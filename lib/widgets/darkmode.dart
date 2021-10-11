@@ -16,7 +16,7 @@ class _DarkModeSwitch extends State<DarkModeSwitch> {
     setState(() {});
   }
 
-  ThemeColor themeMode() {
+  ThemeColor themeMode({double? width}) {
     return ThemeColor(
       gradient: [
         if (isLightTheme) ...[Color(0xDDFF0080), Color(0xDDFF8C00)],
@@ -29,9 +29,16 @@ class _DarkModeSwitch extends State<DarkModeSwitch> {
       shadow: [
         if (isLightTheme)
           BoxShadow(
-              color: Color(0xFFd8d7da), spreadRadius: 5, blurRadius: 10, offset: Offset(0, 5)),
+              color: const Color(0xFFd8d7da),
+              spreadRadius: width != null ? width * 0.005 : 5,
+              blurRadius: width != null ? width * 0.01 : 10,
+              offset: width != null ? Offset(0, (width * 0.005)) : const Offset(0, 5)),
         if (!isLightTheme)
-          BoxShadow(color: Color(0x66000000), spreadRadius: 5, blurRadius: 10, offset: Offset(0, 5))
+          BoxShadow(
+              color: const Color(0x66000000),
+              spreadRadius: width != null ? width * 0.005 : 5,
+              blurRadius: width != null ? width * 0.01 : 10,
+              offset: width != null ? Offset(0, (width * 0.005)) : const Offset(0, 5)),
       ],
       backgroundColor: isLightTheme ? Color(0xFF000000) : Color(0xFFFFFFFF),
     );
@@ -39,7 +46,7 @@ class _DarkModeSwitch extends State<DarkModeSwitch> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
+    double width = 300; //can be moved as input??
     return Container(
       width: width * .3,
       height: width * .13,
@@ -60,20 +67,20 @@ class _DarkModeSwitch extends State<DarkModeSwitch> {
                     padding: EdgeInsets.symmetric(horizontal: width * .01, vertical: width * .01),
                     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       Padding(
-                        padding: EdgeInsets.only(right: width * .045),
+                        padding: EdgeInsets.only(right: width * .03),
                         child: Icon(
                           Iconic.sun_inv,
                           color: Color(0xFF918f95),
-                          size: width * .05,
+                          size: width * .06,
                         ),
                       ),
                       //Padding(padding: EdgeInsets.symmetric(horizontal: width * .025)),
                       Padding(
-                        padding: EdgeInsets.only(left: width * .045),
+                        padding: EdgeInsets.only(left: width * .03),
                         child: Icon(
                           Iconic.moon_inv,
                           color: Color(0xFF918f95),
-                          size: width * .05,
+                          size: width * .06,
                         ),
                       ),
                     ])),
@@ -89,12 +96,12 @@ class _DarkModeSwitch extends State<DarkModeSwitch> {
                         height: width * .15,
                         decoration: ShapeDecoration(
                             color: themeMode().toggleButtonColor,
-                            shadows: themeMode().shadow,
+                            shadows: themeMode(width: width).shadow,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(width * .04))),
                         child: Icon(
                           isLightTheme ? Iconic.sun_inv : Iconic.moon_inv,
-                          size: width * .05,
+                          size: width * .07,
                           color: themeMode().toggleIconColor,
                         ),
                       ),

@@ -57,6 +57,28 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  fonts:
+    - family: Rubik
+      fonts:
+        - asset: lib/assets/rubik_font/Rubik-Regular.ttf
+        - asset: lib/assets/rubik_font/Rubik-Italic.ttf
+          style: italic
+        - asset: lib/assets/rubik_font/Rubik-Bold.ttf
+          weight: 700
+    - family: Montserrat
+      fonts:
+        - asset: lib/assets/montserrat_font/Montserrat-Regular.ttf
+        - asset: lib/assets/montserrat_font/Montserrat-Italic.ttf
+          style: italic
+        - asset: lib/assets/montserrat_font/Montserrat-Bold.ttf
+          weight: 700
+    - family: SF-Pro
+      fonts:
+        - asset: lib/assets/san_francisco_font/SF-Pro-Display-Regular.otf
+        - asset: lib/assets/san_francisco_font/SF-Pro-Display-RegularItalic.otf
+          style: italic
+        - asset: lib/assets/san_francisco_font/SF-Pro-Display-Bold.otf
+          weight: 700
 
   # To add assets to your application, add an assets section, like this:
   # assets:

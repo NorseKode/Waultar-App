@@ -31,16 +31,19 @@ class _SignUpState extends State<SignUp> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: Center(
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Text('This is the sign up page'),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            DarkModeSwitch(),
-          ]),
-          _signInElevatedButton(),
-        ]),
-      ),
+      body: Column(children: [
+        Padding(
+            padding: EdgeInsets.symmetric(horizontal: width * .04, vertical: width * .04),
+            child: Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              const Text('Already using? '),
+              _signInElevatedButton(),
+              Padding(padding: EdgeInsets.only(left: width * .01), child: DarkModeSwitch()),
+            ])),
+        Text('This is the sign up page'),
+        _signInElevatedButton(),
+      ]),
     );
   }
 }
