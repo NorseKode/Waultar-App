@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/navigation/screen.dart';
-import 'package:waultar/widgets/darkmode_switch.dart';
+import 'package:waultar/widgets/darkmode.dart';
 
 class SignUp extends StatefulWidget {
   final AppState _appState;
