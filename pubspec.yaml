@@ -79,6 +79,9 @@ flutter:
           style: italic
         - asset: lib/assets/san_francisco_font/SF-Pro-Display-Bold.otf
           weight: 700
+  
+  assets:
+    - lib/assets/graphics/data_graphic.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
