@@ -33,12 +33,9 @@ class _SignInViewState extends State<SignInView> {
   ElevatedButton _signInButtion() {
     return ElevatedButton(
       onPressed: () async {
-        // _appState.user = 'something';
-        // _appState.viewScreen = ViewScreen.home;
-        // _updateAppState(_appState);
-
-        var temp = await signIn('waultar_test_user', 'd@9;]V4bP+7J(qx,', 'https://api.etebase.com/developer/norsekode/');
-        print(temp);
+        _appState.user = 'something';
+        _appState.viewScreen = ViewScreen.home;
+        _updateAppState(_appState);
       },
       child: const Text('Sign In - go to home'),
     );
