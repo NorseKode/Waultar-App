@@ -19,27 +19,24 @@ class _SignUpForm extends State<SignUpForm> {
   AppState _appState;
   ValueChanged<AppState> _updateAppState;
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _usernameController;
-  late TextEditingController _emailController;
-  late TextEditingController _passwordController;
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   _SignUpForm(this._appState, this._updateAppState);
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _usernameController = TextEditingController();
-  // }
 
   void _saveForm() async {
     final bool isValid = _formKey.currentState!.validate();
     if (isValid) {
       var tempEtebaseUser = EtebaseUser(_usernameController.text.trim(), _emailController.text.trim());
 
-      var temp = await signUp(tempEtebaseUser, _passwordController.text.trim());
-      // var temp = await signIn(tempEtebaseUser.username, _passwordController.text.trim(), serverUrl);
+      // var temp = await signUp(tempEtebaseUser, _passwordController.text.trim());
+      var temp = await signIn(tempEtebaseUser.username, _passwordController.text.trim());
 
       if (temp != null) {
+        print(temp.username);
+        print(temp.email);
+        
         _appState.user = temp;
         _appState.viewScreen = ViewScreen.home;
         _updateAppState(_appState);
@@ -55,7 +52,7 @@ class _SignUpForm extends State<SignUpForm> {
       key: _formKey,
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         const Text("Your Name"),
-        const Padding(
+        Padding(
           padding: EdgeInsets.fromLTRB(0, 8.0, 0, 12.0),
           child: TextField(
               style: TextStyle(
@@ -66,22 +63,24 @@ class _SignUpForm extends State<SignUpForm> {
                   hintText: 'John Doe', border: OutlineInputBorder())),
         ),
         const Text("Your Email"),
-        const Padding(
+        Padding(
           padding: EdgeInsets.fromLTRB(0, 8.0, 0, 12.0),
           child: TextField(
               style: TextStyle(
                 fontSize: 14.0,
               ),
+              controller: _emailController,
               decoration: InputDecoration(
                   hintText: 'john@email.com', border: OutlineInputBorder())),
         ),
         const Text("Password"),
-        const Padding(
+        Padding(
           padding: EdgeInsets.fromLTRB(0, 8.0, 0, 12.0),
           child: TextField(
               style: TextStyle(
                 fontSize: 14.0,
               ),
+              controller: _passwordController,
               decoration: InputDecoration(
                   hintText: 'at least 8 characters',
                   border: OutlineInputBorder())),
