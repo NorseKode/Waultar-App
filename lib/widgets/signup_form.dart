@@ -1,35 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:waultar/etebase/authentication.dart';
 import 'package:waultar/etebase/models/etebase_user.dart';
-import 'package:waultar/globals/globals.dart';
 import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/navigation/screen.dart';
 
 class SignUpForm extends StatefulWidget {
   final AppState _appState;
   final ValueChanged<AppState> _updateAppState;
+  final bool _isSignIn;
   
-  SignUpForm(this._appState, this._updateAppState, {Key? key}) : super(key: key);
+  SignUpForm(this._appState, this._updateAppState, this._isSignIn, {Key? key}) : super(key: key);
 
   @override
-  State<SignUpForm> createState() => _SignUpForm(_appState, _updateAppState);
+  State<SignUpForm> createState() => _SignUpForm(_appState, _updateAppState, this._isSignIn);
 }
 
 class _SignUpForm extends State<SignUpForm> {
   AppState _appState;
   ValueChanged<AppState> _updateAppState;
+  final bool _isSignIn;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  _SignUpForm(this._appState, this._updateAppState);
+  _SignUpForm(this._appState, this._updateAppState, this._isSignIn);
 
   void _saveForm() async {
     final bool isValid = _formKey.currentState!.validate();
     if (isValid) {
       var tempEtebaseUser = EtebaseUser(_usernameController.text.trim(), _emailController.text.trim());
-
+      
       // var temp = await signUp(tempEtebaseUser, _passwordController.text.trim());
       var temp = await signIn(tempEtebaseUser.username, _passwordController.text.trim());
 
@@ -58,9 +59,9 @@ class _SignUpForm extends State<SignUpForm> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
+              Padding(
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 12.0),
-                  child: Text("Register",
+                  child: Text(_isSignIn ? 'Sign In' : "Register",
                       textAlign: TextAlign.left,
                       style: TextStyle(
                           fontSize: 20, fontWeight: FontWeight.bold))),
@@ -69,6 +70,7 @@ class _SignUpForm extends State<SignUpForm> {
                 padding: EdgeInsets.fromLTRB(0, 8.0, 0, 12.0),
                 child: TextField(
                     style: textStyle,
+                    controller: _usernameController,
                     decoration: const InputDecoration(
                         hintText: 'John Doe', border: OutlineInputBorder())),
               ),
@@ -77,6 +79,7 @@ class _SignUpForm extends State<SignUpForm> {
                 padding: EdgeInsets.fromLTRB(0, 8.0, 0, 12.0),
                 child: TextField(
                     style: textStyle,
+                    controller: _emailController,
                     decoration: const InputDecoration(
                         hintText: 'john@email.com',
                         border: OutlineInputBorder())),
@@ -86,6 +89,7 @@ class _SignUpForm extends State<SignUpForm> {
                 padding: EdgeInsets.fromLTRB(0, 8.0, 0, 12.0),
                 child: TextField(
                     style: textStyle,
+                    controller: _passwordController,
                     decoration: const InputDecoration(
                         hintText: 'at least 8 characters',
                         border: OutlineInputBorder())),

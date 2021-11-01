@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:waultar/etebase/authentication.dart';
 import 'package:waultar/etebase/models/etebase_user.dart';
-import 'package:waultar/globals/scaffold_main.dart';
 import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/navigation/screen.dart';
-import 'package:fluttericon/iconic_icons.dart';
-import 'package:waultar/widgets/logo.dart';
 import 'package:waultar/widgets/signup_form.dart';
 
 class SignInView extends StatefulWidget {
@@ -28,6 +24,7 @@ class _SignInViewState extends State<SignInView> {
   ElevatedButton _signUpButton() {
     return ElevatedButton(
       onPressed: () {
+        _appState.user = null;
         _appState.viewScreen = ViewScreen.signup;
         _updateAppState(_appState);
       },
@@ -130,8 +127,9 @@ class _SignInViewState extends State<SignInView> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [SignUpForm()],
-                            ))))
+                              children: [SignUpForm(_appState, _updateAppState, true), _signUpButton()],
+                            )))),
+                            
               ],
             )));
   }
