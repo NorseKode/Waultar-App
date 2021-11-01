@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:waultar/etebase/authentication.dart';
 import 'package:waultar/globals/scaffold_main.dart';
 import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/navigation/screen.dart';
@@ -34,7 +35,7 @@ class _SignInViewState extends State<SignInView> {
 
   ElevatedButton _signInButtion() {
     return ElevatedButton(
-      onPressed: () {
+      onPressed: () async {
         _appState.user = 'something';
         _appState.viewScreen = ViewScreen.home;
         _updateAppState(_appState);
