@@ -35,6 +35,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   material_design_icons_flutter: ^5.0.6295
   fluttericon: ^2.0.0
+  flutter_svg: ^0.23.0+1
 
 dev_dependencies:
   flutter_test:
@@ -82,6 +83,8 @@ flutter:
   
   assets:
     - lib/assets/graphics/data_graphic.png
+    - lib/assets/graphics/Paw.svg
+    - lib/assets/graphics/Paw_Circle.svg
 
   # To add assets to your application, add an assets section, like this:
   # assets:
