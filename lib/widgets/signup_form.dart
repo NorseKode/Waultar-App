@@ -46,73 +46,86 @@ class _SignUpForm extends State<SignUpForm> {
     }
   }
 
+  TextStyle textStyle =
+      const TextStyle(height: 1, letterSpacing: 0.5, fontSize: 14);
+
   @override
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const Text("Your Name"),
-        Padding(
-          padding: EdgeInsets.fromLTRB(0, 8.0, 0, 12.0),
-          child: TextField(
-              style: TextStyle(
-                fontSize: 14.0,
+      child: Expanded(
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 0, 12.0),
+                  child: Text("Register",
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.bold))),
+              Text("Your Name", style: textStyle),
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 8.0, 0, 12.0),
+                child: TextField(
+                    style: textStyle,
+                    decoration: const InputDecoration(
+                        hintText: 'John Doe', border: OutlineInputBorder())),
               ),
-              controller: _usernameController,
-              decoration: InputDecoration(
-                  hintText: 'John Doe', border: OutlineInputBorder())),
-        ),
-        const Text("Your Email"),
-        Padding(
-          padding: EdgeInsets.fromLTRB(0, 8.0, 0, 12.0),
-          child: TextField(
-              style: TextStyle(
-                fontSize: 14.0,
+              Text("Your Email", style: textStyle),
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 8.0, 0, 12.0),
+                child: TextField(
+                    style: textStyle,
+                    decoration: const InputDecoration(
+                        hintText: 'john@email.com',
+                        border: OutlineInputBorder())),
               ),
-              controller: _emailController,
-              decoration: InputDecoration(
-                  hintText: 'john@email.com', border: OutlineInputBorder())),
-        ),
-        const Text("Password"),
-        Padding(
-          padding: EdgeInsets.fromLTRB(0, 8.0, 0, 12.0),
-          child: TextField(
-              style: TextStyle(
-                fontSize: 14.0,
+              Text("Password", style: textStyle),
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 8.0, 0, 12.0),
+                child: TextField(
+                    style: textStyle,
+                    decoration: const InputDecoration(
+                        hintText: 'at least 8 characters',
+                        border: OutlineInputBorder())),
               ),
-              controller: _passwordController,
-              decoration: InputDecoration(
-                  hintText: 'at least 8 characters',
-                  border: OutlineInputBorder())),
-        ),
-        Row(
-          children: [
-            const Checkbox(value: false, onChanged: null),
-            const Text("I agree to the "),
-            Text("Terms & Conditions",
-                style: TextStyle(color: Colors.blue[700]))
-          ],
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 12.0, 0, 12.0),
-          child: Row(children: [
-            Expanded(
-                flex: 1,
-                child: Container(
-                    padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
-                    decoration: BoxDecoration(
-                      color: Colors.blueAccent[700],
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    child: TextButton(
-                        onPressed: _saveForm,
-                        child: const Text(
-                          "Get Started",
-                          style: TextStyle(color: Colors.white),
-                        ))))
-          ]),
-        )
-      ]),
+              Row(
+                children: [
+                  const Checkbox(value: false, onChanged: null),
+                  Text("I agree to the ", style: textStyle),
+                  const Text("Terms & Conditions",
+                      style: TextStyle(
+                          letterSpacing: 0.5,
+                          fontSize: 14,
+                          color: Colors.orange))
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 12.0, 0, 12.0),
+                child: Row(children: [
+                  Expanded(
+                      flex: 1,
+                      child: Container(
+                          padding: const EdgeInsets.only(top: 5.0, bottom: 5.0),
+                          decoration: BoxDecoration(
+                            color: Colors.orange,
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          child: TextButton(
+                              onPressed: _saveForm,
+                              child: const Text(
+                                "Get Started",
+                                style: TextStyle(
+                                    height: 1.5,
+                                    letterSpacing: 0.5,
+                                    fontSize: 14,
+                                    color: Colors.white),
+                              ))))
+                ]),
+              )
+            ]),
+      ),
     );
   }
 }
