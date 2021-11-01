@@ -5,6 +5,8 @@ import 'dart:convert';
 
 import 'package:js/js.dart';
 import 'package:js/js_util.dart';
+import 'package:waultar/etebase/models/etebase_user.dart';
+import 'package:waultar/navigation/app_state.dart';
 
 // Standard JS functions
 @JS('JSON.stringify')
@@ -24,11 +26,13 @@ dynamic signUp(EtebaseUserAuth etebaseUserAuth, String password, String serverUr
   return signUpEtebase({ etebaseUserAuth.username, etebaseUserAuth.email}, password, serverUrl);
 }
 
-dynamic signIn(String username, String password, String serverUrl) async {
+Future<EtebaseUser> signIn(String username, String password, String serverUrl) async {
   var dataFuture = promiseToFuture(login(username, password, serverUrl));
   var rawData = await dataFuture;
-  var data = stringify(rawData);
-  print(data);
+  var jsonString = stringify(rawData);
+  var dataAsMap = jsonDecode(jsonString);
+  var parsedData = EtebaseUser.getUserFromEtebaseResponse(dataAsMap);
+  return EtebaseUser.fromJson(parsedData);
 }
 
 class EtebaseUserAuth {
