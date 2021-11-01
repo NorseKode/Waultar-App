@@ -33,9 +33,7 @@ class _WaultarApp extends State<WaultarApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.grey,
-      ),
+      theme: ThemeData(primarySwatch: Colors.grey, fontFamily: 'Montserrat'),
       home: getAppNavigator(_appState, _updateAppState),
     );
   }
