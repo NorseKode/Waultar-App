@@ -3,8 +3,7 @@ import 'package:waultar/navigation/screen.dart';
 
 class AppState {
   ViewScreen viewScreen;
-  String? user; // TODO: change to etebase auth token
-  EtebaseUser? user2; // TODO: change to etebase auth token
+  EtebaseUser? user;
 
-  AppState(this.viewScreen, {this.user, this.user2});
+  AppState(this.viewScreen, {this.user});
 }
