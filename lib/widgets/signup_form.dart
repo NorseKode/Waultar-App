@@ -31,8 +31,8 @@ class _SignUpForm extends State<SignUpForm> {
     if (isValid) {
       var tempEtebaseUser = EtebaseUser(_usernameController.text.trim(), _emailController.text.trim());
       
-      // var temp = await signUp(tempEtebaseUser, _passwordController.text.trim());
-      var temp = await signIn(tempEtebaseUser.username, _passwordController.text.trim());
+      var temp = await signUp(tempEtebaseUser, _passwordController.text.trim());
+      // var temp = await signIn(tempEtebaseUser.username, _passwordController.text.trim());
 
       if (temp != null) {
         print(temp.username);
