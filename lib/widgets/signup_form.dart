@@ -1,20 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:waultar/etebase/authentication.dart';
+import 'package:waultar/etebase/models/etebase_user.dart';
+import 'package:waultar/globals/globals.dart';
+import 'package:waultar/navigation/app_state.dart';
+import 'package:waultar/navigation/screen.dart';
 
 class SignUpForm extends StatefulWidget {
-  SignUpForm({Key? key}) : super(key: key);
+  final AppState _appState;
+  final ValueChanged<AppState> _updateAppState;
+  
+  SignUpForm(this._appState, this._updateAppState, {Key? key}) : super(key: key);
 
   @override
-  State<SignUpForm> createState() => _SignUpForm();
+  State<SignUpForm> createState() => _SignUpForm(_appState, _updateAppState);
 }
 
 class _SignUpForm extends State<SignUpForm> {
+  AppState _appState;
+  ValueChanged<AppState> _updateAppState;
   final _formKey = GlobalKey<FormState>();
+  late TextEditingController _usernameController;
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
 
-  void _saveForm() {
+  _SignUpForm(this._appState, this._updateAppState);
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _usernameController = TextEditingController();
+  // }
+
+  void _saveForm() async {
     final bool isValid = _formKey.currentState!.validate();
     if (isValid) {
-      print('Got a valid input');
-      // And do something here
+      var tempEtebaseUser = EtebaseUser(_usernameController.text.trim(), _emailController.text.trim());
+
+      var temp = await signUp(tempEtebaseUser, _passwordController.text.trim());
+      // var temp = await signIn(tempEtebaseUser.username, _passwordController.text.trim(), serverUrl);
+
+      if (temp != null) {
+        _appState.user = temp;
+        _appState.viewScreen = ViewScreen.home;
+        _updateAppState(_appState);
+      } else {
+        print('not good');
+      }
     }
   }
 
@@ -30,6 +61,7 @@ class _SignUpForm extends State<SignUpForm> {
               style: TextStyle(
                 fontSize: 14.0,
               ),
+              controller: _usernameController,
               decoration: InputDecoration(
                   hintText: 'John Doe', border: OutlineInputBorder())),
         ),
