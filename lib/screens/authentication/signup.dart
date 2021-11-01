@@ -5,6 +5,7 @@ import 'package:waultar/navigation/screen.dart';
 import 'package:waultar/widgets/darkmode.dart';
 import 'package:fluttericon/iconic_icons.dart';
 import 'package:waultar/widgets/signup_form.dart';
+import 'package:js/js.dart';
 
 class SignUp extends StatefulWidget {
   final AppState _appState;

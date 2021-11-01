@@ -1,5 +1,9 @@
-# Waultar
+# Waultar-App
+## Git branching strategy
 
+- main branch is for the stable shit
+- develop branch is the base for features
+- feature branches are for implementing features (checkout from develop whenever starting a new feature branch)
 ## Setup
 
 https://flutter.dev/docs/get-started/web

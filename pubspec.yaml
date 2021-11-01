@@ -37,6 +37,8 @@ dependencies:
   fluttericon: ^2.0.0
   flutter_svg: ^0.23.0+1
 
+  js: any
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
