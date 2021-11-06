@@ -21,17 +21,6 @@ class _SignInViewState extends State<SignInView> {
 
   _SignInViewState(this._appState, this._updateAppState);
 
-  ElevatedButton _signUpButton() {
-    return ElevatedButton(
-      onPressed: () {
-        _appState.user = null;
-        _appState.viewScreen = ViewScreen.signup;
-        _updateAppState(_appState);
-      },
-      child: const Text('Sign Up'),
-    );
-  }
-
   ElevatedButton _signInButtion() {
     return ElevatedButton(
       onPressed: () async {
@@ -127,7 +116,7 @@ class _SignInViewState extends State<SignInView> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [SignUpForm(_appState, _updateAppState, true), _signUpButton()],
+                              children: [SignUpForm(_appState, _updateAppState, true)],
                             )))),
                             
               ],
