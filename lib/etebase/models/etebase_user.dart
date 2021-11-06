@@ -15,4 +15,9 @@ class EtebaseUser {
   static Map<String, dynamic> getUserFromEtebaseResponse(Map<String, dynamic> map) {
     return map['user'];
   }
+
+  @override
+  String toString() {
+    return 'username: $username, email: $email';
+  }
 }

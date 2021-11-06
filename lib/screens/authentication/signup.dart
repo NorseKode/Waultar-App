@@ -78,7 +78,7 @@ class _SignUpState extends State<SignUp> {
                       ]),
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [SignUpForm()]),
+                      children: [SignUpForm(_appState, _updateAppState, false)]),
                   Row(children: [
                     const Text("Are you already a member? "),
                     Text("Sign in",
