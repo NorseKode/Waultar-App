@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:waultar/etebase/authentication.dart';
 import 'package:waultar/etebase/models/etebase_user.dart';
+import 'package:waultar/exceptions/etebase_exceptions.dart';
 import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/navigation/screen.dart';
+import 'package:waultar/widgets/snackbar_custom.dart';
 
 class SignUpForm extends StatefulWidget {
   final AppState _appState;
@@ -31,18 +33,16 @@ class _SignUpForm extends State<SignUpForm> {
     if (isValid) {
       var tempEtebaseUser = EtebaseUser(_usernameController.text.trim(), _emailController.text.trim());
       
-      var temp = await signUp(tempEtebaseUser, _passwordController.text.trim());
-      // var temp = await signIn(tempEtebaseUser.username, _passwordController.text.trim());
-
-      if (temp != null) {
-        print(temp.username);
-        print(temp.email);
-        
+      try {
+        var temp = await signUp(tempEtebaseUser, _passwordController.text.trim());
         _appState.user = temp;
         _appState.viewScreen = ViewScreen.home;
         _updateAppState(_appState);
-      } else {
-        print('not good');
+      } on EtebaseExceptions catch (e) {
+        SnackBarCustom.useSnackbarOfContext(context, e.message);
+        setState(() {
+          _passwordController.clear();
+        });
       }
     }
   }
