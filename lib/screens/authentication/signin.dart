@@ -38,20 +38,18 @@ class _SignInViewState extends State<SignInView> {
                           fontWeight: FontWeight.bold,
                           fontSize: 24)),
                 )),
+            Positioned(
+              top: MediaQuery.of(context).size.height * 0.4,
+              left: MediaQuery.of(context).size.width * 0.6,
+              child: Image.asset(
+                'lib/assets/graphics/Paws_blue.png',
+                scale: 1.5,
+              ),
+            ),
             Center(
                 child: SingleChildScrollView(
                     child: Center(
-              child: Stack(clipBehavior: Clip.none, children: [
-                Positioned(
-                  top: 100,
-                  left: 500,
-                  child: Image.asset(
-                    'lib/assets/graphics/Paws_blue.png',
-                    scale: 1.5,
-                  ),
-                ),
-                SignInWidget(_appState, _updateAppState)
-              ]),
+              child: SignInWidget(_appState, _updateAppState),
             ))),
           ])),
     );

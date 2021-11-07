@@ -39,20 +39,18 @@ class _SignUpViewState extends State<SignUpView> {
                           fontWeight: FontWeight.bold,
                           fontSize: 24)),
                 )),
+            Positioned(
+              top: MediaQuery.of(context).size.height * 0.4,
+              left: MediaQuery.of(context).size.width * 0.6,
+              child: Image.asset(
+                'lib/assets/graphics/Paws_blue.png',
+                scale: 1.5,
+              ),
+            ),
             Center(
                 child: SingleChildScrollView(
                     child: Center(
-              child: Stack(clipBehavior: Clip.none, children: [
-                Positioned(
-                  top: 100,
-                  left: 500,
-                  child: Image.asset(
-                    'lib/assets/graphics/Paws_blue.png',
-                    scale: 1.5,
-                  ),
-                ),
-                SignUpWidget(_appState, _updateAppState)
-              ]),
+              child: SignUpWidget(_appState, _updateAppState),
             ))),
           ])),
     );
