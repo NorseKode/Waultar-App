@@ -89,6 +89,7 @@ flutter:
     - lib/assets/graphics/data_graphic.png
     - lib/assets/graphics/Paw.svg
     - lib/assets/graphics/Paw_Circle.svg
+    - lib/assets/graphics/Paws_blue.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
