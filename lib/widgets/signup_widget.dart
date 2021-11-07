@@ -81,8 +81,11 @@ class _SignUpWidget extends State<SignUpWidget> {
             height: 10,
           ),
           TextField(
+              style: const TextStyle(fontSize: 14, color: Color(0xffb9bbbe)),
               obscureText: isPassword,
               decoration: const InputDecoration(
+                  isDense: true,
+                  contentPadding: EdgeInsets.all(18.0),
                   border: OutlineInputBorder(),
                   fillColor: Color(0xff2f3136),
                   filled: true))
