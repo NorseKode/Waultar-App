@@ -4,6 +4,7 @@ import 'package:waultar/etebase/models/etebase_user.dart';
 import 'package:waultar/globals/globals.dart';
 import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/navigation/screen.dart';
+import 'package:waultar/widgets/sso.dart';
 
 class SignUpWidget extends StatefulWidget {
   final AppState _appState;
@@ -153,16 +154,23 @@ class _SignUpWidget extends State<SignUpWidget> {
           child: const Text(
             'Continue',
             style: TextStyle(
-                fontSize: 16, color: Colors.white, fontWeight: FontWeight.w700),
+                fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
           )),
     );
   }
 
   Widget _signInLink() {
     return Container(
-        margin: const EdgeInsets.only(top: 10),
+      margin: const EdgeInsets.only(top: 10),
+      child: InkWell(
+        onTap: () {
+          _appState.viewScreen = ViewScreen.signin;
+          _updateAppState(_appState);
+        },
         child: const Text("Already have an account?",
-            style: TextStyle(color: Colors.blue)));
+            style: TextStyle(color: Colors.blue)),
+      ),
+    );
   }
 
   @override
@@ -196,6 +204,7 @@ class _SignUpWidget extends State<SignUpWidget> {
               _emailPasswordWidget(),
               _terms(),
               _continueButton(),
+              //const SSO(),
               _signInLink()
             ],
           ),
