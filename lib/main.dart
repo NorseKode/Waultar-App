@@ -32,7 +32,7 @@ class _WaultarApp extends State<WaultarApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Waultar',
       theme: ThemeData(primarySwatch: Colors.grey, fontFamily: 'SF-Pro'),
       home: getAppNavigator(_appState, _updateAppState),
     );
