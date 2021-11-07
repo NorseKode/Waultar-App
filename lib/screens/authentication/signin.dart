@@ -53,37 +53,38 @@ class _SignInViewState extends State<SignInView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      color: Colors.blue,
-      child: Stack(
-        children: [
-          const Positioned(
-              top: 0,
-              left: 0,
-              child: Padding(
-                padding: EdgeInsets.all(20.0),
-                child: Text("WAULTAR",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24)),
-              )),
-          Center(
-            child: Stack(clipBehavior: Clip.none, children: [
-              Positioned(
-                top: 100,
-                left: 500,
-                child: Image.asset(
-                  'lib/assets/graphics/Paws_blue.png',
-                  scale: 1.5,
+      body: Container(
+          height: MediaQuery.of(context).size.height,
+          color: Colors.blue,
+          child: Stack(children: [
+            const Positioned(
+                top: 0,
+                left: 0,
+                child: Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: Text("WAULTAR",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24)),
+                )),
+            Center(
+                child: SingleChildScrollView(
+                    child: Center(
+              child: Stack(clipBehavior: Clip.none, children: [
+                Positioned(
+                  top: 100,
+                  left: 500,
+                  child: Image.asset(
+                    'lib/assets/graphics/Paws_blue.png',
+                    scale: 1.5,
+                  ),
                 ),
-              ),
-              SignUpWidget(_appState, _updateAppState)
-            ]),
-          )
-        ],
-      ),
-    ));
+                SignUpWidget(_appState, _updateAppState)
+              ]),
+            ))),
+          ])),
+    );
   }
 }
 

@@ -160,7 +160,7 @@ class _SignUpWidget extends State<SignUpWidget> {
 
   Widget _signInLink() {
     return Container(
-        margin: const EdgeInsets.symmetric(vertical: 10),
+        margin: const EdgeInsets.only(top: 10),
         child: const Text("Already have an account?",
             style: TextStyle(color: Colors.blue)));
   }
@@ -169,37 +169,35 @@ class _SignUpWidget extends State<SignUpWidget> {
   Widget build(BuildContext context) {
     return Form(
         key: _formKey,
-        child: SingleChildScrollView(
-          child: Container(
-            margin: const EdgeInsets.fromLTRB(32, 70, 32, 70),
-            width: 480,
-            //height: 580,
-            padding: const EdgeInsets.all(32.0),
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 54, 57, 63),
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: const Offset(0, 3), // changes position of shadow
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _title(),
-                const SizedBox(height: 15),
-                _emailPasswordWidget(),
-                _terms(),
-                _continueButton(),
-                _signInLink()
-              ],
-            ),
+        child: Container(
+          margin: const EdgeInsets.fromLTRB(32, 70, 32, 70),
+          width: 480,
+          //height: 580,
+          padding: const EdgeInsets.all(32.0),
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 54, 57, 63),
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                spreadRadius: 5,
+                blurRadius: 7,
+                offset: const Offset(0, 3), // changes position of shadow
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _title(),
+              const SizedBox(height: 15),
+              _emailPasswordWidget(),
+              _terms(),
+              _continueButton(),
+              _signInLink()
+            ],
           ),
         ));
   }
