@@ -170,7 +170,7 @@ class _SignUpWidget extends State<SignUpWidget> {
     return Form(
         key: _formKey,
         child: Container(
-          margin: const EdgeInsets.fromLTRB(32, 70, 32, 70),
+          margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
           width: 480,
           //height: 580,
           padding: const EdgeInsets.all(32.0),
