@@ -33,7 +33,7 @@ class _WaultarApp extends State<WaultarApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Waultar',
-      theme: ThemeData(primarySwatch: Colors.grey, fontFamily: 'SF-Pro'),
+      theme: ThemeData(primarySwatch: Colors.grey, fontFamily: 'Montserrat'),
       home: getAppNavigator(_appState, _updateAppState),
     );
   }

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:waultar/navigation/app_state.dart';
+import 'package:waultar/navigation/no_animation_delegate.dart';
 import 'package:waultar/navigation/screen.dart';
-import 'package:waultar/screens/authentication/signin.dart';
 import 'package:waultar/screens/authentication/signup.dart';
+import 'package:waultar/screens/authentication/signin.dart';
 import 'package:waultar/screens/home.dart';
 
-Navigator getAppNavigator(AppState appState, ValueChanged<AppState> updateAppState) {
+Navigator getAppNavigator(
+    AppState appState, ValueChanged<AppState> updateAppState) {
   return Navigator(
+    transitionDelegate: NoAnimationTransitionDelegate(),
     pages: [
       if (appState.user != null)
         MaterialPage(
@@ -21,7 +24,7 @@ Navigator getAppNavigator(AppState appState, ValueChanged<AppState> updateAppSta
       if (appState.user == null && appState.viewScreen == ViewScreen.signup)
         MaterialPage(
           key: ValueKey('SignUpView'),
-          child: SignUp(appState, updateAppState),
+          child: SignUpView(appState, updateAppState),
         ),
     ],
     onPopPage: (route, result) {
