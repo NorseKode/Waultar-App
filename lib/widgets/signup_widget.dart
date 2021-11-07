@@ -167,11 +167,11 @@ class _SignUpWidget extends State<SignUpWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.all(32),
-      child: Form(
-          key: _formKey,
+    return Form(
+        key: _formKey,
+        child: SingleChildScrollView(
           child: Container(
+            margin: const EdgeInsets.fromLTRB(32, 70, 32, 70),
             width: 480,
             //height: 580,
             padding: const EdgeInsets.all(32.0),
@@ -200,7 +200,7 @@ class _SignUpWidget extends State<SignUpWidget> {
                 _signInLink()
               ],
             ),
-          )),
-    );
+          ),
+        ));
   }
 }

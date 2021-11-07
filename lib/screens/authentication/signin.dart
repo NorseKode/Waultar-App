@@ -58,13 +58,16 @@ class _SignInViewState extends State<SignInView> {
       child: Stack(
         children: [
           const Positioned(
-              top: 20,
-              left: 20,
-              child: Text("WAULTAR",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24))),
+              top: 0,
+              left: 0,
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Text("WAULTAR",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24)),
+              )),
           Center(
             child: Stack(clipBehavior: Clip.none, children: [
               Positioned(
