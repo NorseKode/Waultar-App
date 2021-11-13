@@ -28,8 +28,6 @@ class _SignInWidget extends State<SignInWidget> {
 
   _SignInWidget(this._appState, this._updateAppState);
 
-  bool terms = false;
-
   Widget test() {
     return TextButton(
         onPressed: () async {
@@ -46,8 +44,9 @@ class _SignInWidget extends State<SignInWidget> {
 
   void _saveForm() async {
     final bool isValid = _formKey.currentState!.validate();
+    print(isValid);
 
-    if (isValid && terms) {
+    if (isValid) {
       var tempEtebaseUser = EtebaseUser(
           _usernameController.text.trim(), _emailController.text.trim());
 
@@ -79,7 +78,8 @@ class _SignInWidget extends State<SignInWidget> {
     ));
   }
 
-  Widget _entryField(String title, {bool isPassword = false}) {
+  Widget _entryField(String title, TextEditingController controller,
+      {bool isPassword = false}) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -96,6 +96,7 @@ class _SignInWidget extends State<SignInWidget> {
             height: 10,
           ),
           TextField(
+              controller: controller,
               style: const TextStyle(fontSize: 14, color: Color(0xffb9bbbe)),
               obscureText: isPassword,
               decoration: const InputDecoration(
@@ -112,8 +113,8 @@ class _SignInWidget extends State<SignInWidget> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("EMAIL"),
-        _entryField("PASSWORD", isPassword: true),
+        _entryField("EMAIL", _emailController),
+        _entryField("PASSWORD", _passwordController, isPassword: true),
       ],
     );
   }

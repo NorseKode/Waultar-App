@@ -65,7 +65,8 @@ class _SignUpWidget extends State<SignUpWidget> {
     ));
   }
 
-  Widget _entryField(String title, {bool isPassword = false}) {
+  Widget _entryField(String title, TextEditingController controller,
+      {bool isPassword = false}) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -82,6 +83,7 @@ class _SignUpWidget extends State<SignUpWidget> {
             height: 10,
           ),
           TextField(
+              controller: controller,
               style: const TextStyle(fontSize: 14, color: Color(0xffb9bbbe)),
               obscureText: isPassword,
               decoration: const InputDecoration(
@@ -98,9 +100,9 @@ class _SignUpWidget extends State<SignUpWidget> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("NAME"),
-        _entryField("EMAIL"),
-        _entryField("PASSWORD", isPassword: true),
+        _entryField("NAME", _usernameController),
+        _entryField("EMAIL", _emailController),
+        _entryField("PASSWORD", _passwordController, isPassword: true),
       ],
     );
   }
