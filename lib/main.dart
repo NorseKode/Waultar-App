@@ -1,57 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:waultar/navigation/app_navigator.dart';
 import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/navigation/screen.dart';
 
 void main() {
-  AppState _appState = AppState(ViewScreen.signin);
-
-  runApp(WaultarApp(_appState));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppState>(create: (_) => AppState(ViewScreen.home)),
+      ],
+      child: WaultarApp(),
+    ),
+  );
 }
 
 class WaultarApp extends StatefulWidget {
-  final AppState _appState;
-
-  WaultarApp(this._appState);
-
   @override
-  _WaultarApp createState() => _WaultarApp(_appState);
+  _WaultarApp createState() => _WaultarApp();
 }
 
 class _WaultarApp extends State<WaultarApp> {
-  AppState _appState;
-
-  _WaultarApp(this._appState);
-
-  void _updateAppState(AppState? appState) {
-    setState(() {
-      if (appState != null) _appState = appState;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Waultar',
       theme: ThemeData(primarySwatch: Colors.grey, fontFamily: 'Montserrat'),
-      home: getAppNavigator(_appState, _updateAppState),
+      home: getAppNavigator(context.read<AppState>()),
     );
   }
 }
-
-// class WaultarApp extends StatelessWidget {
-//   final AppState _appState;
-
-//   const WaultarApp(this._appState, {Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Flutter Demo',
-//       theme: ThemeData(
-//         primarySwatch: Colors.grey,
-//       ),
-//       home: const SignUp(),
-//     );
-//   }
-// }
