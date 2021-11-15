@@ -37,7 +37,7 @@ dependencies:
   fluttericon: ^2.0.0
   flutter_svg: ^0.23.0+1
 
-  js: any
+  # js: any
 
   tuple: ^2.0.0
 
