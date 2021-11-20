@@ -1,57 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:waultar/navigation/app_navigator.dart';
+import 'package:provider/provider.dart';
 import 'package:waultar/navigation/app_state.dart';
-import 'package:waultar/navigation/screen.dart';
+import 'package:waultar/navigation/router/app_route_path.dart';
+
+import 'navigation/router/app_route_information_parser.dart';
+import 'navigation/router/app_router_delegate.dart';
 
 void main() {
-  AppState _appState = AppState(ViewScreen.signin);
-
-  runApp(WaultarApp(_appState));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppState>(create: (_) => AppState()),
+      ],
+      child: const WaultarApp(),
+    ),
+  );
+  // runApp(WaultarApp());
 }
 
 class WaultarApp extends StatefulWidget {
-  final AppState _appState;
-
-  WaultarApp(this._appState);
+  const WaultarApp({Key? key}) : super(key: key);
 
   @override
-  _WaultarApp createState() => _WaultarApp(_appState);
+  _WaultarApp createState() => _WaultarApp();
 }
 
 class _WaultarApp extends State<WaultarApp> {
-  AppState _appState;
-
-  _WaultarApp(this._appState);
-
-  void _updateAppState(AppState? appState) {
-    setState(() {
-      if (appState != null) _appState = appState;
-    });
-  }
-
+  final AppRouterDelegate _routerDelegate = AppRouterDelegate(AppRoutePath.testScreen1());
+  final AppRouteInformationParser _routeInformationParser = AppRouteInformationParser();
+  
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Waultar',
       theme: ThemeData(primarySwatch: Colors.grey, fontFamily: 'Montserrat'),
-      home: getAppNavigator(_appState, _updateAppState),
+      routerDelegate: _routerDelegate,
+      routeInformationParser: _routeInformationParser,
     );
   }
 }
-
-// class WaultarApp extends StatelessWidget {
-//   final AppState _appState;
-
-//   const WaultarApp(this._appState, {Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Flutter Demo',
-//       theme: ThemeData(
-//         primarySwatch: Colors.grey,
-//       ),
-//       home: const SignUp(),
-//     );
-//   }
-// }

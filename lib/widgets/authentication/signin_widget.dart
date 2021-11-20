@@ -33,9 +33,9 @@ class _SignInWidget extends State<SignInWidget> {
   Widget test() {
     return TextButton(
         onPressed: () async {
-          _appState.user = EtebaseUser('', '');
-          _appState.viewScreen = ViewScreen.home;
-          _updateAppState(_appState);
+          // _appState.user = EtebaseUser('', '');
+          // _appState.viewScreen = ViewScreen.home;
+          // _updateAppState(_appState);
         },
         child: const Text(
           'Login',
@@ -48,23 +48,23 @@ class _SignInWidget extends State<SignInWidget> {
     final bool isValid = _formKey.currentState!.validate();
 
     if (isValid && terms) {
-      var tempEtebaseUser = EtebaseUser(
-          _usernameController.text.trim(), _emailController.text.trim());
+      // var tempEtebaseUser = EtebaseUser(
+      //     _usernameController.text.trim(), _emailController.text.trim());
 
-      // var temp = await signUp(tempEtebaseUser, _passwordController.text.trim());
-      var temp = await signIn(
-          tempEtebaseUser.username, _passwordController.text.trim());
+      // // var temp = await signUp(tempEtebaseUser, _passwordController.text.trim());
+      // var temp = await signIn(
+      //     tempEtebaseUser.username, _passwordController.text.trim());
 
-      if (temp != null) {
-        print(temp.username);
-        print(temp.email);
+      // if (temp != null) {
+      //   print(temp.username);
+      //   print(temp.email);
 
-        _appState.user = temp;
-        _appState.viewScreen = ViewScreen.home;
-        _updateAppState(_appState);
-      } else {
-        print('not good');
-      }
+      //   _appState.user = temp;
+      //   _appState.viewScreen = ViewScreen.home;
+      //   _updateAppState(_appState);
+      // } else {
+      //   print('not good');
+      // }
     } else {
       print("not valid");
     }
@@ -152,8 +152,8 @@ class _SignInWidget extends State<SignInWidget> {
       margin: const EdgeInsets.only(top: 10),
       child: InkWell(
         onTap: () {
-          _appState.viewScreen = ViewScreen.signup;
-          _updateAppState(_appState);
+          // _appState.viewScreen = ViewScreen.signup;
+          // _updateAppState(_appState);
         },
         child:
             const Text("Not a member?", style: TextStyle(color: Colors.blue)),

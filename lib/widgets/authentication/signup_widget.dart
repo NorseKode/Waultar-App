@@ -34,23 +34,23 @@ class _SignUpWidget extends State<SignUpWidget> {
     final bool isValid = _formKey.currentState!.validate();
 
     if (isValid && terms) {
-      var tempEtebaseUser = EtebaseUser(
-          _usernameController.text.trim(), _emailController.text.trim());
+      // var tempEtebaseUser = EtebaseUser(
+      //     _usernameController.text.trim(), _emailController.text.trim());
 
-      // var temp = await signUp(tempEtebaseUser, _passwordController.text.trim());
-      var temp = await signIn(
-          tempEtebaseUser.username, _passwordController.text.trim());
+      // // var temp = await signUp(tempEtebaseUser, _passwordController.text.trim());
+      // var temp = await signIn(
+      //     tempEtebaseUser.username, _passwordController.text.trim());
 
-      if (temp != null) {
-        print(temp.username);
-        print(temp.email);
+      // if (temp != null) {
+      //   print(temp.username);
+      //   print(temp.email);
 
-        _appState.user = temp;
-        _appState.viewScreen = ViewScreen.home;
-        _updateAppState(_appState);
-      } else {
-        print('not good');
-      }
+      //   _appState.user = temp;
+      //   _appState.viewScreen = ViewScreen.home;
+      //   _updateAppState(_appState);
+      // } else {
+      //   print('not good');
+      // }
     } else {
       print("not valid");
     }
@@ -164,7 +164,7 @@ class _SignUpWidget extends State<SignUpWidget> {
       margin: const EdgeInsets.only(top: 10),
       child: InkWell(
         onTap: () {
-          _appState.viewScreen = ViewScreen.signin;
+          // _appState.viewScreen = ViewScreen.signin;
           _updateAppState(_appState);
         },
         child: const Text("Already have an account?",

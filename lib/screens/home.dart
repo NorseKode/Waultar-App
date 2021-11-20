@@ -1,32 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:waultar/globals/scaffold_main.dart';
-import 'package:waultar/navigation/app_state.dart';
-import 'package:waultar/navigation/screen.dart';
 
-class HomePageView extends StatefulWidget {
-  final AppState _appState;
-  final ValueChanged<AppState> _updateAppState;
-
-  HomePageView(this._appState, this._updateAppState);
-  
+class HomePageView extends StatefulWidget {  
   @override
-  _HomePageViewState createState() => _HomePageViewState(_appState, _updateAppState);
+  _HomePageViewState createState() => _HomePageViewState();
 }
 
 class _HomePageViewState extends State<HomePageView> {
-  AppState _appState;
-  ValueChanged<AppState> _updateAppState;
-
-  _HomePageViewState(this._appState, this._updateAppState);
-  
-  ElevatedButton _signOutButton() {
-    return ElevatedButton(onPressed: () {
-      _appState.user = null;
-      _appState.viewScreen = ViewScreen.signin;
-      _updateAppState(_appState);
-    }, child: const Text('Sign out'));
-  }
-
   @override
   Widget build(BuildContext context) {
     return getScaffoldMain(
@@ -35,7 +15,7 @@ class _HomePageViewState extends State<HomePageView> {
         child: Column(
           children: [
             Text('This is the home page'),
-            _signOutButton(),
+            // _signOutButton(),
           ],
         ),
       ),
