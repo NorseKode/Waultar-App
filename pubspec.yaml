@@ -84,6 +84,16 @@ flutter:
           style: italic
         - asset: lib/assets/san_francisco_font/SF-Pro-Display-Bold.otf
           weight: 700
+    - family: Poppins
+      fonts:
+        - asset: lib/assets/poppins/Poppins-Regular.ttf
+        - asset: lib/assets/poppins/Poppins-Bold.ttf
+          weight: 700
+    - family: Inter
+      fonts:
+        - asset: lib/assets/inter/Inter-Regular.ttf
+        - asset: lib/assets/inter/Inter-Bold.ttf
+          weight: 700     
   
   assets:
     - lib/assets/graphics/data_graphic.png

@@ -14,7 +14,7 @@ _getAppBar(BuildContext context, String? message, Function? onTap) {
 
 SafeArea _getSafeAreaMain(var body) {
   return SafeArea(
-    minimum: EdgeInsets.all(25.0),
+    //minimum: EdgeInsets.all(25.0),
     child: Center(
       child: SingleChildScrollView(
         physics: ScrollPhysics(),

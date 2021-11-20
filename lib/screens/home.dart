@@ -3,7 +3,9 @@ import 'package:waultar/globals/scaffold_main.dart';
 import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/navigation/screen.dart';
 import 'package:waultar/widgets/dashboard.dart';
-import 'package:waultar/widgets/menu_panel.dart';
+import 'package:waultar/widgets/menu_panel1.dart';
+import 'package:waultar/widgets/menu_panel2.dart';
+import 'package:waultar/widgets/toppanel.dart';
 
 class HomePageView extends StatefulWidget {
   final AppState _appState;
@@ -37,7 +39,16 @@ class _HomePageViewState extends State<HomePageView> {
     return getScaffoldMain(
         context,
         Row(
-          children: [MenuPanel(), Dashboard()],
+          children: [
+            MenuPanel2(),
+            SizedBox(width: 5),
+            Container(
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [TopPanel(), Dashboard()]),
+            )
+          ],
         ));
   }
 }

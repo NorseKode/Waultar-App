@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 
-class MenuPanel extends StatefulWidget {
-  const MenuPanel({Key? key}) : super(key: key);
+class MenuPanel1 extends StatefulWidget {
+  const MenuPanel1({Key? key}) : super(key: key);
 
   @override
-  _MenuPanelState createState() => _MenuPanelState();
+  _MenuPanel1State createState() => _MenuPanel1State();
 }
 
-class _MenuPanelState extends State<MenuPanel> {
+class _MenuPanel1State extends State<MenuPanel1> {
   Widget logo() {
     return Container(
-      height: 100,
       child: Row(
         children: [
-          Container(height: 50, width: 50, color: Colors.blue),
+          Container(height: 30, width: 30, color: Colors.blue),
           SizedBox(
             width: 25,
           ),
-          Text("Waultar", style: TextStyle(fontSize: 25))
+          Text("Waultar", style: TextStyle(fontSize: 20))
         ],
       ),
     );
@@ -32,13 +31,17 @@ class _MenuPanelState extends State<MenuPanel> {
       height: 50,
       child: Row(
         children: [
-          Icon(icon),
+          Icon(
+            icon,
+            color: active ? Colors.white : Colors.grey,
+          ),
           const SizedBox(
             width: 30,
           ),
           Text(
             name,
-            style: TextStyle(color: active ? Colors.white : Colors.grey),
+            style: TextStyle(
+                color: active ? Colors.white : Colors.grey, fontSize: 12),
           )
         ],
       ),
@@ -49,8 +52,11 @@ class _MenuPanelState extends State<MenuPanel> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 25.0),
-        Text("Administration"),
+        SizedBox(height: 50.0),
+        Padding(
+          padding: const EdgeInsets.only(left: 25.0),
+          child: Text("Administration"),
+        ),
         SizedBox(height: 20),
         menuItem(Icons.access_alarm, "Overview", true),
         menuItem(Icons.access_alarm, "Data Collection", false),
@@ -62,15 +68,15 @@ class _MenuPanelState extends State<MenuPanel> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
+      width: 240,
       height: MediaQuery.of(context).size.height,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          logo(),
-          administrationMenu(),
-        ]),
-      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 25.0),
+          child: logo(),
+        ),
+        administrationMenu(),
+      ]),
     );
   }
 }

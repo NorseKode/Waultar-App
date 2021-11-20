@@ -36,8 +36,8 @@ class _WaultarApp extends State<WaultarApp> {
       title: 'Waultar',
       theme: ThemeData(
           primarySwatch: Colors.grey,
-          scaffoldBackgroundColor: Color(0xFF1F2128),
-          fontFamily: 'Montserrat'),
+          scaffoldBackgroundColor: Color(0xFF111315),
+          fontFamily: 'Inter'),
       home: getAppNavigator(_appState, _updateAppState),
     );
   }
