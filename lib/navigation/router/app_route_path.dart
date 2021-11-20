@@ -5,6 +5,7 @@ class AppRoutePath extends RoutePath {
   ViewScreen viewScreen;
   
   AppRoutePath.home() : viewScreen = ViewScreen.home;
+  AppRoutePath.sigin() : viewScreen = ViewScreen.signin;
   AppRoutePath.testScreen1() : viewScreen = ViewScreen.testScreen1;
   AppRoutePath.unknown() : viewScreen = ViewScreen.unknown;
 

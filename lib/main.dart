@@ -5,6 +5,7 @@ import 'package:waultar/navigation/router/app_route_path.dart';
 
 import 'navigation/router/app_route_information_parser.dart';
 import 'navigation/router/app_router_delegate.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 void main() {
   runApp(
@@ -26,15 +27,26 @@ class WaultarApp extends StatefulWidget {
 }
 
 class _WaultarApp extends State<WaultarApp> {
-  final AppRouterDelegate _routerDelegate = AppRouterDelegate(AppRoutePath.testScreen1());
+  AppRouterDelegate? _routerDelegate;
+
+  @override
+  void initState() {
+    if (kIsWeb) {
+      _routerDelegate = AppRouterDelegate(AppRoutePath.sigin());
+    } else {
+      _routerDelegate = AppRouterDelegate(AppRoutePath.testScreen1());
+    }
+    super.initState();
+  }
+
   final AppRouteInformationParser _routeInformationParser = AppRouteInformationParser();
-  
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Waultar',
       theme: ThemeData(primarySwatch: Colors.grey, fontFamily: 'Montserrat'),
-      routerDelegate: _routerDelegate,
+      routerDelegate: _routerDelegate!,
       routeInformationParser: _routeInformationParser,
     );
   }
