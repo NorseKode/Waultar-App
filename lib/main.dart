@@ -28,6 +28,14 @@ class WaultarApp extends StatefulWidget {
 }
 
 class _WaultarApp extends State<WaultarApp> {
+
+  @override
+  void dispose()
+  {
+    Hive.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
