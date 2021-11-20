@@ -5,7 +5,7 @@ import 'package:waultar/navigation/screen.dart';
 import 'package:waultar/screens/home.dart';
 import 'package:waultar/screens/temp/test1.dart';
 import 'package:waultar/screens/unknown.dart';
-import 'package:waultar/screens/upload/uploader.dart';
+import 'package:waultar/widgets/upload/uploader.dart';
 
 Navigator getAppNavigator(RoutePath routePath, ValueChanged<RoutePath> _updateState) {
   return Navigator(
