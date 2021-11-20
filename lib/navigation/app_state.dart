@@ -1,17 +1,20 @@
 import 'package:flutter/cupertino.dart';
-import 'package:waultar/etebase/models/etebase_user.dart';
-import 'package:waultar/navigation/screen.dart';
+import 'package:flutter/material.dart';
+
+import 'router/route_path.dart';
 
 class AppState with ChangeNotifier {
-  ViewScreen viewScreen;
-  EtebaseUser? user;
-
-  AppState(this.viewScreen, {this.user});
-
-  void updateState(AppState appState) {
-    viewScreen = appState.viewScreen;
-    if (user != null) {
-      user = appState.user;
+  ValueChanged<RoutePath>? _updateNavigatorFun;
+  
+  AppState();
+  
+  set setNavigationFun(ValueChanged<RoutePath> fun) => _updateNavigatorFun = fun;
+  
+  updateNavigatorState(RoutePath routePath) {
+    if (_updateNavigatorFun != null) {
+      _updateNavigatorFun!(routePath);
+    } else {
+      throw FormatException('Unexpected null value', _updateNavigatorFun);
     }
   }
 }

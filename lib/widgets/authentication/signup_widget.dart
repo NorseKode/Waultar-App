@@ -164,7 +164,7 @@ class _SignUpWidget extends State<SignUpWidget> {
       margin: const EdgeInsets.only(top: 10),
       child: InkWell(
         onTap: () {
-          _appState.viewScreen = ViewScreen.signin;
+          // _appState.viewScreen = ViewScreen.signin;
           _updateAppState(_appState);
         },
         child: const Text("Already have an account?",

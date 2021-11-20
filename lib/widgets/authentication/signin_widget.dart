@@ -33,9 +33,9 @@ class _SignInWidget extends State<SignInWidget> {
   Widget test() {
     return TextButton(
         onPressed: () async {
-          _appState.user = EtebaseUser('', '');
-          _appState.viewScreen = ViewScreen.home;
-          _updateAppState(_appState);
+          // _appState.user = EtebaseUser('', '');
+          // _appState.viewScreen = ViewScreen.home;
+          // _updateAppState(_appState);
         },
         child: const Text(
           'Login',
@@ -152,8 +152,8 @@ class _SignInWidget extends State<SignInWidget> {
       margin: const EdgeInsets.only(top: 10),
       child: InkWell(
         onTap: () {
-          _appState.viewScreen = ViewScreen.signup;
-          _updateAppState(_appState);
+          // _appState.viewScreen = ViewScreen.signup;
+          // _updateAppState(_appState);
         },
         child:
             const Text("Not a member?", style: TextStyle(color: Colors.blue)),
