@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:waultar/etebase/models/etebase_user.dart';
 import 'package:waultar/navigation/app_navigator.dart';
 import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/navigation/screen.dart';
 
 void main() {
-  AppState _appState = AppState(ViewScreen.signin);
+  AppState _appState = AppState(ViewScreen.home, user: EtebaseUser("", ""));
 
   runApp(WaultarApp(_appState));
 }
@@ -33,7 +34,10 @@ class _WaultarApp extends State<WaultarApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Waultar',
-      theme: ThemeData(primarySwatch: Colors.grey, fontFamily: 'Montserrat'),
+      theme: ThemeData(
+          primarySwatch: Colors.grey,
+          scaffoldBackgroundColor: Color(0xFF1F2128),
+          fontFamily: 'Montserrat'),
       home: getAppNavigator(_appState, _updateAppState),
     );
   }

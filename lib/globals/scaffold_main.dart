@@ -14,7 +14,7 @@ _getAppBar(BuildContext context, String? message, Function? onTap) {
 
 SafeArea _getSafeAreaMain(var body) {
   return SafeArea(
-    minimum: EdgeInsets.all(26.0),
+    minimum: EdgeInsets.all(25.0),
     child: Center(
       child: SingleChildScrollView(
         physics: ScrollPhysics(),
@@ -24,7 +24,8 @@ SafeArea _getSafeAreaMain(var body) {
   );
 }
 
-getScaffoldMain(BuildContext context, var body, {String? appBarText, Function? onTapAppBar}) {
+getScaffoldMain(BuildContext context, var body,
+    {String? appBarText, Function? onTapAppBar}) {
   return Scaffold(
     // appBar: _getAppBar(context, appBarText, onTapAppBar),
     body: _getSafeAreaMain(body),
