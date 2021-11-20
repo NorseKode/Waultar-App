@@ -17,7 +17,7 @@ class _UnknownViewState extends State<UnknownView> {
       onPressed: () {
         context.read<AppState>().updateNavigatorState(AppRoutePath.home());
       },
-      child: Text('Go To Home'),
+      child: const Text('Go To Home'),
     );
   }
 
@@ -26,7 +26,7 @@ class _UnknownViewState extends State<UnknownView> {
       onPressed: () {
         context.read<AppState>().updateNavigatorState(AppRoutePath.testScreen1());
       },
-      child: Text('Go To Test Screen'),
+      child: const Text('Go To Test Screen'),
     );
   }
 
@@ -37,7 +37,7 @@ class _UnknownViewState extends State<UnknownView> {
       Center(
         child: Column(
           children: [
-            Text('404'),
+            const Text('404'),
             _goToHome(context),
             _goToTestScreen1Button(),
           ],

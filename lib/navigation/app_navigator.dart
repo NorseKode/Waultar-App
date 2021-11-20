@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/navigation/no_animation_delegate.dart';
 import 'package:waultar/navigation/router/route_path.dart';
 import 'package:waultar/navigation/screen.dart';
@@ -7,7 +6,6 @@ import 'package:waultar/screens/home.dart';
 import 'package:waultar/screens/temp/test1.dart';
 import 'package:waultar/screens/unknown.dart';
 
-import 'router/app_route_path.dart';
 
 Navigator getAppNavigator(RoutePath routePath, ValueChanged<RoutePath> _updateState) {
   return Navigator(
