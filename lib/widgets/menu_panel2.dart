@@ -50,14 +50,24 @@ class _MenuPanel2State extends State<MenuPanel2> {
   Widget build(BuildContext context) {
     return Container(
       color: Color(0xFF1A1D1F),
-      width: 100,
+      width: 80,
       height: MediaQuery.of(context).size.height,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(
             children: [
-              Container(width: 100, height: 100, color: Colors.white),
+              Container(
+                width: 80,
+                height: 80,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Image.asset(
+                    'lib/assets/graphics/Logo.png',
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
               menuItem(Icons.home, MenuScreens.dashboard),
               SizedBox(height: 10),
               menuItem(Icons.block, MenuScreens.datacollection),
