@@ -75,19 +75,17 @@ class _WaultarApp extends State<WaultarApp> {
             var firstTimeUser = _settingsBox.isEmpty;
             if (firstTimeUser)
             {
-              // print('first time user');
               Settings default_settings = Settings();
               _settingsBox.add(default_settings);
               // proceed to load the application with default settings
             }
             else 
             {
-              // print('not first time user');
               // it is not the first time opening the app, and settings are configured
               // proceed to load the application and get the actual settings with this command :
               var content = _settingsBox.values.first;
             }
-            
+
             return const counterPage();
           }
         }
