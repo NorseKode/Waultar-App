@@ -8,7 +8,7 @@ part of 'settings.dart';
 
 class SettingsAdapter extends TypeAdapter<Settings> {
   @override
-  final int typeId = 0;
+  final int typeId = 3;
 
   @override
   Settings read(BinaryReader reader) {
@@ -26,13 +26,15 @@ class SettingsAdapter extends TypeAdapter<Settings> {
   @override
   void write(BinaryWriter writer, Settings obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.darkModeEnabled)
       ..writeByte(1)
       ..write(obj.firstTimeAppUser)
       ..writeByte(2)
-      ..write(obj.email);
+      ..write(obj.email)
+      ..writeByte(3)
+      ..write(obj.key);
   }
 
   @override
