@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
+// ignore: implementation_imports
 import 'package:provider/src/provider.dart';
 import 'package:waultar/globals/scaffold_main.dart';
 import 'package:waultar/navigation/app_state.dart';
-import 'package:waultar/navigation/screen.dart';
+import 'package:waultar/navigation/router/app_route_path.dart';
+import 'package:waultar/navigation/router/route_path.dart';
 
 class HomePageView extends StatefulWidget {  
-  final Function _updateState;
-
-  HomePageView(this._updateState);
-  
   @override
   _HomePageViewState createState() => _HomePageViewState();
 }
@@ -16,10 +14,7 @@ class HomePageView extends StatefulWidget {
 class _HomePageViewState extends State<HomePageView> {
   _navTest(BuildContext context) {
     return ElevatedButton(onPressed: () {
-      var appState = context.read<AppState>();
-      appState.viewScreen = ViewScreen.page2;
-      appState.updateState(appState);
-      // widget._updateState();
+      context.read<AppState>().updateNavigatorState(AppRoutePath.page2());
     } , child: Text('test'));
   }
   

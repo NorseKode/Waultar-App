@@ -22,9 +22,9 @@ class _DashboardState extends State<Dashboard> {
   ElevatedButton _signOutButton() {
     return ElevatedButton(
         onPressed: () {
-          _appState.user = null;
-          _appState.viewScreen = ViewScreen.signin;
-          _updateAppState(_appState);
+          // _appState.user = null;
+          // _appState.viewScreen = ViewScreen.signin;
+          // _updateAppState(_appState);
         },
         child: const Text('Sign out'));
   }

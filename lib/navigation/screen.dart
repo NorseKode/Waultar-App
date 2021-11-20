@@ -3,4 +3,5 @@ enum ViewScreen {
   signup,
   home,
   page2,
+  unknown,
 }
