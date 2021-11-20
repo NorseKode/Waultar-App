@@ -3,9 +3,9 @@ import 'package:waultar/globals/scaffold_main.dart';
 import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/navigation/screen.dart';
 import 'package:waultar/widgets/dashboard.dart';
-
-import 'package:waultar/widgets/menu_panel2.dart';
-import 'package:waultar/widgets/toppanel.dart';
+import 'package:waultar/widgets/menu_screens.dart';
+import 'package:waultar/widgets/menu_panel.dart';
+import 'package:waultar/widgets/top_panel.dart';
 
 class HomePageView extends StatefulWidget {
   final AppState _appState;
@@ -34,13 +34,16 @@ class _HomePageViewState extends State<HomePageView> {
         child: const Text('Sign out'));
   }
 
-  Widget title() {
-    return const Padding(
-      padding: EdgeInsets.all(20),
+  Widget title(String title) {
+    return Padding(
+      padding: const EdgeInsets.all(20),
       child: Text(
-        "Dashboard",
-        style: TextStyle(
-            fontSize: 30, fontWeight: FontWeight.bold, color: Colors.white),
+        title,
+        style: const TextStyle(
+            fontFamily: "Poppins",
+            fontSize: 30,
+            fontWeight: FontWeight.w600,
+            color: Colors.white),
       ),
     );
   }
@@ -51,25 +54,16 @@ class _HomePageViewState extends State<HomePageView> {
         context,
         Row(
           children: [
-            MenuPanel2(),
+            MenuPanel(),
             SizedBox(width: 5),
             Container(
               height: MediaQuery.of(context).size.height,
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: [TopPanel(), title(), Dashboard()]),
+                  children: [TopPanel(), title("Dashboard"), Dashboard()]),
             )
           ],
         ));
   }
 }
-
-      // Center(
-      //   child: Column(
-      //     children: [
-      //       Text('This is the home page'),
-      //       _signOutButton(),
-      //     ],
-      //   ),
-      // ),
