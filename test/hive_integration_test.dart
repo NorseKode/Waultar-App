@@ -24,29 +24,28 @@ void main() {
     initialiseHive();
   });
 
-  group('test sample', () async {
+  group('test sample', () {
 
-    await Hive.openBox<Settings>('settings');
 
     test('given new database has no settings set', () async {
+
+      await Hive.openBox<Settings>('settings');
       var settingsBox = Hive.box<Settings>('settings');
-
       var expected = true;
-
       var actual = settingsBox.isEmpty;
 
       expect(actual, expected);
       expect(settingsBox.length, 0);
     });
     
-    test('given default settings returns darkmode is false', () {
+    test('given default settings returns darkmode is false', () async {
       
+      await Hive.openBox<Settings>('settings');
       var settingBox = Hive.box<Settings>('settings');
       Settings setting = Settings();
       settingBox.add(setting);
 
       expect(setting, settingBox.getAt(0));
-      expect(null, settingBox.getAt(1));
       expect(false, settingBox.getAt(0)?.darkModeEnabled);
     });
 
