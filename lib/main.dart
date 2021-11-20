@@ -26,7 +26,7 @@ class WaultarApp extends StatefulWidget {
 }
 
 class _WaultarApp extends State<WaultarApp> {
-  final AppRouterDelegate _routerDelegate = AppRouterDelegate(AppRoutePath.testScreen1());
+  final AppRouterDelegate _routerDelegate = AppRouterDelegate(AppRoutePath.uploader());
   final AppRouteInformationParser _routeInformationParser = AppRouteInformationParser();
   
   @override

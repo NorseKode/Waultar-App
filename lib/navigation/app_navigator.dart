@@ -5,7 +5,7 @@ import 'package:waultar/navigation/screen.dart';
 import 'package:waultar/screens/home.dart';
 import 'package:waultar/screens/temp/test1.dart';
 import 'package:waultar/screens/unknown.dart';
-
+import 'package:waultar/screens/upload/uploader.dart';
 
 Navigator getAppNavigator(RoutePath routePath, ValueChanged<RoutePath> _updateState) {
   return Navigator(
@@ -25,6 +25,11 @@ Navigator getAppNavigator(RoutePath routePath, ValueChanged<RoutePath> _updateSt
         MaterialPage(
           key: ValueKey('HomePage'),
           child: HomePageView(),
+        ),
+      if (routePath.viewScreen == ViewScreen.uploader)
+        const MaterialPage(
+          key: ValueKey('Uploader'),
+          child: UploaderView(),
         ),
     ],
     onPopPage: (route, result) {

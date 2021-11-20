@@ -3,5 +3,6 @@ enum ViewScreen {
   signup,
   home,
   unknown,
+  uploader,
   testScreen1,
 }
