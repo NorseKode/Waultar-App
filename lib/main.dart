@@ -6,9 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:waultar/navigation/app_navigator.dart';
 import 'package:waultar/navigation/app_state.dart';
-import 'package:waultar/navigation/screen.dart';
+import 'package:waultar/navigation/router/app_route_path.dart';
+
+import 'navigation/router/app_route_information_parser.dart';
+import 'navigation/router/app_router_delegate.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'models/settings.dart';
 
@@ -16,13 +19,10 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(SettingsAdapter());
 
-  await Hive.openBox<int>('testBox');
-
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider<AppState>(
-            create: (_) => AppState(ViewScreen.home)),
+        ChangeNotifierProvider<AppState>(create: (_) => AppState()),
       ],
       child: const WaultarApp(),
     ),
@@ -37,8 +37,7 @@ class WaultarApp extends StatefulWidget {
 }
 
 class _WaultarApp extends State<WaultarApp> {
-
-  FutureBuilder loadApplication(BuildContext context) 
+  /*FutureBuilder loadApplication(BuildContext context) 
   {
     return FutureBuilder(
       future: Hive.openBox<Settings>('settings'), 
@@ -92,12 +91,13 @@ class _WaultarApp extends State<WaultarApp> {
               print(content?.key);
             }
             
+            // reutrnn
             return const CounterPage();
           }
         }
       } 
     );
-  }
+  }*/
 
   @override
   void dispose()
@@ -107,66 +107,29 @@ class _WaultarApp extends State<WaultarApp> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Waultar',
-      theme: ThemeData(primarySwatch: Colors.grey, fontFamily: 'Montserrat'),
-      // home: getAppNavigator(context.read<AppState>()),
-      home: loadApplication(context)
-    );
-  }
-}
-
-class CounterPage extends StatefulWidget {
-  const CounterPage({Key? key}) : super(key: key);
-
-  @override
-  _counterPageState createState() => _counterPageState();
-}
-
-class _counterPageState extends State<CounterPage> {
-  late Box<int> _box;
+  AppRouterDelegate? _routerDelegate;
 
   @override
   void initState() {
+    if (kIsWeb) {
+      _routerDelegate = AppRouterDelegate(AppRoutePath.sigin());
+    } else {
+      _routerDelegate = AppRouterDelegate(AppRoutePath.testScreen1());
+    }
     super.initState();
-    _box = Hive.box<int>('testBox');
   }
+
+  final AppRouteInformationParser _routeInformationParser = AppRouteInformationParser();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Counter test with Hive'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Restart the app to test persistance with Hive'),
-            const SizedBox(
-              height: 8,
-            ),
-            const Text('You have invoked the counter this many times:'),
-            ValueListenableBuilder<Box<int>>(
-              valueListenable: _box.listenable(),
-              builder: (context, box, _) {
-                return Text(
-                  '${box.get('counter', defaultValue: 0)}',
-                  style: Theme.of(context).textTheme.headline4,
-                );
-              },
-            ),
-            IconButton(
-              onPressed: () 
-              {
-                _box.put('counter', _box.get('counter', defaultValue: 0)! + 1);
-              },
-              icon: const Icon(Icons.plus_one)),
-          ],
-        ),
-      ),
+    return MaterialApp.router(
+      title: 'Waultar',
+      theme: ThemeData(primarySwatch: Colors.grey, fontFamily: 'Montserrat'),
+      // home: getAppNavigator(context.read<AppState>()),
+      // home: loadApplication(context)
+      routerDelegate: _routerDelegate!,
+      routeInformationParser: _routeInformationParser,
     );
   }
 }

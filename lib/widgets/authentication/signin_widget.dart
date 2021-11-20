@@ -1,41 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:waultar/etebase/authentication.dart';
-import 'package:waultar/etebase/models/etebase_user.dart';
-import 'package:waultar/globals/globals.dart';
 import 'package:waultar/navigation/app_state.dart';
-import 'package:waultar/navigation/screen.dart';
-import 'package:waultar/widgets/sso.dart';
 
 class SignInWidget extends StatefulWidget {
-  final AppState _appState;
-  final ValueChanged<AppState> _updateAppState;
-
-  SignInWidget(this._appState, this._updateAppState, {Key? key})
-      : super(key: key);
-
   @override
   State<SignInWidget> createState() =>
-      _SignInWidget(_appState, _updateAppState);
+      _SignInWidget();
 }
 
 class _SignInWidget extends State<SignInWidget> {
-  AppState _appState;
-  ValueChanged<AppState> _updateAppState;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  _SignInWidget(this._appState, this._updateAppState);
 
   bool terms = false;
 
   Widget test() {
     return TextButton(
         onPressed: () async {
-          _appState.user = EtebaseUser('', '');
-          _appState.viewScreen = ViewScreen.home;
-          _updateAppState(_appState);
+          // _appState.user = EtebaseUser('', '');
+          // _appState.viewScreen = ViewScreen.home;
+          // _updateAppState(_appState);
         },
         child: const Text(
           'Login',
@@ -152,8 +137,8 @@ class _SignInWidget extends State<SignInWidget> {
       margin: const EdgeInsets.only(top: 10),
       child: InkWell(
         onTap: () {
-          _appState.viewScreen = ViewScreen.signup;
-          _updateAppState(_appState);
+          // _appState.viewScreen = ViewScreen.signup;
+          // _updateAppState(_appState);
         },
         child:
             const Text("Not a member?", style: TextStyle(color: Colors.blue)),
