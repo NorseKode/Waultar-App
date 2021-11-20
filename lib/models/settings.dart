@@ -1,9 +1,16 @@
 import 'package:hive/hive.dart';
+part 'settings.g.dart';
 
-@HiveType(typeId: 0)
+@HiveType(adapterName: 'SettingsAdapter', typeId: 0)
 class Settings {
   @HiveField(0)
-  bool darkModeEnabled;
+  final bool darkModeEnabled;
 
-  Settings({this.darkModeEnabled = false});
+  @HiveField(1)
+  final bool firstTimeAppUser;
+
+  @HiveField(2)
+  final String ?email;
+
+  Settings({this.darkModeEnabled = false, this.firstTimeAppUser = true, this.email});
 }
