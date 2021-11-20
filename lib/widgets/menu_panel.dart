@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'menu_item.dart';
 import 'menu_screens.dart';
 
 class MenuPanel extends StatefulWidget {
@@ -13,6 +12,35 @@ class MenuPanel extends StatefulWidget {
 
 class _MenuPanelState extends State<MenuPanel> {
   var active = MenuScreens.dashboard;
+
+  Widget menuItem(IconData icon, MenuScreens view) {
+    return SizedBox(
+      width: 45,
+      height: 45,
+      child: TextButton(
+        onPressed: () {
+          setState(() {
+            active = view;
+          });
+        },
+        style: active != view
+            ? ButtonStyle(
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12))),
+              )
+            : ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Color(0xFF272B30)),
+                elevation: MaterialStateProperty.all(5),
+                side: MaterialStateProperty.all(
+                    BorderSide(color: Color(0xFF272B30), width: 1)),
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12))),
+                shadowColor: MaterialStateProperty.all(Color(0xFF000000))),
+        child: Icon(icon,
+            color: active != view ? Color(0xFF65696F) : Colors.white),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,30 +64,13 @@ class _MenuPanelState extends State<MenuPanel> {
                 ),
               ),
               SizedBox(height: 10),
-              MenuItem(
-                  active: active,
-                  icon: FontAwesomeIcons.chartBar,
-                  view: MenuScreens.dashboard),
+              menuItem(FontAwesomeIcons.chartBar, MenuScreens.dashboard),
               SizedBox(height: 10),
-              MenuItem(
-                  active: active,
-                  icon: FontAwesomeIcons.gem,
-                  view: MenuScreens.datacollection),
+              menuItem(FontAwesomeIcons.gem, MenuScreens.datacollection),
               SizedBox(height: 10),
-              MenuItem(
-                  active: active,
-                  icon: FontAwesomeIcons.images,
-                  view: MenuScreens.imagelibrary),
+              menuItem(FontAwesomeIcons.images, MenuScreens.imagelibrary),
               SizedBox(height: 10),
-              MenuItem(
-                  active: active,
-                  icon: FontAwesomeIcons.questionCircle,
-                  view: MenuScreens.support),
-              SizedBox(height: 10),
-              MenuItem(
-                  active: active,
-                  icon: FontAwesomeIcons.cog,
-                  view: MenuScreens.settings),
+              menuItem(FontAwesomeIcons.questionCircle, MenuScreens.support),
             ],
           ),
           Column(
@@ -69,10 +80,7 @@ class _MenuPanelState extends State<MenuPanel> {
                   child: Divider(
                       height: 5, thickness: 2, color: Color(0xFF65696F))),
               SizedBox(height: 10),
-              MenuItem(
-                  active: active,
-                  icon: FontAwesomeIcons.arrowLeft,
-                  view: MenuScreens.none),
+              menuItem(FontAwesomeIcons.arrowLeft, MenuScreens.none),
               SizedBox(height: 22.5),
             ],
           ),

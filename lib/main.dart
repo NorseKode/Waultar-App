@@ -37,7 +37,7 @@ class _WaultarApp extends State<WaultarApp> {
       theme: ThemeData(
           primarySwatch: Colors.grey,
           scaffoldBackgroundColor: Color(0xFF111315),
-          fontFamily: 'Inter'),
+          fontFamily: 'Inter'), // theme: widget.themeProvider.themeData(),
       home: getAppNavigator(_appState, _updateAppState),
     );
   }
