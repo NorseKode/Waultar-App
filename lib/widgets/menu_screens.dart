@@ -4,5 +4,7 @@ enum MenuScreens {
   imagelibrary,
   settings,
   support,
+  darkmode,
+  signout,
   none
 }

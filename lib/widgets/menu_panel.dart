@@ -80,7 +80,9 @@ class _MenuPanelState extends State<MenuPanel> {
                   child: Divider(
                       height: 5, thickness: 2, color: Color(0xFF65696F))),
               SizedBox(height: 10),
-              menuItem(FontAwesomeIcons.arrowLeft, MenuScreens.none),
+              menuItem(FontAwesomeIcons.adjust, MenuScreens.darkmode),
+              SizedBox(height: 10),
+              menuItem(FontAwesomeIcons.arrowLeft, MenuScreens.signout),
               SizedBox(height: 22.5),
             ],
           ),

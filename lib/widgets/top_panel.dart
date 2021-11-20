@@ -11,6 +11,8 @@ class TopPanel extends StatefulWidget {
 }
 
 class _TopPanelState extends State<TopPanel> {
+  var settings = false;
+
   Widget searchBar() {
     return Container(
         padding: EdgeInsets.all(10),
@@ -50,13 +52,25 @@ class _TopPanelState extends State<TopPanel> {
       height: 45,
       child: TextButton(
         onPressed: () {
-          print("You pressed: settings");
+          setState(() {
+            settings = !settings;
+          });
         },
-        style: ButtonStyle(
-          shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
-        ),
-        child: const Icon(FontAwesomeIcons.cog, color: Color(0xFF65696F)),
+        style: !settings
+            ? ButtonStyle(
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12))),
+              )
+            : ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(Color(0xFF272B30)),
+                elevation: MaterialStateProperty.all(5),
+                side: MaterialStateProperty.all(
+                    BorderSide(color: Color(0xFF272B30), width: 1)),
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12))),
+                shadowColor: MaterialStateProperty.all(Color(0xFF000000))),
+        child: Icon(FontAwesomeIcons.cog,
+            color: !settings ? Color(0xFF65696F) : Colors.white),
       ),
     );
   }
