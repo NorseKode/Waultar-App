@@ -49,6 +49,15 @@ void main() {
       expect(false, settingBox.getAt(0)?.darkModeEnabled);
     });
 
+    test('given already added setting, returns the setting', () async {
+
+      await Hive.openBox<Settings>('settings');
+      var settingBox = Hive.box<Settings>('settings');
+      Settings? actual = settingBox.get(0);
+
+      expect(actual?.key, 'settings');
+    });
+
   });
   
   // tear down once after all test cases
