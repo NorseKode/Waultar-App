@@ -33,13 +33,16 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return getScaffoldMain(
       context,
-      Center(
-        child: Column(
-          children: [
-            Text('This is the dashboard page'),
-            _signOutButton(),
-          ],
-        ),
+      Row(
+        children: [
+          // Column(children: [Text("Logo and name"), Menu(), ProfileMenu()],),
+          Column(
+            children: [
+              //Row(children: [Text("Dashboard"), DashboardAddButton()]),
+              Column()
+            ],
+          )
+        ],
       ),
     );
   }
