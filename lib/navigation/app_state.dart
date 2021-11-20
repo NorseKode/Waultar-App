@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 import 'router/route_path.dart';
 
 class AppState with ChangeNotifier {
-  ValueChanged<RoutePath>? updateNavigatorFun;
+  ValueChanged<RoutePath>? _updateNavigatorFun;
   
   AppState();
   
+  set setNavigationFun(ValueChanged<RoutePath> fun) => _updateNavigatorFun = fun;
+  
   updateNavigatorState(RoutePath routePath) {
-    if (updateNavigatorFun != null) {
-      updateNavigatorFun!(routePath);
+    if (_updateNavigatorFun != null) {
+      _updateNavigatorFun!(routePath);
     } else {
-      throw FormatException('Unexpected null value', updateNavigatorFun);
+      throw FormatException('Unexpected null value', _updateNavigatorFun);
     }
   }
 }

@@ -18,8 +18,8 @@ class AppRouterDelegate extends RouterDelegate<AppRoutePath> with ChangeNotifier
   }
 
   @override
-  Widget build(BuildContext context) {
-    context.read<AppState>().updateNavigatorFun = _updateNavigationState;
+  Widget build(BuildContext context) {  
+    context.read<AppState>().setNavigationFun = _updateNavigationState;
     return getAppNavigator(_routePath, _updateNavigationState);
   }
 

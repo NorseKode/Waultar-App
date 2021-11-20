@@ -4,7 +4,8 @@ import 'package:waultar/navigation/no_animation_delegate.dart';
 import 'package:waultar/navigation/router/route_path.dart';
 import 'package:waultar/navigation/screen.dart';
 import 'package:waultar/screens/home.dart';
-import 'package:waultar/screens/page2.dart';
+import 'package:waultar/screens/temp/test1.dart';
+import 'package:waultar/screens/unknown.dart';
 
 import 'router/app_route_path.dart';
 
@@ -12,16 +13,21 @@ Navigator getAppNavigator(RoutePath routePath, ValueChanged<RoutePath> _updateSt
   return Navigator(
     transitionDelegate: NoAnimationTransitionDelegate(),
     pages: [
+      if (routePath.viewScreen == ViewScreen.testScreen1)
+        const MaterialPage(
+          key: ValueKey('TestScreen'),
+          child: TestView1(),
+        ),
+      if (routePath.viewScreen == ViewScreen.unknown)
+        const MaterialPage(
+          key: ValueKey('Unknown'),
+          child: UnknownView(),
+        ),
       if (routePath.viewScreen == ViewScreen.home)
         MaterialPage(
           key: ValueKey('HomePage'),
           child: HomePageView(),
         ),
-      if (routePath.viewScreen == ViewScreen.page2)
-        const MaterialPage(
-          key: ValueKey('Page2'),
-          child: Page2(),
-        )
     ],
     onPopPage: (route, result) {
       if (!route.didPop(result)) return false;

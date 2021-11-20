@@ -1,6 +1,6 @@
 import 'package:waultar/navigation/screen.dart';
 
-class RoutePath {
+abstract class RoutePath {
   ViewScreen viewScreen;
 
   RoutePath() : viewScreen = ViewScreen.unknown;

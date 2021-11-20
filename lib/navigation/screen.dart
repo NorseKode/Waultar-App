@@ -2,6 +2,6 @@ enum ViewScreen {
   signin,
   signup,
   home,
-  page2,
   unknown,
+  testScreen1,
 }
