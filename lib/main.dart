@@ -78,8 +78,8 @@ class _WaultarApp extends State<WaultarApp> {
             if (firstTimeUser)
             {
               print('first time user');
-              Settings default_settings = Settings();
-              _settingsBox.add(default_settings);
+              Settings defaultSettings = Settings();
+              _settingsBox.add(defaultSettings);
               // proceed to load the application with default settings
             }
             else 
@@ -92,7 +92,7 @@ class _WaultarApp extends State<WaultarApp> {
               print(content?.key);
             }
             
-            return const counterPage();
+            return const CounterPage();
           }
         }
       } 
@@ -118,14 +118,14 @@ class _WaultarApp extends State<WaultarApp> {
   }
 }
 
-class counterPage extends StatefulWidget {
-  const counterPage({Key? key}) : super(key: key);
+class CounterPage extends StatefulWidget {
+  const CounterPage({Key? key}) : super(key: key);
 
   @override
   _counterPageState createState() => _counterPageState();
 }
 
-class _counterPageState extends State<counterPage> {
+class _counterPageState extends State<CounterPage> {
   late Box<int> _box;
 
   @override
@@ -138,17 +138,17 @@ class _counterPageState extends State<counterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Counter test with Hive'),
+        title: const Text('Counter test with Hive'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Restart the app to test persistance with Hive'),
-            SizedBox(
+            const Text('Restart the app to test persistance with Hive'),
+            const SizedBox(
               height: 8,
             ),
-            Text('You have invoked the counter this many times:'),
+            const Text('You have invoked the counter this many times:'),
             ValueListenableBuilder<Box<int>>(
               valueListenable: _box.listenable(),
               builder: (context, box, _) {
@@ -159,11 +159,11 @@ class _counterPageState extends State<counterPage> {
               },
             ),
             IconButton(
-                onPressed: () 
-                {
-                  _box.put('counter', _box.get('counter', defaultValue: 0)! + 1);
-                },
-                icon: Icon(Icons.plus_one)),
+              onPressed: () 
+              {
+                _box.put('counter', _box.get('counter', defaultValue: 0)! + 1);
+              },
+              icon: const Icon(Icons.plus_one)),
           ],
         ),
       ),
