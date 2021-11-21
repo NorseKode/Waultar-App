@@ -4,7 +4,7 @@ import 'package:waultar/etebase/models/etebase_user.dart';
 import 'package:waultar/globals/globals.dart';
 import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/navigation/screen.dart';
-import 'package:waultar/widgets/sso.dart';
+import 'package:waultar/widgets/authentication/sso.dart';
 
 class SignInWidget extends StatefulWidget {
   final AppState _appState;

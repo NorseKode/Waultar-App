@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:waultar/image_parser/image_parser.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
