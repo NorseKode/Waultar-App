@@ -1,6 +1,6 @@
 import 'dart:io';
 
-List<File> _getImages(List<File> fileList) {
+List<File> getImages(List<File> fileList) {
   var imageFormats = ['.jpg', '.jpeg', '.png', '.tif', '.tiff', '.gif'];
 
   var images = fileList
@@ -11,7 +11,7 @@ List<File> _getImages(List<File> fileList) {
   return List.generate(images.length, (index) => File(images[index]));
 }
 
-List<List<File>> _sortListToFormatSubList(List<File> fileList) {
+List<List<File>> sortListToFormatSubList(List<File> fileList) {
   var imageFormats = [
     '.jpg',
     '.jpeg',
@@ -25,7 +25,7 @@ List<List<File>> _sortListToFormatSubList(List<File> fileList) {
   var pathMap = fileList.map((item) => item.path);
 
   List<List<File>> listOfLists = [];
-  imageFormats.forEach((format) async {
+  imageFormats.forEach((format) {
     List<File> s = [];
     pathMap.forEach((item) => item.endsWith(format)
         ? s.add(File(item))

@@ -1,9 +1,5 @@
 import 'dart:io';
-import 'package:waultar/screens/temp/test1.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:waultar/models/settings.dart';
-import 'package:waultar/widgets/upload/uploader.dart';
 import 'package:waultar/screens/temp/file_sorting.dart';
 
 void main() {
@@ -41,38 +37,22 @@ void main() {
   });
 
   group('file sorter - sortFileLists', () {
-    List<List<File>> _sortFileLists(List<File> fileList) {
-      var imageFormats = ['.jpg', '.jpeg', '.png', '.tif', '.tiff', '.gif'];
-      var pathMap = fileList.map((item) => item.path);
-
-      List<List<File>> listOfLists = [];
-      imageFormats.forEach((format) async {
-        List<File> s = [];
-        pathMap.forEach((item) => item.endsWith(format)
-            ? s.add(File(item))
-            : {pathMap.iterator.moveNext()});
-
-        if (s.isNotEmpty) listOfLists.add(s);
-      });
-      return listOfLists;
-    }
-
-    test("test1 - given empty list returns empty list", () async {
-      print("test1 - given empty list returns empty list");
+    test("test3 - given empty list returns empty list", () async {
+      print("test3 - given empty list returns empty list");
       List<File> fileList = [];
-      var actual = _sortFileLists(fileList);
+      var actual = sortListToFormatSubList(fileList);
       expect(actual, []);
     });
 
-    test("test2 - given list returns list with lists", () async {
-      print("test2 - given list returns list with lists");
+    test("test4 - given list returns list with lists", () async {
+      print("test4 - given list returns list with lists");
       List<File> fileList = [
         File("/lib/assets/Paws_blue.png"),
         File("file.html"),
         File("image.jpeg")
       ];
-      var actual = _sortFileLists(fileList).length;
-      expect(actual, 2);
+      var actual = sortListToFormatSubList(fileList).length;
+      expect(actual, 3);
     });
   });
 
