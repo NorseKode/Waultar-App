@@ -4,22 +4,12 @@ import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/widgets/authentication/signin_widget.dart';
 
 class SignInView extends StatefulWidget {
-  final AppState _appState;
-  final ValueChanged<AppState> _updateAppState;
-
-  SignInView(this._appState, this._updateAppState);
-
   @override
   _SignInViewState createState() =>
-      _SignInViewState(_appState, _updateAppState);
+      _SignInViewState();
 }
 
 class _SignInViewState extends State<SignInView> {
-  AppState _appState;
-  ValueChanged<AppState> _updateAppState;
-
-  _SignInViewState(this._appState, this._updateAppState);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +39,7 @@ class _SignInViewState extends State<SignInView> {
             Center(
                 child: SingleChildScrollView(
                     child: Center(
-              child: SignInWidget(_appState, _updateAppState),
+              child: SignInWidget(),
             ))),
           ])),
     );

@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:waultar/navigation/no_animation_delegate.dart';
 import 'package:waultar/navigation/router/route_path.dart';
 import 'package:waultar/navigation/screen.dart';
+import 'package:waultar/screens/authentication/signin.dart';
 import 'package:waultar/screens/home.dart';
 import 'package:waultar/screens/temp/test1.dart';
 import 'package:waultar/screens/unknown.dart';
 import 'package:waultar/widgets/upload/uploader.dart';
 
-Navigator getAppNavigator(RoutePath routePath, ValueChanged<RoutePath> _updateState) {
+import 'app_state.dart';
+
+Navigator getAppNavigator(AppState appState, RoutePath routePath, ValueChanged<RoutePath> _updateState) {
   return Navigator(
     transitionDelegate: NoAnimationTransitionDelegate(),
     pages: [
@@ -30,6 +33,10 @@ Navigator getAppNavigator(RoutePath routePath, ValueChanged<RoutePath> _updateSt
         const MaterialPage(
           key: ValueKey('Uploader'),
           child: UploaderView(),
+      if (routePath.viewScreen == ViewScreen.signin && appState.user == null)
+        MaterialPage(
+          key: ValueKey('SignIn'),
+          child: SignInView(),
         ),
     ],
     onPopPage: (route, result) {
