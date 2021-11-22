@@ -1,12 +1,12 @@
-import 'dart:html';
+// import 'dart:html';
 
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 
-void imageCapture(List<File> fileList) {
-  var imageList = fileList
-      .map((item) => item.relativePath)
-      .where((item) => item!.endsWith(".png"))
-      .toList(growable: false);
+// void imageCapture(List<File> fileList) {
+//   var imageList = fileList
+//       .map((item) => item.relativePath)
+//       .where((item) => item!.endsWith(".png"))
+//       .toList(growable: false);
 
-  print(imageList.first.toString());
-}
+//   print(imageList.first.toString());
+// }

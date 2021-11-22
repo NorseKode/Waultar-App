@@ -8,21 +8,15 @@ import 'package:waultar/widgets/general/menu_panel.dart';
 import 'package:waultar/widgets/general/top_panel.dart';
 
 class HomePageView extends StatefulWidget {
-  final AppState _appState;
-  final ValueChanged<AppState> _updateAppState;
 
-  HomePageView(this._appState, this._updateAppState);
 
   @override
   _HomePageViewState createState() =>
-      _HomePageViewState(_appState, _updateAppState);
+      _HomePageViewState();
 }
 
 class _HomePageViewState extends State<HomePageView> {
-  AppState _appState;
-  ValueChanged<AppState> _updateAppState;
 
-  _HomePageViewState(this._appState, this._updateAppState);
 
   // ElevatedButton _signOutButton() {
   //   return ElevatedButton(
