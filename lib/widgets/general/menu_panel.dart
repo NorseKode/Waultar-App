@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +14,7 @@ class MenuPanel extends StatefulWidget {
 
 class _MenuPanelState extends State<MenuPanel> {
   var active = MenuScreens.dashboard;
-  var themeProvider;
+  late ThemeProvider themeProvider;
 
   Widget menuItem(IconData icon, MenuScreens view, {VoidCallback? onPressed}) {
     return SizedBox(
@@ -33,26 +32,29 @@ class _MenuPanelState extends State<MenuPanel> {
                     borderRadius: BorderRadius.circular(12))),
               )
             : ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Color(0xFF272B30)),
+                backgroundColor: MaterialStateProperty.all(
+                    themeProvider.themeMode().buttonColor),
                 elevation: MaterialStateProperty.all(5),
-                side: MaterialStateProperty.all(
-                    BorderSide(color: Color(0xFF272B30), width: 1)),
+                side: MaterialStateProperty.all(BorderSide(
+                    color: themeProvider.themeMode().buttonColor, width: 1)),
                 shape: MaterialStateProperty.all(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12))),
-                shadowColor: MaterialStateProperty.all(Color(0xFF000000))),
+                shadowColor: MaterialStateProperty.all(
+                    themeProvider.themeMode().shadowColor)),
         child: Icon(icon,
-            color: active != view ? Color(0xFF65696F) : Colors.white),
+            color: active != view
+                ? themeProvider.themeMode().secondaryColor
+                : themeProvider.themeMode().iconColor),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    print("Build menu_panel");
     themeProvider = Provider.of<ThemeProvider>(context);
 
     return Container(
-      color: Color(0xFF1A1D1F),
+      color: themeProvider.themeData().primaryColor,
       width: 80,
       height: MediaQuery.of(context).size.height,
       child: Column(
@@ -67,6 +69,7 @@ class _MenuPanelState extends State<MenuPanel> {
                   padding: const EdgeInsets.all(20.0),
                   child: Image.asset(
                     'lib/assets/graphics/Logo.png',
+                    color: themeProvider.themeMode().iconColor,
                   ),
                 ),
               ),
@@ -84,8 +87,10 @@ class _MenuPanelState extends State<MenuPanel> {
             children: [
               Container(
                   width: 45,
-                  child: const Divider(
-                      height: 5, thickness: 2, color: Color(0xFF65696F))),
+                  child: Divider(
+                      height: 5,
+                      thickness: 2,
+                      color: themeProvider.themeMode().secondaryColor)),
               SizedBox(height: 10),
               menuItem(FontAwesomeIcons.adjust, MenuScreens.darkmode,
                   onPressed: () async {

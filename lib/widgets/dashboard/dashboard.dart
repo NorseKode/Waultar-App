@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:waultar/image_parser/image_parser.dart';
+import 'package:provider/provider.dart';
+import 'package:waultar/providers/theme_provider.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -11,6 +12,8 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
+
     return Expanded(
       child: Padding(
         padding:
@@ -20,7 +23,7 @@ class _DashboardState extends State<Dashboard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-                color: Color(0xFF1A1D1F),
+                color: themeProvider.themeData().primaryColor,
                 width: MediaQuery.of(context).size.width - 125,
                 height: 2000),
           ],

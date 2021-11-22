@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import 'menu_screens.dart';
+import 'package:provider/provider.dart';
+import 'package:waultar/providers/theme_provider.dart';
 
 class TopPanel extends StatefulWidget {
   const TopPanel({Key? key}) : super(key: key);
@@ -12,33 +12,35 @@ class TopPanel extends StatefulWidget {
 
 class _TopPanelState extends State<TopPanel> {
   var settings = false;
+  late ThemeProvider themeProvider;
 
   Widget searchBar() {
     return Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         height: 40,
         decoration: BoxDecoration(
-            color: Color(0xFF272B30), borderRadius: BorderRadius.circular(12)),
-        child: Row(children: const [
+            color: themeProvider.themeMode().buttonColor,
+            borderRadius: BorderRadius.circular(12)),
+        child: Row(children: [
           Icon(
             Icons.search,
-            color: Color(0xFF65696F),
+            color: themeProvider.themeMode().secondaryColor,
             size: 20,
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           SizedBox(
             width: 250,
             child: TextField(
               decoration: InputDecoration(
                 hintText: 'Search or type a command',
                 hintStyle: TextStyle(
-                  color: Color(0xFF65696F),
+                  color: themeProvider.themeMode().secondaryColor,
                   fontSize: 15,
                 ),
                 border: InputBorder.none,
               ),
               style: TextStyle(
-                color: Colors.white,
+                color: themeProvider.themeData().textTheme.bodyText1!.color,
                 fontSize: 15,
               ),
             ),
@@ -62,25 +64,31 @@ class _TopPanelState extends State<TopPanel> {
                     borderRadius: BorderRadius.circular(12))),
               )
             : ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Color(0xFF272B30)),
+                backgroundColor: MaterialStateProperty.all(
+                    themeProvider.themeMode().buttonColor),
                 elevation: MaterialStateProperty.all(5),
-                side: MaterialStateProperty.all(
-                    BorderSide(color: Color(0xFF272B30), width: 1)),
+                side: MaterialStateProperty.all(BorderSide(
+                    color: themeProvider.themeMode().buttonColor, width: 1)),
                 shape: MaterialStateProperty.all(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12))),
-                shadowColor: MaterialStateProperty.all(Color(0xFF000000))),
+                shadowColor: MaterialStateProperty.all(
+                    themeProvider.themeMode().shadowColor)),
         child: Icon(FontAwesomeIcons.cog,
-            color: !settings ? Color(0xFF65696F) : Colors.white),
+            color: !settings
+                ? themeProvider.themeMode().secondaryColor
+                : themeProvider.themeMode().iconColor),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    themeProvider = Provider.of<ThemeProvider>(context);
+
     return Container(
         height: 80,
         width: MediaQuery.of(context).size.width - 85,
-        color: const Color(0xFF1A1D1F),
+        color: themeProvider.themeData().primaryColor,
         child: Row(
           children: [
             Padding(
@@ -94,7 +102,8 @@ class _TopPanelState extends State<TopPanel> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(30.0),
                 child: ColorFiltered(
-                  colorFilter: ColorFilter.mode(Colors.blue, BlendMode.darken),
+                  colorFilter: ColorFilter.mode(
+                      themeProvider.themeMode().themeColor, BlendMode.darken),
                   child: Image.asset(
                     'lib/assets/graphics/Logo.png',
                     width: 40.0,
