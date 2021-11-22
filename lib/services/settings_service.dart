@@ -13,6 +13,11 @@ class SettingsService {
   bool getDarkMode() => settingsBox.get('darkmode');
 
   ValueListenable listenForDarkmode() => settingsBox.listenable(keys: ['darkmode']);
-  
+
+  bool isBoxEmpty() => settingsBox.isEmpty;
+
+  bool isBoxOpen() => settingsBox.isOpen;
+
+  int getLengthOfBox() => settingsBox.length;
   
 }
