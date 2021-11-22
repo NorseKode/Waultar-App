@@ -6,10 +6,9 @@ part 'todos_dao.g.dart';
 
 @DriftAccessor(tables: [Todos])
 class TodosDao extends DatabaseAccessor<WaultarDb> with _$TodosDaoMixin {
-
   TodosDao(WaultarDb attachedDatabase) : super(attachedDatabase);
 
-    Stream<List<Todo>> todosInCategory(Categorie category) {
+  Stream<List<Todo>> todosInCategory(Categorie category) {
     if (category == null) {
       // ignore: deprecated_member_use
       return (select(todos)..where((t) => isNull(t.category))).watch();
@@ -17,5 +16,13 @@ class TodosDao extends DatabaseAccessor<WaultarDb> with _$TodosDaoMixin {
       return (select(todos)..where((t) => t.category.equals(category.id)))
           .watch();
     }
+  }
+
+  Future<int> addTodo(TodosCompanion todo) {
+    return into(todos).insert(todo);
+  }
+
+  Stream<Todo> getTodoById(int id) {
+    return (select(todos)..where((t) => t.id.equals(id))).watchSingle();
   }
 }

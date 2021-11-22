@@ -32,6 +32,7 @@ LazyDatabase _openConnection()
 class WaultarDb extends _$WaultarDb
 {
   WaultarDb() : super(_openConnection());
+  WaultarDb.testing(QueryExecutor q) : super(q);
 
   // enabling isolation
   // WaultarDb.connect(DatabaseConnection connection) : super.connect(connection);
