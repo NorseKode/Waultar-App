@@ -13,15 +13,17 @@ void main() async {
     await Hive.deleteFromDisk();
   });
 
-  
+
   group('test sample', () {
     test('given new database has no settings set', () async {
       SettingsService _service = locator<SettingsService>();
       var empty = _service.isBoxEmpty();
       var length = _service.getLengthOfBox();
+      var darkmode = _service.getDarkMode();
 
-      expect(empty, true);
-      expect(length, 0);
+      expect(empty, false);
+      expect(length, 2);
+      expect(darkmode, false);
     });
 
     test('toogle dark mode', () async {
