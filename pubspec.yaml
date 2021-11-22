@@ -44,6 +44,16 @@ dependencies:
   hive: ^2.0.4
   hive_flutter: ^1.1.0 
 
+  # to use drift query APIs with the sqlite3 lib
+  drift: ^1.0.1 
+
+  # ships the latest sqlite3 version with the android and iOS build. Not on other platforms.
+  sqlite3_flutter_libs: ^0.5.1
+
+  # Used to find a suitable location to store the db file. 
+  path_provider: ^2.0.7
+  path: ^1.8.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -58,6 +68,8 @@ dev_dependencies:
   # will generate the Hive adapters for our models
   hive_generator: ^1.1.1
   build_runner: ^2.1.5
+
+  drift_dev: ^1.0.2
 
 
 # For information on the generic Dart part of this file, see the

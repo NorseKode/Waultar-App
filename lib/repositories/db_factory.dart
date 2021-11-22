@@ -20,10 +20,6 @@ class DbFactory {
   LazyBox get settingsBox => _settingsBox;
   Future<void> openSettings() async => _settingsBox = await Hive.openLazyBox('settings');
   
-
-
-
-
   void registerAdapters() 
   {
     Hive.registerAdapter(SettingsAdapter());
@@ -34,6 +30,5 @@ class DbFactory {
     this._settingsRepository = new SettingsRepository(_settingsBox);
   }
 
-
-
 }
+
