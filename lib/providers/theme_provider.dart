@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-//import 'package:hive/hive.dart';
+import 'package:waultar/services/startup.dart';
+import 'package:waultar/services/settings_service.dart';
 
 class ThemeProvider with ChangeNotifier {
-  bool isLightTheme;
+  final SettingsService _settingsService = locator<SettingsService>();
 
-  ThemeProvider({required this.isLightTheme});
+  late bool isLightTheme;
 
-  // use to toggle the theme
+  ThemeProvider() {
+    isLightTheme = _settingsService.getDarkMode();
+  }
+
+  
   toggleThemeData() async {
-    //final settings = await Hive.openBox('settings');
-    //settings.put('isLightTheme', !isLightTheme);
     isLightTheme = !isLightTheme;
+    _settingsService.toogleDarkMode(isLightTheme);
     notifyListeners();
   }
 

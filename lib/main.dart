@@ -15,11 +15,11 @@ import 'navigation/router/app_route_information_parser.dart';
 import 'navigation/router/app_router_delegate.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-import 'models/settings.dart';
+import 'services/startup.dart';
 
 void main() async {
-  await Hive.initFlutter();
-  Hive.registerAdapter(SettingsAdapter());
+
+  await setupServices();
 
   runApp(
     MultiProvider(
@@ -39,71 +39,10 @@ class WaultarApp extends StatefulWidget {
 }
 
 class _WaultarApp extends State<WaultarApp> {
-  /*FutureBuilder loadApplication(BuildContext context) 
-  {
-    return FutureBuilder(
-      future: Hive.openBox<Settings>('settings'), 
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done)
-        {
-          return Scaffold(
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text('Loading ...'),
-                  CircularProgressIndicator(),
-                ],
-              ),
-            ),
-          );
-        }
-        else 
-        {
-          if (snapshot.error != null)
-          {
-            print(snapshot.error);
-            return const Scaffold(
-              body: Center(
-                child: Text('Something went wrong'),
-              ),
-            );
-          }
-          else 
-          {
-            var _settingsBox = Hive.box<Settings>('settings');
-
-            // if the settings box is empty, the app is run for the first time at the client
-            // thus, we will seed settings with some default settings
-            var firstTimeUser = _settingsBox.isEmpty;
-            if (firstTimeUser)
-            {
-              print('first time user');
-              Settings defaultSettings = Settings();
-              _settingsBox.add(defaultSettings);
-              // proceed to load the application with default settings
-            }
-            else 
-            {
-              print('not first time user');
-              // it is not the first time opening the app, and settings are configured
-              // proceed to load the application and get the actual settings with this command :
-              // var content = _settingsBox.get('settings');
-              var content = _settingsBox.get(0);
-              print(content?.key);
-            }
-            
-            // reutrnn
-            return const CounterPage();
-          }
-        }
-      } 
-    );
-  }*/
-
+  
   @override
-  void dispose() {
-    // closes all Hive boxes
+  void dispose()
+  {
     Hive.close();
     super.dispose();
   }
@@ -127,12 +66,11 @@ class _WaultarApp extends State<WaultarApp> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Waultar',
+      // theme: ThemeData(primarySwatch: Colors.grey, fontFamily: 'Montserrat'),
       theme: ThemeData(
           primarySwatch: Colors.grey,
           scaffoldBackgroundColor: Color(0xFF111315),
           fontFamily: 'Inter'),
-      // home: getAppNavigator(context.read<AppState>()),
-      // home: loadApplication(context)
       routerDelegate: _routerDelegate!,
       routeInformationParser: _routeInformationParser,
     );
