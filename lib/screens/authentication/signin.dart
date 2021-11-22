@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:waultar/image_parser/image_parser.dart';
 import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/widgets/authentication/signin_widget.dart';
 

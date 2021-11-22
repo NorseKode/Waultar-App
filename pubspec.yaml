@@ -44,6 +44,7 @@ dependencies:
 
   hive: ^2.0.4
   hive_flutter: ^1.1.0 
+  font_awesome_flutter: ^9.2.0
 
 dev_dependencies:
   flutter_test:
@@ -93,12 +94,28 @@ flutter:
           style: italic
         - asset: lib/assets/san_francisco_font/SF-Pro-Display-Bold.otf
           weight: 700
+    - family: Poppins
+      fonts:
+        - asset: lib/assets/poppins/Poppins-Regular.ttf
+        - asset: lib/assets/poppins/Poppins-Medium.ttf
+          weight: 500
+        - asset: lib/assets/poppins/Poppins-SemiBold.ttf
+          weight: 400
+        - asset: lib/assets/poppins/Poppins-Bold.ttf
+          weight: 700
+    - family: Inter
+      fonts:
+        - asset: lib/assets/inter/Inter-Regular.ttf
+        - asset: lib/assets/inter/Inter-Bold.ttf
+          weight: 700     
   
   assets:
     - lib/assets/graphics/data_graphic.png
     - lib/assets/graphics/Paw.svg
     - lib/assets/graphics/Paw_Circle.svg
     - lib/assets/graphics/Paws_blue.png
+    - lib/assets/graphics/Logo.png
+    - lib/assets/graphics/placeholder.jfif
 
   # To add assets to your application, add an assets section, like this:
   # assets:
