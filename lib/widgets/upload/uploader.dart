@@ -11,17 +11,15 @@ class UploaderComponent extends StatefulWidget {
 }
 
 class _UploaderComponentState extends State<UploaderComponent> {
-  _uploadSingleFileButton(BuildContext context) {
+  _uploadFilesButton(BuildContext context, bool isFile) {
     return ElevatedButton(
       onPressed: () async {
-        var file = await FileUploader.uploadSingle();
-        if (file != null) {
-          print(file.path);
-        }
+        var file =
+            isFile ? await FileUploader.uploadMultiple() : await FileUploader.uploadDirectory();
 
         Navigator.pop(context, file);
       },
-      child: const Text('Press'),
+      child: Text(isFile ? 'Upload file' : 'Upload folder'),
     );
   }
 
@@ -33,7 +31,8 @@ class _UploaderComponentState extends State<UploaderComponent> {
         child: Column(
           children: [
             const Text('uploader'),
-            _uploadSingleFileButton(context),
+            _uploadFilesButton(context, true),
+            _uploadFilesButton(context, false),
           ],
         ),
       ),

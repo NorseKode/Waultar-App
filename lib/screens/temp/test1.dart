@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
@@ -24,14 +26,19 @@ class TestView1State extends State<TestView1> {
     );
   }
 
-  _upload(BuildContext context) {
-    var result = Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => UploaderComponent(),
-        ));
+  _upload(BuildContext context) async {
+    var result = await Navigator.push<List<File>?>(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => UploaderComponent(),
+      ),
+    );
 
-    print(result);
+    if (result != null) {
+      print(result.length);
+    } else {
+      print('null');
+    }
 
     // return UploaderComponent();
   }
