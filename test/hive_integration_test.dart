@@ -2,15 +2,12 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:waultar/models/settings.dart';
 
 
 // creates a tmp Hive database in the testing folder
 void initialiseHive() async {
   var path = Directory.current.path;
-  Hive
-    ..init(path)
-    ..registerAdapter(SettingsAdapter());
+  Hive.init(path);
 }
 void main() {
 
@@ -29,8 +26,8 @@ void main() {
 
     test('given new database has no settings set', () async {
 
-      await Hive.openBox<Settings>('settings');
-      var settingsBox = Hive.box<Settings>('settings');
+      await Hive.openBox('settings');
+      var settingsBox = Hive.box('settings');
       var expected = true;
       var actual = settingsBox.isEmpty;
 
@@ -40,22 +37,11 @@ void main() {
     
     test('given default settings returns darkmode is false', () async {
       
-      await Hive.openBox<Settings>('settings');
-      var settingBox = Hive.box<Settings>('settings');
-      Settings setting = Settings();
-      settingBox.add(setting);
+      await Hive.openBox('settings');
+      var settingBox = Hive.box('settings');
+      settingBox.put('darkmode', true);
 
-      expect(setting, settingBox.getAt(0));
-      expect(false, settingBox.getAt(0)?.darkModeEnabled);
-    });
-
-    test('given already added setting, returns the setting', () async {
-
-      await Hive.openBox<Settings>('settings');
-      var settingBox = Hive.box<Settings>('settings');
-      Settings? actual = settingBox.get(0);
-
-      expect(actual?.key, 'settings');
+      expect(true, settingBox.get('darkmode'));
     });
 
   });

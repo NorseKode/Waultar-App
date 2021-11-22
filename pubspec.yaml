@@ -44,6 +44,9 @@ dependencies:
   hive: ^2.0.4
   hive_flutter: ^1.1.0 
 
+  # for dependency injection
+  get_it: ^7.2.0
+
   # to use drift query APIs with the sqlite3 lib
   drift: ^1.0.1 
 

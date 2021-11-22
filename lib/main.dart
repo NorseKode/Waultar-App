@@ -8,18 +8,16 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/navigation/router/app_route_path.dart';
-import 'package:waultar/repositories/db_factory.dart';
 
 import 'navigation/router/app_route_information_parser.dart';
 import 'navigation/router/app_router_delegate.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-import 'models/settings.dart';
+import 'services/service_locator.dart';
 
 void main() async {
 
-  final DbFactory _factory = DbFactory();  
-  await _factory.build();
+  await setupServices();
 
   runApp(
     MultiProvider(
