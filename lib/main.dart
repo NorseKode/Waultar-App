@@ -8,6 +8,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/navigation/router/app_route_path.dart';
+import 'package:waultar/repositories/db_factory.dart';
 
 import 'navigation/router/app_route_information_parser.dart';
 import 'navigation/router/app_router_delegate.dart';
@@ -16,8 +17,9 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'models/settings.dart';
 
 void main() async {
-  await Hive.initFlutter();
-  Hive.registerAdapter(SettingsAdapter());
+
+  final DbFactory _factory = DbFactory();  
+  await _factory.build();
 
   runApp(
     MultiProvider(
@@ -91,7 +93,6 @@ class _WaultarApp extends State<WaultarApp> {
               print(content?.key);
             }
             
-            // reutrnn
             return const CounterPage();
           }
         }
@@ -102,7 +103,6 @@ class _WaultarApp extends State<WaultarApp> {
   @override
   void dispose()
   {
-    // closes all Hive boxes
     Hive.close();
     super.dispose();
   }

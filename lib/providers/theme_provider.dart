@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:waultar/services/theme_service.dart';
 
 class ThemeProvider with ChangeNotifier {
+  ThemeService _service;
   bool isLightTheme;
 
-  ThemeProvider({required this.isLightTheme});
+  
 
-  toggleThemeData() async {
+  ThemeProvider(@required this._service)
+  {
+    // isLightTheme = _service.getDarkMode();
+  }
+
+  toggleDarkmode() async {
     isLightTheme = !isLightTheme;
+    _service.toogleDarkMode();
     notifyListeners();
   }
 
