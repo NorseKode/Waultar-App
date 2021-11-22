@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:waultar/services/service_locator.dart';
+import 'package:waultar/services/startup.dart';
 import 'package:waultar/services/settings_service.dart';
 
 class ThemeProvider with ChangeNotifier {

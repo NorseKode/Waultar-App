@@ -20,3 +20,4 @@ Future<void> setupServices() async
   locator.registerSingleton<SettingsService>(SettingsService(settingsBox: _settingsBox));
 
 }
+

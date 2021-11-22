@@ -13,7 +13,7 @@ import 'navigation/router/app_route_information_parser.dart';
 import 'navigation/router/app_router_delegate.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-import 'services/service_locator.dart';
+import 'services/startup.dart';
 
 void main() async {
 
