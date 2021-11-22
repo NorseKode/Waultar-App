@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:drift/native.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
@@ -13,7 +15,17 @@ Future<void> setupServices({bool testing = false}) async
   testing 
   ? Hive.init('/test/')
   : await Hive.initFlutter();
-  final _settingsBox = await Hive.openBox('settings');
+
+  // var lazy = await Hive.openLazyBox('settings');
+  // await lazy.clear();
+
+  // await lazy.deleteFromDisk();
+  // var exists = await Hive.boxExists('settings');
+  // print(exists);
+
+  // exit(1);
+
+  final _settingsBox = await Hive.openBox<dynamic>('settings');
 
   // configure on startup the correct sqlite binary to use
   SqliteService().init();
