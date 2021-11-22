@@ -1,5 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:waultar/providers/theme_provider.dart';
 
 import 'menu_screens.dart';
 
@@ -12,17 +15,18 @@ class MenuPanel extends StatefulWidget {
 
 class _MenuPanelState extends State<MenuPanel> {
   var active = MenuScreens.dashboard;
+  var themeProvider;
 
-  Widget menuItem(IconData icon, MenuScreens view) {
+  Widget menuItem(IconData icon, MenuScreens view, {VoidCallback? onPressed}) {
     return SizedBox(
       width: 45,
       height: 45,
       child: TextButton(
-        onPressed: () {
-          setState(() {
-            active = view;
-          });
-        },
+        onPressed: onPressed ??
+            () {
+              active != view;
+              setState(() {});
+            },
         style: active != view
             ? ButtonStyle(
                 shape: MaterialStateProperty.all(RoundedRectangleBorder(
@@ -44,6 +48,9 @@ class _MenuPanelState extends State<MenuPanel> {
 
   @override
   Widget build(BuildContext context) {
+    print("Build menu_panel");
+    themeProvider = Provider.of<ThemeProvider>(context);
+
     return Container(
       color: Color(0xFF1A1D1F),
       width: 80,
@@ -77,12 +84,19 @@ class _MenuPanelState extends State<MenuPanel> {
             children: [
               Container(
                   width: 45,
-                  child: Divider(
+                  child: const Divider(
                       height: 5, thickness: 2, color: Color(0xFF65696F))),
               SizedBox(height: 10),
-              menuItem(FontAwesomeIcons.adjust, MenuScreens.darkmode),
+              menuItem(FontAwesomeIcons.adjust, MenuScreens.darkmode,
+                  onPressed: () async {
+                await themeProvider.toggleThemeData();
+                setState(() {});
+              }),
               SizedBox(height: 10),
-              menuItem(FontAwesomeIcons.arrowLeft, MenuScreens.signout),
+              menuItem(
+                FontAwesomeIcons.arrowLeft,
+                MenuScreens.signout,
+              ),
               SizedBox(height: 22.5),
             ],
           ),

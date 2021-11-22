@@ -11,10 +11,11 @@ class ThemeProvider with ChangeNotifier {
     isLightTheme = _settingsService.getDarkMode();
   }
 
-  
   toggleThemeData() async {
+    print("changing theme...");
     isLightTheme = !isLightTheme;
     _settingsService.toogleDarkMode(isLightTheme);
+    print("changed theme to: " + (isLightTheme ? "darkmode" : "lightmde"));
     notifyListeners();
   }
 
@@ -23,7 +24,7 @@ class ThemeProvider with ChangeNotifier {
     return ThemeData(
       fontFamily: 'Inter',
       visualDensity: VisualDensity.adaptivePlatformDensity,
-      primarySwatch: isLightTheme ? Colors.grey : Colors.grey,
+      primarySwatch: isLightTheme ? Colors.grey : Colors.yellow,
       primaryColor: Color(0xff2196F3),
       brightness: isLightTheme ? Brightness.light : Brightness.dark,
       backgroundColor: isLightTheme ? Color(0xFFFFFFFF) : Color(0xFF111315),

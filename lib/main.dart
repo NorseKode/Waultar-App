@@ -10,6 +10,7 @@ import 'package:waultar/etebase/models/etebase_user.dart';
 import 'package:waultar/navigation/app_navigator.dart';
 import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/navigation/router/app_route_path.dart';
+import 'package:waultar/providers/theme_provider.dart';
 
 import 'navigation/router/app_route_information_parser.dart';
 import 'navigation/router/app_router_delegate.dart';
@@ -18,13 +19,13 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'services/startup.dart';
 
 void main() async {
-
   await setupServices();
 
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider<AppState>(create: (_) => AppState()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider())
       ],
       child: const WaultarApp(),
     ),
@@ -39,10 +40,8 @@ class WaultarApp extends StatefulWidget {
 }
 
 class _WaultarApp extends State<WaultarApp> {
-  
   @override
-  void dispose()
-  {
+  void dispose() {
     Hive.close();
     super.dispose();
   }
@@ -64,13 +63,15 @@ class _WaultarApp extends State<WaultarApp> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp.router(
       title: 'Waultar',
-      // theme: ThemeData(primarySwatch: Colors.grey, fontFamily: 'Montserrat'),
-      theme: ThemeData(
-          primarySwatch: Colors.grey,
-          scaffoldBackgroundColor: Color(0xFF111315),
-          fontFamily: 'Inter'),
+      theme: themeProvider.themeData(),
+      //theme: ThemeData(primarySwatch: Colors.grey, fontFamily: 'Montserrat'),
+      // theme: ThemeData(
+      //     primarySwatch: Colors.grey,
+      //     scaffoldBackgroundColor: Color(0xFF111315),
+      //     fontFamily: 'Inter'),
       routerDelegate: _routerDelegate!,
       routeInformationParser: _routeInformationParser,
     );

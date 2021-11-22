@@ -2,22 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:waultar/globals/scaffold_main.dart';
 import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/navigation/screen.dart';
-import 'package:waultar/widgets/dashboard.dart';
+import 'package:waultar/widgets/dashboard/dashboard.dart';
 import 'package:waultar/widgets/general/menu_screens.dart';
 import 'package:waultar/widgets/general/menu_panel.dart';
 import 'package:waultar/widgets/general/top_panel.dart';
 
 class HomePageView extends StatefulWidget {
-
-
   @override
-  _HomePageViewState createState() =>
-      _HomePageViewState();
+  _HomePageViewState createState() => _HomePageViewState();
 }
 
 class _HomePageViewState extends State<HomePageView> {
-
-
   // ElevatedButton _signOutButton() {
   //   return ElevatedButton(
   //       onPressed: () {
