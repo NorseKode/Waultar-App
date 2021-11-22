@@ -6,6 +6,7 @@ import 'package:waultar/screens/authentication/signin.dart';
 import 'package:waultar/screens/home.dart';
 import 'package:waultar/screens/temp/test1.dart';
 import 'package:waultar/screens/unknown.dart';
+import 'package:waultar/widgets/upload/uploader.dart';
 
 import 'app_state.dart';
 
@@ -27,6 +28,11 @@ Navigator getAppNavigator(AppState appState, RoutePath routePath, ValueChanged<R
         MaterialPage(
           key: ValueKey('HomePage'),
           child: HomePageView(),
+        ),
+      if (routePath.viewScreen == ViewScreen.uploader)
+        const MaterialPage(
+          key: ValueKey('Uploader'),
+          child: UploaderView(),
         ),
       if (routePath.viewScreen == ViewScreen.signin && appState.user == null)
         MaterialPage(

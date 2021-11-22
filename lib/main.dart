@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/etebase/models/etebase_user.dart';
+import 'package:waultar/navigation/app_navigator.dart';
 import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/navigation/router/app_route_path.dart';
 
@@ -57,13 +59,18 @@ class _WaultarApp extends State<WaultarApp> {
     super.initState();
   }
 
-  final AppRouteInformationParser _routeInformationParser = AppRouteInformationParser();
+  final AppRouteInformationParser _routeInformationParser =
+      AppRouteInformationParser();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Waultar',
-      theme: ThemeData(primarySwatch: Colors.grey, fontFamily: 'Montserrat'),
+      // theme: ThemeData(primarySwatch: Colors.grey, fontFamily: 'Montserrat'),
+      theme: ThemeData(
+          primarySwatch: Colors.grey,
+          scaffoldBackgroundColor: Color(0xFF111315),
+          fontFamily: 'Inter'),
       routerDelegate: _routerDelegate!,
       routeInformationParser: _routeInformationParser,
     );

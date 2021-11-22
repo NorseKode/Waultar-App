@@ -11,38 +11,24 @@ class ThemeProvider with ChangeNotifier {
     isLightTheme = _settingsService.getDarkMode();
   }
 
-  toggleDarkmode() async {
+  
+  toggleThemeData() async {
     isLightTheme = !isLightTheme;
     _settingsService.toogleDarkMode(isLightTheme);
     notifyListeners();
   }
 
+  // Global theme data we are always check if the light theme is enabled #isLightTheme
   ThemeData themeData() {
     return ThemeData(
+      fontFamily: 'Inter',
       visualDensity: VisualDensity.adaptivePlatformDensity,
       primarySwatch: isLightTheme ? Colors.grey : Colors.grey,
-      primaryColor: isLightTheme ? Colors.white : Color(0xFF1E1F28),
+      primaryColor: Color(0xff2196F3),
       brightness: isLightTheme ? Brightness.light : Brightness.dark,
-      backgroundColor: isLightTheme ? Color(0xFFFFFFFF) : Color(0xFF26242e),
-      scaffoldBackgroundColor: isLightTheme ? Color(0xFFFFFFFF) : Color(0xFF26242e),
+      backgroundColor: isLightTheme ? Color(0xFFFFFFFF) : Color(0xFF111315),
+      scaffoldBackgroundColor:
+          isLightTheme ? Color(0xFFFFFFFF) : Color(0xFF111315),
     );
   }
-}
-
-class ThemeColor {
-  List<Color> gradient;
-  Color backgroundColor;
-  Color toggleButtonColor;
-  Color toggleBackgroundColor;
-  Color textColor;
-  List<BoxShadow> shadow;
-
-  ThemeColor(
-    this.gradient,
-    this.backgroundColor,
-    this.toggleBackgroundColor,
-    this.toggleButtonColor,
-    this.textColor,
-    this.shadow,
-  );
 }

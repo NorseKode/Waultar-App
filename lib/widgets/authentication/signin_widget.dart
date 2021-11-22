@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:waultar/navigation/app_state.dart';
+import 'package:waultar/navigation/screen.dart';
+import 'package:waultar/widgets/authentication/sso.dart';
 
 class SignInWidget extends StatefulWidget {
   @override
-  State<SignInWidget> createState() =>
-      _SignInWidget();
+  State<SignInWidget> createState() => _SignInWidget();
 }
 
 class _SignInWidget extends State<SignInWidget> {
@@ -13,7 +14,7 @@ class _SignInWidget extends State<SignInWidget> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  bool terms = false;
+  //_SignInWidget(this._appState, this._updateAppState);
 
   Widget test() {
     return TextButton(
@@ -29,31 +30,32 @@ class _SignInWidget extends State<SignInWidget> {
         ));
   }
 
-  void _saveForm() async {
-    final bool isValid = _formKey.currentState!.validate();
+  // void _saveForm() async {
+  //   final bool isValid = _formKey.currentState!.validate();
+  //   print(isValid);
 
-    if (isValid && terms) {
-      // var tempEtebaseUser = EtebaseUser(
-      //     _usernameController.text.trim(), _emailController.text.trim());
+  //   if (isValid) {
+  //     var tempEtebaseUser = EtebaseUser(
+  //         _usernameController.text.trim(), _emailController.text.trim());
 
-      // // var temp = await signUp(tempEtebaseUser, _passwordController.text.trim());
-      // var temp = await signIn(
-      //     tempEtebaseUser.username, _passwordController.text.trim());
+  //     // var temp = await signUp(tempEtebaseUser, _passwordController.text.trim());
+  //     var temp = await signIn(
+  //         tempEtebaseUser.username, _passwordController.text.trim());
 
-      // if (temp != null) {
-      //   print(temp.username);
-      //   print(temp.email);
+  //     if (temp != null) {
+  //       print(temp.username);
+  //       print(temp.email);
 
-      //   _appState.user = temp;
-      //   _appState.viewScreen = ViewScreen.home;
-      //   _updateAppState(_appState);
-      // } else {
-      //   print('not good');
-      // }
-    } else {
-      print("not valid");
-    }
-  }
+  //       _appState.user = temp;
+  //       _appState.viewScreen = ViewScreen.home;
+  //       _updateAppState(_appState);
+  //     } else {
+  //       print('not good');
+  //     }
+  //   } else {
+  //     print("not valid");
+  //   }
+  // }
 
   Widget _title() {
     return const Center(
@@ -64,7 +66,8 @@ class _SignInWidget extends State<SignInWidget> {
     ));
   }
 
-  Widget _entryField(String title, {bool isPassword = false}) {
+  Widget _entryField(String title, TextEditingController controller,
+      {bool isPassword = false}) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -81,6 +84,7 @@ class _SignInWidget extends State<SignInWidget> {
             height: 10,
           ),
           TextField(
+              controller: controller,
               style: const TextStyle(fontSize: 14, color: Color(0xffb9bbbe)),
               obscureText: isPassword,
               decoration: const InputDecoration(
@@ -97,15 +101,15 @@ class _SignInWidget extends State<SignInWidget> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("EMAIL"),
-        _entryField("PASSWORD", isPassword: true),
+        _entryField("EMAIL", _emailController),
+        _entryField("PASSWORD", _passwordController, isPassword: true),
       ],
     );
   }
 
   Widget _continueButton() {
     return InkWell(
-      onTap: () => _saveForm(),
+      onTap: () => {}, //_saveForm(),
       child: Container(
           margin: const EdgeInsets.symmetric(vertical: 10),
           padding: const EdgeInsets.symmetric(vertical: 15),
