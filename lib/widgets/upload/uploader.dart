@@ -1,14 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:waultar/globals/scaffold_main.dart';
 
-class UploaderView extends StatefulWidget {
-  const UploaderView({Key? key}) : super(key: key);
+import 'upload_files.dart';
+
+class UploaderComponent extends StatefulWidget {
+  const UploaderComponent({Key? key}) : super(key: key);
 
   @override
-  _UploaderViewState createState() => _UploaderViewState();
+  _UploaderComponentState createState() => _UploaderComponentState();
 }
 
-class _UploaderViewState extends State<UploaderView> {
+class _UploaderComponentState extends State<UploaderComponent> {
+  _uploadSingleFileButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () async {
+        var file = await FileUploader.uploadSingle();
+        if (file != null) {
+          print(file.path);
+        }
+
+        Navigator.pop(context, file);
+      },
+      child: const Text('Press'),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return getScaffoldMain(
@@ -16,7 +32,8 @@ class _UploaderViewState extends State<UploaderView> {
       Center(
         child: Column(
           children: [
-            const Text('TODO'),
+            const Text('uploader'),
+            _uploadSingleFileButton(context),
           ],
         ),
       ),
