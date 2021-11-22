@@ -16,7 +16,8 @@ void main() {
 
   group('Test that DAOs can be invoked', () {
     
-    test('given no entries return null', () async {
+    test('given new entry returns id and correct entry', () async {
+      
       final dao = db.todosDao;
       const todo = TodosCompanion(
         title: Value('Setup drift'),
@@ -24,8 +25,10 @@ void main() {
       );
 
       final id = await dao.addTodo(todo);
-
       expect(id, 0);
+
+      final created = await dao.getTodoByIdAsFuture(0);
+      expect(created.title, 'Setup drift');
 
     });
 

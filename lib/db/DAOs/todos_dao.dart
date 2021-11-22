@@ -22,7 +22,11 @@ class TodosDao extends DatabaseAccessor<WaultarDb> with _$TodosDaoMixin {
     return into(todos).insert(todo);
   }
 
-  Stream<Todo> getTodoById(int id) {
+  Stream<Todo> getTodoByIdAsStream(int id) {
     return (select(todos)..where((t) => t.id.equals(id))).watchSingle();
+  }
+
+  Future<Todo> getTodoByIdAsFuture(int id) {
+    return (select(todos)..where((t) => t.id.equals(id))).getSingle();
   }
 }
