@@ -24,4 +24,31 @@ class FileUploader {
       return null;
     }
   }
+  
+  /// Returns a list of files if users picks a directory, reutrns `null` otherwise
+  static Future<List<File>?> uploadDirectory() async {
+    String? path = await FilePicker.platform.getDirectoryPath();
+    
+    if (path != null) {
+      return await _getAllFilesFrom(path);
+    } else {
+      return null;
+    }
+  }
+
+  static Future<List<File>> _getAllFilesFrom(String path) async {
+    var dir = Directory(path);
+    List<File> files = [];
+
+    await dir.list(recursive: true, followLinks: false).forEach((element) async {
+      var stat = await element.stat();
+      var isFile = stat.type == FileSystemEntityType.file;
+      
+      if (isFile) {
+        files.add(File(element.path));
+      }
+     });
+
+    return files;
+  }
 }
