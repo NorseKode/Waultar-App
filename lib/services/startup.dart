@@ -16,15 +16,6 @@ Future<void> setupServices({bool testing = false}) async
   ? Hive.init('/test/')
   : await Hive.initFlutter();
 
-  // var lazy = await Hive.openLazyBox('settings');
-  // await lazy.clear();
-
-  // await lazy.deleteFromDisk();
-  // var exists = await Hive.boxExists('settings');
-  // print(exists);
-
-  // exit(1);
-
   final _settingsBox = await Hive.openBox<dynamic>('settings');
 
   // configure on startup the correct sqlite binary to use
