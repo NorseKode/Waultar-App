@@ -3,23 +3,15 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:waultar/db/drift_config.dart';
 
-import 'dart:io';
-import 'dart:ffi';
-import 'package:sqlite3/open.dart';
+import 'package:waultar/services/startup.dart';
 
 
-DynamicLibrary _openOnWindows() {
-  final scriptDir = File(Platform.script.toFilePath()).parent;
-  final libraryNextToScript = File('${scriptDir.path}/lib/assets/sqlite/sqlite3.dll');
-  return DynamicLibrary.open(libraryNextToScript.path);
-}
-
-void main() {
+Future<void> main() async {
   late WaultarDb db;
+  await setupServices(testing: true);
 
   setUp(() {
-    open.overrideFor(OperatingSystem.windows, _openOnWindows);
-    db = WaultarDb.testing(NativeDatabase.memory());
+    db = locator<WaultarDb>();
   });
 
   tearDown(() async {

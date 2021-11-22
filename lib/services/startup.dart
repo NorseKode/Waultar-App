@@ -1,3 +1,4 @@
+import 'package:drift/native.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -7,16 +8,22 @@ import 'package:waultar/services/sqlite_service.dart';
 
 final locator = GetIt.instance;
 
-Future<void> setupServices() async 
+Future<void> setupServices({bool testing = false}) async 
 {
-  await Hive.initFlutter();
+  testing 
+  ? Hive.init('/test/')
+  : await Hive.initFlutter();
   final _settingsBox = await Hive.openBox('settings');
 
   // configure on startup the correct sqlite binary to use
   SqliteService().init();
 
   // when correct sqlite binary have initialized, register the db
-  locator.registerSingleton<WaultarDb>(WaultarDb());
+  testing 
+  ? locator.registerSingleton<WaultarDb>(WaultarDb.testing(NativeDatabase.memory()))
+  : locator.registerSingleton<WaultarDb>(WaultarDb());
+
+  // services used throughout the app
   locator.registerSingleton<SettingsService>(SettingsService(settingsBox: _settingsBox));
 
 }
