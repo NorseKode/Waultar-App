@@ -23,8 +23,11 @@ Future<void> setupServices({bool testing = false}) async
   ? locator.registerSingleton<WaultarDb>(WaultarDb.testing(NativeDatabase.memory()))
   : locator.registerSingleton<WaultarDb>(WaultarDb());
 
+  // settingsBox will be registered before SettingsService, to make the injection possible
+  locator.registerSingleton<Box>(_settingsBox, instanceName: 'settingsBox');
+
   // services used throughout the app
-  locator.registerSingleton<SettingsService>(SettingsService(settingsBox: _settingsBox));
+  locator.registerSingleton<SettingsService>(SettingsService());
 
 }
 
