@@ -5,13 +5,12 @@ import 'package:waultar/db/drift_config.dart';
 
 import 'dart:io';
 import 'dart:ffi';
-import 'package:sqlite3/sqlite3.dart';
 import 'package:sqlite3/open.dart';
 
 
 DynamicLibrary _openOnWindows() {
   final scriptDir = File(Platform.script.toFilePath()).parent;
-  final libraryNextToScript = File('${scriptDir.path}/sqlite3.dll');
+  final libraryNextToScript = File('${scriptDir.path}/lib/assets/sqlite/sqlite3.dll');
   return DynamicLibrary.open(libraryNextToScript.path);
 }
 
@@ -38,9 +37,9 @@ void main() {
       );
 
       final id = await dao.addTodo(todo);
-      expect(id, 0);
+      expect(id, 1);
 
-      final created = await dao.getTodoByIdAsFuture(0);
+      final created = await dao.getTodoByIdAsFuture(1);
       expect(created.title, 'Setup drift');
 
     });
