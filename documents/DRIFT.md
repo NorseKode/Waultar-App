@@ -17,4 +17,16 @@ If you change or add table definitions, you MUST increment the schemaversion in 
 int get schemaVersion => 1;
 ```
 
+To run migrations :
+
+```bash
+flutter packages pub run build_runner build
+```
+
+If there are conflicts, try :
+
+```bash
+flutter packages pub run build_runner build --delete-conflicting-outputs
+```
+
 ## Testing
