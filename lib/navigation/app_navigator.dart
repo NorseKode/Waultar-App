@@ -33,6 +33,7 @@ Navigator getAppNavigator(AppState appState, RoutePath routePath, ValueChanged<R
         const MaterialPage(
           key: ValueKey('Uploader'),
           child: UploaderView(),
+        ),
       if (routePath.viewScreen == ViewScreen.signin && appState.user == null)
         MaterialPage(
           key: ValueKey('SignIn'),
