@@ -11,9 +11,6 @@ class ThemeProvider with ChangeNotifier {
     isLightTheme = _settingsService.getDarkMode();
   }
 
-
-
-  
   toggleDarkmode() async {
     isLightTheme = !isLightTheme;
     _settingsService.toogleDarkMode(isLightTheme);
