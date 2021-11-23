@@ -40,6 +40,7 @@ class MenuItem extends StatelessWidget {
                 //     themeProvider.themeMode().shadowColor)
               ),
         child: Icon(icon,
+            size: 20,
             color: !active
                 ? themeProvider.themeMode().secondaryColor
                 : themeProvider.themeMode().iconColor),

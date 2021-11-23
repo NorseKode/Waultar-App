@@ -63,7 +63,7 @@ class _TopPanelState extends State<TopPanel> {
     return Container(
         height: 80,
         width: MediaQuery.of(context).size.width - 82,
-        color: themeProvider.themeData().primaryColor,
+        //color: themeProvider.themeData().primaryColor,
         child: Row(
           children: [
             title("Dashboard"),

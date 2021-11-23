@@ -28,7 +28,7 @@ class _HomePageViewState extends State<HomePageView> {
                     SizedBox(
                       height: 2,
                     ),
-                    Dashboard()
+                    //Dashboard()
                   ]),
             )
           ],

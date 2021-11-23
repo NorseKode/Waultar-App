@@ -27,7 +27,7 @@ class ThemeProvider with ChangeNotifier {
       brightness: isLightTheme ? Brightness.light : Brightness.dark,
       backgroundColor: isLightTheme ? Color(0xFFE0E0E0) : Color(0xFF111315),
       scaffoldBackgroundColor:
-          isLightTheme ? Color(0xFFE0E0E0) : Color(0xFF111315),
+          isLightTheme ? Color.fromARGB(255, 238, 238, 238) : Color(0xFF111315),
       textTheme: TextTheme(
           headline1: TextStyle(
             color: isLightTheme ? Colors.black : Colors.white,

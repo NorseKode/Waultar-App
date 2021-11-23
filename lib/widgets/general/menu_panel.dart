@@ -42,44 +42,63 @@ class _MenuPanelState extends State<MenuPanel> {
               ),
               SizedBox(height: 10),
               MenuItem(
-                active: true,
+                active: active == MenuScreens.dashboard ? true : false,
                 icon: FontAwesomeIcons.chartBar,
                 themeProvider: themeProvider,
+                onPressed: () {
+                  active = MenuScreens.dashboard;
+                  setState(() {});
+                },
               ),
               SizedBox(height: 10),
               MenuItem(
-                active: false,
+                active: active == MenuScreens.datacollection ? true : false,
                 icon: FontAwesomeIcons.gem,
                 themeProvider: themeProvider,
+                onPressed: () {
+                  active = MenuScreens.datacollection;
+                  setState(() {});
+                },
               ),
               SizedBox(height: 10),
               MenuItem(
-                active: false,
+                active: active == MenuScreens.imagelibrary ? true : false,
                 icon: FontAwesomeIcons.images,
                 themeProvider: themeProvider,
+                onPressed: () {
+                  active = MenuScreens.imagelibrary;
+                  setState(() {});
+                },
               ),
               SizedBox(height: 10),
               MenuItem(
-                active: false,
+                active: active == MenuScreens.support ? true : false,
                 icon: FontAwesomeIcons.questionCircle,
                 themeProvider: themeProvider,
+                onPressed: () {
+                  active = MenuScreens.support;
+                  setState(() {});
+                },
               ),
             ],
           ),
           Column(
             children: [
               Container(
-                  width: 45,
+                  width: 38,
                   child: Divider(
                       height: 5,
                       thickness: 2,
-                      color:
-                          themeProvider.themeData().scaffoldBackgroundColor)),
+                      color: themeProvider.themeMode().secondaryColor)),
               SizedBox(height: 10),
               MenuItem(
-                active: false,
+                active: active == MenuScreens.settings ? true : false,
                 icon: FontAwesomeIcons.cog,
                 themeProvider: themeProvider,
+                onPressed: () {
+                  active = MenuScreens.settings;
+                  setState(() {});
+                },
               ),
               SizedBox(height: 10),
               MenuItem(
