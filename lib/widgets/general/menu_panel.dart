@@ -23,7 +23,7 @@ class _MenuPanelState extends State<MenuPanel> {
       child: TextButton(
         onPressed: onPressed ??
             () {
-              active != view;
+              active = view;
               setState(() {});
             },
         style: active != view
