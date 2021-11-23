@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/providers/theme_provider.dart';
+import 'package:waultar/widgets/general/menu_item.dart';
 
 class TopPanel extends StatefulWidget {
   const TopPanel({Key? key}) : super(key: key);
@@ -48,36 +49,10 @@ class _TopPanelState extends State<TopPanel> {
         ]));
   }
 
-  Widget settingsButton() {
-    return SizedBox(
-      width: 45,
-      height: 45,
-      child: TextButton(
-        onPressed: () {
-          setState(() {
-            settings = !settings;
-          });
-        },
-        style: !settings
-            ? ButtonStyle(
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12))),
-              )
-            : ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                    themeProvider.themeMode().buttonColor),
-                elevation: MaterialStateProperty.all(5),
-                side: MaterialStateProperty.all(BorderSide(
-                    color: themeProvider.themeMode().buttonColor, width: 1)),
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12))),
-                shadowColor: MaterialStateProperty.all(
-                    themeProvider.themeMode().shadowColor)),
-        child: Icon(FontAwesomeIcons.cog,
-            color: !settings
-                ? themeProvider.themeMode().secondaryColor
-                : themeProvider.themeMode().iconColor),
-      ),
+  Widget title(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20),
+      child: Text(title, style: Theme.of(context).textTheme.headline1),
     );
   }
 
@@ -87,28 +62,34 @@ class _TopPanelState extends State<TopPanel> {
 
     return Container(
         height: 80,
-        width: MediaQuery.of(context).size.width - 85,
+        width: MediaQuery.of(context).size.width - 82,
         color: themeProvider.themeData().primaryColor,
         child: Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: searchBar(),
-            ),
+            title("Dashboard"),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 100),
+            //   child: searchBar(),
+            // ),
             Expanded(child: Container()),
-            settingsButton(),
+            MenuItem(
+              onPressed: () async {
+                await themeProvider.toggleThemeData();
+                setState(() {});
+              },
+              active: false,
+              icon: FontAwesomeIcons.adjust,
+              themeProvider: themeProvider,
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
               child: ClipRRect(
-                borderRadius: BorderRadius.circular(30.0),
+                borderRadius: BorderRadius.circular(100.0),
                 child: ColorFiltered(
                   colorFilter: ColorFilter.mode(
                       themeProvider.themeMode().themeColor, BlendMode.darken),
-                  child: Image.asset(
-                    'lib/assets/graphics/Logo.png',
-                    width: 40.0,
-                    height: 40.0,
-                  ),
+                  child: Image.asset('lib/assets/graphics/Logo.png',
+                      width: 40.0, height: 40.0, fit: BoxFit.fill),
                 ),
               ),
             )

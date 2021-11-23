@@ -10,13 +10,6 @@ class HomePageView extends StatefulWidget {
 }
 
 class _HomePageViewState extends State<HomePageView> {
-  Widget title(String title) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Text(title, style: Theme.of(context).textTheme.headline1),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return getScaffoldMain(
@@ -24,13 +17,19 @@ class _HomePageViewState extends State<HomePageView> {
         Row(
           children: [
             MenuPanel(),
-            SizedBox(width: 5),
+            SizedBox(width: 2),
             Container(
               height: MediaQuery.of(context).size.height,
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: [TopPanel(), title("Dashboard"), Dashboard()]),
+                  children: [
+                    TopPanel(),
+                    SizedBox(
+                      height: 2,
+                    ),
+                    Dashboard()
+                  ]),
             )
           ],
         ));

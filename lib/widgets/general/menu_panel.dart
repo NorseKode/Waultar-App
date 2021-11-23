@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/providers/theme_provider.dart';
+import 'package:waultar/widgets/general/menu_item.dart';
 
 import 'menu_screens.dart';
 
@@ -16,43 +17,9 @@ class _MenuPanelState extends State<MenuPanel> {
   var active = MenuScreens.dashboard;
   late ThemeProvider themeProvider;
 
-  Widget menuItem(IconData icon, MenuScreens view, {VoidCallback? onPressed}) {
-    return SizedBox(
-      width: 45,
-      height: 45,
-      child: TextButton(
-        onPressed: onPressed ??
-            () {
-              active = view;
-              setState(() {});
-            },
-        style: active != view
-            ? ButtonStyle(
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12))),
-              )
-            : ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                    themeProvider.themeMode().buttonColor),
-                elevation: MaterialStateProperty.all(5),
-                side: MaterialStateProperty.all(BorderSide(
-                    color: themeProvider.themeMode().buttonColor, width: 1)),
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12))),
-                shadowColor: MaterialStateProperty.all(
-                    themeProvider.themeMode().shadowColor)),
-        child: Icon(icon,
-            color: active != view
-                ? themeProvider.themeMode().secondaryColor
-                : themeProvider.themeMode().iconColor),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     themeProvider = Provider.of<ThemeProvider>(context);
-
     return Container(
       color: themeProvider.themeData().primaryColor,
       width: 80,
@@ -74,13 +41,29 @@ class _MenuPanelState extends State<MenuPanel> {
                 ),
               ),
               SizedBox(height: 10),
-              menuItem(FontAwesomeIcons.chartBar, MenuScreens.dashboard),
+              MenuItem(
+                active: true,
+                icon: FontAwesomeIcons.chartBar,
+                themeProvider: themeProvider,
+              ),
               SizedBox(height: 10),
-              menuItem(FontAwesomeIcons.gem, MenuScreens.datacollection),
+              MenuItem(
+                active: false,
+                icon: FontAwesomeIcons.gem,
+                themeProvider: themeProvider,
+              ),
               SizedBox(height: 10),
-              menuItem(FontAwesomeIcons.images, MenuScreens.imagelibrary),
+              MenuItem(
+                active: false,
+                icon: FontAwesomeIcons.images,
+                themeProvider: themeProvider,
+              ),
               SizedBox(height: 10),
-              menuItem(FontAwesomeIcons.questionCircle, MenuScreens.support),
+              MenuItem(
+                active: false,
+                icon: FontAwesomeIcons.questionCircle,
+                themeProvider: themeProvider,
+              ),
             ],
           ),
           Column(
@@ -90,17 +73,19 @@ class _MenuPanelState extends State<MenuPanel> {
                   child: Divider(
                       height: 5,
                       thickness: 2,
-                      color: themeProvider.themeMode().secondaryColor)),
+                      color:
+                          themeProvider.themeData().scaffoldBackgroundColor)),
               SizedBox(height: 10),
-              menuItem(FontAwesomeIcons.adjust, MenuScreens.darkmode,
-                  onPressed: () async {
-                await themeProvider.toggleThemeData();
-                setState(() {});
-              }),
+              MenuItem(
+                active: false,
+                icon: FontAwesomeIcons.cog,
+                themeProvider: themeProvider,
+              ),
               SizedBox(height: 10),
-              menuItem(
-                FontAwesomeIcons.arrowLeft,
-                MenuScreens.signout,
+              MenuItem(
+                active: false,
+                icon: FontAwesomeIcons.arrowLeft,
+                themeProvider: themeProvider,
               ),
               SizedBox(height: 22.5),
             ],

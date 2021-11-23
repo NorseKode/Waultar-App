@@ -15,20 +15,16 @@ class _DashboardState extends State<Dashboard> {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
 
     return Expanded(
-      child: Padding(
-        padding:
-            const EdgeInsets.only(left: 20.0, bottom: 20, right: 20, top: 0),
-        child: SingleChildScrollView(
-            child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-                color: themeProvider.themeData().primaryColor,
-                width: MediaQuery.of(context).size.width - 125,
-                height: 2000),
-          ],
-        )),
-      ),
+      child: SingleChildScrollView(
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+              color: themeProvider.themeData().primaryColor,
+              width: MediaQuery.of(context).size.width - 82,
+              height: 2000),
+        ],
+      )),
     );
   }
 }
