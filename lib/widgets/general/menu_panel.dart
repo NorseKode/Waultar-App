@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:waultar/providers/theme_provider.dart';
+import 'package:waultar/widgets/general/menu_item.dart';
 
 import 'menu_screens.dart';
 
@@ -12,40 +15,13 @@ class MenuPanel extends StatefulWidget {
 
 class _MenuPanelState extends State<MenuPanel> {
   var active = MenuScreens.dashboard;
-
-  Widget menuItem(IconData icon, MenuScreens view) {
-    return SizedBox(
-      width: 45,
-      height: 45,
-      child: TextButton(
-        onPressed: () {
-          setState(() {
-            active = view;
-          });
-        },
-        style: active != view
-            ? ButtonStyle(
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12))),
-              )
-            : ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Color(0xFF272B30)),
-                elevation: MaterialStateProperty.all(5),
-                side: MaterialStateProperty.all(
-                    BorderSide(color: Color(0xFF272B30), width: 1)),
-                shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12))),
-                shadowColor: MaterialStateProperty.all(Color(0xFF000000))),
-        child: Icon(icon,
-            color: active != view ? Color(0xFF65696F) : Colors.white),
-      ),
-    );
-  }
+  late ThemeProvider themeProvider;
 
   @override
   Widget build(BuildContext context) {
+    themeProvider = Provider.of<ThemeProvider>(context);
     return Container(
-      color: Color(0xFF1A1D1F),
+      color: themeProvider.themeData().primaryColor,
       width: 80,
       height: MediaQuery.of(context).size.height,
       child: Column(
@@ -60,29 +36,76 @@ class _MenuPanelState extends State<MenuPanel> {
                   padding: const EdgeInsets.all(20.0),
                   child: Image.asset(
                     'lib/assets/graphics/Logo.png',
+                    color: themeProvider.themeMode().iconColor,
                   ),
                 ),
               ),
               SizedBox(height: 10),
-              menuItem(FontAwesomeIcons.chartBar, MenuScreens.dashboard),
+              MenuItem(
+                active: active == MenuScreens.dashboard ? true : false,
+                icon: FontAwesomeIcons.chartBar,
+                themeProvider: themeProvider,
+                onPressed: () {
+                  active = MenuScreens.dashboard;
+                  setState(() {});
+                },
+              ),
               SizedBox(height: 10),
-              menuItem(FontAwesomeIcons.gem, MenuScreens.datacollection),
+              MenuItem(
+                active: active == MenuScreens.datacollection ? true : false,
+                icon: FontAwesomeIcons.gem,
+                themeProvider: themeProvider,
+                onPressed: () {
+                  active = MenuScreens.datacollection;
+                  setState(() {});
+                },
+              ),
               SizedBox(height: 10),
-              menuItem(FontAwesomeIcons.images, MenuScreens.imagelibrary),
+              MenuItem(
+                active: active == MenuScreens.imagelibrary ? true : false,
+                icon: FontAwesomeIcons.images,
+                themeProvider: themeProvider,
+                onPressed: () {
+                  active = MenuScreens.imagelibrary;
+                  setState(() {});
+                },
+              ),
               SizedBox(height: 10),
-              menuItem(FontAwesomeIcons.questionCircle, MenuScreens.support),
+              MenuItem(
+                active: active == MenuScreens.support ? true : false,
+                icon: FontAwesomeIcons.questionCircle,
+                themeProvider: themeProvider,
+                onPressed: () {
+                  active = MenuScreens.support;
+                  setState(() {});
+                },
+              ),
             ],
           ),
           Column(
             children: [
               Container(
-                  width: 45,
+                  width: 38,
                   child: Divider(
-                      height: 5, thickness: 2, color: Color(0xFF65696F))),
+                      height: 5,
+                      thickness: 2,
+                      color: themeProvider.themeMode().secondaryColor)),
               SizedBox(height: 10),
-              menuItem(FontAwesomeIcons.adjust, MenuScreens.darkmode),
+              MenuItem(
+                active: active == MenuScreens.settings ? true : false,
+                icon: FontAwesomeIcons.cog,
+                themeProvider: themeProvider,
+                onPressed: () {
+                  active = MenuScreens.settings;
+                  setState(() {});
+                },
+              ),
               SizedBox(height: 10),
-              menuItem(FontAwesomeIcons.arrowLeft, MenuScreens.signout),
+              MenuItem(
+                active: false,
+                icon: FontAwesomeIcons.arrowLeft,
+                themeProvider: themeProvider,
+              ),
               SizedBox(height: 22.5),
             ],
           ),
