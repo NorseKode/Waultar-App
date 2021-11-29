@@ -1,58 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:waultar/globals/scaffold_main.dart';
+import 'package:flutter/painting.dart';
+import 'package:waultar/image_parser/image_parser.dart';
 import 'package:waultar/navigation/app_state.dart';
-import 'package:waultar/navigation/screen.dart';
+import 'package:waultar/widgets/authentication/signin_widget.dart';
 
 class SignInView extends StatefulWidget {
-  final AppState _appState;
-  final ValueChanged<AppState> _updateAppState;
-
-  SignInView(this._appState, this._updateAppState);
-
   @override
-  _SignInViewState createState() => _SignInViewState(_appState, _updateAppState);
+  _SignInViewState createState() =>
+      _SignInViewState();
 }
 
 class _SignInViewState extends State<SignInView> {
-  final AppState _appState;
-  final ValueChanged<AppState> _updateAppState;
-
-  _SignInViewState(this._appState, this._updateAppState);
-
-  ElevatedButton _signUpButton() {
-    return ElevatedButton(
-      onPressed: () {
-        _appState.viewScreen = ViewScreen.signup;
-        _updateAppState(_appState);
-      },
-      child: const Text('Sign Up'),
-    );
-  }
-
-  ElevatedButton _signInButtion() {
-    return ElevatedButton(
-      onPressed: () {
-        _appState.user = 'something';
-        _appState.viewScreen = ViewScreen.home;
-        _updateAppState(_appState);
-      },
-      child: const Text('Sign In - go to home'),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return getScaffoldMain(
-      context,
-      Center(
-        child: Column(
-          children: [
-            Text('This is the Sign In Page'),
-            _signUpButton(),
-            _signInButtion(),
-          ],
-        ),
-      ),
+    return Scaffold(
+      body: Container(
+          height: MediaQuery.of(context).size.height,
+          color: Colors.blue,
+          child: Stack(children: [
+            const Positioned(
+                top: 0,
+                left: 0,
+                child: Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: Text("WAULTAR",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24)),
+                )),
+            Positioned(
+              top: MediaQuery.of(context).size.height * 0.4,
+              left: MediaQuery.of(context).size.width * 0.6,
+              child: Image.asset(
+                'lib/assets/graphics/Paws_blue.png',
+                scale: 1.5,
+              ),
+            ),
+            Center(
+                child: SingleChildScrollView(
+                    child: Center(
+              child: SignInWidget(),
+            ))),
+          ])),
     );
   }
 }

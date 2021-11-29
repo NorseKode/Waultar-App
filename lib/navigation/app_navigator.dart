@@ -1,35 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:waultar/navigation/app_state.dart';
+import 'package:waultar/navigation/no_animation_delegate.dart';
+import 'package:waultar/navigation/router/route_path.dart';
 import 'package:waultar/navigation/screen.dart';
 import 'package:waultar/screens/authentication/signin.dart';
-import 'package:waultar/screens/authentication/signup.dart';
 import 'package:waultar/screens/home.dart';
+import 'package:waultar/screens/temp/test1.dart';
+import 'package:waultar/screens/unknown.dart';
+import 'package:waultar/widgets/upload/uploader.dart';
 
-Navigator getAppNavigator(AppState appState, ValueChanged<AppState> updateAppState) {
+import 'app_state.dart';
+
+Navigator getAppNavigator(AppState appState, RoutePath routePath, ValueChanged<RoutePath> _updateState) {
   return Navigator(
+    transitionDelegate: NoAnimationTransitionDelegate(),
     pages: [
-      if (appState.user != null)
+      if (routePath.viewScreen == ViewScreen.testScreen1)
+        const MaterialPage(
+          key: ValueKey('TestScreen'),
+          child: TestView1(),
+        ),
+      if (routePath.viewScreen == ViewScreen.unknown)
+        const MaterialPage(
+          key: ValueKey('Unknown'),
+          child: UnknownView(),
+        ),
+      if (routePath.viewScreen == ViewScreen.home)
         MaterialPage(
           key: ValueKey('HomePage'),
-          child: HomePageView(appState, updateAppState),
+          child: HomePageView(),
         ),
-      if (appState.user == null && appState.viewScreen == ViewScreen.signin)
-        MaterialPage(
-          key: ValueKey('SignInView'),
-          child: SignInView(appState, updateAppState),
+      if (routePath.viewScreen == ViewScreen.uploader)
+        const MaterialPage(
+          key: ValueKey('Uploader'),
+          child: UploaderComponent(),
         ),
-      if (appState.user == null && appState.viewScreen == ViewScreen.signup)
+      if (routePath.viewScreen == ViewScreen.signin && appState.user == null)
         MaterialPage(
-          key: ValueKey('SignUpView'),
-          child: SignUp(appState, updateAppState),
+          key: ValueKey('SignIn'),
+          child: SignInView(),
         ),
     ],
     onPopPage: (route, result) {
       if (!route.didPop(result)) return false;
 
       if (route.isFirst) {
-        appState.user = null;
-        // updateState();
+        // appState.user = null;
       }
 
       return true;

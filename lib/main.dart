@@ -1,59 +1,79 @@
+// import 'dart:js';
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:waultar/etebase/models/etebase_user.dart';
 import 'package:waultar/navigation/app_navigator.dart';
 import 'package:waultar/navigation/app_state.dart';
-import 'package:waultar/navigation/screen.dart';
+import 'package:waultar/navigation/router/app_route_path.dart';
+import 'package:waultar/providers/theme_provider.dart';
 
-void main() {
-  AppState _appState = AppState(ViewScreen.signin);
+import 'navigation/router/app_route_information_parser.dart';
+import 'navigation/router/app_router_delegate.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
-  runApp(WaultarApp(_appState));
+import 'services/startup.dart';
+
+void main() async {
+  await setupServices();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AppState>(create: (_) => AppState()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider())
+      ],
+      child: const WaultarApp(),
+    ),
+  );
 }
 
 class WaultarApp extends StatefulWidget {
-  final AppState _appState;
-
-  WaultarApp(this._appState);
+  const WaultarApp({Key? key}) : super(key: key);
 
   @override
-  _WaultarApp createState() => _WaultarApp(_appState);
+  _WaultarApp createState() => _WaultarApp();
 }
 
 class _WaultarApp extends State<WaultarApp> {
-  AppState _appState;
-
-  _WaultarApp(this._appState);
-
-  void _updateAppState(AppState? appState) {
-    setState(() {
-      if (appState != null) _appState = appState;
-    });
+  @override
+  void dispose() {
+    Hive.close();
+    super.dispose();
   }
+
+  AppRouterDelegate? _routerDelegate;
+
+  @override
+  void initState() {
+    if (kIsWeb) {
+      _routerDelegate = AppRouterDelegate(AppRoutePath.sigin());
+    } else {
+      _routerDelegate = AppRouterDelegate(AppRoutePath.testScreen1());
+    }
+    super.initState();
+  }
+
+  final AppRouteInformationParser _routeInformationParser =
+      AppRouteInformationParser();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.grey,
-      ),
-      home: getAppNavigator(_appState, _updateAppState),
+    ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
+    return MaterialApp.router(
+      title: 'Waultar',
+      theme: themeProvider.themeData(),
+      //theme: ThemeData(primarySwatch: Colors.grey, fontFamily: 'Montserrat'),
+      // theme: ThemeData(
+      //     primarySwatch: Colors.grey,
+      //     scaffoldBackgroundColor: Color(0xFF111315),
+      //     fontFamily: 'Inter'),
+      routerDelegate: _routerDelegate!,
+      routeInformationParser: _routeInformationParser,
     );
   }
 }
-
-// class WaultarApp extends StatelessWidget {
-//   final AppState _appState;
-
-//   const WaultarApp(this._appState, {Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Flutter Demo',
-//       theme: ThemeData(
-//         primarySwatch: Colors.grey,
-//       ),
-//       home: const SignUp(),
-//     );
-//   }
-// }
