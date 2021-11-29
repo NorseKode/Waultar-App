@@ -41,6 +41,7 @@ dependencies:
   provider: ^6.0.1
   tuple: ^2.0.0
   file_picker: ^4.2.4
+  msix: ^2.6.3
 
   hive: ^2.0.4
   hive_flutter: ^1.1.0 
@@ -162,3 +163,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+msix_config:
+  display_name: Waultar
+  publisher_display_name: NorseKode
+  identity_name: NorseKode.Waultar.Windows
+  msix_version: 0.0.1.0
+  logo_path: .\lib\assets\graphics\Logo.png
