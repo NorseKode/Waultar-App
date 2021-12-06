@@ -20,7 +20,7 @@ class ThemeProvider with ChangeNotifier {
   // Global theme data we are always check if the light theme is enabled #isLightTheme
   ThemeData themeData() {
     return ThemeData(
-      fontFamily: 'Inter',
+      fontFamily: 'Poppins', //inter for body?
       visualDensity: VisualDensity.adaptivePlatformDensity,
       primarySwatch: Colors.grey,
       primaryColor: isLightTheme ? Color(0xFFFFFFFF) : Color(0xFF1A1D1F),
@@ -29,14 +29,20 @@ class ThemeProvider with ChangeNotifier {
       scaffoldBackgroundColor:
           isLightTheme ? Color.fromARGB(255, 238, 238, 238) : Color(0xFF111315),
       textTheme: TextTheme(
-          headline1: TextStyle(
-            color: isLightTheme ? Colors.black : Colors.white,
-            fontFamily: "Poppins",
-            fontSize: 30,
-            fontWeight: FontWeight.w600,
-          ),
-          bodyText1:
-              TextStyle(color: isLightTheme ? Colors.black : Colors.white)),
+        headline1: TextStyle(
+          color: isLightTheme ? Color(0xFF65696F) : Color(0xFFE0E0E0),
+          fontFamily: "Poppins",
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+        ),
+        headline2: TextStyle(
+          color: isLightTheme ? Color(0xFF65696F) : Color(0xFFE0E0E0),
+          fontFamily: "Poppins",
+          fontSize: 16,
+        ),
+        bodyText1: const TextStyle(
+            color: Colors.grey, fontSize: 10, fontWeight: FontWeight.w500),
+      ),
     );
   }
 
@@ -48,7 +54,8 @@ class ThemeProvider with ChangeNotifier {
         shadowColor: Color(0xFF000000),
         secondaryColor: Color(0xFF65696F),
         themeColor: Colors.blue,
-        iconColor: isLightTheme ? Color(0xFF1A1D1F) : Colors.white);
+        iconColor: isLightTheme ? Color(0xFF65696F) : Color(0xFFE0E0E0),
+        iconSize: 12);
   }
 }
 
@@ -59,11 +66,13 @@ class PersonalTheme {
   Color themeColor;
   Color iconColor;
   Color shadowColor;
+  double iconSize;
 
   PersonalTheme(
       {required this.buttonColor,
       required this.shadowColor,
       required this.secondaryColor,
       required this.themeColor,
-      required this.iconColor});
+      required this.iconColor,
+      required this.iconSize});
 }

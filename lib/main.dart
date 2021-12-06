@@ -67,11 +67,6 @@ class _WaultarApp extends State<WaultarApp> {
     return MaterialApp.router(
       title: 'Waultar',
       theme: themeProvider.themeData(),
-      //theme: ThemeData(primarySwatch: Colors.grey, fontFamily: 'Montserrat'),
-      // theme: ThemeData(
-      //     primarySwatch: Colors.grey,
-      //     scaffoldBackgroundColor: Color(0xFF111315),
-      //     fontFamily: 'Inter'),
       routerDelegate: _routerDelegate!,
       routeInformationParser: _routeInformationParser,
     );
