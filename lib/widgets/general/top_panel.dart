@@ -28,12 +28,6 @@ class _TopPanelState extends State<TopPanel> {
                   style: themeProvider.themeData().textTheme.headline1),
               Text('John Doe',
                   style: themeProvider.themeData().textTheme.headline2),
-              SvgPicture.asset(
-                'lib/assets/icons/carrot.svg',
-                semanticsLabel: 'carrot logo',
-                height: 18,
-                color: Colors.orange,
-              )
             ],
           ),
           Text(

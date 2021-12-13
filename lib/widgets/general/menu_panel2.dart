@@ -18,10 +18,10 @@ class _MenuPanel2State extends State<MenuPanel2> {
   double menuWidth = 200;
 
   Widget logo() {
-    var logo = SvgPicture.asset('lib/assets/icons/logov4.svg',
+    var logo = SvgPicture.asset('lib/assets/graphics/logov4.svg',
         semanticsLabel: 'waultar logo', height: 40);
     var title = SvgPicture.asset(
-      'lib/assets/icons/waultar.svg',
+      'lib/assets/graphics/waultar.svg',
       semanticsLabel: 'waultar logo',
       height: 20,
       color: themeProvider.themeMode().iconColor,
