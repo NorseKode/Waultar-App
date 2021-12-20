@@ -24,8 +24,8 @@ class _TopPanelState extends State<TopPanel> {
         children: [
           Row(
             children: [
-              Text('Hi ', style: themeProvider.themeData().textTheme.headline1),
-              Text('John Doe',
+              Text('Hi ', style: themeProvider.themeData().textTheme.headline2),
+              Text('John',
                   style: themeProvider.themeData().textTheme.headline2),
               Text(', welcome back!',
                   style: themeProvider.themeData().textTheme.headline2),
