@@ -40,22 +40,31 @@ class ThemeProvider with ChangeNotifier {
           fontFamily: "Poppins",
           fontSize: 16,
         ),
+        headline3: TextStyle(
+            color: isLightTheme ? Color(0xFF65696F) : Color(0xFFE0E0E0),
+            fontFamily: "Poppins",
+            fontSize: 20,
+            fontWeight: FontWeight.w500),
         bodyText1: const TextStyle(
             color: Colors.grey, fontSize: 10, fontWeight: FontWeight.w500),
+        bodyText2: const TextStyle(
+            color: Colors.white, fontSize: 13, fontWeight: FontWeight.w400),
       ),
     );
   }
 
   PersonalTheme themeMode() {
     return PersonalTheme(
-        buttonColor: isLightTheme
-            ? Color.fromARGB(255, 236, 236, 236)
-            : Color(0xFF272B30),
-        shadowColor: Color(0xFF000000),
-        secondaryColor: Color(0xFF65696F),
-        themeColor: Colors.blue,
-        iconColor: isLightTheme ? Color(0xFF65696F) : Color(0xFFE0E0E0),
-        iconSize: 12);
+      buttonColor:
+          isLightTheme ? Color.fromARGB(255, 236, 236, 236) : Color(0xFF272B30),
+      shadowColor: Color(0xFF000000),
+      secondaryColor: Color(0xFF65696F),
+      themeColor: Colors.blue,
+      iconColor: isLightTheme ? Color(0xFF65696F) : Color(0xFFE0E0E0),
+      iconSize: 12,
+      bodyText3: const TextStyle(
+          color: Colors.grey, fontSize: 13, fontWeight: FontWeight.w500),
+    );
   }
 }
 
@@ -67,6 +76,7 @@ class PersonalTheme {
   Color iconColor;
   Color shadowColor;
   double iconSize;
+  TextStyle bodyText3;
 
   PersonalTheme(
       {required this.buttonColor,
@@ -74,5 +84,6 @@ class PersonalTheme {
       required this.secondaryColor,
       required this.themeColor,
       required this.iconColor,
-      required this.iconSize});
+      required this.iconSize,
+      required this.bodyText3});
 }

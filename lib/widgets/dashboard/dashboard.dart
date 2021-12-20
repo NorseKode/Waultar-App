@@ -13,11 +13,93 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   late ThemeProvider themeProvider;
 
-  Widget AddIcon() {
+  Widget addIcon(double size, Color color) {
     const assetName = 'lib/assets/icons/fi-rr-plus.svg';
     final Widget svg = SvgPicture.asset(assetName,
-        semanticsLabel: 'Add new ', height: 15, color: Colors.white);
+        semanticsLabel: 'plus', height: size, color: color);
     return svg;
+  }
+
+  // Widget addButton() {
+  //   return ElevatedButton(
+  //       style: ButtonStyle(
+  //           textStyle: MaterialStateProperty.all<TextStyle>(
+  //               TextStyle(color: Colors.white)),
+  //           backgroundColor: MaterialStateProperty.all<Color>(
+  //               themeProvider.themeMode().themeColor)),
+  //       onPressed: () {},
+  //       child: Row(children: [
+  //         addIcon(),
+  //         const SizedBox(
+  //           width: 10,
+  //         ),
+  //         Text(
+  //           "Add",
+  //           style: themeProvider.themeData().textTheme.bodyText2,
+  //         )
+  //       ]));
+  // }
+
+  Widget addButton() {
+    return PopupMenuButton(
+      tooltip: '',
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(5.0),
+        ),
+      ),
+      offset: const Offset(0.0, 40.0),
+      color: themeProvider.themeData().primaryColor,
+      child: Container(
+          padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+          decoration: BoxDecoration(
+              color: themeProvider.themeMode().themeColor,
+              borderRadius: const BorderRadius.all(Radius.circular(5))),
+          child: Row(children: [
+            addIcon(10, Colors.white),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              "Add",
+              style: themeProvider.themeData().textTheme.bodyText2,
+            )
+          ])),
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        PopupMenuItem<String>(
+            padding: EdgeInsets.zero,
+            value: 'New data',
+            child: ListTile(
+              dense: true,
+              title: Row(children: [
+                addIcon(15, Colors.grey),
+                const SizedBox(
+                  width: 20,
+                ),
+                Text(
+                  "New data",
+                  style: themeProvider.themeMode().bodyText3,
+                )
+              ]),
+            )),
+        PopupMenuItem<String>(
+            padding: EdgeInsets.zero,
+            value: 'New widget',
+            child: ListTile(
+              dense: true,
+              title: Row(children: [
+                addIcon(15, Colors.grey),
+                const SizedBox(
+                  width: 20,
+                ),
+                Text(
+                  "New widget",
+                  style: themeProvider.themeMode().bodyText3,
+                )
+              ]),
+            ))
+      ],
+    );
   }
 
   @override
@@ -26,50 +108,49 @@ class _DashboardState extends State<Dashboard> {
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(35, 22.5, 35, 0),
-      child: SingleChildScrollView(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-              color: themeProvider.themeData().primaryColor,
-              width: MediaQuery.of(context).size.width - 82,
-              height: 2000,
-              child: Column(
+      child: SizedBox(
+        height: 500,
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Dashboard",
+                  style: themeProvider.themeData().textTheme.headline3,
+                ),
+                addButton()
+              ],
+            ),
+            const SizedBox(height: 22.5),
+            Expanded(
+              child: SingleChildScrollView(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Dashboard",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w600),
-                      ),
-                      Container(
-                          child: ElevatedButton(
-                              style: ButtonStyle(
-                                  textStyle:
-                                      MaterialStateProperty.all<TextStyle>(
-                                          TextStyle(color: Colors.white)),
-                                  backgroundColor: MaterialStateProperty.all<
-                                          Color>(
-                                      themeProvider.themeMode().themeColor)),
-                              onPressed: () {},
-                              child: Row(children: [
-                                AddIcon(),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                const Text(
-                                  "Add new",
-                                  style: TextStyle(color: Colors.white),
-                                )
-                              ])))
-                    ],
-                  )
+                  Container(
+                    color: Colors.green,
+                    width: MediaQuery.of(context).size.width - 82,
+                    height: 200,
+                  ),
+                  const SizedBox(height: 22.5),
+                  Container(
+                    color: Colors.red,
+                    width: MediaQuery.of(context).size.width - 82,
+                    height: 200,
+                  ),
+                  const SizedBox(height: 22.5),
+                  Container(
+                    color: Colors.yellow,
+                    width: MediaQuery.of(context).size.width - 82,
+                    height: 200,
+                  ),
                 ],
               )),
-        ],
-      )),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

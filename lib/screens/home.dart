@@ -43,7 +43,6 @@ class _HomePageViewState extends State<HomePageView> {
                       ),
                       Container(
                         color: themeProvider.themeData().primaryColor,
-                        height: 200,
                         width: MediaQuery.of(context).size.width - 202,
                         child: Dashboard(),
                       )
