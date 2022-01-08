@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/providers/theme_provider.dart';
+import 'package:waultar/widgets/upload/upload_files.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -20,25 +21,11 @@ class _DashboardState extends State<Dashboard> {
     return svg;
   }
 
-  // Widget addButton() {
-  //   return ElevatedButton(
-  //       style: ButtonStyle(
-  //           textStyle: MaterialStateProperty.all<TextStyle>(
-  //               TextStyle(color: Colors.white)),
-  //           backgroundColor: MaterialStateProperty.all<Color>(
-  //               themeProvider.themeMode().themeColor)),
-  //       onPressed: () {},
-  //       child: Row(children: [
-  //         addIcon(),
-  //         const SizedBox(
-  //           width: 10,
-  //         ),
-  //         Text(
-  //           "Add",
-  //           style: themeProvider.themeData().textTheme.bodyText2,
-  //         )
-  //       ]));
-  // }
+  _upload(BuildContext context, bool isFile) async {
+    var file = isFile
+        ? await FileUploader.uploadMultiple()
+        : await FileUploader.uploadDirectory();
+  }
 
   Widget addButton() {
     return PopupMenuButton(
@@ -67,6 +54,7 @@ class _DashboardState extends State<Dashboard> {
           ])),
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
         PopupMenuItem<String>(
+            onTap: () async => await _upload(context, true),
             padding: EdgeInsets.zero,
             value: 'New data',
             child: ListTile(

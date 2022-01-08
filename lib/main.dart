@@ -53,7 +53,7 @@ class _WaultarApp extends State<WaultarApp> {
     if (kIsWeb) {
       _routerDelegate = AppRouterDelegate(AppRoutePath.sigin());
     } else {
-      _routerDelegate = AppRouterDelegate(AppRoutePath.testScreen1());
+      _routerDelegate = AppRouterDelegate(AppRoutePath.home());
     }
     super.initState();
   }
