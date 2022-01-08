@@ -1,10 +1,11 @@
 enum MenuScreens {
   dashboard,
-  datacollection,
-  imagelibrary,
+  datasources,
+  album,
+  posts,
+  comments,
+  profile,
   settings,
-  support,
-  darkmode,
-  signout,
-  none
+  logout,
+  alt
 }

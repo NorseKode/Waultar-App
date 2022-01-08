@@ -50,36 +50,36 @@ class _MenuPanelState extends State<MenuPanel> {
                   setState(() {});
                 },
               ),
-              SizedBox(height: 10),
-              MenuItem(
-                active: active == MenuScreens.datacollection ? true : false,
-                icon: FontAwesomeIcons.gem,
-                themeProvider: themeProvider,
-                onPressed: () {
-                  active = MenuScreens.datacollection;
-                  setState(() {});
-                },
-              ),
-              SizedBox(height: 10),
-              MenuItem(
-                active: active == MenuScreens.imagelibrary ? true : false,
-                icon: FontAwesomeIcons.images,
-                themeProvider: themeProvider,
-                onPressed: () {
-                  active = MenuScreens.imagelibrary;
-                  setState(() {});
-                },
-              ),
-              SizedBox(height: 10),
-              MenuItem(
-                active: active == MenuScreens.support ? true : false,
-                icon: FontAwesomeIcons.questionCircle,
-                themeProvider: themeProvider,
-                onPressed: () {
-                  active = MenuScreens.support;
-                  setState(() {});
-                },
-              ),
+              // SizedBox(height: 10),
+              // MenuItem(
+              //   active: active == MenuScreens.datacollection ? true : false,
+              //   icon: FontAwesomeIcons.gem,
+              //   themeProvider: themeProvider,
+              //   onPressed: () {
+              //     active = MenuScreens.datacollection;
+              //     setState(() {});
+              //   },
+              // ),
+              // SizedBox(height: 10),
+              // MenuItem(
+              //   active: active == MenuScreens.imagelibrary ? true : false,
+              //   icon: FontAwesomeIcons.images,
+              //   themeProvider: themeProvider,
+              //   onPressed: () {
+              //     active = MenuScreens.imagelibrary;
+              //     setState(() {});
+              //   },
+              // ),
+              // SizedBox(height: 10),
+              // MenuItem(
+              //   active: active == MenuScreens.support ? true : false,
+              //   icon: FontAwesomeIcons.questionCircle,
+              //   themeProvider: themeProvider,
+              //   onPressed: () {
+              //     active = MenuScreens.support;
+              //     setState(() {});
+              //   },
+              // ),
             ],
           ),
           Column(

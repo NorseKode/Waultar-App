@@ -123,15 +123,11 @@ flutter:
       fonts:
         - asset: lib/assets/inter/Inter-Regular.ttf
         - asset: lib/assets/inter/Inter-Bold.ttf
-          weight: 700     
+          weight: 700       
   
   assets:
-    - lib/assets/graphics/data_graphic.png
-    - lib/assets/graphics/Paw.svg
-    - lib/assets/graphics/Paw_Circle.svg
-    - lib/assets/graphics/Paws_blue.png
-    - lib/assets/graphics/Logo.png
-    - lib/assets/graphics/placeholder.jfif
+    - lib/assets/graphics/
+    - lib/assets/icons/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
