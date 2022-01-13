@@ -35,23 +35,9 @@ class _DashboardState extends State<Dashboard> {
           Radius.circular(5.0),
         ),
       ),
+      elevation: 4,
       offset: const Offset(0.0, 40.0),
-      color: themeProvider.themeData().primaryColor,
-      child: Container(
-          padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-          decoration: BoxDecoration(
-              color: themeProvider.themeMode().themeColor,
-              borderRadius: const BorderRadius.all(Radius.circular(5))),
-          child: Row(children: [
-            addIcon(10, Colors.white),
-            const SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Add",
-              style: themeProvider.themeData().textTheme.bodyText2,
-            )
-          ])),
+      color: themeProvider.themeMode().highlightedPrimary,
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
         PopupMenuItem<String>(
             onTap: () async => await _upload(context, true),
@@ -87,6 +73,21 @@ class _DashboardState extends State<Dashboard> {
               ]),
             ))
       ],
+      child: Container(
+          padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+          decoration: BoxDecoration(
+              color: themeProvider.themeMode().themeColor,
+              borderRadius: const BorderRadius.all(Radius.circular(5))),
+          child: Row(children: [
+            addIcon(10, Colors.white),
+            const SizedBox(
+              width: 10,
+            ),
+            Text(
+              "Add",
+              style: themeProvider.themeData().textTheme.bodyText2,
+            )
+          ])),
     );
   }
 
@@ -96,48 +97,33 @@ class _DashboardState extends State<Dashboard> {
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(35, 22.5, 35, 0),
-      child: SizedBox(
-        height: 500,
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Dashboard",
+                style: themeProvider.themeData().textTheme.headline3,
+              ),
+              addButton()
+            ],
+          ),
+          const SizedBox(height: 22.5),
+          Expanded(
+            child: SingleChildScrollView(
+                child: Column(
               children: [
-                Text(
-                  "Dashboard",
-                  style: themeProvider.themeData().textTheme.headline3,
-                ),
-                addButton()
+                Container(
+                    width: double.infinity,
+                    height: 1000,
+                    decoration: BoxDecoration(
+                        color: themeProvider.themeMode().widgetBackground,
+                        borderRadius: BorderRadius.circular(5))),
               ],
-            ),
-            const SizedBox(height: 22.5),
-            Expanded(
-              child: SingleChildScrollView(
-                  child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    color: Colors.green,
-                    width: MediaQuery.of(context).size.width - 82,
-                    height: 200,
-                  ),
-                  const SizedBox(height: 22.5),
-                  Container(
-                    color: Colors.red,
-                    width: MediaQuery.of(context).size.width - 82,
-                    height: 200,
-                  ),
-                  const SizedBox(height: 22.5),
-                  Container(
-                    color: Colors.yellow,
-                    width: MediaQuery.of(context).size.width - 82,
-                    height: 200,
-                  ),
-                ],
-              )),
-            )
-          ],
-        ),
+            )),
+          )
+        ],
       ),
     );
   }
