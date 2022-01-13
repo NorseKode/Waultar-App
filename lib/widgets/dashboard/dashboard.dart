@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +15,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   late ThemeProvider themeProvider;
+  List<File> uploadedFiles = [];
 
   Widget addIcon(double size, Color color) {
     const assetName = 'lib/assets/icons/fi-rr-plus.svg';
@@ -25,6 +28,85 @@ class _DashboardState extends State<Dashboard> {
     var file = isFile
         ? await FileUploader.uploadMultiple()
         : await FileUploader.uploadDirectory();
+    file != null ? uploadedFiles = file : null;
+    setState(() {});
+  }
+
+  uploadedWidgets() {
+    List<Widget> files = [];
+    List<Widget> images = [];
+    uploadedFiles.map((item) {
+      switch (item.path.split('.').last) {
+        case 'png':
+        case 'jpg':
+          images.add(Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Image.file(item, width: 200),
+          ));
+          return null;
+        default:
+          files.add(Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(item.path.split('\\').last),
+          ));
+          return null;
+      }
+    }).toList();
+    print(uploadedFiles.length);
+    return Column(children: [
+      Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+            color: themeProvider.themeMode().widgetBackground,
+            borderRadius: BorderRadius.circular(5)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: files,
+          ),
+        ),
+      ),
+      SizedBox(height: 20),
+      Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+            color: themeProvider.themeMode().widgetBackground,
+            borderRadius: BorderRadius.circular(5)),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Wrap(
+            children: images,
+          ),
+        ),
+      ),
+    ]);
+  }
+
+  // Column(
+  //             children: [
+  //               Container(
+  //                   width: double.infinity,
+  //                   height: 1000,
+  //                   decoration: BoxDecoration(
+  //                       color: themeProvider.themeMode().widgetBackground,
+  //                       borderRadius: BorderRadius.circular(5)),
+  //                   child: Padding(
+  //                       padding: const EdgeInsets.all(16.0),
+  //                       child: Column(
+  //                         crossAxisAlignment: CrossAxisAlignment.start,
+  //                         children: uploadedWidgets(),
+  //                       ))),
+  //             ],
+  //           )
+
+  int typeSort(var a, var b) {
+    if (a is Text && b is Image)
+      return -1;
+    else if (b is Text && a is Image)
+      return 1;
+    else
+      return -1;
   }
 
   Widget addButton() {
@@ -43,34 +125,40 @@ class _DashboardState extends State<Dashboard> {
             onTap: () async => await _upload(context, true),
             padding: EdgeInsets.zero,
             value: 'New data',
-            child: ListTile(
-              dense: true,
-              title: Row(children: [
-                addIcon(15, Colors.grey),
-                const SizedBox(
-                  width: 20,
-                ),
-                Text(
-                  "New data",
-                  style: themeProvider.themeMode().bodyText3,
-                )
-              ]),
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: ListTile(
+                dense: true,
+                title: Row(children: [
+                  addIcon(15, Colors.grey),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Text(
+                    "New data",
+                    style: themeProvider.themeMode().bodyText3,
+                  )
+                ]),
+              ),
             )),
         PopupMenuItem<String>(
             padding: EdgeInsets.zero,
             value: 'New widget',
-            child: ListTile(
-              dense: true,
-              title: Row(children: [
-                addIcon(15, Colors.grey),
-                const SizedBox(
-                  width: 20,
-                ),
-                Text(
-                  "New widget",
-                  style: themeProvider.themeMode().bodyText3,
-                )
-              ]),
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: ListTile(
+                dense: true,
+                title: Row(children: [
+                  addIcon(15, Colors.grey),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  Text(
+                    "New widget",
+                    style: themeProvider.themeMode().bodyText3,
+                  )
+                ]),
+              ),
             ))
       ],
       child: Container(
@@ -94,7 +182,6 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     themeProvider = Provider.of<ThemeProvider>(context);
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(35, 22.5, 35, 0),
       child: Column(
@@ -111,17 +198,7 @@ class _DashboardState extends State<Dashboard> {
           ),
           const SizedBox(height: 22.5),
           Expanded(
-            child: SingleChildScrollView(
-                child: Column(
-              children: [
-                Container(
-                    width: double.infinity,
-                    height: 1000,
-                    decoration: BoxDecoration(
-                        color: themeProvider.themeMode().widgetBackground,
-                        borderRadius: BorderRadius.circular(5))),
-              ],
-            )),
+            child: SingleChildScrollView(child: uploadedWidgets()),
           )
         ],
       ),

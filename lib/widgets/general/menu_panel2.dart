@@ -214,9 +214,10 @@ class _MenuPanel2State extends State<MenuPanel2> {
                   analytics(),
                   SizedBox(height: 20),
                   collections(),
+                  SizedBox(height: 20),
+                  darkmodeButton(),
                 ],
               ),
-              darkmodeButton(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
