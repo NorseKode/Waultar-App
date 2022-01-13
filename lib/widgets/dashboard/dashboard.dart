@@ -52,34 +52,37 @@ class _DashboardState extends State<Dashboard> {
           return null;
       }
     }).toList();
-    print(uploadedFiles.length);
     return Column(children: [
-      Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-            color: themeProvider.themeMode().widgetBackground,
-            borderRadius: BorderRadius.circular(5)),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: files,
-          ),
-        ),
-      ),
-      SizedBox(height: 20),
-      Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-            color: themeProvider.themeMode().widgetBackground,
-            borderRadius: BorderRadius.circular(5)),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Wrap(
-            children: images,
-          ),
-        ),
-      ),
+      files.isEmpty
+          ? const SizedBox.shrink()
+          : Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: themeProvider.themeMode().widgetBackground,
+                  borderRadius: BorderRadius.circular(5)),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: files,
+                ),
+              ),
+            ),
+      files.isEmpty ? const SizedBox.shrink() : SizedBox(height: 20),
+      images.isEmpty
+          ? const SizedBox.shrink()
+          : Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: themeProvider.themeMode().widgetBackground,
+                  borderRadius: BorderRadius.circular(5)),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Wrap(
+                  children: images,
+                ),
+              ),
+            ),
     ]);
   }
 
