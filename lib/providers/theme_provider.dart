@@ -63,6 +63,10 @@ class ThemeProvider with ChangeNotifier {
       iconSize: 12,
       bodyText3: const TextStyle(
           color: Colors.grey, fontSize: 13, fontWeight: FontWeight.w500),
+      bodyText4: TextStyle(
+          color: isLightTheme ? Color(0xFF65696F) : Color(0xFFE0E0E0),
+          fontSize: 14,
+          fontWeight: FontWeight.w400),
       widgetBackground: isLightTheme ? Color(0xFFEEEEEE) : Color(0xff252728),
       highlightedPrimary:
           isLightTheme ? Color(0xFFFFFFFF) : Color(0xFF1C1E1F), //0xFF262a2d),
@@ -77,6 +81,7 @@ class PersonalTheme {
   Color iconColor;
   double iconSize;
   TextStyle bodyText3;
+  TextStyle bodyText4;
   Color widgetBackground;
   Color highlightedPrimary;
 
@@ -86,6 +91,7 @@ class PersonalTheme {
       required this.iconColor,
       required this.iconSize,
       required this.bodyText3,
+      required this.bodyText4,
       required this.widgetBackground,
       required this.highlightedPrimary});
 }

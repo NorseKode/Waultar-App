@@ -41,13 +41,16 @@ class _DashboardState extends State<Dashboard> {
         case 'jpg':
           images.add(Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Image.file(item, width: 200),
+            child: Image.file(item, height: 200),
           ));
           return null;
         default:
           files.add(Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(item.path.split('\\').last),
+            child: Text(
+              item.path.split('\\').last,
+              style: themeProvider.themeMode().bodyText4,
+            ),
           ));
           return null;
       }
@@ -85,23 +88,6 @@ class _DashboardState extends State<Dashboard> {
             ),
     ]);
   }
-
-  // Column(
-  //             children: [
-  //               Container(
-  //                   width: double.infinity,
-  //                   height: 1000,
-  //                   decoration: BoxDecoration(
-  //                       color: themeProvider.themeMode().widgetBackground,
-  //                       borderRadius: BorderRadius.circular(5)),
-  //                   child: Padding(
-  //                       padding: const EdgeInsets.all(16.0),
-  //                       child: Column(
-  //                         crossAxisAlignment: CrossAxisAlignment.start,
-  //                         children: uploadedWidgets(),
-  //                       ))),
-  //             ],
-  //           )
 
   int typeSort(var a, var b) {
     if (a is Text && b is Image)
