@@ -1,14 +1,24 @@
-// import 'dart:io';
+import 'package:waultar/parser/parse_helper.dart';
 
-// import 'base_entity.dart';
-// import 'parser_enums.dart';
+import 'parser_enums.dart';
 
-// class ContentDTO extends BaseEntity {
-//   final String AssociatedContentId;
-//   final  MyContentType ContentType;
+class ContentDTO {
+  final String guid;
+  final MyContentType contentType;
+  final String title;
+  final String description;
 
-//   ContentDTO(Guid, Timestamp, ProfileId, this.AssociatedContentId, this.ContentType) : super(Guid, Timestamp, ProfileId)
+  ContentDTO(this.guid, this.contentType, this.title, this.description);
 
-//   ContentDTO.fromJson(Map<String, dynamic> json)
-//     : 
-// }
+  ContentDTO.fromJson(Map<String, dynamic> json, List<String> contentTypeNames,
+      List<String> titleNames, List<String> descriptionNames)
+      : guid = 'TODO',
+        contentType = MyContentType.unknown,
+        title = trySeveralNames(json, titleNames),
+        description = trySeveralNames(json, descriptionNames);
+
+  @override
+  String toString() {
+    return "guid: ${guid}, content type: ${contentType}, title: ${title}, description: ${description}";
+  }
+}

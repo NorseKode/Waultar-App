@@ -1,6 +1,7 @@
 enum MyContentType {
-  Post,
-  Comment
+  post,
+  comment,
+  unknown
 }
 
 enum MediaType {
