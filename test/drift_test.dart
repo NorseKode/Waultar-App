@@ -1,7 +1,6 @@
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:waultar/db/drift_config.dart';
+import 'package:waultar/db/configs/drift_config.dart';
 
 import 'package:waultar/services/startup.dart';
 
@@ -14,26 +13,36 @@ Future<void> main() async {
     db = locator<WaultarDb>();
   });
 
-  tearDown(() async {
+  tearDownAll(() async {
     await db.close();
   });
 
   group('Test that DAOs can be invoked', () {
     
-    test('given new entry returns id and correct entry', () async {
+    test('given new db returns darkmode deafult value is false', () async {
 
-      final dao = db.todosDao;
-      const todo = TodosCompanion(
-        title: Value('Setup drift'),
-        content: Value('Very urgent'),
-      );
+      final _dao = db.userSettingsDao;
+      
 
-      final id = await dao.addTodo(todo);
-      expect(id, 1);
+      final userSettings = await _dao.getSettings();
+      expect(userSettings.darkmode, false);
 
-      final created = await dao.getTodoByIdAsFuture(1);
-      expect(created.title, 'Setup drift');
+      // final created = await dao.getTodoByIdAsFuture(1);
+      // expect(created.title, 'Setup drift');
 
+    });
+
+    test('given true updates darkmode', () async {
+
+      final _dao = db.userSettingsDao;
+      const companion = UserAppSettingsCompanion(darkmode: Value(true));
+
+      bool updated = await _dao.updateSettings(companion);
+      expect(updated, true);
+
+      final userSettings = await _dao.getSettings();
+      expect(userSettings.darkmode, true);
+      
     });
 
   });
