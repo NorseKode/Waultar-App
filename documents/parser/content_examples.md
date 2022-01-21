@@ -115,6 +115,7 @@ Excerpts from the json files, on how different contents are structured
 ```
 
 ### posts\your_posts_1.json
+
 ```json
 [
     {
@@ -439,4 +440,276 @@ Excerpts from the json files, on how different contents are structured
 
     ]
 }
+```
+
+### events/your_events.json
+```json
+{
+  "your_events_v2": [
+    {
+      "name": "Livestream - Danpr\u00c3\u00b8ve Ceremoni 34. Ki + 2. Dan",
+      "start_timestamp": 1605448800,
+      "end_timestamp": 1605452400,
+      "description": "Vi fejrer dette \u00c3\u00a5rs danpr\u00c3\u00b8ve-deltagere!\nDa vi pga. Corona ikke kan invitere til fest som vi plejer, fors\u00c3\u00b8ger vi med en livestream af ceremonien, hvor deltagerne f\u00c3\u00a5r overrakt b\u00c3\u00a6lter, diplomer osv.\n\nWe are celebrating this years Dan Test participants! As we are unable to have a Big party like usual, we will try to livestream the ceremony, where the participants are given their belts, diplomas etc.\n\n\u00f0\u009f\u008e\u0088\u00f0\u009f\u0087\u00a9\u00f0\u009f\u0087\u00b0\u00f0\u009f\u00a5\u0082\u00e2\u00ad\u0090\u00ef\u00b8\u008f",
+      "create_timestamp": 1604605248
+    },
+    ...
+    {
+      "name": "Poker Night hos g\u00c3\u00a5sen",
+      "start_timestamp": 1489856400,
+      "end_timestamp": 0,
+      "place": {
+        "name": "Brol\u00c3\u00b8kkevej 54",
+        "coordinate": {
+          "latitude": 55.38192,
+          "longitude": 10.34847
+        }
+      },
+      "description": "Guys, hvis I har tid l\u00c3\u00b8rdag aften, og der er nok opbakning omkring det, vil jeg gerne invitere jer til pokeraften hos mig den f\u00c3\u00b8rn\u00c3\u00a6vnte dag/nat. I kan bare komme n\u00c3\u00a5r I lyster - jeg besidder ikke selv poker equipment, s\u00c3\u00a5 nogen m\u00c3\u00a5 medbringe dette .. ( Borch og Lund ) \nHvis I har lyst til at spise hos mig, s\u00c3\u00a5 sig lige til. Jeg er alene hjemme hele weekenden. \n\nYours sincerely,\nGus Hansen",
+      "create_timestamp": 1489524301
+    },
+    ...
+  ]
+}
+```
+
+### groups/your_posts_in_groups
+
+- same structure as normal posts and polls
+
+### groups/your_comments_in_groups
+
+```json
+{
+  "group_comments_v2": [
+      {
+      "timestamp": 1538845753,
+      "data": [
+        {
+          "comment": {
+            "timestamp": 1538845753,
+            "comment": "Hvor og hvorn\u00c3\u00a5r i morgen?",
+            "author": "Gustav Johansen",
+            "group": "FC CAMPUS"
+          }
+        }
+      ],
+      "title": "Gustav Johansen har kommenteret Jacob Bachs opslag."
+    }
+  ]
+}
+```
+
+### groups/your_groups
+
+```json
+{
+  "groups_admined_v2": [
+    {
+      "name": "SM\u00c3\u0098LFANE P\u00c3\u0085 DEN R\u00c3\u0098DE FR\u00c3\u0086KKERT",
+      "timestamp": 1321634394
+    },
+    ...
+  ]
+}
+```
+
+## Instagram
+
+### comments/post_comments.json
+```json
+{
+  "comments_media_comments": [
+     {
+      "title": "lvolinsta",
+      "media_list_data": [
+        
+      ],
+      "string_list_data": [
+        {
+          "href": "",
+          "value": "@thanweergafoor ahh, of course, it all makes sense now, thanks! \u00f0\u009f\u00a4\u0099",
+          "timestamp": 1550618520
+        }
+      ]
+    },
+    ...
+  ]
+}
+```
+
+### content/posts_1.json
+```json
+[
+    {
+        "media": [
+        {
+            "uri": "media/posts/201806/34844817_2071234879810679_176722768024924871_n_17851964128264437.mp4",
+            "creation_timestamp": 1528646598,
+            "title": "After having landed scoot back full, I had to try it in a combo! First try and somewhat satisfied except for the small break, sadly I twisted my ankle on my second try... #scoot #backflip #backfull #tricking #martialarts #training #flips #parkour #lvol"
+        }
+        ]
+    },
+  ...
+    {
+        "media": [
+        {
+            "uri": "media/posts/201912/80041955_166699531104799_746025938224980092_n_17856715594629257.mp4",
+            "creation_timestamp": 1575388926,
+            "media_metadata": {
+            "video_metadata": {
+                "exif_data": [
+                {
+                    "latitude": 55.71835,
+                    "longitude": 11.72495
+                }
+                ]
+            }
+            },
+            "title": "You know if I don't drop the staff, and maybe do my punches more clearly, then it's almost there \u00f0\u009f\u0098\u0082\n#martialarts #tricking #hapkido"
+        }
+        ]
+    },
+  ...
+    {
+        "media": [
+        {
+            "uri": "media/posts/201904/56560768_1970692303053594_6309902514592175656_n_18025938001189213.jpg",
+            "creation_timestamp": 1554996051,
+            "media_metadata": {
+            "photo_metadata": {
+                "exif_data": [
+                {
+                    "latitude": 36,
+                    "longitude": 128
+                }
+                ]
+            }
+            },
+            "title": "Anyone else feel spring around the corner? \u00f0\u009f\u0099\u008c"
+        }
+        ]
+    },
+    ...
+    {
+        "media": [
+        {
+            "uri": "media/posts/201806/G0NqSARUCKAJDMywXQAlwo9cKPXEYFGRhc2hfYmFzZWxpbmVfNjQwX3YxEQB17gcA_17949994489068497",
+            "creation_timestamp": 1530370210,
+            "title": ""
+        },
+        {
+            "uri": "media/posts/201806/ARUCKAJDMywXQAlwo9cKPXEYFGRhc2hfYmFzZWxpbmVfNjQwX3YxEQB17gcA_17883999907227667",
+            "creation_timestamp": 1530370223,
+            "title": ""
+        }
+        ],
+        "title": "And finally, after a long wait (f\u00e2\u0080\u00a6 my foot) I finally did a running #backflip on the ground! love it! But which one looks best 1 or 2? #martialarts #tricking #hapkido #question #vote #martialart #martialartslife #martialartstricking #taekwondo #tkd #wushu #parkour #sport #trainning #practice #show #freerunning #gainer #lvol",
+        "creation_timestamp": 1530370226
+    },
+    {
+    "media": [
+      {
+        "uri": "media/posts/202001/81823458_171752327544134_5657245478680388270_n_17906545678395831.jpg",
+        "creation_timestamp": 1578045437,
+        "media_metadata": {
+          "photo_metadata": {
+            "exif_data": [
+              {
+                "iso": 20,
+                "focal_length": "3.99",
+                "lens_model": "iPhone 8 back camera 3.99mm f/1.8",
+                "scene_capture_type": "standard",
+                "software": "12.1.4",
+                "device_id": "26FB9E66-5190-49A9-BE07-95CC8151E0E8",
+                "scene_type": 1,
+                "camera_position": "back",
+                "lens_make": "Apple",
+                "date_time_digitized": "2019:06:27 14:55:13",
+                "date_time_original": "2019:06:27 14:55:13",
+                "source_type": "library",
+                "aperture": "1.6959938128383605",
+                "shutter_speed": "10.709981458590853",
+                "metering_mode": "5"
+              }
+            ]
+          }
+        },
+        "title": ""
+      }
+    ]
+    }
+]
+```
+
+### content/profile_photos
+
+```json
+{
+  "ig_profile_picture": [
+    {
+      "uri": "media/other/116841756_338942450833890_3002663964743105975_n_17845874774284126.jpg",
+      "creation_timestamp": 1596126357,
+      "title": "",
+      "is_profile_picture": true
+    }
+  ]
+}
+```
+
+### content/stories
+
+```json
+{
+  "ig_stories": [
+    {
+      "uri": "media/stories/202102/144485749_937105983766758_611672636495602899_n_17885924098997909.jpg",
+      "creation_timestamp": 1612207235,
+      "media_metadata": {
+        "photo_metadata": {
+          "exif_data": [
+            {
+              "device_id": "26FB9E66-5190-49A9-BE07-95CC8151E0E8",
+              "camera_position": "front",
+              "source_type": "library"
+            }
+          ]
+        }
+      },
+      "title": ""
+    },
+    ...
+    {
+      "uri": "media/stories/202009/120227877_1087076641711480_2732489047480466054_n_17878664182849318.mp4",
+      "creation_timestamp": 1601245865,
+      "title": ""
+    },
+    ...
+    {
+      "uri": "media/stories/202008/117567851_1201703443514520_5721942446699423877_n_17848107014294002.jpg",
+      "creation_timestamp": 1597235940,
+      "media_metadata": {
+        "photo_metadata": {
+          "exif_data": [
+            {
+              "iso": 20,
+              "focal_length": "3.99",
+              "lens_model": "iPhone 8 back camera 3.99mm f/1.8",
+              "software": "12.1.4",
+              "device_id": "26FB9E66-5190-49A9-BE07-95CC8151E0E8",
+              "scene_type": 1,
+              "camera_position": "back",
+              "lens_make": "Apple",
+              "date_time_digitized": "2020:08:12 14:38:43",
+              "date_time_original": "2020:08:12 14:38:43",
+              "source_type": "camera",
+              "aperture": "1.6959938131099002",
+              "shutter_speed": "5.322101228680505",
+              "metering_mode": "3"
+            }
+          ]
+        }
+      },
+      "title": ""
+    },
 ```
