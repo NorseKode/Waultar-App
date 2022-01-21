@@ -14,6 +14,11 @@ Set<String> aux(dynamic jsonData, Set<String> set) {
       if (jsonData[key] is Map<String, dynamic>) {
         set = aux(jsonData[key], set);
       }
+      // If the json object contains another json list , recursively go through 
+      // this and add all its keys to the set
+      else if (jsonData[key] is List<dynamic>) {
+        set = aux(jsonData[key], set);
+      }
     }
   } 
   // The data parsed is a josn list
@@ -60,5 +65,6 @@ void main() async {
   var res = await findAllKeys("D:\\OneDrive\\NorseKode\\data\\lvolinsta_20211206");
   // var res = await findAllKeys("D:\\OneDrive\\NorseKode\\data\\facebook-lukasvlarsen");
   print(res.length);
-  writeSetToFile(res, ".\\keys-instagram.txt");
+  // writeSetToFile(res, ".\\keys-instagram.txt");
+  // writeSetToFile(res, ".\\keys-facebook.txt");
 }
