@@ -36,3 +36,30 @@ class _GenericViewState extends State<GenericView> {
   }
 }
 ```
+
+## How to add a new translation
+This requires altering to files located at the internationalization folder, with the required localization. This only special file is the app_en.arb, as it is the template file, with requires the following additions
+
+```arb
+{
+    "helloWorld": "Hello World!",
+    ...
+    "myTranslation": "My Translation",
+    "@helloWorld": {
+      "description": "The conventional newborn programmer greeting"
+    },
+    ...
+    "@myTranslation": {
+      "description": "Description explaining if needed"
+    }
+}
+```
+While any other files only requires the first addition, like so:
+
+```arb
+{
+    "helloWorld": "Hej Verden",
+    ...
+    "myTranslation": "Min Oversættelse"
+}
+```
