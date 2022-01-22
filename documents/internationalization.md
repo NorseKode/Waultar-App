@@ -26,9 +26,9 @@ class _GenericViewState extends State<GenericView> {
 
   @override
   Widget build(BuildContext context) {
-    localizer = AppLocalizations.of(context)!;
-    
+    localizer = AppLocalizations.of(context)!;    
     themeProvider = Provider.of<ThemeProvider>(context);
+    
     return Container(
       child: Text(localizer.helloWorld)
       ...

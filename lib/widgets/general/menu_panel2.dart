@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:waultar/providers/theme_provider.dart';
 import 'package:waultar/widgets/general/menu_screens.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MenuPanel2 extends StatefulWidget {
   const MenuPanel2({Key? key}) : super(key: key);
@@ -13,6 +14,7 @@ class MenuPanel2 extends StatefulWidget {
 }
 
 class _MenuPanel2State extends State<MenuPanel2> {
+  late AppLocalizations localizer;
   var active = MenuScreens.dashboard;
   late ThemeProvider themeProvider;
   double menuWidth = 200;
@@ -46,9 +48,7 @@ class _MenuPanel2State extends State<MenuPanel2> {
       assetName,
       semanticsLabel: 'menu logo: ' + icon,
       height: 15,
-      color: highlight
-          ? themeProvider.themeMode().themeColor
-          : themeProvider.themeMode().iconColor,
+      color: highlight ? themeProvider.themeMode().themeColor : themeProvider.themeMode().iconColor,
     );
     return svg;
   }
@@ -61,10 +61,7 @@ class _MenuPanel2State extends State<MenuPanel2> {
         width: menuWidth,
         decoration: BoxDecoration(
             border: active == screen
-                ? Border(
-                    right: BorderSide(
-                        width: 3.0,
-                        color: themeProvider.themeMode().themeColor))
+                ? Border(right: BorderSide(width: 3.0, color: themeProvider.themeMode().themeColor))
                 : null),
         child: Material(
           color: Colors.transparent,
@@ -100,10 +97,9 @@ class _MenuPanel2State extends State<MenuPanel2> {
         Container(
             alignment: Alignment.centerLeft,
             height: 30,
-            child: Text("ANALYTICS",
-                style: themeProvider.themeData().textTheme.bodyText1)),
-        menuButton('dashboard', "Dashboard", MenuScreens.dashboard),
-        menuButton('world', "Data sources", MenuScreens.datasources),
+            child: Text(localizer.analytics.toUpperCase(), style: themeProvider.themeData().textTheme.bodyText1)),
+        menuButton('dashboard', localizer.dashboard, MenuScreens.dashboard),
+        menuButton('world', localizer.dataSources, MenuScreens.datasources),
       ],
     );
   }
@@ -116,13 +112,13 @@ class _MenuPanel2State extends State<MenuPanel2> {
           alignment: Alignment.centerLeft,
           height: 30,
           child: Text(
-            "COLLECTIONS",
+            localizer.collections.toUpperCase(),
             style: themeProvider.themeData().textTheme.bodyText1,
           ),
         ),
-        menuButton('picture', "Album", MenuScreens.album),
-        menuButton('document', "Posts", MenuScreens.posts),
-        menuButton('edit', "Comments", MenuScreens.comments)
+        menuButton('picture', localizer.album, MenuScreens.album),
+        menuButton('document', localizer.posts, MenuScreens.posts),
+        menuButton('edit', localizer.comments, MenuScreens.comments)
       ],
     );
   }
@@ -135,10 +131,7 @@ class _MenuPanel2State extends State<MenuPanel2> {
         width: menuWidth,
         decoration: BoxDecoration(
             border: active == MenuScreens.profile
-                ? Border(
-                    right: BorderSide(
-                        width: 3.0,
-                        color: themeProvider.themeMode().themeColor))
+                ? Border(right: BorderSide(width: 3.0, color: themeProvider.themeMode().themeColor))
                 : null),
         child: Material(
           color: Colors.transparent,
@@ -160,9 +153,7 @@ class _MenuPanel2State extends State<MenuPanel2> {
                   ),
                   const SizedBox(width: 10),
                   Text('John D.',
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: themeProvider.themeMode().iconColor))
+                      style: TextStyle(fontSize: 12, color: themeProvider.themeMode().iconColor))
                 ],
               ),
             ),
@@ -183,13 +174,10 @@ class _MenuPanel2State extends State<MenuPanel2> {
         width: menuWidth,
         child: Row(
           children: [
-            themeProvider.isLightTheme
-                ? menuIcon('sun', false)
-                : menuIcon('moon', false),
+            themeProvider.isLightTheme ? menuIcon('sun', false) : menuIcon('moon', false),
             const SizedBox(width: 10),
-            Text('Change theme',
-                style: TextStyle(
-                    fontSize: 12, color: themeProvider.themeMode().iconColor))
+            Text(localizer.changeTheme,
+                style: TextStyle(fontSize: 12, color: themeProvider.themeMode().iconColor))
           ],
         ),
       ),
@@ -198,7 +186,9 @@ class _MenuPanel2State extends State<MenuPanel2> {
 
   @override
   Widget build(BuildContext context) {
+    localizer = AppLocalizations.of(context)!;
     themeProvider = Provider.of<ThemeProvider>(context);
+    
     return Container(
         color: themeProvider.themeData().primaryColor,
         width: menuWidth,
@@ -222,10 +212,8 @@ class _MenuPanel2State extends State<MenuPanel2> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   profile(),
-                  menuButton(
-                      'settings-sliders', "Settings", MenuScreens.settings),
-                  menuButton(
-                      'angle-double-small-left', "Logout", MenuScreens.logout)
+                  menuButton('settings-sliders', localizer.settings, MenuScreens.settings),
+                  menuButton('angle-double-small-left', localizer.logout, MenuScreens.logout)
                 ],
               ),
             ],

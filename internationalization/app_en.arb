@@ -1,6 +1,58 @@
 {
     "helloWorld": "Hello World!",
+    "newData": "New Data",
+    "dashboard": "Dashboard",
+    "add": "Add",
+    "newWidget": "New Widget",
+    "analytics": "Analytics",
+    "settings": "Settings",
+    "logout": "Logout",
+    "changeTheme": "Change Theme",
+    "album": "Album",
+    "posts": "Posts",
+    "comments": "Comments",
+    "collections": "Collections",
+    "dataSources": "Data Sources",
     "@helloWorld": {
       "description": "The conventional newborn programmer greeting"
+    },
+    "@newData": {
+      "description": ""
+    },
+    "@dashboard": {
+      "description": ""
+    },
+    "@add": {
+      "description": ""
+    },
+    "@newWidget": {
+      "description": ""
+    },
+    "@analytics": {
+      "description": ""
+    },
+    "@settings": {
+      "description": ""
+    },
+    "@logout": {
+      "description": ""
+    },
+    "@changeTheme": {
+      "description": ""
+    },
+    "@album": {
+      "description": ""
+    },
+    "@posts": {
+      "description": ""
+    },
+    "@comments": {
+      "description": ""
+    },
+    "@collections": {
+      "description": ""
+    },
+    "@dataSources": {
+      "description": ""
     }
 }

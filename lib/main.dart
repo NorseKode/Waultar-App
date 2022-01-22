@@ -68,6 +68,7 @@ class _WaultarApp extends State<WaultarApp> {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp.router(
       title: 'Waultar',
+      locale: Locale('da', ''),
       theme: themeProvider.themeData(),
       routerDelegate: _routerDelegate!,
       routeInformationParser: _routeInformationParser,
@@ -79,7 +80,7 @@ class _WaultarApp extends State<WaultarApp> {
       ],
       supportedLocales: const [
         Locale('en', ''),
-        Locale('dk', ''),
+        Locale('da', ''),
       ],
     );
   }
