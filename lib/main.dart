@@ -11,6 +11,8 @@ import 'package:waultar/navigation/app_navigator.dart';
 import 'package:waultar/navigation/app_state.dart';
 import 'package:waultar/navigation/router/app_route_path.dart';
 import 'package:waultar/providers/theme_provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'navigation/router/app_route_information_parser.dart';
 import 'navigation/router/app_router_delegate.dart';
@@ -69,6 +71,16 @@ class _WaultarApp extends State<WaultarApp> {
       theme: themeProvider.themeData(),
       routerDelegate: _routerDelegate!,
       routeInformationParser: _routeInformationParser,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en', ''),
+        Locale('dk', ''),
+      ],
     );
   }
 }
