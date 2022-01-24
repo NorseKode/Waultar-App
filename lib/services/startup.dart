@@ -4,7 +4,7 @@ import 'package:drift/native.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:waultar/db/drift_config.dart';
+import 'package:waultar/db/configs/drift_config.dart';
 import 'package:waultar/services/settings_service.dart';
 import 'package:waultar/services/sqlite_service.dart';
 
