@@ -33,6 +33,11 @@ class Image implements Insertable<Image> {
       timestamp: Value(timestamp),
     ).toColumns(nullToAbsent);
   }
+
+  @override
+  String toString() {
+    return "id: ${id}, path: ${path}, timestamp: ${timestamp}";
+  }
 }
 
 DateTime getDateTime(var json) {

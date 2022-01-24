@@ -48,11 +48,27 @@ Image? aux(var data, String keyword, Function funToCall) {
   }
 }
 
-loadImages(var data) {
+loadImages(List<Image> acc, var data) {
   if (data is Map<String, dynamic>) {
+    for (var val in data.values) {
+      if (val is Map<String, dynamic> && val.containsKey("uri")) {
+        var img = Image.fromJson(val);
+        if (img != null) {
+          acc.add(img);
+        }
+      } else {
+        loadImages(acc, val);
+      }
+    }
   } else if (data is List<dynamic>) {
     for (var item in data) {
-      // Image.fromJson(json);
+      var img = Image.fromJson(item);
+
+      if (img == null) {
+        loadImages(acc, item);
+      } else {
+        acc.add(img);
+      }
     }
   }
 }
@@ -61,31 +77,20 @@ callMe(var path) async {
   var images = <Image>[];
   var data = await getJsonString(path);
 
+  loadImages(images, data);
+
   // if (data is Map<String, dynamic>) {
-  //   for (var item in data.keys) {
-  //     var res = aux(data[item], "media");
-  //     if (res != null) {
-  //       images.add(res);
-  //     }
+  //   if (data.containsKey("photos")) {
+  //     loadImages(images, data);
   //   }
   // } else if (data is List<dynamic>) {
   //   for (var item in data) {
-  //     print(item);
-  //     var res = aux(item, "media");
-  //     if (res != null) {
-  //       images.add(res);
-  //     }
-  //     break;
-  //   }
-  // }
+  //     var image = Image.fromJson(item);
 
-  if (data is Map<String, dynamic>) {
-    if (data.containsKey("photos")) {
-      loadImages(data);
-    }
-  }
-  // else if (data is List<dynamic>) {
-  //     loadImages(data);
+  //     if (image != null) {
+  //       images.add(image);
+  //     }
+  //   }
   // }
 
   print(images.length);

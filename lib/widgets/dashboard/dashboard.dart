@@ -138,11 +138,12 @@ class _DashboardState extends State<Dashboard> {
             )),
         PopupMenuItem<String>(
             onTap: () async {
-              var dir = await FileUploader.uploadDirectory();
-              copyFolderToDocuments(dir!);
+              // var dir = await FileUploader.uploadDirectory();
+              // copyFolderToDocuments(dir!);
 
-              // var file = await FileUploader.uploadSingle();
-              // var imges = await callMe(file!.path);
+              var file = await FileUploader.uploadSingle();
+              var imges = await callMe(file!.path);
+
               // var context = p.Context(style: Style.windows);
               // // for (var igm in imges) {
               // //   var str = "D:/OneDrive/NorseKode/data/facebook-lukasvlarsen/" + igm.path;
