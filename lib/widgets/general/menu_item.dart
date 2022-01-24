@@ -31,18 +31,13 @@ class MenuItem extends StatelessWidget {
             : ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(
                     themeProvider.themeMode().buttonColor),
-                //elevation: MaterialStateProperty.all(5),
-                // side: MaterialStateProperty.all(BorderSide(
-                //     color: themeProvider.themeMode().buttonColor, width: 1)),
                 shape: MaterialStateProperty.all(RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12))),
-                // shadowColor: MaterialStateProperty.all(
-                //     themeProvider.themeMode().shadowColor)
               ),
         child: Icon(icon,
             size: 20,
             color: !active
-                ? themeProvider.themeMode().secondaryColor
+                ? themeProvider.themeData().primaryColor
                 : themeProvider.themeMode().iconColor),
       ),
     );
