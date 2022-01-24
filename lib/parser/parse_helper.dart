@@ -1,6 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:waultar/models/tables/images_table.dart';
+import 'package:waultar/widgets/upload/upload_files.dart';
+import 'package:path/path.dart' as p;
+
 import 'content_dto.dart';
 
 String trySeveralNames(Map<String, dynamic> json, List<String> pathNames) {
@@ -17,6 +23,93 @@ String trySeveralNames(Map<String, dynamic> json, List<String> pathNames) {
   }
 
   return '';
+}
+
+getJsonString(var path) async {
+  File file = File(path);
+  var jsonString = await file.readAsString();
+  return jsonDecode(jsonString);
+}
+
+Image? aux(var data, String keyword, Function funToCall) {
+  if (data is Map<String, dynamic>) {
+    if (data.containsKey(keyword)) {
+      var image = Image.fromJson(data[keyword]);
+      return image;
+    } else {
+      for (var key in data.keys) {
+        return aux(data[key], keyword, funToCall);
+      }
+    }
+  } else if (data is List<dynamic>) {
+    for (var object in data) {
+      return aux(object, keyword, funToCall);
+    }
+  }
+}
+
+loadImages(var data) {
+  if (data is Map<String, dynamic>) {
+  } else if (data is List<dynamic>) {
+    for (var item in data) {
+      // Image.fromJson(json);
+    }
+  }
+}
+
+callMe(var path) async {
+  var images = <Image>[];
+  var data = await getJsonString(path);
+
+  // if (data is Map<String, dynamic>) {
+  //   for (var item in data.keys) {
+  //     var res = aux(data[item], "media");
+  //     if (res != null) {
+  //       images.add(res);
+  //     }
+  //   }
+  // } else if (data is List<dynamic>) {
+  //   for (var item in data) {
+  //     print(item);
+  //     var res = aux(item, "media");
+  //     if (res != null) {
+  //       images.add(res);
+  //     }
+  //     break;
+  //   }
+  // }
+
+  if (data is Map<String, dynamic>) {
+    if (data.containsKey("photos")) {
+      loadImages(data);
+    }
+  }
+  // else if (data is List<dynamic>) {
+  //     loadImages(data);
+  // }
+
+  print(images.length);
+
+  return images;
+}
+
+copyFolderToDocuments(String dir) async {
+  var context = p.Context(style: Style.windows);
+  var files = await FileUploader.getAllFilesFrom(dir);
+  var appPath = await getApplicationDocumentsDirectory();
+  var path = context.join(appPath.path, "Waultar");
+
+  for (var file in files) {
+    var tempFile = File(path + file);
+    var exists = await tempFile.exists();
+    if (!exists) {
+      tempFile.create(recursive: true);
+    }
+
+    var oldFile = File(dir + file);
+    var newPath = context.canonicalize(tempFile.path);
+    oldFile.copy(context.canonicalize(newPath));
+  }
 }
 
 // String? aux(var data) {

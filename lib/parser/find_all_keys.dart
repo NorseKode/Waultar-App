@@ -96,7 +96,7 @@ Widget findAllKeysOfJsonAtDirectory(BuildContext context) {
                         TextButton(
                           child: Text("Upload Files"),
                           onPressed: () async {
-                            files = await FileUploader.uploadDirectory();
+                            files = await FileUploader.uploadFilesFromDirectory();
                           },
                         ),
                         Text("Amount of files: " + uploadAmount.toString()),
