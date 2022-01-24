@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/providers/theme_provider.dart';
 import 'package:waultar/widgets/upload/upload_files.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  late AppLocalizations localizer;
   late ThemeProvider themeProvider;
   List<File> uploadedFiles = [];
 
@@ -113,7 +115,7 @@ class _DashboardState extends State<Dashboard> {
         PopupMenuItem<String>(
             onTap: () async => await _upload(context, true),
             padding: EdgeInsets.zero,
-            value: 'New data',
+            value: localizer.newData,
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: ListTile(
@@ -124,7 +126,7 @@ class _DashboardState extends State<Dashboard> {
                     width: 20,
                   ),
                   Text(
-                    "New data",
+                    localizer.newData,
                     style: themeProvider.themeMode().bodyText3,
                   )
                 ]),
@@ -132,7 +134,7 @@ class _DashboardState extends State<Dashboard> {
             )),
         PopupMenuItem<String>(
             padding: EdgeInsets.zero,
-            value: 'New widget',
+            value: localizer.newWidget,
             child: Padding(
               padding: const EdgeInsets.all(4.0),
               child: ListTile(
@@ -143,7 +145,7 @@ class _DashboardState extends State<Dashboard> {
                     width: 20,
                   ),
                   Text(
-                    "New widget",
+                    localizer.newWidget,
                     style: themeProvider.themeMode().bodyText3,
                   )
                 ]),
@@ -161,7 +163,7 @@ class _DashboardState extends State<Dashboard> {
               width: 10,
             ),
             Text(
-              "Add",
+              localizer.add,
               style: themeProvider.themeData().textTheme.bodyText2,
             )
           ])),
@@ -170,6 +172,8 @@ class _DashboardState extends State<Dashboard> {
 
   @override
   Widget build(BuildContext context) {
+    localizer = AppLocalizations.of(context)!;
+    
     themeProvider = Provider.of<ThemeProvider>(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(35, 22.5, 35, 0),
@@ -179,7 +183,7 @@ class _DashboardState extends State<Dashboard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "Dashboard",
+                localizer.dashboard,
                 style: themeProvider.themeData().textTheme.headline3,
               ),
               addButton()
