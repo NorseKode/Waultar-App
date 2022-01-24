@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/parser/find_all_keys.dart';
 import 'package:waultar/providers/theme_provider.dart';
 import 'package:waultar/widgets/upload/upload_files.dart';
 
@@ -107,7 +108,7 @@ class _DashboardState extends State<Dashboard> {
                   "Dashboard",
                   style: themeProvider.themeData().textTheme.headline3,
                 ),
-                addButton()
+                addButton(),
               ],
             ),
             const SizedBox(height: 22.5),
