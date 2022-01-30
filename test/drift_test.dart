@@ -1,8 +1,8 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:waultar/db/configs/drift_config.dart';
+import 'package:waultar/data/configs/drift_config.dart';
 
-import 'package:waultar/services/startup.dart';
+import 'package:waultar/startup.dart';
 
 Future<void> main() async {
   late WaultarDb db;
