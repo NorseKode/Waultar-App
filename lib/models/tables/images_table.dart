@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:waultar/db/configs/drift_config.dart';
+import 'package:waultar/parser/base_entity.dart';
 import 'package:waultar/parser/parse_helper.dart';
 
 @UseRowClass(Image)
@@ -24,6 +25,10 @@ class Image implements Insertable<Image> {
         raw = json.toString(),
         timestamp = getDateTime(json);
 
+  static Image fromJson2(var json) {
+    return Image.fromJson(json);
+  }
+
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     return ImagesTableCompanion(
@@ -38,13 +43,10 @@ class Image implements Insertable<Image> {
   String toString() {
     return "id: ${id}, path: ${path}, timestamp: ${timestamp}";
   }
+
 }
 
 DateTime getDateTime(var json) {
   var res = trySeveralNames(json, ['timestamp', 'creation_timestamp']);
-  // if (res) {
-  //   return DateTime.fromMicrosecondsSinceEpoch(int.parse(res));
-  // } else {
   return DateTime.now();
-  // }
 }

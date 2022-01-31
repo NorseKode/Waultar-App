@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/parser/find_all_keys.dart';
+import 'package:waultar/parser/naive_parser.dart';
 import 'package:waultar/parser/parse_helper.dart';
 import 'package:waultar/providers/theme_provider.dart';
 import 'package:waultar/widgets/upload/upload_files.dart';
@@ -142,7 +143,7 @@ class _DashboardState extends State<Dashboard> {
               // copyFolderToDocuments(dir!);
 
               var file = await FileUploader.uploadSingle();
-              var imges = await callMe(file!.path);
+              var imges = await parseDirectory(file!.path);
 
               // var context = p.Context(style: Style.windows);
               // // for (var igm in imges) {

@@ -1,7 +1,13 @@
 class BaseEntity {
-  final String Guid;
-  final DateTime Timestamp;
-  final String ProfileId;
+  // final String guid;
+  // final DateTime Timestamp;
+  // final String ProfileId;
 
-  BaseEntity(this.Guid, this.Timestamp, this.ProfileId); 
+  BaseEntity(); 
+
+  BaseEntity.fromJson(Map<String, dynamic> json);
+
+  fromJson(Map<String, dynamic> json) {
+    return BaseEntity();
+  }
 }

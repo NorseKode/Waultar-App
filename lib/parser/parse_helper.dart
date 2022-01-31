@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:waultar/models/tables/images_table.dart';
 import 'package:waultar/widgets/upload/upload_files.dart';
 import 'package:path/path.dart' as p;
+import 'package:waultar/widgets/upload/upload_util.dart';
 
 import 'content_dto.dart';
 
@@ -73,31 +74,6 @@ loadImages(List<Image> acc, var data) {
   }
 }
 
-callMe(var path) async {
-  var images = <Image>[];
-  var data = await getJsonString(path);
-
-  loadImages(images, data);
-
-  // if (data is Map<String, dynamic>) {
-  //   if (data.containsKey("photos")) {
-  //     loadImages(images, data);
-  //   }
-  // } else if (data is List<dynamic>) {
-  //   for (var item in data) {
-  //     var image = Image.fromJson(item);
-
-  //     if (image != null) {
-  //       images.add(image);
-  //     }
-  //   }
-  // }
-
-  print(images.length);
-
-  return images;
-}
-
 copyFolderToDocuments(String dir) async {
   var context = p.Context(style: Style.windows);
   var files = await FileUploader.getAllFilesFrom(dir);
@@ -117,52 +93,3 @@ copyFolderToDocuments(String dir) async {
   }
 }
 
-// String? aux(var data) {
-//   if (data.containsKey('uri')) {
-//     return data['uri'];
-//   } else if (data is Map<String, dynamic>) {
-//     for (var item in data.values) {
-//       if (item is Map<String, dynamic>) {
-//         return aux(item);
-//       } else if (item is List<dynamic>) {
-
-//       }
-//     }
-//   } else if (data is List<dynamic>) {
-//     for (var item in data) {
-//       return aux(data);
-//     }
-//   }
-// }
-
-// void main() async {
-//   // var file = await FileUploader.uploadSingle();
-//   // var file = File('D:\\OneDrive\\NorseKode\\data\\facebook-lukasvlarsen\\posts\\your_posts_1.json');
-//   var file = File('\\Users\\lukas\\OneDrive\\NorseKode\\data\\facebook-lukasvlarsen\\comments_and_reactions\\comments.json');
-//   var result = <ContentDTO>[];
-
-//   if (file != null) {
-//     var jsonString = await file.readAsString();
-//     var jsonData = jsonDecode(jsonString);
-
-//     List<dynamic> welp = jsonData['comments_v2'];
-
-//     for (var item in welp) {
-//       var element = ContentDTO.fromJson(item, ["welp"], ["title"], ["description", "comment"]);
-//       print(element);
-//       result.add(element);
-//     }
-
-//     print(result.length);
-
-//     // for (Map<String, dynamic> item in jsonData) {
-//     //   var res = aux(item);
-
-//     //   if (res != null) {
-//     //     print('res');
-//     //   }
-//     // }
-//   }
-
-//   print("done");
-// }
