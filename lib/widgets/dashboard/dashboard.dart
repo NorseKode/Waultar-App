@@ -142,8 +142,9 @@ class _DashboardState extends State<Dashboard> {
               // var dir = await FileUploader.uploadDirectory();
               // copyFolderToDocuments(dir!);
 
-              var file = await FileUploader.uploadSingle();
-              var imges = await parseDirectory(file!.path);
+              // var file = await FileUploader.uploupadSingle();
+              var path = await FileUploader.uploadDirectory();
+              var imges = await parseDirectory(path!);
 
               // var context = p.Context(style: Style.windows);
               // // for (var igm in imges) {

@@ -26,8 +26,13 @@ String trySeveralNames(Map<String, dynamic> json, List<String> pathNames) {
   return '';
 }
 
-getJsonString(var path) async {
+getJsonStringFromPath(var path) async {
   File file = File(path);
+  var jsonString = await file.readAsString();
+  return jsonDecode(jsonString);
+}
+
+getJsonStringFromFile(File file) async {
   var jsonString = await file.readAsString();
   return jsonDecode(jsonString);
 }
@@ -93,3 +98,17 @@ copyFolderToDocuments(String dir) async {
   }
 }
 
+copyFileToDocumentsDirectory(String pathFromDocumentDirectory) async {
+  var context = p.Context(style: Style.windows);
+  var appPath = await getApplicationDocumentsDirectory();
+  var waultarPath = context.join(appPath.path, "Waultar");
+  var finalPath = context.join(waultarPath, pathFromDocumentDirectory);
+  var file = File(finalPath);
+
+  var exists = await file.exists();
+  if (exists) {
+    file.create();
+  }
+
+
+}
