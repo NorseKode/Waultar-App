@@ -2,9 +2,11 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
-import 'package:waultar/core/models/tables/index.dart';
+import 'package:waultar/core/models/appsettings_model.dart';
+import 'package:waultar/core/models/image_model.dart';
+import 'package:waultar/data/entities/index.dart';
 import 'package:waultar/data/repositories/image_dao.dart';
-import 'package:waultar/data/repositories/user_settings_dao.dart';
+import 'package:waultar/data/repositories/appsettings_dao.dart';
 import 'dart:io';
 
 part 'drift_config.g.dart';
@@ -19,17 +21,17 @@ LazyDatabase _openConnection() {
 
 @DriftDatabase(tables: [
   // all tables need to be registered here :
-  UserAppSettings,
-  ImagesTable,
+  AppSettingsEntity,
+  ImageEntity,
 ], daos: [
-  // as well as the respective DAOs :
-  UserSettingsDao,
+  // as well as their respective DAOs :
+  AppSettingsDao,
   ImageDao
 ])
 class WaultarDb extends _$WaultarDb {
   WaultarDb() : super(_openConnection());
 
-  // constructor extension for testing
+  // named constructor for testing
   WaultarDb.testing(QueryExecutor q) : super(q);
 
   // enabling isolation
@@ -41,11 +43,13 @@ class WaultarDb extends _$WaultarDb {
   int get schemaVersion => 1;
 
   @override
-  MigrationStrategy get migration => MigrationStrategy(onCreate: (Migrator m) async {
+  MigrationStrategy get migration =>
+      MigrationStrategy(onCreate: (Migrator m) async {
         await m.createAll();
 
-        var defaults = const UserAppSettingsCompanion(key: Value(1), darkmode: Value(false));
+        var defaults = const AppSettingsEntityCompanion(
+            key: Value(1), darkmode: Value(false));
 
-        await into(userAppSettings).insert(defaults);
+        await into(appSettingsEntity).insert(defaults);
       });
 }

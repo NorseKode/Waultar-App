@@ -3,11 +3,10 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:waultar/core/models/tables/images_table.dart';
+import 'package:waultar/core/models/image_model.dart';
 import 'package:waultar/presentation/widgets/upload/upload_files.dart';
 import 'package:path/path.dart' as p;
 
-import 'content_dto.dart';
 
 String trySeveralNames(Map<String, dynamic> json, List<String> pathNames) {
   for (var name in pathNames) {
@@ -31,10 +30,10 @@ getJsonString(var path) async {
   return jsonDecode(jsonString);
 }
 
-Image? aux(var data, String keyword, Function funToCall) {
+ImageModel? aux(var data, String keyword, Function funToCall) {
   if (data is Map<String, dynamic>) {
     if (data.containsKey(keyword)) {
-      var image = Image.fromJson(data[keyword]);
+      var image = ImageModel.fromJson(data[keyword]);
       return image;
     } else {
       for (var key in data.keys) {
@@ -48,11 +47,11 @@ Image? aux(var data, String keyword, Function funToCall) {
   }
 }
 
-loadImages(List<Image> acc, var data) {
+loadImages(List<ImageModel> acc, var data) {
   if (data is Map<String, dynamic>) {
     for (var val in data.values) {
       if (val is Map<String, dynamic> && val.containsKey("uri")) {
-        var img = Image.fromJson(val);
+        var img = ImageModel.fromJson(val);
         if (img != null) {
           acc.add(img);
         }
@@ -62,7 +61,7 @@ loadImages(List<Image> acc, var data) {
     }
   } else if (data is List<dynamic>) {
     for (var item in data) {
-      var img = Image.fromJson(item);
+      var img = ImageModel.fromJson(item);
 
       if (img == null) {
         loadImages(acc, item);
@@ -74,7 +73,7 @@ loadImages(List<Image> acc, var data) {
 }
 
 callMe(var path) async {
-  var images = <Image>[];
+  var images = <ImageModel>[];
   var data = await getJsonString(path);
 
   loadImages(images, data);

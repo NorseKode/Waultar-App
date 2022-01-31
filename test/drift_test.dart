@@ -8,7 +8,7 @@ Future<void> main() async {
   late WaultarDb db;
   await setupServices(testing: true);
 
-  setUp(() {
+  setUpAll(() {
     db = locator<WaultarDb>();
   });
 
@@ -18,7 +18,7 @@ Future<void> main() async {
 
   group('Test that DAOs can be invoked', () {
     test('given new db returns darkmode deafult value is false', () async {
-      final _dao = db.userSettingsDao;
+      final _dao = db.appSettingsDao;
 
       final userSettings = await _dao.getSettings();
       expect(userSettings.darkmode, false);
@@ -28,8 +28,8 @@ Future<void> main() async {
     });
 
     test('given true updates darkmode', () async {
-      final _dao = db.userSettingsDao;
-      const companion = UserAppSettingsCompanion(darkmode: Value(true));
+      final _dao = db.appSettingsDao;
+      const companion = AppSettingsEntityCompanion(darkmode: Value(true));
 
       bool updated = await _dao.updateSettings(companion);
       expect(updated, true);

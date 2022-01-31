@@ -7,86 +7,18 @@ part of 'drift_config.dart';
 // **************************************************************************
 
 // ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
-class UserSettings extends DataClass implements Insertable<UserSettings> {
-  final int key;
-  final bool darkmode;
-  UserSettings({required this.key, required this.darkmode});
-  factory UserSettings.fromData(Map<String, dynamic> data, {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return UserSettings(
-      key: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}key'])!,
-      darkmode: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}darkmode'])!,
-    );
-  }
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['key'] = Variable<int>(key);
-    map['darkmode'] = Variable<bool>(darkmode);
-    return map;
-  }
-
-  UserAppSettingsCompanion toCompanion(bool nullToAbsent) {
-    return UserAppSettingsCompanion(
-      key: Value(key),
-      darkmode: Value(darkmode),
-    );
-  }
-
-  factory UserSettings.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return UserSettings(
-      key: serializer.fromJson<int>(json['key']),
-      darkmode: serializer.fromJson<bool>(json['darkmode']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'key': serializer.toJson<int>(key),
-      'darkmode': serializer.toJson<bool>(darkmode),
-    };
-  }
-
-  UserSettings copyWith({int? key, bool? darkmode}) => UserSettings(
-        key: key ?? this.key,
-        darkmode: darkmode ?? this.darkmode,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('UserSettings(')
-          ..write('key: $key, ')
-          ..write('darkmode: $darkmode')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(key, darkmode);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is UserSettings &&
-          other.key == this.key &&
-          other.darkmode == this.darkmode);
-}
-
-class UserAppSettingsCompanion extends UpdateCompanion<UserSettings> {
+class AppSettingsEntityCompanion extends UpdateCompanion<AppSettingsModel> {
   final Value<int> key;
   final Value<bool> darkmode;
-  const UserAppSettingsCompanion({
+  const AppSettingsEntityCompanion({
     this.key = const Value.absent(),
     this.darkmode = const Value.absent(),
   });
-  UserAppSettingsCompanion.insert({
+  AppSettingsEntityCompanion.insert({
     this.key = const Value.absent(),
     required bool darkmode,
   }) : darkmode = Value(darkmode);
-  static Insertable<UserSettings> custom({
+  static Insertable<AppSettingsModel> custom({
     Expression<int>? key,
     Expression<bool>? darkmode,
   }) {
@@ -96,8 +28,9 @@ class UserAppSettingsCompanion extends UpdateCompanion<UserSettings> {
     });
   }
 
-  UserAppSettingsCompanion copyWith({Value<int>? key, Value<bool>? darkmode}) {
-    return UserAppSettingsCompanion(
+  AppSettingsEntityCompanion copyWith(
+      {Value<int>? key, Value<bool>? darkmode}) {
+    return AppSettingsEntityCompanion(
       key: key ?? this.key,
       darkmode: darkmode ?? this.darkmode,
     );
@@ -117,7 +50,7 @@ class UserAppSettingsCompanion extends UpdateCompanion<UserSettings> {
 
   @override
   String toString() {
-    return (StringBuffer('UserAppSettingsCompanion(')
+    return (StringBuffer('AppSettingsEntityCompanion(')
           ..write('key: $key, ')
           ..write('darkmode: $darkmode')
           ..write(')'))
@@ -125,11 +58,11 @@ class UserAppSettingsCompanion extends UpdateCompanion<UserSettings> {
   }
 }
 
-class $UserAppSettingsTable extends UserAppSettings
-    with TableInfo<$UserAppSettingsTable, UserSettings> {
+class $AppSettingsEntityTable extends AppSettingsEntity
+    with TableInfo<$AppSettingsEntityTable, AppSettingsModel> {
   final GeneratedDatabase _db;
   final String? _alias;
-  $UserAppSettingsTable(this._db, [this._alias]);
+  $AppSettingsEntityTable(this._db, [this._alias]);
   final VerificationMeta _keyMeta = const VerificationMeta('key');
   late final GeneratedColumn<int?> key = GeneratedColumn<int?>(
       'key', aliasedName, false,
@@ -145,11 +78,11 @@ class $UserAppSettingsTable extends UserAppSettings
   @override
   List<GeneratedColumn> get $columns => [key, darkmode];
   @override
-  String get aliasedName => _alias ?? 'user_app_settings';
+  String get aliasedName => _alias ?? 'appSettings';
   @override
-  String get actualTableName => 'user_app_settings';
+  String get actualTableName => 'appSettings';
   @override
-  VerificationContext validateIntegrity(Insertable<UserSettings> instance,
+  VerificationContext validateIntegrity(Insertable<AppSettingsModel> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -169,29 +102,32 @@ class $UserAppSettingsTable extends UserAppSettings
   @override
   Set<GeneratedColumn> get $primaryKey => {key};
   @override
-  UserSettings map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return UserSettings.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  AppSettingsModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AppSettingsModel(
+      const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}darkmode'])!,
+    );
   }
 
   @override
-  $UserAppSettingsTable createAlias(String alias) {
-    return $UserAppSettingsTable(_db, alias);
+  $AppSettingsEntityTable createAlias(String alias) {
+    return $AppSettingsEntityTable(_db, alias);
   }
 }
 
-class ImagesTableCompanion extends UpdateCompanion<Image> {
+class ImageEntityCompanion extends UpdateCompanion<ImageModel> {
   final Value<int> id;
   final Value<String> path;
   final Value<String> raw;
   final Value<DateTime> timestamp;
-  const ImagesTableCompanion({
+  const ImageEntityCompanion({
     this.id = const Value.absent(),
     this.path = const Value.absent(),
     this.raw = const Value.absent(),
     this.timestamp = const Value.absent(),
   });
-  ImagesTableCompanion.insert({
+  ImageEntityCompanion.insert({
     this.id = const Value.absent(),
     required String path,
     required String raw,
@@ -199,7 +135,7 @@ class ImagesTableCompanion extends UpdateCompanion<Image> {
   })  : path = Value(path),
         raw = Value(raw),
         timestamp = Value(timestamp);
-  static Insertable<Image> custom({
+  static Insertable<ImageModel> custom({
     Expression<int>? id,
     Expression<String>? path,
     Expression<String>? raw,
@@ -213,12 +149,12 @@ class ImagesTableCompanion extends UpdateCompanion<Image> {
     });
   }
 
-  ImagesTableCompanion copyWith(
+  ImageEntityCompanion copyWith(
       {Value<int>? id,
       Value<String>? path,
       Value<String>? raw,
       Value<DateTime>? timestamp}) {
-    return ImagesTableCompanion(
+    return ImageEntityCompanion(
       id: id ?? this.id,
       path: path ?? this.path,
       raw: raw ?? this.raw,
@@ -246,7 +182,7 @@ class ImagesTableCompanion extends UpdateCompanion<Image> {
 
   @override
   String toString() {
-    return (StringBuffer('ImagesTableCompanion(')
+    return (StringBuffer('ImageEntityCompanion(')
           ..write('id: $id, ')
           ..write('path: $path, ')
           ..write('raw: $raw, ')
@@ -256,11 +192,11 @@ class ImagesTableCompanion extends UpdateCompanion<Image> {
   }
 }
 
-class $ImagesTableTable extends ImagesTable
-    with TableInfo<$ImagesTableTable, Image> {
+class $ImageEntityTable extends ImageEntity
+    with TableInfo<$ImageEntityTable, ImageModel> {
   final GeneratedDatabase _db;
   final String? _alias;
-  $ImagesTableTable(this._db, [this._alias]);
+  $ImageEntityTable(this._db, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
       'id', aliasedName, false,
@@ -282,11 +218,11 @@ class $ImagesTableTable extends ImagesTable
   @override
   List<GeneratedColumn> get $columns => [id, path, raw, timestamp];
   @override
-  String get aliasedName => _alias ?? 'images_table';
+  String get aliasedName => _alias ?? 'images';
   @override
-  String get actualTableName => 'images_table';
+  String get actualTableName => 'images';
   @override
-  VerificationContext validateIntegrity(Insertable<Image> instance,
+  VerificationContext validateIntegrity(Insertable<ImageModel> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -317,9 +253,9 @@ class $ImagesTableTable extends ImagesTable
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Image map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ImageModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Image(
+    return ImageModel(
       const IntType().mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}path'])!,
@@ -331,22 +267,21 @@ class $ImagesTableTable extends ImagesTable
   }
 
   @override
-  $ImagesTableTable createAlias(String alias) {
-    return $ImagesTableTable(_db, alias);
+  $ImageEntityTable createAlias(String alias) {
+    return $ImageEntityTable(_db, alias);
   }
 }
 
 abstract class _$WaultarDb extends GeneratedDatabase {
   _$WaultarDb(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
-  late final $UserAppSettingsTable userAppSettings =
-      $UserAppSettingsTable(this);
-  late final $ImagesTableTable imagesTable = $ImagesTableTable(this);
-  late final UserSettingsDao userSettingsDao =
-      UserSettingsDao(this as WaultarDb);
+  late final $AppSettingsEntityTable appSettingsEntity =
+      $AppSettingsEntityTable(this);
+  late final $ImageEntityTable imageEntity = $ImageEntityTable(this);
+  late final AppSettingsDao appSettingsDao = AppSettingsDao(this as WaultarDb);
   late final ImageDao imageDao = ImageDao(this as WaultarDb);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [userAppSettings, imagesTable];
+      [appSettingsEntity, imageEntity];
 }

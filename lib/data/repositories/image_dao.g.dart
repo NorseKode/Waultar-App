@@ -7,5 +7,5 @@ part of 'image_dao.dart';
 // **************************************************************************
 
 mixin _$ImageDaoMixin on DatabaseAccessor<WaultarDb> {
-  $ImagesTableTable get imagesTable => attachedDatabase.imagesTable;
+  $ImageEntityTable get imageEntity => attachedDatabase.imageEntity;
 }
