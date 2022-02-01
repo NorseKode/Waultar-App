@@ -1,6 +1,5 @@
 import 'package:drift/drift.dart';
 import 'package:waultar/db/configs/drift_config.dart';
-import 'package:waultar/parser/base_entity.dart';
 import 'package:waultar/parser/parse_helper.dart';
 
 @UseRowClass(Image)

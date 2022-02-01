@@ -4,8 +4,6 @@ import 'package:waultar/parser/parse_helper.dart';
 import 'package:waultar/widgets/upload/upload_util.dart';
 import 'package:path/path.dart' as dartPath;
 
-import 'base_entity.dart';
-
 void readObject<T>(List<T> acc, var data, bool isValidObject(var value),
     bool doesFileAlreadyExists(List<T> acc, T value)?, T constructor(var value)) {
   if (data is Map<String, dynamic>) {

@@ -8,8 +8,6 @@ import 'package:waultar/widgets/upload/upload_files.dart';
 import 'package:path/path.dart' as p;
 import 'package:waultar/widgets/upload/upload_util.dart';
 
-import 'content_dto.dart';
-
 String trySeveralNames(Map<String, dynamic> json, List<String> pathNames) {
   for (var name in pathNames) {
     if (json.containsKey(name) && json[name] is String) {
