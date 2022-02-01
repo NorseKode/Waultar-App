@@ -1,15 +1,11 @@
 import 'package:drift/drift.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
 import 'package:waultar/data/configs/drift_config.dart';
-import 'package:waultar/data/repositories/appsettings_dao.dart';
 import 'package:waultar/startup.dart';
 
-abstract class IAppSettingsService {
-  Future<bool> getDarkMode();
-  Future toogleDarkMode(bool darkMode);
-}
-
 class AppSettingsService implements IAppSettingsService {
-  final _dao = locator<AppSettingsDao>(instanceName: 'appSettingsDao');
+  final IAppSettingsRepository _dao = locator<IAppSettingsRepository>(instanceName: 'appSettingsDao');
 
   @override
   Future<bool> getDarkMode() async {

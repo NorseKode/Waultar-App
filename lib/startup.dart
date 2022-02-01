@@ -3,10 +3,11 @@ import 'dart:ffi';
 import 'package:sqlite3/open.dart';
 import 'package:drift/native.dart';
 import 'package:get_it/get_it.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_image_repository.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
 import 'package:waultar/data/configs/drift_config.dart';
-import 'package:waultar/data/repositories/image_dao.dart';
-import 'package:waultar/data/repositories/appsettings_dao.dart';
-import 'package:waultar/domain/services/settings_service.dart';
+import 'package:waultar/domain/services/appsettings_service.dart';
 
 final locator = GetIt.instance;
 
@@ -23,9 +24,9 @@ Future<void> setupServices({bool testing = false}) async {
 
   var db = locator<WaultarDb>();
 
-  locator.registerSingleton<AppSettingsDao>(db.appSettingsDao,
+  locator.registerSingleton<IAppSettingsRepository>(db.appSettingsDao,
       instanceName: 'appSettingsDao');
-  locator.registerSingleton<ImageDao>(db.imageDao, instanceName: 'imageDao');
+  locator.registerSingleton<IImageRepository>(db.imageDao, instanceName: 'imageDao');
 
   locator.registerSingleton<IAppSettingsService>(AppSettingsService(),
       instanceName: 'appSettingsService');

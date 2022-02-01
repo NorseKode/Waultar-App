@@ -1,5 +1,5 @@
-import 'package:waultar/core/parser/parse_helper.dart';
-import 'package:waultar/core/parser/parser_enums.dart';
+import 'package:waultar/core/parsers/parse_helper.dart';
+import 'package:waultar/core/parsers/parser_enums.dart';
 
 class MediaDTO {
   final String path;

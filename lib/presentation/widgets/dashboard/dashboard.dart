@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
-import 'package:waultar/core/parser/parse_helper.dart';
+import 'package:waultar/core/parsers/parse_helper.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/upload/upload_files.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';

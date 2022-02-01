@@ -1,4 +1,4 @@
-import 'package:waultar/core/parser/parse_helper.dart';
+import 'package:waultar/core/parsers/parse_helper.dart';
 
 import 'parser_enums.dart';
 

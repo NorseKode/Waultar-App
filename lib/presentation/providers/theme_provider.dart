@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:waultar/domain/services/settings_service.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
 import 'package:waultar/startup.dart';
 
 class ThemeProvider with ChangeNotifier {
