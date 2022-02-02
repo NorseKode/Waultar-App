@@ -70,7 +70,7 @@ class NaiveParser {
     for (var file in files) {
       if (dart_path.extension(file.path) == '.json') {
         try {
-          var data = await getJsonStringFromFile(file);
+          var data = await ParseHelper.getJsonStringFromFile(file);
           _imageCriteria(mapOfAcc["Images"]! as List<Image>, data);
         } catch (e) {
           throw ParseException("Unexpected error occured in parsing of file", file, e);
@@ -87,7 +87,7 @@ class NaiveParser {
   static parseFile(File file) async {
     var mapOfAcc = _setupAccumulators();
 
-    var data = await getJsonStringFromFile(file);
+    var data = await ParseHelper.getJsonStringFromFile(file);
 
     try {
       _imageCriteria(mapOfAcc["Images"]! as List<Image>, data);

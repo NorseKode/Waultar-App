@@ -21,7 +21,7 @@ class Image extends BaseEntity implements Insertable<Image> {
 
   Image._fromJson(Map<String, dynamic> json)
       : id = null,
-        path = trySeveralNames(json, ['uri']),
+        path = ParseHelper.trySeveralNames(json, ['uri']),
         raw = json.toString(),
         timestamp = getDateTime(json);
 
@@ -41,12 +41,12 @@ class Image extends BaseEntity implements Insertable<Image> {
 
   @override
   String toString() {
-    return "id: ${id}, path: ${path}, timestamp: ${timestamp}";
+    return "id: $id, path: $path, timestamp: $timestamp";
   }
 
 }
 
 DateTime getDateTime(var json) {
-  var res = trySeveralNames(json, ['timestamp', 'creation_timestamp']);
+  // var res = ParseHelper.trySeveralNames(json, ['timestamp', 'creation_timestamp']);
   return DateTime.now();
 }

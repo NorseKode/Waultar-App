@@ -1,112 +1,206 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:waultar/models/tables/images_table.dart';
+import 'package:flutter/material.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/widgets/upload/upload_files.dart';
-import 'package:path/path.dart' as p;
-import 'package:waultar/widgets/upload/upload_util.dart';
 
-String trySeveralNames(Map<String, dynamic> json, List<String> pathNames) {
-  for (var name in pathNames) {
-    if (json.containsKey(name) && json[name] is String) {
-      return json[name];
-    }
-  }
 
-  for (var object in json.values) {
-    if (object is Map<String, dynamic>) {
-      return trySeveralNames(object, pathNames);
-    }
-  }
-
-  return '';
-}
-
-getJsonStringFromPath(var path) async {
-  File file = File(path);
-  var jsonString = await file.readAsString();
-  return jsonDecode(jsonString);
-}
-
-getJsonStringFromFile(File file) async {
-  var jsonString = await file.readAsString();
-  return jsonDecode(jsonString);
-}
-
-Image? aux(var data, String keyword, Function funToCall) {
-  if (data is Map<String, dynamic>) {
-    if (data.containsKey(keyword)) {
-      var image = Image.fromJson(data[keyword]);
-      return image;
-    } else {
-      for (var key in data.keys) {
-        return aux(data[key], keyword, funToCall);
+/// A static class that provides functionality used by many of the parser
+/// classes
+class ParseHelper {
+  /// Traverses a [json] tree, looking for a key in the [keyNames] list
+  static String trySeveralNames(Map<String, dynamic> json, List<String> keyNames) {
+    for (var name in keyNames) {
+      if (json.containsKey(name) && json[name] is String) {
+        return json[name];
       }
     }
-  } else if (data is List<dynamic>) {
-    for (var object in data) {
-      return aux(object, keyword, funToCall);
-    }
-  }
-}
 
-loadImages(List<Image> acc, var data) {
-  if (data is Map<String, dynamic>) {
-    for (var val in data.values) {
-      if (val is Map<String, dynamic> && val.containsKey("uri")) {
-        var img = Image.fromJson(val);
-        if (img != null) {
-          acc.add(img);
+    for (var object in json.values) {
+      if (object is Map<String, dynamic>) {
+        return trySeveralNames(object, keyNames);
+      }
+    }
+
+    return '';
+  }
+
+  /// Given a [path] converts the file into a json string, no validation is done
+  static getJsonStringFromPath(String path) async {
+    File file = File(path);
+    var jsonString = await file.readAsString();
+    return jsonDecode(jsonString);
+  }
+
+  /// Given a [file] converts the file into a json string, no validation is done
+  static getJsonStringFromFile(File file) async {
+    var jsonString = await file.readAsString();
+    return jsonDecode(jsonString);
+  }
+
+  // static copyFolderToDocuments(String dir) async {
+  //   var context = p.Context(style: Style.windows);
+  //   var files = await FileUploader.getAllFilesFrom(dir);
+  //   var appPath = await getApplicationDocumentsDirectory();
+  //   var path = context.join(appPath.path, "Waultar");
+
+  //   for (var file in files) {
+  //     var tempFile = File(path + file);
+  //     var exists = await tempFile.exists();
+  //     if (!exists) {
+  //       tempFile.create(recursive: true);
+  //     }
+
+  //     var oldFile = File(dir + file);
+  //     var newPath = context.canonicalize(tempFile.path);
+  //     oldFile.copy(context.canonicalize(newPath));
+  //   }
+  // }
+
+  // static copyFileToDocumentsDirectory(String pathFromDocumentDirectory) async {
+  //   var context = p.Context(style: Style.windows);
+  //   var appPath = await getApplicationDocumentsDirectory();
+  //   var waultarPath = context.join(appPath.path, "Waultar");
+  //   var finalPath = context.join(waultarPath, pathFromDocumentDirectory);
+  //   var file = File(finalPath);
+
+  //   var exists = await file.exists();
+  //   if (exists) {
+  //     file.create();
+  //   }
+  // }
+
+  /// Auxiliary function used in the findAllKeys function
+  /// Recursively goes through a json tree, and adds all keys to the [set]
+  static _aux(dynamic jsonData, Set<String> set) {
+    // The data parsed is a json object
+    if (jsonData is Map<String, dynamic>) {
+      for (var key in jsonData.keys) {
+        set.add(key);
+
+        // If the json object contains another object, recursively go through
+        // this and add all its keys to the set
+        if (jsonData[key] is Map<String, dynamic>) {
+          set = _aux(jsonData[key], set);
         }
-      } else {
-        loadImages(acc, val);
+        // If the json object contains another json list , recursively go through
+        // this and add all its keys to the set
+        else if (jsonData[key] is List<dynamic>) {
+          set = _aux(jsonData[key], set);
+        }
       }
     }
-  } else if (data is List<dynamic>) {
-    for (var item in data) {
-      var img = Image.fromJson(item);
-
-      if (img == null) {
-        loadImages(acc, item);
-      } else {
-        acc.add(img);
+    // The data parsed is a josn list
+    else if (jsonData is List<dynamic>) {
+      for (var item in jsonData) {
+        set = _aux(item, set);
       }
     }
+
+    return set;
   }
-}
 
-copyFolderToDocuments(String dir) async {
-  var context = p.Context(style: Style.windows);
-  var files = await FileUploader.getAllFilesFrom(dir);
-  var appPath = await getApplicationDocumentsDirectory();
-  var path = context.join(appPath.path, "Waultar");
+  /// Goes through all files in a give directory, and reads all keys from the json files it finds
+  static Future<Set<String>> findAllKeysFromDirectory(String rootDirectory) async {
+    var result = Set<String>();
+    var rootDir = Directory(rootDirectory);
 
-  for (var file in files) {
-    var tempFile = File(path + file);
-    var exists = await tempFile.exists();
-    if (!exists) {
-      tempFile.create(recursive: true);
+    var directories = await rootDir.list(recursive: true).toList();
+
+    for (var dir in directories) {
+      if (dir.path.contains(".json")) {
+        var file = File(dir.path);
+        var jsonString = await file.readAsString();
+        var jsonData = jsonDecode(jsonString);
+
+        result = _aux(jsonData, result);
+      }
     }
 
-    var oldFile = File(dir + file);
-    var newPath = context.canonicalize(tempFile.path);
-    oldFile.copy(context.canonicalize(newPath));
-  }
-}
-
-copyFileToDocumentsDirectory(String pathFromDocumentDirectory) async {
-  var context = p.Context(style: Style.windows);
-  var appPath = await getApplicationDocumentsDirectory();
-  var waultarPath = context.join(appPath.path, "Waultar");
-  var finalPath = context.join(waultarPath, pathFromDocumentDirectory);
-  var file = File(finalPath);
-
-  var exists = await file.exists();
-  if (exists) {
-    file.create();
+    return result;
   }
 
+  static Future<Set<String>> findAllKeysInFile(File file, Set<String> set) async {
+    var jsonString = await file.readAsString();
+    var jsonData = jsonDecode(jsonString);
 
+    set = _aux(jsonData, set);
+
+    return set;
+  }
+
+  /// Writes a set of strings to the file given by the [filePath]
+  static _writeSetToFile(Set<String> set, String filePath) {
+    var file = File(filePath);
+    var sink = file.openWrite();
+
+    for (var string in set) {
+      sink.writeln(string);
+    }
+  }
+
+  static Widget findAllKeysOfJsonAtDirectory(BuildContext context) {
+    // var localizer = AppLocalizations.of(context)!;
+    var keys = <String>{};
+    // ignore: unused_local_variable
+    List<File>? files;
+    File? saveFile;
+    var uploadAmount = 0;
+
+    return TextButton(
+      onPressed: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+              title: const Text("Find All Keys"),
+              children: [
+                Form(
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          TextButton(
+                            child: const Text("Upload Files"),
+                            onPressed: () async {
+                              files = await FileUploader.uploadFilesFromDirectory();
+                            },
+                          ),
+                          Text("Amount of files: " + uploadAmount.toString()),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          TextButton(
+                            child: const Text("Choose Save File"),
+                            onPressed: () async => saveFile = await FileUploader.uploadSingle(),
+                          ),
+                          const Text("Upload Destination: "),
+                        ],
+                      ),
+                      SimpleDialogOption(
+                        child: const Text("Save"),
+                        onPressed: () {
+                          _writeSetToFile(keys, saveFile!.path);
+                          Navigator.pop(context);
+                        },
+                      ),
+                      SimpleDialogOption(
+                        child: const Text("Cancel"),
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+      child: const Text('Find All Keys'),
+    );
+  }
 }
