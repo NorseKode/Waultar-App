@@ -22,13 +22,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.8.0"
-  ansicolor:
-    dependency: transitive
-    description:
-      name: ansicolor
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.1"
   args:
     dependency: transitive
     description:
@@ -244,6 +237,11 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
+  flutter_localizations:
+    dependency: "direct main"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -345,13 +343,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
-  injector:
-    dependency: transitive
+  intl:
+    dependency: "direct main"
     description:
-      name: injector
+      name: intl
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "0.17.0"
   io:
     dependency: transitive
     description:
@@ -415,13 +413,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
-  msix:
-    dependency: "direct main"
-    description:
-      name: msix
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.6.3"
   nested:
     dependency: transitive
     description:
