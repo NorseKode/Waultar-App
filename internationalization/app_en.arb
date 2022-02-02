@@ -13,6 +13,7 @@
     "comments": "Comments",
     "collections": "Collections",
     "dataSources": "Data Sources",
+    "findAllKeys": "Find all keys",
     "@helloWorld": {
       "description": "The conventional newborn programmer greeting"
     },
@@ -53,6 +54,9 @@
       "description": ""
     },
     "@dataSources": {
+      "description": ""
+    },
+    "@findAllKeys": {
       "description": ""
     }
 }

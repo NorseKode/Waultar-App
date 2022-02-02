@@ -2,13 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
-import 'package:waultar/core/parsers/parse_helper.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/upload/upload_files.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:path/path.dart' as p;
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -136,22 +133,7 @@ class _DashboardState extends State<Dashboard> {
               ),
             )),
         PopupMenuItem<String>(
-            onTap: () async {
-              // var dir = await FileUploader.uploadDirectory();
-              // copyFolderToDocuments(dir!);
-
-              var file = await FileUploader.uploadSingle();
-              var imges = await callMe(file!.path);
-
-              // var context = p.Context(style: Style.windows);
-              // // for (var igm in imges) {
-              // //   var str = "D:/OneDrive/NorseKode/data/facebook-lukasvlarsen/" + igm.path;
-              // //   var temp = p.canonicalize(str);
-              // //   // var path = context.fromUri(str);
-              // //   uploadedFiles.add(File(temp));
-              // // }
-              // // setState(() {});
-            },
+            onTap: () {},
             padding: EdgeInsets.zero,
             value: localizer.newWidget,
             child: Padding(

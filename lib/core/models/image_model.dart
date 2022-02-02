@@ -1,6 +1,7 @@
+import 'package:waultar/core/models/base_model.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
 
-class ImageModel {
+class ImageModel extends BaseModel {
   final int? id;
   final String path;
   final String raw;
@@ -8,11 +9,15 @@ class ImageModel {
 
   ImageModel(this.id, this.path, this.raw, this.timestamp);
 
-  ImageModel.fromJson(Map<String, dynamic> json)
+   ImageModel._fromJson(Map<String, dynamic> json)
       : id = null,
-        path = trySeveralNames(json, ['uri']),
+        path = ParseHelper.trySeveralNames(json, ['uri']),
         raw = json.toString(),
         timestamp = getDateTime(json);
+
+  static ImageModel fromJson(var json) {
+    return ImageModel._fromJson(json);
+  }
 
   @override
   String toString() {
@@ -22,16 +27,7 @@ class ImageModel {
 }
 
 DateTime getDateTime(var json) {
-  var res = trySeveralNames(json, ['timestamp', 'creation_timestamp']);
-  // if (res) {
-  //   return DateTime.fromMicrosecondsSinceEpoch(int.parse(res));
-  // } else {
+  // var res = ParseHelper.trySeveralNames(json, ['timestamp', 'creation_timestamp']);
   return DateTime.now();
-  // }
 }
 
-class Model {
-  final String service;
-
-  Model(this.service);
-}

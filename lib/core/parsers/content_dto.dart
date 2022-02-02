@@ -14,8 +14,8 @@ class ContentDTO {
       List<String> titleNames, List<String> descriptionNames)
       : guid = 'TODO',
         contentType = MyContentType.unknown,
-        title = trySeveralNames(json, titleNames),
-        description = trySeveralNames(json, descriptionNames);
+        title = ParseHelper.trySeveralNames(json, titleNames),
+        description = ParseHelper.trySeveralNames(json, descriptionNames);
 
   @override
   String toString() {
