@@ -138,23 +138,7 @@ class _DashboardState extends State<Dashboard> {
               ),
             )),
         PopupMenuItem<String>(
-            onTap: () async {
-              // var dir = await FileUploader.uploadDirectory();
-              // copyFolderToDocuments(dir!);
-
-              // var file = await FileUploader.uploupadSingle();
-              var path = await FileUploader.uploadDirectory();
-              var imges = await parseDirectory(path!);
-
-              // var context = p.Context(style: Style.windows);
-              // // for (var igm in imges) {
-              // //   var str = "D:/OneDrive/NorseKode/data/facebook-lukasvlarsen/" + igm.path;
-              // //   var temp = p.canonicalize(str);
-              // //   // var path = context.fromUri(str);
-              // //   uploadedFiles.add(File(temp));
-              // // }
-              // // setState(() {});
-            },
+            onTap: () {},
             padding: EdgeInsets.zero,
             value: localizer.newWidget,
             child: Padding(
