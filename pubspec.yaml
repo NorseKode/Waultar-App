@@ -29,6 +29,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations: # Internationalization
+    sdk: flutter         # Internationalization
+  intl: ^0.17.0          # Internationalization
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -83,6 +86,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+  generate: true
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
@@ -123,15 +127,11 @@ flutter:
       fonts:
         - asset: lib/assets/inter/Inter-Regular.ttf
         - asset: lib/assets/inter/Inter-Bold.ttf
-          weight: 700     
+          weight: 700       
   
   assets:
-    - lib/assets/graphics/data_graphic.png
-    - lib/assets/graphics/Paw.svg
-    - lib/assets/graphics/Paw_Circle.svg
-    - lib/assets/graphics/Paws_blue.png
-    - lib/assets/graphics/Logo.png
-    - lib/assets/graphics/placeholder.jfif
+    - lib/assets/graphics/
+    - lib/assets/icons/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

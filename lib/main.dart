@@ -1,22 +1,18 @@
-// import 'dart:js';
-
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:waultar/etebase/models/etebase_user.dart';
-import 'package:waultar/navigation/app_navigator.dart';
-import 'package:waultar/navigation/app_state.dart';
-import 'package:waultar/navigation/router/app_route_path.dart';
-import 'package:waultar/providers/theme_provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'navigation/router/app_route_information_parser.dart';
-import 'navigation/router/app_router_delegate.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:waultar/configs/navigation/app_state.dart';
+import 'package:waultar/configs/navigation/router/app_route_information_parser.dart';
+import 'package:waultar/configs/navigation/router/app_route_path.dart';
+import 'package:waultar/configs/navigation/router/app_router_delegate.dart';
+import 'package:waultar/presentation/providers/theme_provider.dart';
 
-import 'services/startup.dart';
+import 'startup.dart';
 
 void main() async {
   await setupServices();
@@ -53,7 +49,7 @@ class _WaultarApp extends State<WaultarApp> {
     if (kIsWeb) {
       _routerDelegate = AppRouterDelegate(AppRoutePath.sigin());
     } else {
-      _routerDelegate = AppRouterDelegate(AppRoutePath.testScreen1());
+      _routerDelegate = AppRouterDelegate(AppRoutePath.home());
     }
     super.initState();
   }
@@ -66,14 +62,20 @@ class _WaultarApp extends State<WaultarApp> {
     ThemeProvider themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp.router(
       title: 'Waultar',
+      // locale: Locale('da', ''),
       theme: themeProvider.themeData(),
-      //theme: ThemeData(primarySwatch: Colors.grey, fontFamily: 'Montserrat'),
-      // theme: ThemeData(
-      //     primarySwatch: Colors.grey,
-      //     scaffoldBackgroundColor: Color(0xFF111315),
-      //     fontFamily: 'Inter'),
       routerDelegate: _routerDelegate!,
       routeInformationParser: _routeInformationParser,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en', ''),
+        Locale('da', ''),
+      ],
     );
   }
 }

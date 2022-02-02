@@ -1,0 +1,16 @@
+{
+    "helloWorld": "Hej Verden",
+    "newData": "Ny Data",
+    "dashbaord": "Dashboard",
+    "add": "Tilføj",
+    "newWidget": "Nyt Widget",
+    "analytics": "Analyser",
+    "settings": "Indstillinger",
+    "logout": "Log Ud",
+    "changeTheme": "Ændre Tema",
+    "album": "Album",
+    "posts": "Opslag",
+    "comments": "Kommentarer",
+    "collections": "Kollektioner/Samlinger",
+    "dataSources": "Data Kilder"
+}

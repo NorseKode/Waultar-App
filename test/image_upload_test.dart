@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:waultar/screens/temp/file_sorting.dart';
+import 'package:waultar/presentation/screens/temp/file_sorting.dart';
 
 void main() {
   setUpAll(() async {});
@@ -18,14 +18,12 @@ void main() {
     }
 
     test("test1 - given empty list returns empty list", () async {
-      print("test1 - given empty list returns empty list");
       List<File> fileList = [];
       var actual = _getImages(fileList).length;
       expect(actual, 0);
     });
 
     test("test2 - given list returns image files", () async {
-      print("test2 - given list returns image files");
       List<File> fileList = [
         File("image.png"),
         File("file.html"),
@@ -38,14 +36,12 @@ void main() {
 
   group('file sorter - sortFileLists', () {
     test("test3 - given empty list returns empty list", () async {
-      print("test3 - given empty list returns empty list");
       List<File> fileList = [];
       var actual = sortListToFormatSubList(fileList);
       expect(actual, []);
     });
 
     test("test4 - given list returns list with lists", () async {
-      print("test4 - given list returns list with lists");
       List<File> fileList = [
         File("/lib/assets/Paws_blue.png"),
         File("file.html"),
