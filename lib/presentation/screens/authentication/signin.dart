@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:waultar/presentation/widgets/authentication/signin_widget.dart';
 
 class SignInView extends StatefulWidget {
