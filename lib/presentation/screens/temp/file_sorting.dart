@@ -25,13 +25,15 @@ List<List<File>> sortListToFormatSubList(List<File> fileList) {
   var pathMap = fileList.map((item) => item.path);
 
   List<List<File>> listOfLists = [];
-  imageFormats.forEach((format) {
+  for (var format in imageFormats) {
     List<File> s = [];
-    pathMap.forEach((item) => item.endsWith(format)
+    for (var item in pathMap) {
+      item.endsWith(format)
         ? s.add(File(item))
-        : {pathMap.iterator.moveNext()});
+        : {pathMap.iterator.moveNext()};
+    }
 
     if (s.isNotEmpty) listOfLists.add(s);
-  });
+  }
   return listOfLists;
 }

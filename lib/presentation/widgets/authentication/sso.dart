@@ -14,16 +14,16 @@ class _SSOState extends State<SSO> {
       child: Container(
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(4)),
+              borderRadius: const BorderRadius.all(Radius.circular(4)),
               border: Border.all(
-                  width: 2, color: Color(0xff202122))), //Color(0xffb9bbbe)
+                  width: 2, color: const Color(0xff202122))), //Color(0xffb9bbbe)
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(Icons.circle, color: Color(0xff202122)),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Text(title,
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Color(0xff202122), fontWeight: FontWeight.bold))
             ],
           )),
@@ -39,9 +39,9 @@ class _SSOState extends State<SSO> {
           children: [
             _ssoButton("Github", Colors.black),
             const SizedBox(width: 10),
-            _ssoButton("Google", Color(0xffDB4437)),
+            _ssoButton("Google", const Color(0xffDB4437)),
             const SizedBox(width: 10),
-            _ssoButton("Facebook", Color(0xff4267B2))
+            _ssoButton("Facebook", const Color(0xff4267B2))
           ],
         ));
   }

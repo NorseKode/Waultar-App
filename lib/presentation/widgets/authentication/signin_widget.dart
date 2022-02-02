@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 class SignInWidget extends StatefulWidget {
+  const SignInWidget({Key? key}) : super(key: key);
+
   @override
   State<SignInWidget> createState() => _SignInWidget();
 }
 
 class _SignInWidget extends State<SignInWidget> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _usernameController = TextEditingController();
+  // final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 

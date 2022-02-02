@@ -3,6 +3,8 @@ import 'package:flutter/painting.dart';
 import 'package:waultar/presentation/widgets/authentication/signin_widget.dart';
 
 class SignInView extends StatefulWidget {
+  const SignInView({Key? key}) : super(key: key);
+
   @override
   _SignInViewState createState() =>
       _SignInViewState();
@@ -35,7 +37,7 @@ class _SignInViewState extends State<SignInView> {
                 scale: 1.5,
               ),
             ),
-            Center(
+            const Center(
                 child: SingleChildScrollView(
                     child: Center(
               child: SignInWidget(),

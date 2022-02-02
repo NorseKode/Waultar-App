@@ -73,7 +73,7 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
             ),
-      files.isEmpty ? const SizedBox.shrink() : SizedBox(height: 20),
+      files.isEmpty ? const SizedBox.shrink() : const SizedBox(height: 20),
       images.isEmpty
           ? const SizedBox.shrink()
           : Container(
@@ -92,12 +92,13 @@ class _DashboardState extends State<Dashboard> {
   }
 
   int typeSort(var a, var b) {
-    if (a is Text && b is Image)
+    if (a is Text && b is Image) {
       return -1;
-    else if (b is Text && a is Image)
+    } else if (b is Text && a is Image) {
       return 1;
-    else
+    } else {
       return -1;
+    }
   }
 
   Widget addButton() {

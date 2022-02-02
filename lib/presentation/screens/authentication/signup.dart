@@ -6,10 +6,11 @@ class SignUpView extends StatefulWidget {
   final AppState _appState;
   final ValueChanged<AppState> _updateAppState;
 
-  SignUpView(this._appState, this._updateAppState);
+  const SignUpView(this._appState, this._updateAppState, {Key? key}) : super(key: key);
 
   @override
   _SignUpViewState createState() =>
+      // ignore: no_logic_in_create_state
       _SignUpViewState(_appState, _updateAppState);
 }
 

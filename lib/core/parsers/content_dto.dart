@@ -19,6 +19,6 @@ class ContentDTO {
 
   @override
   String toString() {
-    return "guid: ${guid}, content type: ${contentType}, title: ${title}, description: ${description}";
+    return "guid: $guid, content type: $contentType, title: $title, description: $description";
   }
 }

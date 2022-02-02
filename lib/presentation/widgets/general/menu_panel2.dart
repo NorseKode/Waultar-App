@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/menu_screens.dart';
@@ -28,7 +27,7 @@ class _MenuPanel2State extends State<MenuPanel2> {
       height: 20,
       color: themeProvider.themeMode().iconColor,
     );
-    return Container(
+    return SizedBox(
       height: 90,
       child: Row(
         children: [
@@ -142,7 +141,7 @@ class _MenuPanel2State extends State<MenuPanel2> {
             },
             hoverColor: Colors.transparent,
             highlightColor: Colors.transparent,
-            child: Container(
+            child: SizedBox(
               height: 30,
               width: menuWidth,
               child: Row(
@@ -169,7 +168,7 @@ class _MenuPanel2State extends State<MenuPanel2> {
         await themeProvider.toggleThemeData();
         setState(() {});
       },
-      child: Container(
+      child: SizedBox(
         height: 30,
         width: menuWidth,
         child: Row(
@@ -202,9 +201,9 @@ class _MenuPanel2State extends State<MenuPanel2> {
                 children: [
                   logo(),
                   analytics(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   collections(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   darkmodeButton(),
                 ],
               ),

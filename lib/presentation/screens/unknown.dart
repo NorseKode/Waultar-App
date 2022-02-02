@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+// ignore: implementation_imports
 import 'package:provider/src/provider.dart';
 import 'package:waultar/configs/globals/scaffold_main.dart';
 import 'package:waultar/configs/navigation/app_state.dart';
