@@ -13,7 +13,7 @@ main() {
   var emptyObject = File(path_dart.join(pathToCurrentFile, "data", "empty_object.json"));
   var emptyList = File(path_dart.join(pathToCurrentFile, "data", "empty_list.json"));
   var corrupted = File(path_dart.join(pathToCurrentFile, "data", "corrupt.json"));
-  var mediaJson1 = File(path_dart.join(pathToCurrentFile, "data", "each_media_type_list.json"));
+  // var mediaJson1 = File(path_dart.join(pathToCurrentFile, "data", "each_media_type_list.json"));
 
   group("Initial testing of edge cases with: ", () {
     test("empty json object", () async {
