@@ -1,0 +1,195 @@
+profile_account_insights
+title
+media_map_data
+string_map_data
+Contact Syncing
+href
+value
+timestamp
+First Country Code
+Has Shared Live Video
+Last Login
+Last Logout
+First Story Time
+Last Story Time
+First Close Friends Story Time
+profile_user
+Profile Photo
+uri
+creation_timestamp
+Email
+Phone Number
+Phone Confirmed
+Phone Confirmation Method
+Username
+Name
+Bio
+Gender
+Date of birth
+Website
+Private Account
+profile_business
+Connected Facebook Page
+profile_profile_change
+Changed
+Previous Value
+New Value
+Change Date
+ig_custom_audiences_all_types
+advertiser_name
+has_data_file_custom_audience
+has_remarketing_custom_audience
+has_in_person_store_visit
+impressions_history_posts_seen
+Author
+Time
+impressions_history_chaining_seen
+impressions_history_videos_watched
+comments_media_comments
+media_list_data
+string_list_data
+settings_allow_comments_from
+Comments Allowed From
+settings_upgraded_to_cross_app_messaging
+Upgraded To Cross-App Messaging
+Time Upgraded
+ig_archived_post_media
+media
+media_metadata
+video_metadata
+exif_data
+latitude
+longitude
+photo_metadata
+ig_igtv_media
+ig_other_media
+ig_profile_picture
+is_profile_picture
+ig_stories
+devices_camera
+Device ID
+Compression
+Face Tracker Version
+Supported SDK Versions
+devices_devices
+User Agent
+relationships_followers
+relationships_following
+inferred_data_primary_location
+City Name
+inferred_data_ig_interest
+Interest
+likes_comment_likes
+likes_media_likes
+account_history_login_history
+Cookie Name
+IP Address
+Language Code
+account_history_logout_history
+account_history_registration_info
+Device
+participants
+name
+messages
+sender_name
+timestamp_ms
+content
+share
+link
+type
+is_unsent
+is_still_participant
+thread_type
+thread_path
+magic_words
+reactions
+reaction
+actor
+share_text
+original_content_owner
+photos
+videos
+users
+profile_share_username
+profile_share_name
+ig_secret_groups
+unnamed_group_count
+secret_groups_owned_data
+secret_groups_participating_data
+monetization_eligibility
+Product Name
+Decision
+Reason
+organic_insights_reach
+Date Range
+Accounts Reached
+Accounts Reached Delta
+Followers
+Non-Followers
+Non-Followers Delta
+Impressions
+Impressions Delta
+Profile Visits
+Profile Visits Delta
+Website Taps
+Website Taps Delta
+Email Button Taps
+Email Button Taps Delta
+organic_insights_audience
+Followers Delta
+Follows
+Unfollows
+Overall
+Follower Percentage by City
+Follower Percentage by Country
+Follower Percentage by Age for All Genders
+Follower Percentage by Age for Men
+Follower Percentage by Age for Women
+Total Follower Percentage for Men
+Total Follower Percentage for Women
+Monday Follower Activity
+Tuesday Follower Activity
+Wednesday Follower Activity
+Thursday Follower Activity
+Friday Follower Activity
+Saturday Follower Activity
+Sunday Follower Activity
+organic_insights_interactions
+Content Interactions
+Content Interactions Delta
+Post Interactions
+Post Interactions Delta
+Post Comments
+Post Saves
+Story Interactions
+Story Interactions Delta
+Video Interactions
+Video Interactions Delta
+Live Video Interactions
+Live Video Interactions Delta
+Accounts engaged
+Accounts Engaged Delta
+Engaged Account By Follow Type
+You engaged delta% more accounts that werenât following you compared to previous period
+organic_insights_posts
+Media Thumbnail
+Creation Timestamp
+Saves
+Likes
+Comments
+Shares
+organic_insights_stories
+Navigation
+Forward
+Back
+Next Story
+Exited
+Sticker Taps
+Sticker Taps by Sticker
+Replies
+saved_saved_collections
+Created At
+Updated At
+Shared By
+saved_saved_media
+story_activities_emoji_sliders

@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:waultar/models/tables/images_table.dart';
-import 'package:waultar/parser/naive_parser.dart';
 import 'package:path/path.dart' as path_dart;
+import 'package:waultar/core/models/image_model.dart';
+import 'package:waultar/core/parsers/naive_parser.dart';
 
 main() {
   var pathToCurrentFile = path_dart
@@ -19,7 +19,7 @@ main() {
     test("empty json object", () async {
       var result = await NaiveParser.parseFile(emptyObject);
 
-      var images = result["Images"] as List<Image>;
+      var images = result["Images"] as List<ImageModel>;
 
       expect(images.isEmpty, true);
     });
@@ -27,7 +27,7 @@ main() {
     test("empty json list", () async {
       var result = await NaiveParser.parseFile(emptyList);
 
-      var images = result["Images"] as List<Image>;
+      var images = result["Images"] as List<ImageModel>;
 
       expect(images.isEmpty, true);
     });
@@ -41,7 +41,7 @@ main() {
     test("Json containing one of each media", () async {
       var result = await NaiveParser.parseFile(mediaJson1);
 
-      var images = result["Images"] as List<Image>;
+      var images = result["Images"] as List<ImageModel>;
 
       expect(images.length, 2);
     });

@@ -6,19 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:waultar/etebase/models/etebase_user.dart';
-import 'package:waultar/navigation/app_navigator.dart';
-import 'package:waultar/navigation/app_state.dart';
-import 'package:waultar/navigation/router/app_route_path.dart';
-import 'package:waultar/providers/theme_provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'navigation/router/app_route_information_parser.dart';
-import 'navigation/router/app_router_delegate.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:waultar/configs/navigation/app_state.dart';
+import 'package:waultar/configs/navigation/router/app_route_information_parser.dart';
+import 'package:waultar/configs/navigation/router/app_route_path.dart';
+import 'package:waultar/configs/navigation/router/app_router_delegate.dart';
+import 'package:waultar/presentation/providers/theme_provider.dart';
 
-import 'services/startup.dart';
+import 'startup.dart';
 
 void main() async {
   await setupServices();
