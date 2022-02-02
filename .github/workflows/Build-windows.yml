@@ -1,0 +1,74 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Build Windows msi
+
+on:
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build-and-test-android:
+    runs-on: windows-latest
+
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Setup java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: Setup the flutter environment.
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '2.5.3'
+          channel: 'stable' # 'dev', 'alpha', 'beta'
+
+      - name: Enable Desktop
+        run: flutter config --enable-windows-desktop
+        
+      - name: Get dependencies
+        run: flutter pub get
+      
+      - name: Build Windows Application
+        run: flutter build windows
+      
+      - name: Build msi
+        run: flutter pub run msix:create
+      
+       # Upload generated apk to the artifacts, is included in the github
+       # action build
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Waultar.msi
+          path: build/windows/runner/Release/
+      
+      - name: release
+        uses: actions/create-release@v1
+        id: create_release
+        with:
+          draft: true
+          prerelease: true
+          release_name: ${{ steps.version.outputs.version }}
+          tag_name: ${{ github.ref }}
+          body_path: CHANGELOG.md
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: upload windows msi
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/windows/runner/Release/
+          asset_name: Waultar.msi
+          asset_content_type: application/msi
