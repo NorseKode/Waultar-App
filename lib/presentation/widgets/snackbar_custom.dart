@@ -6,7 +6,7 @@ class SnackBarCustom {
       SnackBar(
         content: Text(
           message,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 14.0,
             fontWeight: FontWeight.w600,

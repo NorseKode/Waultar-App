@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttericon/iconic_icons.dart';
 
 class DarkModeSwitch extends StatefulWidget {
-  DarkModeSwitch({Key? key}) : super(key: key);
+  const DarkModeSwitch({Key? key}) : super(key: key);
 
   @override
   State<DarkModeSwitch> createState() => _DarkModeSwitch();
@@ -19,14 +19,14 @@ class _DarkModeSwitch extends State<DarkModeSwitch> {
   ThemeColor themeMode({double? width}) {
     return ThemeColor(
       gradient: [
-        if (isLightTheme) ...[Color(0xDDFF0080), Color(0xDDFF8C00)],
-        if (!isLightTheme) ...[Color(0xFF8983F7), Color(0xFFA3DAFB)]
+        if (isLightTheme) ...[const Color(0xDDFF0080), const Color(0xDDFF8C00)],
+        if (!isLightTheme) ...[const Color(0xFF8983F7), const Color(0xFFA3DAFB)]
       ],
-      textColor: isLightTheme ? Color(0xFF000000) : Color(0xFFFFFFFF),
-      toggleButtonColor: isLightTheme ? Color(0xFFFFFFFF) : Color(0xFf34323d),
+      textColor: isLightTheme ? const Color(0xFF000000) : const Color(0xFFFFFFFF),
+      toggleButtonColor: isLightTheme ? const Color(0xFFFFFFFF) : const Color(0xFf34323d),
       toggleBackgroundColor:
-          isLightTheme ? Color(0xFFe7e7e8) : Color(0xFF222029),
-      toggleIconColor: isLightTheme ? Color(0xFF006BD4) : Color(0xFFECD820),
+          isLightTheme ? const Color(0xFFe7e7e8) : const Color(0xFF222029),
+      toggleIconColor: isLightTheme ? const Color(0xFF006BD4) : const Color(0xFFECD820),
       shadow: [
         if (isLightTheme)
           BoxShadow(
@@ -45,14 +45,14 @@ class _DarkModeSwitch extends State<DarkModeSwitch> {
                   ? Offset(0, (width * 0.005))
                   : const Offset(0, 5)),
       ],
-      backgroundColor: isLightTheme ? Color(0xFF000000) : Color(0xFFFFFFFF),
+      backgroundColor: isLightTheme ? const Color(0xFF000000) : const Color(0xFFFFFFFF),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     double width = 200; //can be moved as input??
-    return Container(
+    return SizedBox(
       width: width * .3,
       height: width * .13,
       child: GestureDetector(
@@ -79,7 +79,7 @@ class _DarkModeSwitch extends State<DarkModeSwitch> {
                             padding: EdgeInsets.only(right: width * .03),
                             child: Icon(
                               Iconic.sun_inv,
-                              color: Color(0xFF918f95),
+                              color: const Color(0xFF918f95),
                               size: width * .06,
                             ),
                           ),
@@ -88,7 +88,7 @@ class _DarkModeSwitch extends State<DarkModeSwitch> {
                             padding: EdgeInsets.only(left: width * .03),
                             child: Icon(
                               Iconic.moon_inv,
-                              color: Color(0xFF918f95),
+                              color: const Color(0xFF918f95),
                               size: width * .06,
                             ),
                           ),
@@ -100,7 +100,7 @@ class _DarkModeSwitch extends State<DarkModeSwitch> {
                       alignment: isLightTheme
                           ? Alignment.centerLeft
                           : Alignment.centerRight,
-                      duration: Duration(milliseconds: 350),
+                      duration: const Duration(milliseconds: 350),
                       curve: Curves.ease,
                       child: Container(
                         alignment: Alignment.center,

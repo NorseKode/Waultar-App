@@ -5,17 +5,18 @@ class SignUpWidget extends StatefulWidget {
   final AppState _appState;
   final ValueChanged<AppState> _updateAppState;
 
-  SignUpWidget(this._appState, this._updateAppState, {Key? key})
+  const SignUpWidget(this._appState, this._updateAppState, {Key? key})
       : super(key: key);
 
   @override
   State<SignUpWidget> createState() =>
+      // ignore: no_logic_in_create_state
       _SignUpWidget(_appState, _updateAppState);
 }
 
 class _SignUpWidget extends State<SignUpWidget> {
-  AppState _appState;
-  ValueChanged<AppState> _updateAppState;
+  final AppState _appState;
+  final ValueChanged<AppState> _updateAppState;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -46,8 +47,6 @@ class _SignUpWidget extends State<SignUpWidget> {
       // } else {
       //   print('not good');
       // }
-    } else {
-      print("not valid");
     }
   }
 

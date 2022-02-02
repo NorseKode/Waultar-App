@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 
@@ -15,7 +13,7 @@ class _TopPanelState extends State<TopPanel> {
   late ThemeProvider themeProvider;
 
   Widget welcome() {
-    return Container(
+    return SizedBox(
       height: 45,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

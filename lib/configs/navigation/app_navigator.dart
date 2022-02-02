@@ -4,7 +4,6 @@ import 'package:waultar/configs/navigation/router/route_path.dart';
 import 'package:waultar/configs/navigation/screen.dart';
 import 'package:waultar/presentation/screens/authentication/signin.dart';
 import 'package:waultar/presentation/screens/home.dart';
-import 'package:waultar/presentation/screens/temp/test1.dart';
 import 'package:waultar/presentation/screens/unknown.dart';
 import 'package:waultar/presentation/widgets/upload/uploader.dart';
 
@@ -14,18 +13,13 @@ Navigator getAppNavigator(AppState appState, RoutePath routePath, ValueChanged<R
   return Navigator(
     transitionDelegate: NoAnimationTransitionDelegate(),
     pages: [
-      if (routePath.viewScreen == ViewScreen.testScreen1)
-        const MaterialPage(
-          key: ValueKey('TestScreen'),
-          child: TestView1(),
-        ),
       if (routePath.viewScreen == ViewScreen.unknown)
         const MaterialPage(
           key: ValueKey('Unknown'),
           child: UnknownView(),
         ),
       if (routePath.viewScreen == ViewScreen.home)
-        MaterialPage(
+        const MaterialPage(
           key: ValueKey('HomePage'),
           child: HomePageView(),
         ),
@@ -35,7 +29,7 @@ Navigator getAppNavigator(AppState appState, RoutePath routePath, ValueChanged<R
           child: UploaderComponent(),
         ),
       if (routePath.viewScreen == ViewScreen.signin && appState.user == null)
-        MaterialPage(
+        const MaterialPage(
           key: ValueKey('SignIn'),
           child: SignInView(),
         ),

@@ -5,8 +5,8 @@ enum MyContentType {
 }
 
 enum MediaType {
-  Text,
-  Image,
-  Video,
-  Other
+  text,
+  image,
+  video,
+  other
 }

@@ -8,6 +8,8 @@ import 'package:waultar/presentation/widgets/general/top_panel.dart';
 
 
 class HomePageView extends StatefulWidget {
+  const HomePageView({Key? key}) : super(key: key);
+
   @override
   _HomePageViewState createState() => _HomePageViewState();
 }
@@ -20,34 +22,32 @@ class _HomePageViewState extends State<HomePageView> {
         context,
         Row(
           children: [
-            MenuPanel2(),
+            const MenuPanel2(),
             const SizedBox(width: 2),
             Expanded(
               child: Container(
-                child: Container(
-                  color: themeProvider.themeData().primaryColor,
-                  height: MediaQuery.of(context).size.height,
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        TopPanel(),
-                        Divider(
-                          color:
-                              themeProvider.themeData().scaffoldBackgroundColor,
-                          indent: 35,
-                          endIndent: 35,
-                          height: 2,
-                          thickness: 2,
+                color: themeProvider.themeData().primaryColor,
+                height: MediaQuery.of(context).size.height,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const TopPanel(),
+                      Divider(
+                        color:
+                            themeProvider.themeData().scaffoldBackgroundColor,
+                        indent: 35,
+                        endIndent: 35,
+                        height: 2,
+                        thickness: 2,
+                      ),
+                      Expanded(
+                        child: Container(
+                          color: themeProvider.themeData().primaryColor,
+                          child: const Dashboard(),
                         ),
-                        Expanded(
-                          child: Container(
-                            color: themeProvider.themeData().primaryColor,
-                            child: Dashboard(),
-                          ),
-                        )
-                      ]),
-                ),
+                      )
+                    ]),
               ),
             )
           ],

@@ -102,7 +102,7 @@ class ParseHelper {
 
   /// Goes through all files in a give directory, and reads all keys from the json files it finds
   static Future<Set<String>> findAllKeysFromDirectory(String rootDirectory) async {
-    var result = Set<String>();
+    var result = <String>{};
     var rootDir = Directory(rootDirectory);
 
     var directories = await rootDir.list(recursive: true).toList();

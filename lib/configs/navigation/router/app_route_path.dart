@@ -2,7 +2,8 @@ import 'package:waultar/configs/navigation/router/route_path.dart';
 import 'package:waultar/configs/navigation/screen.dart';
 
 class AppRoutePath extends RoutePath {
-  ViewScreen viewScreen;
+  // ignore: annotate_overrides, overridden_fields
+  final ViewScreen viewScreen;
   
   AppRoutePath.home()        : viewScreen = ViewScreen.home;
   AppRoutePath.sigin()       : viewScreen = ViewScreen.signin;
