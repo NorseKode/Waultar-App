@@ -37,13 +37,13 @@ main() {
     });
   });
 
-  group("Tests of json containing media. ", () {
-    test("Json containing one of each media", () async {
-      var result = await NaiveParser.parseFile(mediaJson1);
+  // group("Tests of json containing media. ", () {
+  //   test("Json containing one of each media", () async {
+  //     var result = await NaiveParser.parseFile(mediaJson1);
 
-      var images = result["Images"] as List<ImageModel>;
+  //     var images = result["Images"] as List<ImageModel>;
 
-      expect(images.length, 2);
-    });
-  });
+  //     expect(images.length, 2);
+  //   });
+  // });
 }
