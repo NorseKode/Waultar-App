@@ -3,12 +3,17 @@ import 'package:waultar/services/startup.dart';
 import 'package:waultar/services/settings_service.dart';
 
 class ThemeProvider with ChangeNotifier {
-  final SettingsService _settingsService = locator<SettingsService>();
+  final IAppSettingsService _settingsService =
+      locator<IAppSettingsService>(instanceName: 'appSettingsService');
 
-  late bool isLightTheme;
+  late bool isLightTheme = false;
+
+  loadTheme() async {
+    isLightTheme = await _settingsService.getDarkMode();
+  }
 
   ThemeProvider() {
-    isLightTheme = _settingsService.getDarkMode();
+    loadTheme();
   }
 
   toggleThemeData() async {
@@ -23,12 +28,9 @@ class ThemeProvider with ChangeNotifier {
       fontFamily: 'Poppins', //inter for body?
       visualDensity: VisualDensity.adaptivePlatformDensity,
       primarySwatch: Colors.grey,
-      primaryColor: isLightTheme
-          ? Color(0xFFFFFFFF)
-          : Color(0xFF161819), //Color(0xFF1A1D1F),
+      primaryColor: isLightTheme ? Color(0xFFFFFFFF) : Color(0xFF161819), //Color(0xFF1A1D1F),
       brightness: isLightTheme ? Brightness.light : Brightness.dark,
-      scaffoldBackgroundColor:
-          isLightTheme ? Color(0xFFEEEEEE) : Color(0xFF111315),
+      scaffoldBackgroundColor: isLightTheme ? Color(0xFFEEEEEE) : Color(0xFF111315),
       textTheme: TextTheme(
         headline1: TextStyle(
           color: isLightTheme ? Color(0xFF65696F) : Color(0xFFE0E0E0),
@@ -46,30 +48,25 @@ class ThemeProvider with ChangeNotifier {
             fontFamily: "Poppins",
             fontSize: 20,
             fontWeight: FontWeight.w500),
-        bodyText1: const TextStyle(
-            color: Colors.grey, fontSize: 10, fontWeight: FontWeight.w500),
-        bodyText2: const TextStyle(
-            color: Colors.white, fontSize: 13, fontWeight: FontWeight.w400),
+        bodyText1: const TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.w500),
+        bodyText2: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w400),
       ),
     );
   }
 
   PersonalTheme themeMode() {
     return PersonalTheme(
-      buttonColor:
-          isLightTheme ? Color.fromARGB(255, 236, 236, 236) : Color(0xFF272B30),
+      buttonColor: isLightTheme ? Color.fromARGB(255, 236, 236, 236) : Color(0xFF272B30),
       themeColor: Colors.blue,
       iconColor: isLightTheme ? Color(0xFF65696F) : Color(0xFFE0E0E0),
       iconSize: 12,
-      bodyText3: const TextStyle(
-          color: Colors.grey, fontSize: 13, fontWeight: FontWeight.w500),
+      bodyText3: const TextStyle(color: Colors.grey, fontSize: 13, fontWeight: FontWeight.w500),
       bodyText4: TextStyle(
           color: isLightTheme ? Color(0xFF65696F) : Color(0xFFE0E0E0),
           fontSize: 14,
           fontWeight: FontWeight.w400),
       widgetBackground: isLightTheme ? Color(0xFFEEEEEE) : Color(0xff252728),
-      highlightedPrimary:
-          isLightTheme ? Color(0xFFFFFFFF) : Color(0xFF1C1E1F), //0xFF262a2d),
+      highlightedPrimary: isLightTheme ? Color(0xFFFFFFFF) : Color(0xFF1C1E1F), //0xFF262a2d),
     );
   }
 }

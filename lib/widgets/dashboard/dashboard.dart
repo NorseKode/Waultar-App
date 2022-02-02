@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:waultar/parser/find_all_keys.dart';
 import 'package:waultar/providers/theme_provider.dart';
 import 'package:waultar/widgets/upload/upload_files.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -22,15 +21,15 @@ class _DashboardState extends State<Dashboard> {
 
   Widget addIcon(double size, Color color) {
     const assetName = 'lib/assets/icons/fi-rr-plus.svg';
-    final Widget svg = SvgPicture.asset(assetName,
-        semanticsLabel: 'plus', height: size, color: color);
+    final Widget svg =
+        SvgPicture.asset(assetName, semanticsLabel: 'plus', height: size, color: color);
     return svg;
   }
 
   _upload(BuildContext context, bool isFile) async {
     var file = isFile
         ? await FileUploader.uploadMultiple()
-        : await FileUploader.uploadDirectory();
+        : await FileUploader.uploadFilesFromDirectory();
     file != null ? uploadedFiles = file : null;
     setState(() {});
   }
@@ -134,6 +133,7 @@ class _DashboardState extends State<Dashboard> {
               ),
             )),
         PopupMenuItem<String>(
+            onTap: () {},
             padding: EdgeInsets.zero,
             value: localizer.newWidget,
             child: Padding(
@@ -174,7 +174,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     localizer = AppLocalizations.of(context)!;
-    
+
     themeProvider = Provider.of<ThemeProvider>(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(35, 22.5, 35, 0),

@@ -180,14 +180,173 @@ class $UserAppSettingsTable extends UserAppSettings
   }
 }
 
+class ImagesTableCompanion extends UpdateCompanion<Image> {
+  final Value<int> id;
+  final Value<String> path;
+  final Value<String> raw;
+  final Value<DateTime> timestamp;
+  const ImagesTableCompanion({
+    this.id = const Value.absent(),
+    this.path = const Value.absent(),
+    this.raw = const Value.absent(),
+    this.timestamp = const Value.absent(),
+  });
+  ImagesTableCompanion.insert({
+    this.id = const Value.absent(),
+    required String path,
+    required String raw,
+    required DateTime timestamp,
+  })  : path = Value(path),
+        raw = Value(raw),
+        timestamp = Value(timestamp);
+  static Insertable<Image> custom({
+    Expression<int>? id,
+    Expression<String>? path,
+    Expression<String>? raw,
+    Expression<DateTime>? timestamp,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (path != null) 'path': path,
+      if (raw != null) 'raw': raw,
+      if (timestamp != null) 'timestamp': timestamp,
+    });
+  }
+
+  ImagesTableCompanion copyWith(
+      {Value<int>? id,
+      Value<String>? path,
+      Value<String>? raw,
+      Value<DateTime>? timestamp}) {
+    return ImagesTableCompanion(
+      id: id ?? this.id,
+      path: path ?? this.path,
+      raw: raw ?? this.raw,
+      timestamp: timestamp ?? this.timestamp,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (path.present) {
+      map['path'] = Variable<String>(path.value);
+    }
+    if (raw.present) {
+      map['raw'] = Variable<String>(raw.value);
+    }
+    if (timestamp.present) {
+      map['timestamp'] = Variable<DateTime>(timestamp.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ImagesTableCompanion(')
+          ..write('id: $id, ')
+          ..write('path: $path, ')
+          ..write('raw: $raw, ')
+          ..write('timestamp: $timestamp')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ImagesTableTable extends ImagesTable
+    with TableInfo<$ImagesTableTable, Image> {
+  final GeneratedDatabase _db;
+  final String? _alias;
+  $ImagesTableTable(this._db, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+      'id', aliasedName, false,
+      typeName: 'INTEGER',
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _pathMeta = const VerificationMeta('path');
+  late final GeneratedColumn<String?> path = GeneratedColumn<String?>(
+      'path', aliasedName, false,
+      typeName: 'TEXT', requiredDuringInsert: true);
+  final VerificationMeta _rawMeta = const VerificationMeta('raw');
+  late final GeneratedColumn<String?> raw = GeneratedColumn<String?>(
+      'raw', aliasedName, false,
+      typeName: 'TEXT', requiredDuringInsert: true);
+  final VerificationMeta _timestampMeta = const VerificationMeta('timestamp');
+  late final GeneratedColumn<DateTime?> timestamp = GeneratedColumn<DateTime?>(
+      'timestamp', aliasedName, false,
+      typeName: 'INTEGER', requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, path, raw, timestamp];
+  @override
+  String get aliasedName => _alias ?? 'images_table';
+  @override
+  String get actualTableName => 'images_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<Image> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('path')) {
+      context.handle(
+          _pathMeta, path.isAcceptableOrUnknown(data['path']!, _pathMeta));
+    } else if (isInserting) {
+      context.missing(_pathMeta);
+    }
+    if (data.containsKey('raw')) {
+      context.handle(
+          _rawMeta, raw.isAcceptableOrUnknown(data['raw']!, _rawMeta));
+    } else if (isInserting) {
+      context.missing(_rawMeta);
+    }
+    if (data.containsKey('timestamp')) {
+      context.handle(_timestampMeta,
+          timestamp.isAcceptableOrUnknown(data['timestamp']!, _timestampMeta));
+    } else if (isInserting) {
+      context.missing(_timestampMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Image map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Image(
+      const IntType().mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}path'])!,
+      const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}raw'])!,
+      const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}timestamp'])!,
+    );
+  }
+
+  @override
+  $ImagesTableTable createAlias(String alias) {
+    return $ImagesTableTable(_db, alias);
+  }
+}
+
 abstract class _$WaultarDb extends GeneratedDatabase {
   _$WaultarDb(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   late final $UserAppSettingsTable userAppSettings =
       $UserAppSettingsTable(this);
+  late final $ImagesTableTable imagesTable = $ImagesTableTable(this);
   late final UserSettingsDao userSettingsDao =
       UserSettingsDao(this as WaultarDb);
+  late final ImageDao imageDao = ImageDao(this as WaultarDb);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities => [userAppSettings];
+  List<DatabaseSchemaEntity> get allSchemaEntities =>
+      [userAppSettings, imagesTable];
 }
