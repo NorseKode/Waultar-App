@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:tuple/tuple.dart';
 import 'package:waultar/exceptions/parse_exception.dart';
 import 'package:waultar/models/tables/base_entity.dart';
 import 'package:waultar/models/tables/images_table.dart';
@@ -11,7 +12,7 @@ import 'package:path/path.dart' as dart_path;
 /// It isn't optimized in anyway, and should only be used for testing
 class NaiveParser {
   /// Reads the entire json tree, looking for object of a specific type
-  /// 
+  ///
   /// Main function that traverses the json tree stored in [data], where it
   /// collects entities in the [acc] list. It decides whether an object is of
   /// a specififc type with the [isValidObject] that is specific for each
@@ -53,15 +54,15 @@ class NaiveParser {
     } else {
       // if something unexpected is encounters, the object is thrown back to
       // the caller
-      throw data;
+      throw Tuple2("Uknown data", data);
     }
   }
-  
+
   /// Parses all files in [directory]
-  /// 
-  /// Takes a directory [directory] and reads all files in said directory. 
+  ///
+  /// Takes a directory [directory] and reads all files in said directory.
   /// Followed by an parsing of every file in said directory
-  /// 
+  ///
   /// Throws an [ParseException] if something unexpected in encountered
   static parseDirectory(Directory directory) async {
     var mapOfAcc = _setupAccumulators();
@@ -72,8 +73,10 @@ class NaiveParser {
         try {
           var data = await ParseHelper.getJsonStringFromFile(file);
           _imageCriteria(mapOfAcc["Images"]! as List<Image>, data);
-        } catch (e) {
-          throw ParseException("Unexpected error occured in parsing of file", file, e);
+        } on Tuple2<String, dynamic> catch (e) {
+          throw ParseException("Unexpected error occured in parsing of file", file, e.item2);
+        } on FormatException catch (e) {
+          throw ParseException("Wrong formatted json", file, e);
         }
       }
     }
@@ -82,17 +85,19 @@ class NaiveParser {
   }
 
   /// Parses a single [file]
-  /// 
+  ///
   /// Throws an [ParseException] if something unexpected in encountered
-  static parseFile(File file) async {
+  static Future<Map<String, List<BaseEntity>>> parseFile(File file) async {
     var mapOfAcc = _setupAccumulators();
 
     var data = await ParseHelper.getJsonStringFromFile(file);
 
     try {
       _imageCriteria(mapOfAcc["Images"]! as List<Image>, data);
-    } catch (e) {
-      throw ParseException("Unexpected error occured in parsing of file", file, e);
+    } on Tuple2<String, dynamic> catch (e) {
+      throw ParseException("Unexpected error occured in parsing of file", file, e.item2);
+    } on FormatException catch (e) {
+      throw ParseException("Wrong formatted json", file, e);
     }
 
     return mapOfAcc;
@@ -104,11 +109,17 @@ class NaiveParser {
     };
   }
 
-  static _imageCriteria(List<Image> acc, String data) {
+  static _imageCriteria(List<Image> acc, var data) {
     imageCriteria(var value) =>
         value is Map<String, dynamic> &&
-        value.containsKey("uri") &&
-        !value.containsKey("thumbnail");
+        value.containsKey("media") &&
+        value.values.firstWhere(
+                (element) =>
+                    element is Map<String, dynamic> &&
+                    element.keys.contains("uri") &&
+                    !element.keys.contains("thumbnail"),
+                orElse: () => null) !=
+            null;
     isImageAlreadyInList(List<Image> acc, Image img) =>
         acc.where((element) => element.path == img.path).isEmpty ? false : true;
 
