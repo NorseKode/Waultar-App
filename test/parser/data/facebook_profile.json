@@ -8,7 +8,7 @@
         },
         "emails": {
             "emails": [
-                "lukas98@live.dk"
+                "REDACTED@MAIL.COM"
             ],
             "previous_emails": [
                 "lukas.v.larsen.3@facebook.com"
@@ -17,9 +17,9 @@
             "ad_account_emails": []
         },
         "birthday": {
-            "year": 1998,
+            "year": 2021,
             "month": 2,
-            "day": 27
+            "day": 12
         },
         "gender": {
             "gender_option": "MALE",
@@ -73,7 +73,7 @@
         "phone_numbers": [
             {
                 "phone_type": "Mobile",
-                "phone_number": "+4524785944",
+                "phone_number": "12345678",
                 "verified": true
             }
         ],
@@ -428,6 +428,6 @@
             }
         ],
         "registration_timestamp": 1236956306,
-        "profile_uri": "https://www.facebook.com/lukas.v.larsen"
+        "profile_uri": "https://www.facebook.com/profile"
     }
 }

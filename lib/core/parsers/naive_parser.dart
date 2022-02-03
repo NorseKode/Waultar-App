@@ -38,7 +38,8 @@ class NaiveParser {
             acc.add(object);
           }
         } else {
-          _readObjects<T>(acc, value, isValidObject, doesFileAlreadyExists, constructor);
+          _readObjects<T>(
+              acc, value, isValidObject, doesFileAlreadyExists, constructor);
         }
       }
     } else if (data is List<dynamic>) {
@@ -46,7 +47,8 @@ class NaiveParser {
         var object = constructor(item);
 
         if (object == null) {
-          _readObjects<T>(acc, item, isValidObject, doesFileAlreadyExists, constructor);
+          _readObjects<T>(
+              acc, item, isValidObject, doesFileAlreadyExists, constructor);
         } else {
           acc.add(object);
         }
@@ -58,8 +60,8 @@ class NaiveParser {
     }
   }
 
-  static _readObject<T>(
-      var data, bool Function(dynamic value) isValidObject, T Function(dynamic value) constructor) {
+  static _readObject<T>(var data, bool Function(dynamic value) isValidObject,
+      T Function(dynamic value) constructor) {
     if (data is Map<String, dynamic>) {
       if (isValidObject(data)) {
         return constructor(data);
@@ -84,6 +86,41 @@ class NaiveParser {
     // }
   }
 
+  static Map<String, dynamic> _readJsonValuesAsMap(
+      var json, String parentKey, Map<String, dynamic> acc) {
+    if (json is Map<String, dynamic>) {
+      for (var key in json.keys) {
+        if (key == "value") {
+          acc[parentKey] = json["value"];
+        } else if (json[key] is String ||
+            json[key] is bool ||
+            json[key] is int) {
+          acc[key] = json[key];
+        } else {
+          acc = _readJsonValuesAsMap(json[key], key, acc);
+        }
+      }
+    } else if (json is List<dynamic>) {
+      var items = <dynamic>[];
+
+      for (var item in json) {
+        if (item is String) {
+          items.add(item);
+        } else if (item is bool) {
+          items.add(item);
+        } else if (item is int) {
+          items.add(item);
+        } else if (item != null) {
+          acc = _readJsonValuesAsMap(item, parentKey, acc);
+        }
+      }
+
+      acc[parentKey] = items;
+    }
+
+    return acc;
+  }
+
   /// Parses all files in [directory]
   ///
   /// Takes a directory [directory] and reads all files in said directory.
@@ -100,7 +137,8 @@ class NaiveParser {
           var data = await ParseHelper.getJsonStringFromFile(file);
           _imageCriteria(mapOfAcc["Images"]! as List<ImageModel>, data);
         } on Tuple2<String, dynamic> catch (e) {
-          throw ParseException("Unexpected error occured in parsing of file", file, e.item2);
+          throw ParseException(
+              "Unexpected error occured in parsing of file", file, e.item2);
         } on FormatException catch (e) {
           throw ParseException("Wrong formatted json", file, e);
         }
@@ -117,10 +155,13 @@ class NaiveParser {
     var mapOfAcc = _setupAccumulators();
 
     var jsonData = await ParseHelper.getJsonStringFromFile(file);
-    var isProfileData = await _probleJsonMap(jsonData, ["profile_v2", "profile_user"], 1);
+    var isProfileData =
+        await _probleJsonMap(jsonData, ["profile_v2", "profile_user"], 1);
 
     if (isProfileData) {
-      var profile = _profileCriteria(jsonData);
+      // var profile = _profileCriteria(jsonData);
+      var profile = ProfileModel.fromJson(
+          _readJsonValuesAsMap(jsonData, "", <String, dynamic>{}));
 
       if (profile != null) {
         mapOfAcc["Profile"] = profile;
@@ -147,8 +188,8 @@ class NaiveParser {
     };
   }
 
-  static Future<bool> _probleJsonMap(
-      var jsonData, List<String> keysToLookFor, int amountOfUniqueKeysNeeded) async {
+  static Future<bool> _probleJsonMap(var jsonData, List<String> keysToLookFor,
+      int amountOfUniqueKeysNeeded) async {
     var keys = await ParseHelper.findAllKeysInJson(jsonData);
 
     var result = keys.where((e) => keysToLookFor.contains(e));
@@ -170,7 +211,8 @@ class NaiveParser {
     isImageAlreadyInList(List<ImageModel> acc, ImageModel img) =>
         acc.where((element) => element.path == img.path).isEmpty ? false : true;
 
-    _readObjects<ImageModel>(acc, data, imageCriteria, isImageAlreadyInList, ImageModel.fromJson);
+    _readObjects<ImageModel>(
+        acc, data, imageCriteria, isImageAlreadyInList, ImageModel.fromJson);
   }
 
   static _profileCriteria(var jsonData) {

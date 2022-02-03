@@ -8,101 +8,87 @@ import 'package:waultar/presentation/widgets/upload/upload_files.dart';
 /// classes
 class ParseHelper {
   /// Traverses a [json] tree, looking for a key in the [keyNames] list
-  static String trySeveralNames(var json, List<String> keyNames) {
-    // for (var name in keyNames) {
-    //   if (json is Map<String, dynamic>) {
-    //     if (json.containsKey(name) && json[name] is String) {
-    //       return json[name];
-    //     }
-    // }
+  static String trySeveralNames(
+      Map<String, dynamic> possibleValues, List<String> keyNames) {
+    var keysInMap = keyNames.where((key) => possibleValues.containsKey(key));
 
-    // for (var object in json.values) {
-    //   if (object is Map<String, dynamic>) {
-    //     return trySeveralNames(object, keyNames);
-    //   } else if (object is List<dynamic>) {}
-    // }
-
-    dynamic? shortenedJson;
-    var results = <String>[];
-    var keys = findAllKeysInJson(json);
-
-    if (keys.contains("string_map_data")) {
-      // Used for instagram data
-      shortenedJson = _findObjectInJsonFromKey(json, "string_map_data");
-    }
-
-    if (shortenedJson != null) {
-      results = _trySeveralNames(shortenedJson, keyNames, results);
+    if (keysInMap.isEmpty) {
+      return "";
     } else {
-      results = _trySeveralNames(json, keyNames, <String>[]);
-    }
-    
+      var result = possibleValues[keysInMap.first];
 
-    return results[0];
-  }
-
-  static List<String> _trySeveralNames(var json, List<String> keyNames, List<String> results) {
-    var possibleResults = <String>[];
-    
-    for (var name in keyNames) {
-      if (json is Map<String, dynamic>) {
-        if (json.containsKey(name)) {
-          results.add(json[name]);
-        } else if (json.containsKey(name) && json.values.contains("value")) {
-
-        } else {
-          _trySeveralNames(json.values, keyNames, results);
-        }
-      } else if (json is List<dynamic>) {
-        for (var value in json) {
-          if (value is Map<String, dynamic>) {
-            if (value.containsKey(name)) {
-              results.add(value[name]);
-            }
-          }
-        }
+      if (result is List<dynamic>) {
+        return result[0];
+      } else {
+        return result;
       }
 
-      // if (json is Map<String, dynamic>) {
-      //   // Facebook's setup
-      //   if (json.containsKey(name) && json[name] is String) {
-      //     results.add(json[name]);
-      //   }
-      //   // Insstagram's setup
-      //   else if (json.containsKey(name) &&
-      //       json[name] is Map<String, dynamic> &&
-      //       json[name].containsKey("value")) {
-      //     var temp = json[name];
-      //     return json[name]["value"];
-      //   } else {
-      //     for (var value in json.values) {
-      //       results = _trySeveralNames(json, keyNames, results);
-      //     }
-      //   }
-      // } else if (json is List<dynamic>) {
-      //   for (var item in json) {
-      //     results = _trySeveralNames(json, keyNames, results);
-      //   }
-      // }
-    }
+      // dynamic shortenedJson;
+      // // var results = <String>[];
+      // var results = "";
+      // var keys = findAllKeysInJson(json);
 
-    return possibleResults;
+      // // must be instragram data
+      // if (keys.contains("string_map_data")) {
+      //   shortenedJson = _findObjectInJsonFromKey(json, "string_map_data");
+      // }
+
+      // if (shortenedJson != null) {
+      //   // results = _trySeveralNames(shortenedJson, keyNames, results);
+      //   results = _trySeveralNames(shortenedJson, keyNames);
+      // } else {
+      //   results = _trySeveralNames(json, keyNames);
+      // }
+
+      // return results;
+    }
   }
 
+  // static String _trySeveralNames(var json, List<String> keyNames) {
+  //   if (json is Map<String, dynamic>) {
+  //     var possibleKey = json.keys.firstWhere(
+  //         (element) => keyNames.contains(element),
+  //         orElse: () => "");
+
+  //     if (possibleKey != "") {
+  //       var keyValue = json[possibleKey];
+
+  //       if (keyValue is Map<String, dynamic> && keyValue.containsKey("value")) {
+  //         return keyValue["value"];
+  //       } else if (keyValue is! List<dynamic> &&
+  //           keyValue is! Map<String, dynamic>) {
+  //         return keyValue;
+  //       }
+  //     } else {
+  //       for (var key in json.keys) {
+  //         return _trySeveralNames(json[key], keyNames);
+  //       }
+  //     }
+  //   } else if (json is List<dynamic>) {
+  //     for (var item in json) {
+  //       return _trySeveralNames(item, keyNames);
+  //     }
+  //   } else if (json is String) {
+  //     return json;
+  //   }
+
+  //   return "";
+  //   // return possibleResults;
+  // }
+
   static _findObjectInJsonFromKey(var json, String key) {
+    // find json object of the key
     if (json is Map<String, dynamic>) {
       if (json.containsKey(key)) {
-        return json;
+        return json[key];
       } else {
-        _findObjectInJsonFromKey(json.values, key);
+        for (var mapKey in json.keys) {
+          return _findObjectInJsonFromKey(json[mapKey], key);
+        }
       }
     } else if (json is List<dynamic>) {
       for (var item in json) {
-        if (item is Map<String, dynamic> && item.containsKey(key)) {
-          return item;
-        } else {
-          _findObjectInJsonFromKey(item, key);
-        }
+        return _findObjectInJsonFromKey(item, key);
       }
     }
   }
@@ -183,7 +169,8 @@ class ParseHelper {
   }
 
   /// Goes through all files in a give directory, and reads all keys from the json files it finds
-  static Future<Set<String>> findAllKeysFromDirectory(String rootDirectory) async {
+  static Future<Set<String>> findAllKeysFromDirectory(
+      String rootDirectory) async {
     var result = <String>{};
     var rootDir = Directory(rootDirectory);
 
@@ -254,7 +241,8 @@ class ParseHelper {
                           TextButton(
                             child: const Text("Upload Files"),
                             onPressed: () async {
-                              files = await FileUploader.uploadFilesFromDirectory();
+                              files =
+                                  await FileUploader.uploadFilesFromDirectory();
                             },
                           ),
                           Text("Amount of files: " + uploadAmount.toString()),
@@ -264,7 +252,8 @@ class ParseHelper {
                         children: [
                           TextButton(
                             child: const Text("Choose Save File"),
-                            onPressed: () async => saveFile = await FileUploader.uploadSingle(),
+                            onPressed: () async =>
+                                saveFile = await FileUploader.uploadSingle(),
                           ),
                           const Text("Upload Destination: "),
                         ],

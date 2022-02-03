@@ -12,12 +12,12 @@
         "string_map_data": {
           "Email": {
             "href": "",
-            "value": "lukasvol98@gmail.com",
+            "value": "REDACTED@MAIL.COM",
             "timestamp": 0
           },
           "Phone Number": {
             "href": "",
-            "value": "+4524785944",
+            "value": "12345678",
             "timestamp": 0
           },
           "Phone Confirmed": {
@@ -42,7 +42,7 @@
           },
           "Bio": {
             "href": "",
-            "value": "Martial Arts | Tricking | Snowboarding | Skiing | CrossFit | Traveling | Photogrpahy | Videoediting |Facebook: @LLVOL https://www.facebook.com/LLVOL/|",
+            "value": "REDACTED BIO",
             "timestamp": 0
           },
           "Gender": {
@@ -52,7 +52,7 @@
           },
           "Date of birth": {
             "href": "",
-            "value": "1998-02-27",
+            "value": "2021-02-12",
             "timestamp": 0
           },
           "Website": {

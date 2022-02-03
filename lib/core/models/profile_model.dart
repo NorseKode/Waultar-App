@@ -13,19 +13,22 @@ class ProfileModel extends BaseModel {
   final String profileUri;
   final String raw;
 
-  ProfileModel(this.id, this.username, this.name, this.email, this.gender, this.bio,
-      this.phoneNumber, this.dateOfBirth, this.profileUri, this.raw);
+  static var NaiveParser;
 
-   ProfileModel._fromJson(Map<String, dynamic> json)
+  ProfileModel(this.id, this.username, this.name, this.email, this.gender,
+      this.bio, this.phoneNumber, this.dateOfBirth, this.profileUri, this.raw);
+
+  ProfileModel._fromJson(Map<String, dynamic> json)
       : id = null,
         username = ParseHelper.trySeveralNames(json, ["Username"]),
         name = ParseHelper.trySeveralNames(json, ["full_name"]),
-        email = ParseHelper.trySeveralNames(json, []),
-        gender = ParseHelper.trySeveralNames(json, []),
-        bio = ParseHelper.trySeveralNames(json, []),
-        phoneNumber = ParseHelper.trySeveralNames(json, []),
-        dateOfBirth = DateTime.now(),// DateTime.parse(ParseHelper.trySeveralNames(json, [])),
-        profileUri = ParseHelper.trySeveralNames(json, []),
+        email = ParseHelper.trySeveralNames(json, ["emails", "Email"]),
+        gender = ParseHelper.trySeveralNames(json, ["gender_option", "Gender"]),
+        bio = ParseHelper.trySeveralNames(json, ["Bio"]),
+        phoneNumber = ParseHelper.trySeveralNames(json, ["phone_number"]),
+        dateOfBirth = DateTime
+            .now(), // DateTime.parse(ParseHelper.trySeveralNames(json, [])),
+        profileUri = ParseHelper.trySeveralNames(json, ["profile_uri"]),
         raw = json.toString();
 
   static ProfileModel fromJson(var json) {
