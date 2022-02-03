@@ -3,6 +3,7 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_image_repository.
 import 'package:waultar/core/models/image_model.dart';
 import 'package:waultar/data/configs/drift_config.dart';
 import 'package:waultar/data/entities/index.dart';
+import 'package:waultar/data/repositories/companion_mapper.dart';
 
 part 'image_dao.g.dart';
 
@@ -13,11 +14,7 @@ class ImageDao extends DatabaseAccessor<WaultarDb> with _$ImageDaoMixin implemen
   /// returns id of created entry
   @override
   Future<int> addImage(ImageModel image) {
-    var companion = ImageEntityCompanion(
-      path: Value(image.path),
-      raw: Value(image.raw),
-      timestamp: Value(image.timestamp),
-    );
+    var companion = toImageCompanion(image);
     return into(imageEntity).insert(companion);
   }
 

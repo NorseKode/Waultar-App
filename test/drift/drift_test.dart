@@ -1,5 +1,5 @@
-import 'package:drift/drift.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:waultar/core/models/index.dart';
 import 'package:waultar/data/configs/drift_config.dart';
 
 import 'package:waultar/startup.dart';
@@ -29,9 +29,9 @@ Future<void> main() async {
 
     test('given true updates darkmode', () async {
       final _dao = db.appSettingsDao;
-      const companion = AppSettingsEntityCompanion(darkmode: Value(true));
+      var model = AppSettingsModel(true);
 
-      bool updated = await _dao.updateSettings(companion);
+      bool updated = await _dao.updateSettings(model);
       expect(updated, true);
 
       final userSettings = await _dao.getSettings();
