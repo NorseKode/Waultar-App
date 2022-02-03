@@ -4,25 +4,107 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:waultar/presentation/widgets/upload/upload_files.dart';
 
-
 /// A static class that provides functionality used by many of the parser
 /// classes
 class ParseHelper {
   /// Traverses a [json] tree, looking for a key in the [keyNames] list
-  static String trySeveralNames(Map<String, dynamic> json, List<String> keyNames) {
+  static String trySeveralNames(var json, List<String> keyNames) {
+    // for (var name in keyNames) {
+    //   if (json is Map<String, dynamic>) {
+    //     if (json.containsKey(name) && json[name] is String) {
+    //       return json[name];
+    //     }
+    // }
+
+    // for (var object in json.values) {
+    //   if (object is Map<String, dynamic>) {
+    //     return trySeveralNames(object, keyNames);
+    //   } else if (object is List<dynamic>) {}
+    // }
+
+    dynamic? shortenedJson;
+    var results = <String>[];
+    var keys = findAllKeysInJson(json);
+
+    if (keys.contains("string_map_data")) {
+      // Used for instagram data
+      shortenedJson = _findObjectInJsonFromKey(json, "string_map_data");
+    }
+
+    if (shortenedJson != null) {
+      results = _trySeveralNames(shortenedJson, keyNames, results);
+    } else {
+      results = _trySeveralNames(json, keyNames, <String>[]);
+    }
+    
+
+    return results[0];
+  }
+
+  static List<String> _trySeveralNames(var json, List<String> keyNames, List<String> results) {
+    var possibleResults = <String>[];
+    
     for (var name in keyNames) {
-      if (json.containsKey(name) && json[name] is String) {
-        return json[name];
+      if (json is Map<String, dynamic>) {
+        if (json.containsKey(name)) {
+          results.add(json[name]);
+        } else if (json.containsKey(name) && json.values.contains("value")) {
+
+        } else {
+          _trySeveralNames(json.values, keyNames, results);
+        }
+      } else if (json is List<dynamic>) {
+        for (var value in json) {
+          if (value is Map<String, dynamic>) {
+            if (value.containsKey(name)) {
+              results.add(value[name]);
+            }
+          }
+        }
       }
+
+      // if (json is Map<String, dynamic>) {
+      //   // Facebook's setup
+      //   if (json.containsKey(name) && json[name] is String) {
+      //     results.add(json[name]);
+      //   }
+      //   // Insstagram's setup
+      //   else if (json.containsKey(name) &&
+      //       json[name] is Map<String, dynamic> &&
+      //       json[name].containsKey("value")) {
+      //     var temp = json[name];
+      //     return json[name]["value"];
+      //   } else {
+      //     for (var value in json.values) {
+      //       results = _trySeveralNames(json, keyNames, results);
+      //     }
+      //   }
+      // } else if (json is List<dynamic>) {
+      //   for (var item in json) {
+      //     results = _trySeveralNames(json, keyNames, results);
+      //   }
+      // }
     }
 
-    for (var object in json.values) {
-      if (object is Map<String, dynamic>) {
-        return trySeveralNames(object, keyNames);
+    return possibleResults;
+  }
+
+  static _findObjectInJsonFromKey(var json, String key) {
+    if (json is Map<String, dynamic>) {
+      if (json.containsKey(key)) {
+        return json;
+      } else {
+        _findObjectInJsonFromKey(json.values, key);
+      }
+    } else if (json is List<dynamic>) {
+      for (var item in json) {
+        if (item is Map<String, dynamic> && item.containsKey(key)) {
+          return item;
+        } else {
+          _findObjectInJsonFromKey(item, key);
+        }
       }
     }
-
-    return '';
   }
 
   /// Given a [path] converts the file into a json string, no validation is done
@@ -130,9 +212,9 @@ class ParseHelper {
     return set;
   }
 
-  static Future<Set<String>> findAllKeysInJsonMap(var data) async {
+  static Set<String> findAllKeysInJson(var data) {
     var set = <String>{};
-    
+
     set = _aux(data, set);
 
     return set;

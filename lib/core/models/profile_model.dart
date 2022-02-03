@@ -18,7 +18,7 @@ class ProfileModel extends BaseModel {
 
    ProfileModel._fromJson(Map<String, dynamic> json)
       : id = null,
-        username = ParseHelper.trySeveralNames(json, ["username"]),
+        username = ParseHelper.trySeveralNames(json, ["Username"]),
         name = ParseHelper.trySeveralNames(json, ["full_name"]),
         email = ParseHelper.trySeveralNames(json, []),
         gender = ParseHelper.trySeveralNames(json, []),

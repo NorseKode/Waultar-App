@@ -117,7 +117,7 @@ class NaiveParser {
     var mapOfAcc = _setupAccumulators();
 
     var jsonData = await ParseHelper.getJsonStringFromFile(file);
-    var isProfileData = await _probleJsonMap(jsonData, ["profile_v2"], 1);
+    var isProfileData = await _probleJsonMap(jsonData, ["profile_v2", "profile_user"], 1);
 
     if (isProfileData) {
       var profile = _profileCriteria(jsonData);
@@ -149,7 +149,7 @@ class NaiveParser {
 
   static Future<bool> _probleJsonMap(
       var jsonData, List<String> keysToLookFor, int amountOfUniqueKeysNeeded) async {
-    var keys = await ParseHelper.findAllKeysInJsonMap(jsonData);
+    var keys = await ParseHelper.findAllKeysInJson(jsonData);
 
     var result = keys.where((e) => keysToLookFor.contains(e));
 
@@ -174,7 +174,9 @@ class NaiveParser {
   }
 
   static _profileCriteria(var jsonData) {
-    profileCriteria(var data) => data is Map<String, dynamic> && data.containsKey("profile_v2");
+    profileCriteria(var data) =>
+        data is Map<String, dynamic> && data.containsKey("profile_v2") ||
+        data.containsKey("profile_user");
 
     ProfileModel? result;
     result = _readObject(jsonData, profileCriteria, ProfileModel.fromJson);

@@ -16,6 +16,7 @@ main() {
   var corrupted = File(path_dart.join(pathToCurrentFile, "data", "corrupt.json"));
   // var mediaJson1 = File(path_dart.join(pathToCurrentFile, "data", "each_media_type_list.json"));
   var facebookProfile = File(path_dart.join(pathToCurrentFile, "data", "facebook_profile.json"));
+  var instagramProfile = File(path_dart.join(pathToCurrentFile, "data", "instagram_profile.json"));
 
   parserRunner<T>(Function(File file) parser, File fileToRun, String key) async {
     var result = await parser(fileToRun);
@@ -59,11 +60,18 @@ main() {
 
   group("Parsing of profile data: ", () {
     test("Facebook profile v2", () async {
-      var res =
+      var result =
           await parserRunner<ProfileModel?>(NaiveParser.parseFile, facebookProfile, "Profile");
 
-      expect(res!.username, "");
-      expect(res.name, "Lukas Vinther Offenberg Larsen");
+      expect(result!.username, "");
+      expect(result.name, "REDACTED FULLNAME");
+    });
+
+    test("Instagram profile", () async {
+      var result = await parserRunner<  ProfileModel?>(NaiveParser.parseFile, instagramProfile, "Profile");
+
+      expect(result != null, true);
+      expect(result!.username, "REDACTED USERNAME");
     });
   });
 }
