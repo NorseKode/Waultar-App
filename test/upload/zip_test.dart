@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:waultar/domain/services/upload_service.dart';
+import 'package:waultar/domain/services/parser_service.dart';
 import 'package:waultar/presentation/widgets/upload/upload_files.dart';
 
 Future<void> main() async {
