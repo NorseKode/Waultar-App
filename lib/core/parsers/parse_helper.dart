@@ -120,11 +120,20 @@ class ParseHelper {
     return result;
   }
 
-  static Future<Set<String>> findAllKeysInFile(File file, Set<String> set) async {
+  static Future<Set<String>> findAllKeysInFile(File file) async {
+    var set = <String>{};
     var jsonString = await file.readAsString();
     var jsonData = jsonDecode(jsonString);
 
     set = _aux(jsonData, set);
+
+    return set;
+  }
+
+  static Future<Set<String>> findAllKeysInJsonMap(var data) async {
+    var set = <String>{};
+    
+    set = _aux(data, set);
 
     return set;
   }

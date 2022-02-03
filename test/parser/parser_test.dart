@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as path_dart;
 import 'package:waultar/core/models/image_model.dart';
+import 'package:waultar/core/models/profile_model.dart';
 import 'package:waultar/core/parsers/naive_parser.dart';
 
 main() {
@@ -14,6 +15,15 @@ main() {
   var emptyList = File(path_dart.join(pathToCurrentFile, "data", "empty_list.json"));
   var corrupted = File(path_dart.join(pathToCurrentFile, "data", "corrupt.json"));
   // var mediaJson1 = File(path_dart.join(pathToCurrentFile, "data", "each_media_type_list.json"));
+  var facebookProfile = File(path_dart.join(pathToCurrentFile, "data", "facebook_profile.json"));
+
+  parserRunner<T>(Function(File file) parser, File fileToRun, String key) async {
+    var result = await parser(fileToRun);
+
+    var object = result[key] as T;
+
+    return object;
+  }
 
   group("Initial testing of edge cases with: ", () {
     test("empty json object", () async {
@@ -46,4 +56,14 @@ main() {
   //     expect(images.length, 2);
   //   });
   // });
+
+  group("Parsing of profile data: ", () {
+    test("Facebook profile v2", () async {
+      var res =
+          await parserRunner<ProfileModel?>(NaiveParser.parseFile, facebookProfile, "Profile");
+
+      expect(res!.username, "");
+      expect(res.name, "Lukas Vinther Offenberg Larsen");
+    });
+  });
 }
