@@ -1,7 +1,6 @@
-import 'package:drift/drift.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
-import 'package:waultar/data/configs/drift_config.dart';
+import 'package:waultar/core/models/appsettings_model.dart';
 import 'package:waultar/startup.dart';
 
 class AppSettingsService implements IAppSettingsService {
@@ -15,7 +14,7 @@ class AppSettingsService implements IAppSettingsService {
 
   @override
   Future toogleDarkMode(bool darkMode) async {
-    var result = await _dao.updateSettings(AppSettingsEntityCompanion(darkmode: Value(darkMode)));
+    var result = await _dao.updateSettings(AppSettingsModel(darkMode));
     if (!result) {
       // no entry updated, errormessage or something here
     }

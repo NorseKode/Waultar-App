@@ -2,12 +2,14 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
-import 'package:waultar/core/models/appsettings_model.dart';
-import 'package:waultar/core/models/image_model.dart';
+import 'package:waultar/core/models/index.dart';
 import 'package:waultar/data/entities/index.dart';
+import 'package:waultar/data/entities/profile_entity.dart';
 import 'package:waultar/data/repositories/image_dao.dart';
 import 'package:waultar/data/repositories/appsettings_dao.dart';
 import 'dart:io';
+
+import 'package:waultar/data/repositories/profile_dao.dart';
 
 part 'drift_config.g.dart';
 
@@ -23,10 +25,12 @@ LazyDatabase _openConnection() {
   // all tables need to be registered here :
   AppSettingsEntity,
   ImageEntity,
+  ProfileEntity,
 ], daos: [
   // as well as their respective DAOs :
   AppSettingsDao,
-  ImageDao
+  ImageDao,
+  ProfileDao,
 ])
 class WaultarDb extends _$WaultarDb {
   WaultarDb() : super(_openConnection());

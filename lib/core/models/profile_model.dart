@@ -3,12 +3,12 @@ import 'package:waultar/core/parsers/parse_helper.dart';
 
 class ProfileModel extends BaseModel {
   final int? id;
-  final String? username;
-  final String? name;
+  final String username;
+  final String name;
   final String email;
   final String gender;
   final String bio;
-  final String? phoneNumber;
+  final String phoneNumber;
   final DateTime dateOfBirth;
   final String profileUri;
   final String raw;
