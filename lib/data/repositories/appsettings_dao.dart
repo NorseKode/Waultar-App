@@ -4,6 +4,8 @@ import 'package:waultar/core/models/appsettings_model.dart';
 import 'package:waultar/data/configs/drift_config.dart';
 import 'package:waultar/data/entities/appsettings_entity.dart';
 
+import 'companion_mapper.dart';
+
 part 'appsettings_dao.g.dart';
 
 @DriftAccessor(tables: [AppSettingsEntity])
@@ -20,8 +22,9 @@ class AppSettingsDao extends DatabaseAccessor<WaultarDb> with _$AppSettingsDaoMi
   Future<AppSettingsModel> getSettings() => (select(appSettingsEntity)..where((s) => s.key.equals(_key))).getSingle();
 
   @override
-  Future<bool> updateSettings(AppSettingsEntityCompanion appSettings) async { 
-    int amountOfRowsUpdated = await (update(appSettingsEntity)..where((s) => s.key.equals(_key))).write(appSettings);
+  Future<bool> updateSettings(AppSettingsModel appSettings) async { 
+    var companion = toAppSettingsCompanion(appSettings);
+    int amountOfRowsUpdated = await (update(appSettingsEntity)..where((s) => s.key.equals(_key))).write(companion);
 
     if (amountOfRowsUpdated == 1) {
       return true; 

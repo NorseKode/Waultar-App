@@ -4,25 +4,93 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:waultar/presentation/widgets/upload/upload_files.dart';
 
-
 /// A static class that provides functionality used by many of the parser
 /// classes
 class ParseHelper {
   /// Traverses a [json] tree, looking for a key in the [keyNames] list
-  static String trySeveralNames(Map<String, dynamic> json, List<String> keyNames) {
-    for (var name in keyNames) {
-      if (json.containsKey(name) && json[name] is String) {
-        return json[name];
+  static String trySeveralNames(
+      Map<String, dynamic> possibleValues, List<String> keyNames) {
+    var keysInMap = keyNames.where((key) => possibleValues.containsKey(key));
+
+    if (keysInMap.isEmpty) {
+      return "";
+    } else {
+      var result = possibleValues[keysInMap.first];
+
+      if (result is List<dynamic>) {
+        return result[0];
+      } else {
+        return result;
+      }
+
+      // dynamic shortenedJson;
+      // // var results = <String>[];
+      // var results = "";
+      // var keys = findAllKeysInJson(json);
+
+      // // must be instragram data
+      // if (keys.contains("string_map_data")) {
+      //   shortenedJson = _findObjectInJsonFromKey(json, "string_map_data");
+      // }
+
+      // if (shortenedJson != null) {
+      //   // results = _trySeveralNames(shortenedJson, keyNames, results);
+      //   results = _trySeveralNames(shortenedJson, keyNames);
+      // } else {
+      //   results = _trySeveralNames(json, keyNames);
+      // }
+
+      // return results;
+    }
+  }
+
+  // static String _trySeveralNames(var json, List<String> keyNames) {
+  //   if (json is Map<String, dynamic>) {
+  //     var possibleKey = json.keys.firstWhere(
+  //         (element) => keyNames.contains(element),
+  //         orElse: () => "");
+
+  //     if (possibleKey != "") {
+  //       var keyValue = json[possibleKey];
+
+  //       if (keyValue is Map<String, dynamic> && keyValue.containsKey("value")) {
+  //         return keyValue["value"];
+  //       } else if (keyValue is! List<dynamic> &&
+  //           keyValue is! Map<String, dynamic>) {
+  //         return keyValue;
+  //       }
+  //     } else {
+  //       for (var key in json.keys) {
+  //         return _trySeveralNames(json[key], keyNames);
+  //       }
+  //     }
+  //   } else if (json is List<dynamic>) {
+  //     for (var item in json) {
+  //       return _trySeveralNames(item, keyNames);
+  //     }
+  //   } else if (json is String) {
+  //     return json;
+  //   }
+
+  //   return "";
+  //   // return possibleResults;
+  // }
+
+  static _findObjectInJsonFromKey(var json, String key) {
+    // find json object of the key
+    if (json is Map<String, dynamic>) {
+      if (json.containsKey(key)) {
+        return json[key];
+      } else {
+        for (var mapKey in json.keys) {
+          return _findObjectInJsonFromKey(json[mapKey], key);
+        }
+      }
+    } else if (json is List<dynamic>) {
+      for (var item in json) {
+        return _findObjectInJsonFromKey(item, key);
       }
     }
-
-    for (var object in json.values) {
-      if (object is Map<String, dynamic>) {
-        return trySeveralNames(object, keyNames);
-      }
-    }
-
-    return '';
   }
 
   /// Given a [path] converts the file into a json string, no validation is done
@@ -101,7 +169,8 @@ class ParseHelper {
   }
 
   /// Goes through all files in a give directory, and reads all keys from the json files it finds
-  static Future<Set<String>> findAllKeysFromDirectory(String rootDirectory) async {
+  static Future<Set<String>> findAllKeysFromDirectory(
+      String rootDirectory) async {
     var result = <String>{};
     var rootDir = Directory(rootDirectory);
 
@@ -120,11 +189,20 @@ class ParseHelper {
     return result;
   }
 
-  static Future<Set<String>> findAllKeysInFile(File file, Set<String> set) async {
+  static Future<Set<String>> findAllKeysInFile(File file) async {
+    var set = <String>{};
     var jsonString = await file.readAsString();
     var jsonData = jsonDecode(jsonString);
 
     set = _aux(jsonData, set);
+
+    return set;
+  }
+
+  static Set<String> findAllKeysInJson(var data) {
+    var set = <String>{};
+
+    set = _aux(data, set);
 
     return set;
   }
@@ -163,7 +241,8 @@ class ParseHelper {
                           TextButton(
                             child: const Text("Upload Files"),
                             onPressed: () async {
-                              files = await FileUploader.uploadFilesFromDirectory();
+                              files =
+                                  await FileUploader.uploadFilesFromDirectory();
                             },
                           ),
                           Text("Amount of files: " + uploadAmount.toString()),
@@ -173,7 +252,8 @@ class ParseHelper {
                         children: [
                           TextButton(
                             child: const Text("Choose Save File"),
-                            onPressed: () async => saveFile = await FileUploader.uploadSingle(),
+                            onPressed: () async =>
+                                saveFile = await FileUploader.uploadSingle(),
                           ),
                           const Text("Upload Destination: "),
                         ],
