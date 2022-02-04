@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/exceptions/parse_exception.dart';
+import 'package:waultar/core/abstracts/abstract_parsers/base_parser.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/models/profile_model.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
@@ -10,7 +11,7 @@ import 'package:path/path.dart' as dart_path;
 
 /// A naive parser that reads the entire json tree
 /// It isn't optimized in anyway, and should only be used for testing
-class NaiveParser {
+class NaiveParser extends BaseParser {
   /// Reads the entire json tree, looking for object of a specific type
   ///
   /// Main function that traverses the json tree stored in [data], where it
@@ -121,13 +122,8 @@ class NaiveParser {
     return acc;
   }
 
-  /// Parses all files in [directory]
-  ///
-  /// Takes a directory [directory] and reads all files in said directory.
-  /// Followed by an parsing of every file in said directory
-  ///
-  /// Throws an [ParseException] if something unexpected in encountered
-  static parseDirectory(Directory directory) async {
+  @override
+  Stream<BaseModel> parseDirectory(Directory directory) async* {
     var mapOfAcc = _setupAccumulators();
     var files = await getAllFilesFrom(directory.path);
 
@@ -145,13 +141,11 @@ class NaiveParser {
       }
     }
 
-    return mapOfAcc;
+
+    // return mapOfAcc;
   }
 
-  /// Parses a single [file]
-  ///
-  /// Throws an [ParseException] if something unexpected in encountered
-  static parseFile(File file) async {
+  Stream<BaseModel> parseFile(File file) async* {
     var mapOfAcc = _setupAccumulators();
 
     var jsonData = await ParseHelper.getJsonStringFromFile(file);
@@ -176,7 +170,7 @@ class NaiveParser {
     //   throw ParseException("Wrong formatted json", file, e);
     // }
 
-    return mapOfAcc;
+    // return mapOfAcc;
   }
 
   static Map<String, dynamic> _setupAccumulators() {
