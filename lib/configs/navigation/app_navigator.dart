@@ -23,11 +23,11 @@ Navigator getAppNavigator(AppState appState, RoutePath routePath, ValueChanged<R
           key: ValueKey('HomePage'),
           child: HomePageView(),
         ),
-      if (routePath.viewScreen == ViewScreen.uploader)
-        const MaterialPage(
-          key: ValueKey('Uploader'),
-          child: UploaderComponent(),
-        ),
+      // if (routePath.viewScreen == ViewScreen.uploader)
+      //   const MaterialPage(
+      //     key: ValueKey('Uploader'),
+      //     child: UploaderComponent(),
+      //   ),
       if (routePath.viewScreen == ViewScreen.signin && appState.user == null)
         const MaterialPage(
           key: ValueKey('SignIn'),

@@ -4,6 +4,7 @@ import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/menu_screens.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:waultar/presentation/widgets/upload/uploader.dart';
 
 class MenuPanel2 extends StatefulWidget {
   const MenuPanel2({Key? key}) : super(key: key);
@@ -96,7 +97,8 @@ class _MenuPanel2State extends State<MenuPanel2> {
         Container(
             alignment: Alignment.centerLeft,
             height: 30,
-            child: Text(localizer.analytics.toUpperCase(), style: themeProvider.themeData().textTheme.bodyText1)),
+            child: Text(localizer.analytics.toUpperCase(),
+                style: themeProvider.themeData().textTheme.bodyText1)),
         menuButton('dashboard', localizer.dashboard, MenuScreens.dashboard),
         menuButton('world', localizer.dataSources, MenuScreens.datasources),
       ],
@@ -117,7 +119,7 @@ class _MenuPanel2State extends State<MenuPanel2> {
         ),
         menuButton('picture', localizer.album, MenuScreens.album),
         menuButton('document', localizer.posts, MenuScreens.posts),
-        menuButton('edit', localizer.comments, MenuScreens.comments)
+        menuButton('edit', localizer.comments, MenuScreens.comments),
       ],
     );
   }
@@ -183,11 +185,31 @@ class _MenuPanel2State extends State<MenuPanel2> {
     );
   }
 
+  Widget uploadButton(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        var res = await Uploader.uploadDialogue(context);
+      },
+      child: SizedBox(
+        height: 30,
+        width: menuWidth,
+        child: Row(
+          children: [
+            menuIcon('edit', false),
+            const SizedBox(width: 10),
+            Text(localizer.upload,
+                style: TextStyle(fontSize: 12, color: themeProvider.themeMode().iconColor))
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     localizer = AppLocalizations.of(context)!;
     themeProvider = Provider.of<ThemeProvider>(context);
-    
+
     return Container(
         color: themeProvider.themeData().primaryColor,
         width: menuWidth,
@@ -205,6 +227,7 @@ class _MenuPanel2State extends State<MenuPanel2> {
                   collections(),
                   const SizedBox(height: 20),
                   darkmodeButton(),
+                  uploadButton(context),
                 ],
               ),
               Column(
