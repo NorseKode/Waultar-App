@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:waultar/configs/globals/scaffold_main.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'upload_files.dart';
 class Uploader {
-  static uploadDialogue(BuildContext context) {
+  static Future<List<String>?> uploadDialogue(BuildContext context) {
     var localizer = AppLocalizations.of(context)!;
 
-    return showDialog(
+    return showDialog<List<String>?>(
       context: context,
       builder: (BuildContext context) {
         return SimpleDialog(
@@ -23,7 +22,7 @@ class Uploader {
             SimpleDialogOption(
               onPressed: () async {
                 var files = await FileUploader.uploadMultiple();
-                Navigator.pop(context, files != null ? files : [""]);
+                Navigator.pop(context, files != null ? files.map((e) => e.path).toList() : [""]);
               },
               child: Text(localizer.uploadFiles),
             )

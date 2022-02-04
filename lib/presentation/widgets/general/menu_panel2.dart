@@ -4,7 +4,9 @@ import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/menu_screens.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:waultar/presentation/widgets/upload/upload_files.dart';
 import 'package:waultar/presentation/widgets/upload/uploader.dart';
+import 'package:path/path.dart' as dart_path;
 
 class MenuPanel2 extends StatefulWidget {
   const MenuPanel2({Key? key}) : super(key: key);
@@ -188,7 +190,16 @@ class _MenuPanel2State extends State<MenuPanel2> {
   Widget uploadButton(BuildContext context) {
     return InkWell(
       onTap: () async {
-        var res = await Uploader.uploadDialogue(context);
+        var uploadedFiles = await Uploader.uploadDialogue(context);
+
+        if (uploadedFiles != null) {
+          var zipFiles = uploadedFiles.where((element) => dart_path.extension(element) == ".zip").toList();
+          if (zipFiles.length == 1) {
+            uploadedFiles = await FileUploader.extractZip(dart_path.normalize(zipFiles.first));
+          }
+
+          // TODO: send to parser
+        }
       },
       child: SizedBox(
         height: 30,

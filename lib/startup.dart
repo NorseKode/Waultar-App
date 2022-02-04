@@ -12,6 +12,7 @@ import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.d
 import 'package:waultar/data/configs/drift_config.dart';
 import 'package:waultar/domain/services/appsettings_service.dart';
 import 'configs/globals/os_enum.dart';
+import 'package:path/path.dart' as dart_path;
 
 final locator = GetIt.instance;
 late OS os;
@@ -88,7 +89,7 @@ void configureSQLiteBinaries() {
 DynamicLibrary _openOnWindows() {
   final scriptDir = File(Platform.script.toFilePath()).parent;
   final libraryNextToScript =
-      File('${scriptDir.path}/lib/assets/sqlite/sqlite3.dll');
+      File(dart_path.normalize('${scriptDir.path}/lib/assets/sqlite/sqlite3.dll'));
   return DynamicLibrary.open(libraryNextToScript.path);
 }
 
