@@ -8,16 +8,13 @@ class AppSettingsService implements IAppSettingsService {
       locator<IAppSettingsRepository>(instanceName: 'appSettingsRepo');
 
   @override
-  Future<bool> getDarkMode() async {
+  bool getDarkMode() {
     var settings = _repo.getSettings();
     return settings.darkmode;
   }
 
   @override
   Future toogleDarkMode(bool darkMode) async {
-    var result = await _repo.updateSettings(AppSettingsModel(1, darkMode));
-    if (!result) {
-      // no entry updated, errormessage or something here
-    }
+    await _repo.updateSettings(AppSettingsModel(1, darkMode));
   }
 }

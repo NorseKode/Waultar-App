@@ -9,7 +9,8 @@ class ObjectBox {
   ObjectBox._create(this.store) {
     // additional setup code here
     final appSettingsBox = store.box<AppSettingsBox>();
-    if (appSettingsBox.isEmpty()) {
+    if (appSettingsBox.count() == 0) {
+      print('settingsbox is empty');
       var initialAppSettings = AppSettingsBox(0, false);
       appSettingsBox.put(initialAppSettings);
     }

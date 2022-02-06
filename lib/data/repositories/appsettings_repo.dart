@@ -22,7 +22,7 @@ class AppSettingsRepository implements IAppSettingsRepository {
   @override
   Future updateSettings(AppSettingsModel appSettings) async {
     appSettingsBox
-        .putAsync(AppSettingsBox(appSettings.id!, appSettings.darkmode));
+        .putAsync(AppSettingsBox(1, appSettings.darkmode));
   }
 
   @override

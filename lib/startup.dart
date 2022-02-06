@@ -17,26 +17,18 @@ late OS os;
 late ObjectBox context;
 
 Future<void> setupServices({bool testing = false}) async {
+
   os = detectPlatform();
   locator.registerSingleton<OS>(os, instanceName: 'platform');
-
-  // configure on startup the correct sqlite binary to use
-  // configureSQLiteBinaries();
 
   // create objectbox at startup
   context = await ObjectBox.create();
   locator.registerSingleton<ObjectBox>(context, instanceName: 'context');
 
-  // when correct sqlite binary have initialized, register the db
-  // testing
-  //     ? locator.registerSingleton<WaultarDb>(
-  //         WaultarDb.testing(NativeDatabase.memory()))
-  //     : locator.registerSingleton<WaultarDb>(WaultarDb());
-
-  // var db = locator<WaultarDb>();
 
   locator.registerSingleton<IAppSettingsRepository>(AppSettingsRepository(),
       instanceName: 'appSettingsRepo');
+
 
   locator.registerSingleton<IAppSettingsService>(AppSettingsService(),
       instanceName: 'appSettingsService');
