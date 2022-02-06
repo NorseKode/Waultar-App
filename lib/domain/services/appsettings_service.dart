@@ -4,17 +4,18 @@ import 'package:waultar/core/models/appsettings_model.dart';
 import 'package:waultar/startup.dart';
 
 class AppSettingsService implements IAppSettingsService {
-  final IAppSettingsRepository _dao = locator<IAppSettingsRepository>(instanceName: 'appSettingsDao');
+  final IAppSettingsRepository _repo =
+      locator<IAppSettingsRepository>(instanceName: 'appSettingsRepo');
 
   @override
   Future<bool> getDarkMode() async {
-    var settings = await _dao.getSettings();
+    var settings = _repo.getSettings();
     return settings.darkmode;
   }
 
   @override
   Future toogleDarkMode(bool darkMode) async {
-    var result = await _dao.updateSettings(AppSettingsModel(darkMode));
+    var result = await _repo.updateSettings(AppSettingsModel(1, darkMode));
     if (!result) {
       // no entry updated, errormessage or something here
     }

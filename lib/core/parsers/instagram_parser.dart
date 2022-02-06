@@ -28,16 +28,19 @@ class InstragramParser extends BaseParser {
 
     try {
       if (keysInJsonData.contains("media")) {
-        var objectsOfInterests = await ParseHelper.readObjects(jsonData, "media").toList();
+        var objectsOfInterests =
+            await ParseHelper.readObjects(jsonData, "media").toList();
 
         for (var object in objectsOfInterests) {
           for (var media in object["media"]) {
-            yield ImageModel.fromJson(ParseHelper.jsonDataAsMap(media, "", <String, dynamic>{}));
+            yield ImageModel.fromJson(ParseHelper.jsonDataAsMap(
+                media, "", <String, dynamic>{}, [""]));
           }
         }
       }
     } on Tuple2<String, dynamic> catch (e) {
-      throw ParseException("Unexpected error occured in parsing of file", file, e.item2);
+      throw ParseException(
+          "Unexpected error occured in parsing of file", file, e.item2);
     } on FormatException catch (e) {
       throw ParseException("Wrong formatted json", file, e);
     }

@@ -23,15 +23,20 @@ class ParseHelper {
     }
   }
 
-  static Map<String, dynamic> jsonDataAsMap(var json, String parentKey, Map<String, dynamic> acc) {
+  static Map<String, dynamic> jsonDataAsMap(var json, String parentKey,
+      Map<String, dynamic> acc, List<String> keysToExclude) {
     if (json is Map<String, dynamic>) {
       for (var key in json.keys) {
-        if (key == "value") {
-          acc[parentKey] = json["value"];
-        } else if (json[key] is String || json[key] is bool || json[key] is int) {
-          acc[key] = json[key];
-        } else {
-          acc = jsonDataAsMap(json[key], key, acc);
+        if (!keysToExclude.contains(key)) {
+          if (key == "value") {
+            acc[parentKey] = json["value"];
+          } else if (json[key] is String ||
+              json[key] is bool ||
+              json[key] is int) {
+            acc[key] = json[key];
+          } else {
+            acc = jsonDataAsMap(json[key], key, acc, keysToExclude);
+          }
         }
       }
     } else if (json is List<dynamic>) {
@@ -45,7 +50,7 @@ class ParseHelper {
         } else if (item is int) {
           items.add(item);
         } else if (item != null) {
-          acc = jsonDataAsMap(item, parentKey, acc);
+          acc = jsonDataAsMap(item, parentKey, acc, keysToExclude);
         }
       }
 
@@ -56,7 +61,8 @@ class ParseHelper {
   }
 
   /// Traverses a [json] tree, looking for a key in the [keyNames] list
-  static String trySeveralNames(Map<String, dynamic> possibleValues, List<String> keyNames) {
+  static String trySeveralNames(
+      Map<String, dynamic> possibleValues, List<String> keyNames) {
     var keysInMap = keyNames.where((key) => possibleValues.containsKey(key));
 
     if (keysInMap.isEmpty) {
@@ -116,7 +122,8 @@ class ParseHelper {
   }
 
   /// Goes through all files in a give directory, and reads all keys from the json files it finds
-  static Future<Set<String>> findAllKeysFromDirectory(String rootDirectory) async {
+  static Future<Set<String>> findAllKeysFromDirectory(
+      String rootDirectory) async {
     var result = <String>{};
     var rootDir = Directory(rootDirectory);
 
@@ -153,7 +160,8 @@ class ParseHelper {
     return set;
   }
 
-  static bool probeJsonMap(var jsonData, List<String> keysToLookFor, int amountOfUniqueKeysNeeded) {
+  static bool probeJsonMap(
+      var jsonData, List<String> keysToLookFor, int amountOfUniqueKeysNeeded) {
     var keys = ParseHelper.findAllKeysInJson(jsonData);
 
     var result = keys.where((e) => keysToLookFor.contains(e));
