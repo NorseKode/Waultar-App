@@ -26,7 +26,7 @@ Future<void> setupServices({bool testing = false}) async {
   locator.registerSingleton<ObjectBox>(context, instanceName: 'context');
 
 
-  locator.registerSingleton<IAppSettingsRepository>(AppSettingsRepository(),
+  locator.registerSingleton<IAppSettingsRepository>(AppSettingsRepository(context),
       instanceName: 'appSettingsRepo');
 
 
