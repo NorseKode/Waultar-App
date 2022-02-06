@@ -121,31 +121,55 @@ class ImageEntityCompanion extends UpdateCompanion<ImageModel> {
   final Value<String> path;
   final Value<String> raw;
   final Value<DateTime> timestamp;
+  final Value<String> description;
+  final Value<String> uri;
+  final Value<String> title;
+  final Value<String> metadata;
   const ImageEntityCompanion({
     this.id = const Value.absent(),
     this.path = const Value.absent(),
     this.raw = const Value.absent(),
     this.timestamp = const Value.absent(),
+    this.description = const Value.absent(),
+    this.uri = const Value.absent(),
+    this.title = const Value.absent(),
+    this.metadata = const Value.absent(),
   });
   ImageEntityCompanion.insert({
     this.id = const Value.absent(),
     required String path,
     required String raw,
     required DateTime timestamp,
+    required String description,
+    required String uri,
+    required String title,
+    required String metadata,
   })  : path = Value(path),
         raw = Value(raw),
-        timestamp = Value(timestamp);
+        timestamp = Value(timestamp),
+        description = Value(description),
+        uri = Value(uri),
+        title = Value(title),
+        metadata = Value(metadata);
   static Insertable<ImageModel> custom({
     Expression<int>? id,
     Expression<String>? path,
     Expression<String>? raw,
     Expression<DateTime>? timestamp,
+    Expression<String>? description,
+    Expression<String>? uri,
+    Expression<String>? title,
+    Expression<String>? metadata,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (path != null) 'path': path,
       if (raw != null) 'raw': raw,
       if (timestamp != null) 'timestamp': timestamp,
+      if (description != null) 'description': description,
+      if (uri != null) 'uri': uri,
+      if (title != null) 'title': title,
+      if (metadata != null) 'metadata': metadata,
     });
   }
 
@@ -153,12 +177,20 @@ class ImageEntityCompanion extends UpdateCompanion<ImageModel> {
       {Value<int>? id,
       Value<String>? path,
       Value<String>? raw,
-      Value<DateTime>? timestamp}) {
+      Value<DateTime>? timestamp,
+      Value<String>? description,
+      Value<String>? uri,
+      Value<String>? title,
+      Value<String>? metadata}) {
     return ImageEntityCompanion(
       id: id ?? this.id,
       path: path ?? this.path,
       raw: raw ?? this.raw,
       timestamp: timestamp ?? this.timestamp,
+      description: description ?? this.description,
+      uri: uri ?? this.uri,
+      title: title ?? this.title,
+      metadata: metadata ?? this.metadata,
     );
   }
 
@@ -177,6 +209,18 @@ class ImageEntityCompanion extends UpdateCompanion<ImageModel> {
     if (timestamp.present) {
       map['timestamp'] = Variable<DateTime>(timestamp.value);
     }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (uri.present) {
+      map['uri'] = Variable<String>(uri.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (metadata.present) {
+      map['metadata'] = Variable<String>(metadata.value);
+    }
     return map;
   }
 
@@ -186,7 +230,11 @@ class ImageEntityCompanion extends UpdateCompanion<ImageModel> {
           ..write('id: $id, ')
           ..write('path: $path, ')
           ..write('raw: $raw, ')
-          ..write('timestamp: $timestamp')
+          ..write('timestamp: $timestamp, ')
+          ..write('description: $description, ')
+          ..write('uri: $uri, ')
+          ..write('title: $title, ')
+          ..write('metadata: $metadata')
           ..write(')'))
         .toString();
   }
@@ -215,8 +263,26 @@ class $ImageEntityTable extends ImageEntity
   late final GeneratedColumn<DateTime?> timestamp = GeneratedColumn<DateTime?>(
       'timestamp', aliasedName, false,
       typeName: 'INTEGER', requiredDuringInsert: true);
+  final VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  late final GeneratedColumn<String?> description = GeneratedColumn<String?>(
+      'description', aliasedName, false,
+      typeName: 'TEXT', requiredDuringInsert: true);
+  final VerificationMeta _uriMeta = const VerificationMeta('uri');
+  late final GeneratedColumn<String?> uri = GeneratedColumn<String?>(
+      'uri', aliasedName, false,
+      typeName: 'TEXT', requiredDuringInsert: true);
+  final VerificationMeta _titleMeta = const VerificationMeta('title');
+  late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
+      'title', aliasedName, false,
+      typeName: 'TEXT', requiredDuringInsert: true);
+  final VerificationMeta _metadataMeta = const VerificationMeta('metadata');
+  late final GeneratedColumn<String?> metadata = GeneratedColumn<String?>(
+      'metadata', aliasedName, false,
+      typeName: 'TEXT', requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns => [id, path, raw, timestamp];
+  List<GeneratedColumn> get $columns =>
+      [id, path, raw, timestamp, description, uri, title, metadata];
   @override
   String get aliasedName => _alias ?? 'images';
   @override
@@ -247,6 +313,32 @@ class $ImageEntityTable extends ImageEntity
     } else if (isInserting) {
       context.missing(_timestampMeta);
     }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    } else if (isInserting) {
+      context.missing(_descriptionMeta);
+    }
+    if (data.containsKey('uri')) {
+      context.handle(
+          _uriMeta, uri.isAcceptableOrUnknown(data['uri']!, _uriMeta));
+    } else if (isInserting) {
+      context.missing(_uriMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('metadata')) {
+      context.handle(_metadataMeta,
+          metadata.isAcceptableOrUnknown(data['metadata']!, _metadataMeta));
+    } else if (isInserting) {
+      context.missing(_metadataMeta);
+    }
     return context;
   }
 
@@ -256,13 +348,16 @@ class $ImageEntityTable extends ImageEntity
   ImageModel map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ImageModel(
-      const IntType().mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}path'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}uri'])!,
       const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}raw'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}metadata'])!,
       const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}timestamp'])!,
+      const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
+      const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}description'])!,
     );
   }
 

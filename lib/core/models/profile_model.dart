@@ -13,8 +13,6 @@ class ProfileModel extends BaseModel {
   final String profileUri;
   final String raw;
 
-  static var NaiveParser;
-
   ProfileModel(this.id, this.username, this.name, this.email, this.gender,
       this.bio, this.phoneNumber, this.dateOfBirth, this.profileUri, this.raw);
 
@@ -31,7 +29,11 @@ class ProfileModel extends BaseModel {
         profileUri = ParseHelper.trySeveralNames(json, ["profile_uri"]),
         raw = json.toString();
 
-  static ProfileModel fromJson(var json) {
+  ProfileModel fromJson(var json) {
+    return ProfileModel._fromJson(json);
+  }
+  
+  static ProfileModel fromJson2(var json) {
     return ProfileModel._fromJson(json);
   }
 

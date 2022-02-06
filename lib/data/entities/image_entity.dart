@@ -11,4 +11,8 @@ class ImageEntity extends Table{
   TextColumn get path => text()();
   TextColumn get raw => text()();
   DateTimeColumn get timestamp => dateTime()();
+  TextColumn get description => text()();
+  TextColumn get uri => text()();
+  TextColumn get title => text()();
+  TextColumn get metadata => text()();
 }

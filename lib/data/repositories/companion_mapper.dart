@@ -4,10 +4,10 @@ import 'package:waultar/core/models/index.dart';
 import 'package:waultar/data/configs/drift_config.dart';
 
 ImageEntityCompanion toImageCompanion(ImageModel image) {
-  return ImageEntityCompanion(
-    path: Value(image.path),
-    raw: Value(image.raw),
-    timestamp: Value(image.timestamp)
+  return const ImageEntityCompanion(
+    // path: Value(image.path),
+    // raw: Value(image.raw),
+    // timestamp: Value(image.timestamp)
   );
 }
 

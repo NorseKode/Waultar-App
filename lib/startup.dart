@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:ffi';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:path/path.dart';
 import 'package:sqlite3/open.dart';
 import 'package:drift/native.dart';
 import 'package:get_it/get_it.dart';

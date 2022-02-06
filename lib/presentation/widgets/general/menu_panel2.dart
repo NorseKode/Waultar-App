@@ -198,7 +198,6 @@ class _MenuPanel2State extends State<MenuPanel2> {
             uploadedFiles = await FileUploader.extractZip(dart_path.normalize(zipFiles.first));
           }
 
-          // TODO: send to parser
         }
       },
       child: SizedBox(

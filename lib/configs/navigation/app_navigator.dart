@@ -5,7 +5,6 @@ import 'package:waultar/configs/navigation/screen.dart';
 import 'package:waultar/presentation/screens/authentication/signin.dart';
 import 'package:waultar/presentation/screens/home.dart';
 import 'package:waultar/presentation/screens/unknown.dart';
-import 'package:waultar/presentation/widgets/upload/uploader.dart';
 
 import 'app_state.dart';
 

@@ -1,15 +1,62 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:waultar/presentation/widgets/upload/upload_files.dart';
-
 /// A static class that provides functionality used by many of the parser
 /// classes
 class ParseHelper {
+  static Stream<dynamic> readObjects(var data, String keyToLookFor) async* {
+    if (data is Map<String, dynamic>) {
+      if (data.containsKey(keyToLookFor)) {
+        yield data[keyToLookFor];
+      }
+      for (var value in data.values) {
+        readObjects(value, keyToLookFor);
+      }
+    } else if (data is List<dynamic>) {
+      for (var item in data) {
+        if (item is Map<String, dynamic> && item.containsKey(keyToLookFor)) {
+          yield item;
+        }
+
+        readObjects(item, keyToLookFor);
+      }
+    }
+  }
+
+  static Map<String, dynamic> jsonDataAsMap(var json, String parentKey, Map<String, dynamic> acc) {
+    if (json is Map<String, dynamic>) {
+      for (var key in json.keys) {
+        if (key == "value") {
+          acc[parentKey] = json["value"];
+        } else if (json[key] is String || json[key] is bool || json[key] is int) {
+          acc[key] = json[key];
+        } else {
+          acc = jsonDataAsMap(json[key], key, acc);
+        }
+      }
+    } else if (json is List<dynamic>) {
+      var items = <dynamic>[];
+
+      for (var item in json) {
+        if (item is String) {
+          items.add(item);
+        } else if (item is bool) {
+          items.add(item);
+        } else if (item is int) {
+          items.add(item);
+        } else if (item != null) {
+          acc = jsonDataAsMap(item, parentKey, acc);
+        }
+      }
+
+      acc[parentKey] = items;
+    }
+
+    return acc;
+  }
+
   /// Traverses a [json] tree, looking for a key in the [keyNames] list
-  static String trySeveralNames(
-      Map<String, dynamic> possibleValues, List<String> keyNames) {
+  static String trySeveralNames(Map<String, dynamic> possibleValues, List<String> keyNames) {
     var keysInMap = keyNames.where((key) => possibleValues.containsKey(key));
 
     if (keysInMap.isEmpty) {
@@ -21,74 +68,6 @@ class ParseHelper {
         return result[0];
       } else {
         return result;
-      }
-
-      // dynamic shortenedJson;
-      // // var results = <String>[];
-      // var results = "";
-      // var keys = findAllKeysInJson(json);
-
-      // // must be instragram data
-      // if (keys.contains("string_map_data")) {
-      //   shortenedJson = _findObjectInJsonFromKey(json, "string_map_data");
-      // }
-
-      // if (shortenedJson != null) {
-      //   // results = _trySeveralNames(shortenedJson, keyNames, results);
-      //   results = _trySeveralNames(shortenedJson, keyNames);
-      // } else {
-      //   results = _trySeveralNames(json, keyNames);
-      // }
-
-      // return results;
-    }
-  }
-
-  // static String _trySeveralNames(var json, List<String> keyNames) {
-  //   if (json is Map<String, dynamic>) {
-  //     var possibleKey = json.keys.firstWhere(
-  //         (element) => keyNames.contains(element),
-  //         orElse: () => "");
-
-  //     if (possibleKey != "") {
-  //       var keyValue = json[possibleKey];
-
-  //       if (keyValue is Map<String, dynamic> && keyValue.containsKey("value")) {
-  //         return keyValue["value"];
-  //       } else if (keyValue is! List<dynamic> &&
-  //           keyValue is! Map<String, dynamic>) {
-  //         return keyValue;
-  //       }
-  //     } else {
-  //       for (var key in json.keys) {
-  //         return _trySeveralNames(json[key], keyNames);
-  //       }
-  //     }
-  //   } else if (json is List<dynamic>) {
-  //     for (var item in json) {
-  //       return _trySeveralNames(item, keyNames);
-  //     }
-  //   } else if (json is String) {
-  //     return json;
-  //   }
-
-  //   return "";
-  //   // return possibleResults;
-  // }
-
-  static _findObjectInJsonFromKey(var json, String key) {
-    // find json object of the key
-    if (json is Map<String, dynamic>) {
-      if (json.containsKey(key)) {
-        return json[key];
-      } else {
-        for (var mapKey in json.keys) {
-          return _findObjectInJsonFromKey(json[mapKey], key);
-        }
-      }
-    } else if (json is List<dynamic>) {
-      for (var item in json) {
-        return _findObjectInJsonFromKey(item, key);
       }
     }
   }
@@ -105,38 +84,6 @@ class ParseHelper {
     var jsonString = await file.readAsString();
     return jsonDecode(jsonString);
   }
-
-  // static copyFolderToDocuments(String dir) async {
-  //   var context = p.Context(style: Style.windows);
-  //   var files = await FileUploader.getAllFilesFrom(dir);
-  //   var appPath = await getApplicationDocumentsDirectory();
-  //   var path = context.join(appPath.path, "Waultar");
-
-  //   for (var file in files) {
-  //     var tempFile = File(path + file);
-  //     var exists = await tempFile.exists();
-  //     if (!exists) {
-  //       tempFile.create(recursive: true);
-  //     }
-
-  //     var oldFile = File(dir + file);
-  //     var newPath = context.canonicalize(tempFile.path);
-  //     oldFile.copy(context.canonicalize(newPath));
-  //   }
-  // }
-
-  // static copyFileToDocumentsDirectory(String pathFromDocumentDirectory) async {
-  //   var context = p.Context(style: Style.windows);
-  //   var appPath = await getApplicationDocumentsDirectory();
-  //   var waultarPath = context.join(appPath.path, "Waultar");
-  //   var finalPath = context.join(waultarPath, pathFromDocumentDirectory);
-  //   var file = File(finalPath);
-
-  //   var exists = await file.exists();
-  //   if (exists) {
-  //     file.create();
-  //   }
-  // }
 
   /// Auxiliary function used in the findAllKeys function
   /// Recursively goes through a json tree, and adds all keys to the [set]
@@ -169,8 +116,7 @@ class ParseHelper {
   }
 
   /// Goes through all files in a give directory, and reads all keys from the json files it finds
-  static Future<Set<String>> findAllKeysFromDirectory(
-      String rootDirectory) async {
+  static Future<Set<String>> findAllKeysFromDirectory(String rootDirectory) async {
     var result = <String>{};
     var rootDir = Directory(rootDirectory);
 
@@ -207,79 +153,87 @@ class ParseHelper {
     return set;
   }
 
-  /// Writes a set of strings to the file given by the [filePath]
-  static _writeSetToFile(Set<String> set, String filePath) {
-    var file = File(filePath);
-    var sink = file.openWrite();
+  static bool probeJsonMap(var jsonData, List<String> keysToLookFor, int amountOfUniqueKeysNeeded) {
+    var keys = ParseHelper.findAllKeysInJson(jsonData);
 
-    for (var string in set) {
-      sink.writeln(string);
-    }
+    var result = keys.where((e) => keysToLookFor.contains(e));
+
+    return result.length >= amountOfUniqueKeysNeeded ? true : false;
   }
 
-  static Widget findAllKeysOfJsonAtDirectory(BuildContext context) {
-    // var localizer = AppLocalizations.of(context)!;
-    var keys = <String>{};
-    // ignore: unused_local_variable
-    List<File>? files;
-    File? saveFile;
-    var uploadAmount = 0;
+  // /// Writes a set of strings to the file given by the [filePath]
+  // static _writeSetToFile(Set<String> set, String filePath) {
+  //   var file = File(filePath);
+  //   var sink = file.openWrite();
 
-    return TextButton(
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return SimpleDialog(
-              title: const Text("Find All Keys"),
-              children: [
-                Form(
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          TextButton(
-                            child: const Text("Upload Files"),
-                            onPressed: () async {
-                              files =
-                                  await FileUploader.uploadFilesFromDirectory();
-                            },
-                          ),
-                          Text("Amount of files: " + uploadAmount.toString()),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          TextButton(
-                            child: const Text("Choose Save File"),
-                            onPressed: () async =>
-                                saveFile = await FileUploader.uploadSingle(),
-                          ),
-                          const Text("Upload Destination: "),
-                        ],
-                      ),
-                      SimpleDialogOption(
-                        child: const Text("Save"),
-                        onPressed: () {
-                          _writeSetToFile(keys, saveFile!.path);
-                          Navigator.pop(context);
-                        },
-                      ),
-                      SimpleDialogOption(
-                        child: const Text("Cancel"),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      },
-      child: const Text('Find All Keys'),
-    );
-  }
+  //   for (var string in set) {
+  //     sink.writeln(string);
+  //   }
+  // }
+
+  // static Widget findAllKeysOfJsonAtDirectory(BuildContext context) {
+  //   // var localizer = AppLocalizations.of(context)!;
+  //   var keys = <String>{};
+  //   // ignore: unused_local_variable
+  //   List<File>? files;
+  //   File? saveFile;
+  //   var uploadAmount = 0;
+
+  //   return TextButton(
+  //     onPressed: () {
+  //       showDialog(
+  //         context: context,
+  //         builder: (BuildContext context) {
+  //           return SimpleDialog(
+  //             title: const Text("Find All Keys"),
+  //             children: [
+  //               Form(
+  //                 child: Column(
+  //                   children: [
+  //                     Row(
+  //                       children: [
+  //                         TextButton(
+  //                           child: const Text("Upload Files"),
+  //                           onPressed: () async {
+  //                             files =
+  //                                 await FileUploader.uploadFilesFromDirectory();
+  //                           },
+  //                         ),
+  //                         Text("Amount of files: " + uploadAmount.toString()),
+  //                       ],
+  //                     ),
+  //                     Row(
+  //                       children: [
+  //                         TextButton(
+  //                           child: const Text("Choose Save File"),
+  //                           onPressed: () async =>
+  //                               saveFile = await FileUploader.uploadSingle(),
+  //                         ),
+  //                         const Text("Upload Destination: "),
+  //                       ],
+  //                     ),
+  //                     SimpleDialogOption(
+  //                       child: const Text("Save"),
+  //                       onPressed: () {
+  //                         _writeSetToFile(keys, saveFile!.path);
+  //                         Navigator.pop(context);
+  //                       },
+  //                     ),
+  //                     SimpleDialogOption(
+  //                       child: const Text("Cancel"),
+  //                       onPressed: () {
+  //                         Navigator.pop(context);
+  //                       },
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ],
+  //           );
+  //         },
+  //       );
+  //     },
+  //     child: const Text('Find All Keys'),
+  //   );
+  // }
 }
