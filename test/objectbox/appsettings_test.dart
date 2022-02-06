@@ -1,19 +1,22 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
 import 'package:waultar/core/models/index.dart';
+import 'package:waultar/data/configs/objectbox.dart';
 
 import 'package:waultar/startup.dart';
 
 Future<void> main() async {
   late IAppSettingsRepository _repo;
+  late ObjectBox _context;
   await setupServices(testing: true);
 
   setUpAll(() {
     _repo = locator<IAppSettingsRepository>(instanceName: 'appSettingsRepo');
+    _context = locator<ObjectBox>();
   });
 
   tearDownAll(() async {
-    // await db.close();
+    _context.store.close(); 
   });
 
   group('Test that repo can be invoked', () {

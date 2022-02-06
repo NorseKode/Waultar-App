@@ -4,55 +4,55 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:7986903999584604040",
-      "lastPropertyId": "4:3296098508908037990",
-      "name": "FacebookPostModel",
-      "properties": [
-        {
-          "id": "1:7278287785311826167",
-          "name": "id",
-          "type": 6,
-          "flags": 1
-        },
-        {
-          "id": "2:7391466522269391834",
-          "name": "description",
-          "type": 9
-        },
-        {
-          "id": "3:74664769778312515",
-          "name": "title",
-          "type": 9
-        },
-        {
-          "id": "4:3296098508908037990",
-          "name": "timestamp",
-          "type": 10
-        }
-      ],
-      "relations": []
-    },
-    {
-      "id": "2:2203205686300041010",
-      "lastPropertyId": "2:5137348806379954565",
+      "id": "1:2148786199038735847",
+      "lastPropertyId": "2:849533903163781586",
       "name": "AppSettingsBox",
       "properties": [
         {
-          "id": "1:5298297933063149431",
+          "id": "1:9155762340551357005",
           "name": "id",
           "type": 6,
           "flags": 1
         },
         {
-          "id": "2:5137348806379954565",
+          "id": "2:849533903163781586",
           "name": "darkmode",
           "type": 1
         }
       ],
       "relations": []
+    },
+    {
+      "id": "2:1837511870469432447",
+      "lastPropertyId": "4:2600227792391331024",
+      "name": "FacebookPostModel",
+      "properties": [
+        {
+          "id": "1:219800542496953078",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7926224797411893663",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "3:6880580214941458863",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "4:2600227792391331024",
+          "name": "timestamp",
+          "type": 10
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "2:2203205686300041010",
+  "lastEntityId": "2:1837511870469432447",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
