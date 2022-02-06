@@ -17,14 +17,21 @@ class AppSettingsRepository implements IAppSettingsRepository {
 
   @override
   AppSettingsModel getSettings() {
-    var settings = _appSettingsBox.get(1);
-    return settings!.toModel();
+    var settings = _appSettingsBox.get(1)!;
+    return AppSettingsModel(settings.id, settings.darkmode);
   }
 
   @override
   Future updateSettings(AppSettingsModel appSettings) async {
-    _appSettingsBox
-        .putAsync(AppSettingsBox(1, appSettings.darkmode));
+    var settings = _appSettingsBox.get(1)!;
+    settings.darkmode = appSettings.darkmode;
+
+    int id = await _appSettingsBox.putAsync(settings);
+    
+    if (id != 1) {
+      throw ObjectBoxException(
+          'AppSettings did not update, but instead created a new entry');
+    }
   }
 
   @override

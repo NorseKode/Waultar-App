@@ -31,10 +31,11 @@ Future<void> main() async {
     });
 
     test('given true updates darkmode', () async {
-      final userSettings = _repo.getSettings();
+      var userSettings = _repo.getSettings();
       expect(userSettings.id, 1);
-      userSettings.darkmode = true;
+      expect(userSettings.darkmode, false);
 
+      userSettings.darkmode = true;
       await _repo.updateSettings(userSettings);
 
       final userSettingsUpdated = _repo.getSettings();

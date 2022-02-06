@@ -16,7 +16,7 @@ import 'package:waultar/core/models/appsettings_model.dart';
 @Entity()
 class AppSettingsBox {
   int id = 0;
-  final bool darkmode;
+  bool darkmode;
 
   AppSettingsBox(this.id, this.darkmode);
 
