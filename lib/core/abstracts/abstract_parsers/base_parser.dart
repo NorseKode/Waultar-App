@@ -15,3 +15,9 @@ abstract class BaseParser {
   /// Throws an [ParseException] if something unexpected in encountered
   Stream<BaseModel> parseFile(File file);
 }
+
+enum DataTypes {
+  unknown,
+  post,
+  media
+}

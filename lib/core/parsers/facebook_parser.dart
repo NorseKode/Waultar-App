@@ -20,14 +20,14 @@ class FacebookParser extends BaseParser {
   @override
   Stream<BaseModel> parseFile(File file) async* {
     var jsonData = await ParseHelper.getJsonStringFromFile(file);
-    var keysInJsonData = ParseHelper.findAllKeysInJson(jsonData);
+    // var keysInJsonData = ParseHelper.findAllKeysInJson(jsonData);
     var filename = path_dart.basenameWithoutExtension(file.path);
 
     try {
       if (filename.contains("post")) {
         for (var post in jsonData) {
           yield FacebookPost.fromJson(ParseHelper.jsonDataAsMap(
-              post, "", <String, dynamic>{}, ["attachements"]));
+              post, "", ["attachements"]));
           // TODO: parse media
         }
       }

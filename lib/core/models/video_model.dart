@@ -1,14 +1,16 @@
 import 'package:waultar/core/models/media_model.dart';
 
-class ImageModel extends MediaModel {
+class VideoModel extends MediaModel {
   final String title;
   final String description;
+  final String thumbnail;
 
-  ImageModel(String uri, String metadata, DateTime timestamp, this.title, this.description) : super(uri, metadata, timestamp);
+  VideoModel(uri, metadata, timestamp, this.title, this.description, this.thumbnail) : super(uri, metadata, timestamp);
 
-  ImageModel.fromJson(Map<String, dynamic> json)
+  VideoModel.fromJson(Map<String, dynamic> json)
       : title = json.containsKey("title") ? json["title"] : "",
         description = json.containsKey("description") ? json["description"] : "",
+        thumbnail = "",
         super(
           json.containsKey("uri") ? json["uri"] : "",
           json.containsKey("metadata") ? json["metadata"] : "",

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as path_dart;
 import 'package:waultar/core/parsers/facebook_parser.dart';
-import 'package:waultar/core/parsers/instagram_parser.dart';
 
 import '../test_helper.dart';
 
@@ -17,11 +16,11 @@ main() {
         var parser = FacebookParser();
 
         var res = await parser.parseFile(faceBookPost).toList();
-        print(res);
+        // print(res);
 
-        for (var post in res) {
-          print(post.toString());
-        }
+        // for (var post in res) {
+        //   print(post.toString());
+        // }
 
         expect(res.isNotEmpty, true);
       });

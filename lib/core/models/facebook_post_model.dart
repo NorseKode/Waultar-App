@@ -1,6 +1,5 @@
 import 'package:objectbox/objectbox.dart';
 import 'package:waultar/core/models/base_model.dart';
-import 'package:waultar/core/parsers/parse_helper.dart';
 
 import 'media_model.dart';
 
