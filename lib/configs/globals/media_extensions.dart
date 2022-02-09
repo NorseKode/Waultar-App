@@ -54,5 +54,6 @@ enum FileType {
   image,
   video,
   audio,
-  file
+  file,
+  link
 }

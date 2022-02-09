@@ -4,6 +4,26 @@ import 'dart:io';
 /// A static class that provides functionality used by many of the parser
 /// classes
 class ParseHelper {
+  static Stream<dynamic> returnEveryJsonObject(var jsonData) async* {
+    if (jsonData is Map<String, dynamic>) {
+      yield jsonData;
+
+      for (var value in jsonData.values) {
+        await for (final result in returnEveryJsonObject(value)) {
+          yield result;
+        }
+      }
+    } else if (jsonData is List<dynamic>) {
+      // yield jsonData;
+
+      for (var item in jsonData) {
+        await for (final result in returnEveryJsonObject(item)) {
+          yield result;
+        }
+      }
+    }
+  }
+  
   static Stream<dynamic> readObjects(var data, List<String> keysToLookFor) async* {
     if (data is Map<String, dynamic>) {
       for (var key in keysToLookFor) {

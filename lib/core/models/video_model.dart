@@ -10,7 +10,7 @@ class VideoModel extends MediaModel {
   VideoModel.fromJson(Map<String, dynamic> json)
       : title = json.containsKey("title") ? json["title"] : "",
         description = json.containsKey("description") ? json["description"] : "",
-        thumbnail = "",
+        thumbnail = json.containsKey("thumbnail") ? (json["thumbnail"])["uri"] : "",
         super(
           json.containsKey("uri") ? json["uri"] : "",
           json.containsKey("metadata") ? json["metadata"] : "",
