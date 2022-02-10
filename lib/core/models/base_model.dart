@@ -1,3 +1,9 @@
+import 'package:waultar/core/models/service_model.dart';
+
 abstract class BaseModel {  
-  // BaseModel fromJson(var json);
+  int id = 0;
+  ServiceModel service;
+  String raw;
+
+  BaseModel(this.id, this.service, this.raw);
 }

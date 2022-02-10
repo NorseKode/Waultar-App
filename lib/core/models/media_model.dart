@@ -1,9 +1,20 @@
 import 'package:waultar/core/models/base_model.dart';
+import 'package:waultar/core/models/service_model.dart';
 
 abstract class MediaModel extends BaseModel {
-  final String uri;
-  final String metadata;
-  final DateTime timestamp;
+  
+  Uri uri;
+  String? metadata;
+  DateTime? timestamp;
 
-  MediaModel(this.uri, this.metadata, this.timestamp);
+  MediaModel(
+    int id, 
+    ServiceModel service, 
+    String raw,
+    this.uri,
+    this.metadata,
+    this.timestamp 
+  ) : super(id, service, raw);
+
 }
+
