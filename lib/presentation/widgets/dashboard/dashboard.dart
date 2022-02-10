@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
-import 'package:waultar/presentation/widgets/upload/upload_files.dart';
+import 'package:waultar/presentation/widgets/upload/uploader.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -26,13 +26,13 @@ class _DashboardState extends State<Dashboard> {
     return svg;
   }
 
-  _upload(BuildContext context, bool isFile) async {
-    var file = isFile
-        ? await FileUploader.uploadMultiple()
-        : await FileUploader.uploadFilesFromDirectory();
-    file != null ? uploadedFiles = file : null;
-    setState(() {});
-  }
+  // _upload(BuildContext context, bool isFile) async {
+  //   var file = isFile
+  //       ? await FileUploader.uploadMultiple()
+  //       : await FileUploader.uploadFilesFromDirectory();
+  //   file != null ? uploadedFiles = file : null;
+  //   setState(() {});
+  // }
 
   uploadedWidgets() {
     List<Widget> files = [];
@@ -101,7 +101,7 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  Widget addButton() {
+  Widget addButton(BuildContext parentContext) {
     return PopupMenuButton(
       tooltip: '',
       shape: const RoundedRectangleBorder(
@@ -113,8 +113,14 @@ class _DashboardState extends State<Dashboard> {
       offset: const Offset(0.0, 40.0),
       color: themeProvider.themeMode().highlightedPrimary,
       itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-        PopupMenuItem<String>(
-            onTap: () async => await _upload(context, true),
+        // PopupMenuItem<String>(
+        PopupMenuItem(
+            // onTap: () async => await _upload(context, true),
+            onTap: () async {
+              await Uploader.uploadDialogue(parentContext);
+
+              // print("break");
+            },
             padding: EdgeInsets.zero,
             value: localizer.newData,
             child: Padding(
@@ -188,7 +194,7 @@ class _DashboardState extends State<Dashboard> {
                 localizer.dashboard,
                 style: themeProvider.themeData().textTheme.headline3,
               ),
-              addButton()
+              addButton(context),
             ],
           ),
           const SizedBox(height: 22.5),

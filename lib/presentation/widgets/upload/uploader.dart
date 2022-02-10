@@ -1,41 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:waultar/configs/globals/scaffold_main.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'upload_files.dart';
+class Uploader {
+  static Future<List<String>?> uploadDialogue(BuildContext context) {
+    var localizer = AppLocalizations.of(context)!;
 
-class UploaderComponent extends StatefulWidget {
-  const UploaderComponent({Key? key}) : super(key: key);
-
-  @override
-  _UploaderComponentState createState() => _UploaderComponentState();
-}
-
-class _UploaderComponentState extends State<UploaderComponent> {
-  _uploadFilesButton(BuildContext context, bool isFile) {
-    return ElevatedButton(
-      onPressed: () async {
-        var file =
-            isFile ? await FileUploader.uploadMultiple() : await FileUploader.uploadDirectory();
-
-        Navigator.pop(context, file);
-      },
-      child: Text(isFile ? 'Upload file' : 'Upload folder'),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return getScaffoldMain(
-      context,
-      Center(
-        child: Column(
+    return showDialog<List<String>?>(
+      context: context,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: Text(localizer.upload),
           children: [
-            const Text('uploader'),
-            _uploadFilesButton(context, true),
-            _uploadFilesButton(context, false),
+            SimpleDialogOption(
+              onPressed: () async {
+                var directory = await FileUploader.uploadDirectory();
+                Navigator.pop(context, directory != null ? [directory] : [""]);
+              },
+              child: Text(localizer.uploadDirectory),
+            ),
+            SimpleDialogOption(
+              onPressed: () async {
+                var files = await FileUploader.uploadMultiple();
+                Navigator.pop(context, files != null ? files.map((e) => e.path).toList() : [""]);
+              },
+              child: Text(localizer.uploadFiles),
+            )
           ],
-        ),
-      ),
+        );
+      },
     );
   }
 }

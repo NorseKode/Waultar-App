@@ -6,10 +6,10 @@ class ThemeProvider with ChangeNotifier {
   final IAppSettingsService _settingsService =
       locator<IAppSettingsService>(instanceName: 'appSettingsService');
 
-  late bool isLightTheme = false;
+  late bool isLightTheme; // = false;
 
-  loadTheme() async {
-    isLightTheme = await _settingsService.getDarkMode();
+  loadTheme() {
+    isLightTheme = _settingsService.getDarkMode();
   }
 
   ThemeProvider() {

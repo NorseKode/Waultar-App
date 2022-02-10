@@ -44,24 +44,28 @@ dependencies:
   provider: ^6.0.1
   tuple: ^2.0.0
   file_picker: ^4.2.4
-  msix: ^2.6.3
+  dcdg: ^4.0.1
 
-  hive: ^2.0.4
-  hive_flutter: ^1.1.0 
   font_awesome_flutter: ^9.2.0
 
   # for dependency injection
   get_it: ^7.2.0
 
+  objectbox: ^1.4.0-dev.0
+  objectbox_flutter_libs: any
+
   # to use drift query APIs with the sqlite3 lib
-  drift: ^1.0.1 
+  # drift: ^1.0.1 
 
   # ships the latest sqlite3 version with the android and iOS build. Not on other platforms.
-  sqlite3_flutter_libs: ^0.5.1
+  # sqlite3_flutter_libs: ^0.5.1
 
   # Used to find a suitable location to store the db file. 
   path_provider: ^2.0.7
   path: ^1.8.0
+
+  # used for zip extraction
+  archive: ^3.1.11
 
 dev_dependencies:
   flutter_test:
@@ -73,12 +77,12 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^1.0.0
+  msix: ^2.6.3
   
-  # will generate the Hive adapters for our models
-  hive_generator: ^1.1.1
-  build_runner: ^2.1.5
+  build_runner: ^2.0.0
+  objectbox_generator: any
 
-  drift_dev: ^1.0.2
+  # drift_dev: ^1.0.2
 
 
 # For information on the generic Dart part of this file, see the
@@ -170,3 +174,6 @@ msix_config:
   identity_name: NorseKode.Waultar.Windows
   msix_version: 0.0.2.0
   logo_path: .\lib\assets\graphics\Logo.png
+
+objectbox: 
+  output_dir: data/configs
