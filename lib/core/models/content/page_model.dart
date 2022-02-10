@@ -1,17 +1,20 @@
 import 'package:waultar/core/models/base_model.dart';
-import 'package:waultar/core/models/misc/place_model.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
 
-class LifeEventModel extends BaseModel {
-  
-  String title;
-  PlaceModel? place;
+class PageModel extends BaseModel {
+  final String name;
+  final bool isUsers;
 
-  LifeEventModel({
+  // only if isUsers == true
+  final Uri? uri;
+
+  PageModel({
     int id = 0, 
     required ProfileModel profile, 
     required String raw,
-    required this.title,
-    this.place
+    required this.name,
+    required this.isUsers,
+    this.uri,
   }) : super(id, profile, raw);
+  
 }

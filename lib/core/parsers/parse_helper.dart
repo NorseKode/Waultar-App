@@ -2,14 +2,24 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:waultar/core/models/misc/service_model.dart';
+import 'package:waultar/core/models/profile/profile_model.dart';
 
 /// A static class that provides functionality used by many of the parser
 /// classes
 class ParseHelper {
-
   // TODO : get from repo at startup time
-  static ServiceModel facebook = ServiceModel(1, "facebook", "meta", Uri(path: ""));
-  static ServiceModel instagram = ServiceModel(2, "instagram", "meta", Uri(path: ""));
+  static ProfileModel profile = ProfileModel(
+      activities: [],
+      createdTimestamp: DateTime.now(),
+      emails: [],
+      fullName: '',
+      raw: '',
+      uri: Uri(),
+      service: facebook);
+  static ServiceModel facebook =
+      ServiceModel(1, "facebook", "meta", Uri(path: ""));
+  static ServiceModel instagram =
+      ServiceModel(2, "instagram", "meta", Uri(path: ""));
 
   static Stream<dynamic> returnEveryJsonObject(var jsonData) async* {
     if (jsonData is Map<String, dynamic>) {
@@ -30,8 +40,9 @@ class ParseHelper {
       }
     }
   }
-  
-  static Stream<dynamic> readObjects(var data, List<String> keysToLookFor) async* {
+
+  static Stream<dynamic> readObjects(
+      var data, List<String> keysToLookFor) async* {
     if (data is Map<String, dynamic>) {
       for (var key in keysToLookFor) {
         if (data.containsKey(key)) {
@@ -56,7 +67,8 @@ class ParseHelper {
     }
   }
 
-  static Map<String, dynamic> jsonDataAsMap(var json, String parentKey, List<String> keysToExclude) {
+  static Map<String, dynamic> jsonDataAsMap(
+      var json, String parentKey, List<String> keysToExclude) {
     return _jsonDataAsMap(json, parentKey, <String, dynamic>{}, keysToExclude);
   }
 

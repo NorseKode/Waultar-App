@@ -1,6 +1,6 @@
 import 'package:waultar/core/models/media/media_model.dart';
-import 'package:waultar/core/models/misc/service_model.dart';
 import 'package:waultar/core/models/model_helper.dart';
+import 'package:waultar/core/models/profile/profile_model.dart';
 
 class VideoModel extends MediaModel {
   String title;
@@ -9,7 +9,7 @@ class VideoModel extends MediaModel {
 
   VideoModel({
     int id = 0,
-    required ServiceModel service,
+    required ProfileModel profile,
     required String raw,
     required Uri uri,
     String? metadata,
@@ -17,9 +17,9 @@ class VideoModel extends MediaModel {
     required this.title,
     required this.description,
     this.thumbnail,
-  }) : super(id, service, raw, uri, metadata, timestamp);
+  }) : super(id, profile, raw, uri, metadata, timestamp);
 
-  VideoModel.fromJson(Map<String, dynamic> json, ServiceModel service)
+  VideoModel.fromJson(Map<String, dynamic> json, ProfileModel profile)
       : title = json.containsKey("title") ? json["title"] : "",
         description =
             json.containsKey("description") ? json["description"] : "",
@@ -28,7 +28,7 @@ class VideoModel extends MediaModel {
             : Uri(),
         super(
           0,
-          service,
+          profile,
           "",
           json.containsKey("uri") ? Uri(path: json["uri"]) : Uri(),
           json.containsKey("metadata") ? json["metadata"] : "",

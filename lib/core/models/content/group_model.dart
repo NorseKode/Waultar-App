@@ -1,5 +1,5 @@
 import 'package:waultar/core/models/base_model.dart';
-import 'package:waultar/core/models/misc/service_model.dart';
+import 'package:waultar/core/models/profile/profile_model.dart';
 
 class GroupModel extends BaseModel {
 
@@ -10,12 +10,12 @@ class GroupModel extends BaseModel {
 
   GroupModel({
     int id = 0, 
-    required ServiceModel service,
+    required ProfileModel profile,
     required String raw,
     required this.name,
     this.isUsers = false,
     this.badge,
     this.timestamp,
-  }) : super(id, service, raw);
+  }) : super(id, profile, raw);
   
 }
