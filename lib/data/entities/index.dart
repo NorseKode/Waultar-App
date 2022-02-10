@@ -1,2 +1,1 @@
-export 'appsettings_entity.dart';
-export 'image_entity.dart';
+export 'misc/appsettings_entity.dart';

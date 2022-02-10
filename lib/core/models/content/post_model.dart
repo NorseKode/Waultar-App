@@ -35,8 +35,8 @@ class PostModel extends BaseModel {
   PostModel({
     int id = 0,
     required ServiceModel service,
-    required this.timestamp,
     required String raw,
+    required this.timestamp,
     this.content,
     this.description,
     this.title,
@@ -50,16 +50,16 @@ class PostModel extends BaseModel {
     this.meta,
   }) : super(id, service, raw);
 
-  // PostModel.fromJson(Map<String, dynamic> json)
-  //     : id = null,
-  //       content = null,
-  //       description = json["post"],
-  //       title = json["title"],
-  //       // event = null,
-  //       // group = null,
-  //       // poll = null,
-  //       // lifeEventType = null
-  //       timestamp = DateTime.fromMillisecondsSinceEpoch(json["timestamp"]);
+  PostModel.fromJson(Map<String, dynamic> json, ServiceModel service)
+      : content = null,
+        description = json["post"],
+        title = json["title"],
+        event = null,
+        group = null,
+        poll = null,
+        lifeEvent = null,
+        timestamp = DateTime.fromMillisecondsSinceEpoch(json["timestamp"]),
+        super (0, service, "");
 
   @override
   String toString() {

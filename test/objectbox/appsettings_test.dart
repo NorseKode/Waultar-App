@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
-import 'package:waultar/core/models/index.dart';
 import 'package:waultar/data/repositories/appsettings_repo.dart';
 
 import 'setup.dart';

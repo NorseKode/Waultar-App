@@ -2,7 +2,7 @@ import 'package:objectbox/objectbox.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
 import 'package:waultar/core/models/misc/appsettings_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
-import 'package:waultar/data/entities/appsettings_entity.dart';
+import 'package:waultar/data/entities/misc/appsettings_entity.dart';
 import 'package:waultar/startup.dart';
 
 class AppSettingsRepository implements IAppSettingsRepository {

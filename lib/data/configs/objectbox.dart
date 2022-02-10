@@ -1,6 +1,6 @@
 import 'package:objectbox/objectbox.dart';
 
-import '../entities/appsettings_entity.dart';
+import '../entities/misc/appsettings_entity.dart';
 import 'objectbox.g.dart';
 
 class ObjectBox {
