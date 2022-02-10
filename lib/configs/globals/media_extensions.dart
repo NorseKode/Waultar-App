@@ -3,8 +3,7 @@ import 'package:path/path.dart' as path_dart;
 class Extensions {
   static final _imageExtensions = [".jpg", ".png", ".gif"];
   static final _videoExtensions = [".mp4", ".mov"];
-  static final _audioExtensions = [".mp3"];
-  static final _fileExtensions = [".pdf", ".docx", ".pptx", ".md"];
+  static final _fileExtensions = [".pdf", ".docx", ".pptx", ".md", ".mp3", ".aac"];
 
   static bool isImage(String path) {
     return _checkExtension(path, _imageExtensions);
@@ -14,8 +13,12 @@ class Extensions {
     return _checkExtension(path, _videoExtensions);
   }
 
-  static bool isAudio(String path) {
-    return _checkExtension(path, _audioExtensions);
+  static bool isLink(String path) {
+    var uri = Uri.tryParse(path);
+    
+    return uri != null 
+      ? uri.hasScheme
+      : false;
   }
 
   static bool isFile(String path) {
@@ -31,10 +34,10 @@ class Extensions {
       return FileType.image;
     } else if (isVideo(path)) {
       return FileType.video;
-    } else if (isAudio(path)) {
-      return FileType.audio;
     } else if (isFile(path)) {
       return FileType.file;
+    } else if (isLink(path)) {
+      return FileType.link;
     }
   
     return FileType.unknown;

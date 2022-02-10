@@ -1,7 +1,9 @@
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/models/base_model.dart';
+import 'package:waultar/core/models/file_model.dart';
 import 'package:waultar/core/models/image_model.dart';
+import 'package:waultar/core/models/link_model.dart';
 import 'package:waultar/core/models/video_model.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
 
@@ -25,6 +27,8 @@ class FacebookParser extends BaseParser {
     try {
       var jsonData = await ParseHelper.getJsonStringFromFile(file);
       var filename = path_dart.basenameWithoutExtension(file.path);
+      const mediaKeys = ["uri", "content", "link"];
+      var uriAlreadyUsed = [];
 
       if (filename.contains("post")) {
         for (var post in jsonData) {
@@ -34,24 +38,32 @@ class FacebookParser extends BaseParser {
       }
 
       await for (final object in ParseHelper.returnEveryJsonObject(jsonData)) {
-        if (object is Map<String, dynamic> && object.containsKey("uri")) {
-          // var dataMap = ParseHelper.jsonDataAsMap(object, "parentKey", [""]);
+        if (object is Map<String, dynamic>) {
+          var mediaKey = object.keys.firstWhere((key) => mediaKeys.contains(key), orElse: () => "");
 
-          switch (Extensions.getFileType(object["uri"])) {
-            case FileType.image:
-              yield ImageModel.fromJson(object);
-              break;
-            case FileType.video:
-              yield VideoModel.fromJson(object);
-              break;
-            case FileType.audio:
-              break;
-            case FileType.file:
-              break;
-            case FileType.link:
-              break;
-            default:
-              break;
+          if (mediaKey != "" && !uriAlreadyUsed.contains(object[mediaKey])) {
+            switch (Extensions.getFileType(object[mediaKey])) {
+              case FileType.image:
+                uriAlreadyUsed.add(object[mediaKey]);
+                yield ImageModel.fromJson(object);
+                break;
+              case FileType.video:
+                uriAlreadyUsed.add(object[mediaKey]);
+                yield VideoModel.fromJson(object);
+                break;
+              case FileType.file:
+                uriAlreadyUsed.add(object[mediaKey]);
+                yield FileModel.fromJson(object);
+                break;
+              case FileType.link:
+                if (object[mediaKey] is String && !object[mediaKey].startsWith("https://interncache")) {
+                  uriAlreadyUsed.add(object[mediaKey]);
+                  yield LinkModel.fromJson(object);
+                }
+                break;
+              default:
+                break;
+            }
           }
         }
       }

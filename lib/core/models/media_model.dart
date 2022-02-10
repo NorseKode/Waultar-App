@@ -1,9 +1,9 @@
 import 'package:waultar/core/models/base_model.dart';
 
 abstract class MediaModel extends BaseModel {
-  final String uri;
+  final Uri uri;
   final String metadata;
-  final DateTime timestamp;
+  final DateTime? timestamp;
 
   MediaModel(this.uri, this.metadata, this.timestamp);
 }
