@@ -1,6 +1,6 @@
 import 'package:waultar/core/models/base_model.dart';
 import 'package:waultar/core/models/misc/coordinate_model.dart';
-import 'package:waultar/core/models/misc/service_model.dart';
+import 'package:waultar/core/models/profile/profile_model.dart';
 
 class PlaceModel extends BaseModel {
   String? name;
@@ -9,11 +9,11 @@ class PlaceModel extends BaseModel {
 
   PlaceModel({
     int id = 0, 
-    required ServiceModel service,
+    required ProfileModel profile,
     required String raw,
     this.name,
     this.address,
     this.coordinate,
-  }) : super(id, service, raw);
+  }) : super(id, profile, raw);
   
 }

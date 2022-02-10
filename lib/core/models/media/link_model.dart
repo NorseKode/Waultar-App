@@ -1,24 +1,24 @@
 import 'package:waultar/core/models/media/media_model.dart';
-import 'package:waultar/core/models/misc/service_model.dart';
 import 'package:waultar/core/models/model_helper.dart';
+import 'package:waultar/core/models/profile/profile_model.dart';
 
 class LinkModel extends MediaModel {
   String? source;
 
   LinkModel({
     int id = 0,
-    required ServiceModel service,
+    required ProfileModel profile,
     required String raw,
     required Uri uri,
     String? metadata,
     DateTime? timestamp,
     this.source,
-  }) : super(id, service, raw, uri, metadata, timestamp);
+  }) : super(id, profile, raw, uri, metadata, timestamp);
 
-  LinkModel.fromJson(Map<String, dynamic> json, ServiceModel service)
+  LinkModel.fromJson(Map<String, dynamic> json, ProfileModel profile)
       : super(
           0,
-          service,
+          profile,
           "",
           json.containsKey("uri")
               ? Uri(path: json["uri"])

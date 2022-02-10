@@ -34,10 +34,10 @@ class InstragramParser extends BaseParser {
 
           switch (Extensions.getFileType(dataMap["uri"])) {
             case FileType.image:
-              yield ImageModel.fromJson(dataMap, ParseHelper.instagram);
+              yield ImageModel.fromJson(dataMap, ParseHelper.profile);
               break;
             case FileType.video:
-              yield VideoModel.fromJson(dataMap, ParseHelper.instagram);
+              yield VideoModel.fromJson(dataMap, ParseHelper.profile);
               break;
             default:
           }

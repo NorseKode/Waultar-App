@@ -32,7 +32,7 @@ class FacebookParser extends BaseParser {
       if (filename.contains("post")) {
         for (var post in jsonData) {
           yield PostModel.fromJson(ParseHelper.jsonDataAsMap(
-              post, "", ["attachements"]), ParseHelper.facebook);
+              post, "", ["attachements"]), ParseHelper.profile);
           // TODO: parse media
         }
       }
@@ -45,20 +45,20 @@ class FacebookParser extends BaseParser {
             switch (Extensions.getFileType(object[mediaKey])) {
               case FileType.image:
                 uriAlreadyUsed.add(object[mediaKey]);
-                yield ImageModel.fromJson(object, ParseHelper.facebook);
+                yield ImageModel.fromJson(object, ParseHelper.profile);
                 break;
               case FileType.video:
                 uriAlreadyUsed.add(object[mediaKey]);
-                yield VideoModel.fromJson(object, ParseHelper.facebook);
+                yield VideoModel.fromJson(object, ParseHelper.profile);
                 break;
               case FileType.file:
                 uriAlreadyUsed.add(object[mediaKey]);
-                yield FileModel.fromJson(object, ParseHelper.facebook);
+                yield FileModel.fromJson(object, ParseHelper.profile);
                 break;
               case FileType.link:
                 if (object[mediaKey] is String && !object[mediaKey].startsWith("https://interncache")) {
                   uriAlreadyUsed.add(object[mediaKey]);
-                  yield LinkModel.fromJson(object, ParseHelper.facebook);
+                  yield LinkModel.fromJson(object, ParseHelper.profile);
                 }
                 break;
               default:

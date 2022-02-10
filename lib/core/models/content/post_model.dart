@@ -4,8 +4,8 @@ import 'package:waultar/core/models/content/life_event_model.dart';
 import 'package:waultar/core/models/media/media_model.dart';
 import 'package:waultar/core/models/misc/person_model.dart';
 import 'package:waultar/core/models/content/poll_model.dart';
-import 'package:waultar/core/models/misc/service_model.dart';
 import 'package:waultar/core/models/misc/tag_model.dart';
+import 'package:waultar/core/models/profile/profile_model.dart';
 
 import '../base_model.dart';
 
@@ -34,7 +34,7 @@ class PostModel extends BaseModel {
 
   PostModel({
     int id = 0,
-    required ServiceModel service,
+    required ProfileModel profile,
     required String raw,
     required this.timestamp,
     this.content,
@@ -48,9 +48,9 @@ class PostModel extends BaseModel {
     this.lifeEvent,
     this.isArchived = false,
     this.meta,
-  }) : super(id, service, raw);
+  }) : super(id, profile, raw);
 
-  PostModel.fromJson(Map<String, dynamic> json, ServiceModel service)
+  PostModel.fromJson(Map<String, dynamic> json, ProfileModel profile)
       : content = null,
         description = json["post"],
         title = json["title"],
@@ -59,7 +59,7 @@ class PostModel extends BaseModel {
         poll = null,
         lifeEvent = null,
         timestamp = DateTime.fromMillisecondsSinceEpoch(json["timestamp"]),
-        super (0, service, "");
+        super (0, profile, "");
 
   @override
   String toString() {

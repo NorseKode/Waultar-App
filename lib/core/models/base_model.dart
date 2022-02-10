@@ -1,9 +1,9 @@
-import 'package:waultar/core/models/misc/service_model.dart';
+import 'package:waultar/core/models/profile/profile_model.dart';
 
 abstract class BaseModel {  
   int id = 0;
-  ServiceModel service;
-  String raw;
+  final ProfileModel profile;
+  final String raw;
 
-  BaseModel(this.id, this.service, this.raw);
+  BaseModel(this.id, this.profile, this.raw);
 }
