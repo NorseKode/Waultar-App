@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:objectbox/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/entities/misc/appsettings_entity.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
