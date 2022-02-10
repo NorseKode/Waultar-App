@@ -1,16 +1,12 @@
 import 'dart:io';
-import 'dart:ffi';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get_it/get_it.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_image_repository.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/repositories/appsettings_repo.dart';
 import 'package:waultar/domain/services/appsettings_service.dart';
 import 'configs/globals/os_enum.dart';
-import 'package:path/path.dart' as dart_path;
 
 final locator = GetIt.instance;
 late OS os;

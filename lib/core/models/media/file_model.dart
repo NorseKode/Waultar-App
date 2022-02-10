@@ -1,13 +1,13 @@
 import 'package:waultar/core/models/media/media_model.dart';
 import 'package:waultar/core/models/misc/service_model.dart';
+import 'package:waultar/core/models/model_helper.dart';
 
 class FileModel extends MediaModel {
-  
   Uri? thumbnail;
 
   FileModel({
     int id = 0,
-    required ServiceModel service, 
+    required ServiceModel service,
     required String raw,
     required Uri uri,
     String? metadata,
@@ -15,24 +15,14 @@ class FileModel extends MediaModel {
     this.thumbnail,
   }) : super(id, service, raw, uri, metadata, timestamp);
 
-
-  // ImageModel.fromJson(Map<String, dynamic> json)
-  //     : title = json.containsKey("title") ? json["title"] : "",
-  //       description = json.containsKey("description") ? json["description"] : "",
-  //       super(
-  //         json.containsKey("uri") ? json["uri"] : "",
-  //         json.containsKey("metadata") ? json["metadata"] : "",
-  //         json.containsKey("creation_timestamp") ? DateTime.fromMillisecondsSinceEpoch(json["creation_timestamp"]) : DateTime.now(),
-  //       );
-
-  // @override
-  // ImageModel fromJson(var json) {
-  //   return ImageModel._fromJson(json);
-  // }
-
-  // @override
-  // String toString() {
-  //   return "id: $id, path: $path, timestamp: $timestamp";
-  // }
-
+  FileModel.fromJson(Map<String, dynamic> json, ServiceModel service)
+      : thumbnail = Uri(path: "TODO, give standard thumbnail from extension"),
+        super(
+          0,
+          service,
+          "",
+          json.containsKey("uri") ? Uri(path: json["uri"]) : Uri(),
+          json.containsKey("metadata") ? json["metadata"] : "",
+          ModelHelper.getTimestamp(json),
+        );
 }

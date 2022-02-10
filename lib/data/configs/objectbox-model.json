@@ -21,35 +21,6 @@
         }
       ],
       "relations": []
-    },
-    {
-      "id": "2:1837511870469432447",
-      "lastPropertyId": "4:2600227792391331024",
-      "name": "FacebookPostModel",
-      "properties": [
-        {
-          "id": "1:219800542496953078",
-          "name": "id",
-          "type": 6,
-          "flags": 1
-        },
-        {
-          "id": "2:7926224797411893663",
-          "name": "description",
-          "type": 9
-        },
-        {
-          "id": "3:6880580214941458863",
-          "name": "title",
-          "type": 9
-        },
-        {
-          "id": "4:2600227792391331024",
-          "name": "timestamp",
-          "type": 10
-        }
-      ],
-      "relations": []
     }
   ],
   "lastEntityId": "2:1837511870469432447",
@@ -58,9 +29,16 @@
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
-  "retiredEntityUids": [],
+  "retiredEntityUids": [
+    1837511870469432447
+  ],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    219800542496953078,
+    7926224797411893663,
+    6880580214941458863,
+    2600227792391331024
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

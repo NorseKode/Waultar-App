@@ -3,7 +3,6 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repos
 import 'package:waultar/core/models/misc/appsettings_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/entities/misc/appsettings_entity.dart';
-import 'package:waultar/startup.dart';
 
 class AppSettingsRepository implements IAppSettingsRepository {
   // final ObjectBox context = locator<ObjectBox>(instanceName: 'context');

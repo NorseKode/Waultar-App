@@ -1,29 +1,66 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:waultar/core/models/misc/service_model.dart';
+
 /// A static class that provides functionality used by many of the parser
 /// classes
 class ParseHelper {
-  static Stream<dynamic> readObjects(var data, String keyToLookFor) async* {
+
+  // TODO : get from repo at startup time
+  static ServiceModel facebook = ServiceModel(1, "facebook", "meta", Uri(path: ""));
+  static ServiceModel instagram = ServiceModel(2, "instagram", "meta", Uri(path: ""));
+
+  static Stream<dynamic> returnEveryJsonObject(var jsonData) async* {
+    if (jsonData is Map<String, dynamic>) {
+      yield jsonData;
+
+      for (var value in jsonData.values) {
+        await for (final result in returnEveryJsonObject(value)) {
+          yield result;
+        }
+      }
+    } else if (jsonData is List<dynamic>) {
+      // yield jsonData;
+
+      for (var item in jsonData) {
+        await for (final result in returnEveryJsonObject(item)) {
+          yield result;
+        }
+      }
+    }
+  }
+  
+  static Stream<dynamic> readObjects(var data, List<String> keysToLookFor) async* {
     if (data is Map<String, dynamic>) {
-      if (data.containsKey(keyToLookFor)) {
-        yield data[keyToLookFor];
+      for (var key in keysToLookFor) {
+        if (data.containsKey(key)) {
+          yield data[key];
+        }
       }
       for (var value in data.values) {
-        readObjects(value, keyToLookFor);
+        readObjects(value, keysToLookFor);
       }
     } else if (data is List<dynamic>) {
       for (var item in data) {
-        if (item is Map<String, dynamic> && item.containsKey(keyToLookFor)) {
-          yield item;
+        if (item is Map<String, dynamic>) {
+          for (var key in keysToLookFor) {
+            if (item.containsKey(key)) {
+              yield item;
+            }
+          }
         }
 
-        readObjects(item, keyToLookFor);
+        readObjects(item, keysToLookFor);
       }
     }
   }
 
-  static Map<String, dynamic> jsonDataAsMap(var json, String parentKey,
+  static Map<String, dynamic> jsonDataAsMap(var json, String parentKey, List<String> keysToExclude) {
+    return _jsonDataAsMap(json, parentKey, <String, dynamic>{}, keysToExclude);
+  }
+
+  static Map<String, dynamic> _jsonDataAsMap(var json, String parentKey,
       Map<String, dynamic> acc, List<String> keysToExclude) {
     if (json is Map<String, dynamic>) {
       for (var key in json.keys) {
@@ -35,7 +72,7 @@ class ParseHelper {
               json[key] is int) {
             acc[key] = json[key];
           } else {
-            acc = jsonDataAsMap(json[key], key, acc, keysToExclude);
+            acc = _jsonDataAsMap(json[key], key, acc, keysToExclude);
           }
         }
       }
@@ -50,7 +87,7 @@ class ParseHelper {
         } else if (item is int) {
           items.add(item);
         } else if (item != null) {
-          acc = jsonDataAsMap(item, parentKey, acc, keysToExclude);
+          acc = _jsonDataAsMap(item, parentKey, acc, keysToExclude);
         }
       }
 
