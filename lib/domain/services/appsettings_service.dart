@@ -1,6 +1,6 @@
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
-import 'package:waultar/core/models/appsettings_model.dart';
+import 'package:waultar/core/models/misc/appsettings_model.dart';
 import 'package:waultar/startup.dart';
 
 class AppSettingsService implements IAppSettingsService {

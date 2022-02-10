@@ -1,13 +1,13 @@
-import 'package:waultar/core/models/event_model.dart';
-import 'package:waultar/core/models/group_model.dart';
-import 'package:waultar/core/models/life_event_model.dart';
-import 'package:waultar/core/models/media_model.dart';
-import 'package:waultar/core/models/person_model.dart';
-import 'package:waultar/core/models/poll_model.dart';
-import 'package:waultar/core/models/service_model.dart';
-import 'package:waultar/core/models/tag_model.dart';
+import 'package:waultar/core/models/content/event_model.dart';
+import 'package:waultar/core/models/content/group_model.dart';
+import 'package:waultar/core/models/content/life_event_model.dart';
+import 'package:waultar/core/models/media/media_model.dart';
+import 'package:waultar/core/models/misc/person_model.dart';
+import 'package:waultar/core/models/content/poll_model.dart';
+import 'package:waultar/core/models/misc/service_model.dart';
+import 'package:waultar/core/models/misc/tag_model.dart';
 
-import 'base_model.dart';
+import '../base_model.dart';
 
 class PostModel extends BaseModel {
   late DateTime timestamp;

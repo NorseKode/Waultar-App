@@ -1,5 +1,5 @@
 import 'package:objectbox/objectbox.dart';
-import 'package:waultar/core/models/appsettings_model.dart';
+import 'package:waultar/core/models/misc/appsettings_model.dart';
 
 @Entity()
 class AppSettingsBox {

@@ -1,5 +1,5 @@
-import 'package:waultar/core/models/media_model.dart';
-import 'package:waultar/core/models/service_model.dart';
+import 'package:waultar/core/models/media/media_model.dart';
+import 'package:waultar/core/models/misc/service_model.dart';
 
 class LinkModel extends MediaModel {
   

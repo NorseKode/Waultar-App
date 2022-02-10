@@ -1,13 +1,12 @@
-import 'package:waultar/core/models/media_model.dart';
-import 'package:waultar/core/models/service_model.dart';
+import 'package:waultar/core/models/media/media_model.dart';
+import 'package:waultar/core/models/misc/service_model.dart';
 
-class VideoModel extends MediaModel {
+class ImageModel extends MediaModel {
   
   String title;
   String description;
-  Uri? thumbnail;
 
-  VideoModel({
+  ImageModel({
     int id = 0,
     required ServiceModel service, 
     required String raw,
@@ -16,7 +15,6 @@ class VideoModel extends MediaModel {
     DateTime? timestamp,
     required this.title,
     required this.description,
-    this.thumbnail,
   }) : super(id, service, raw, uri, metadata, timestamp);
 
 

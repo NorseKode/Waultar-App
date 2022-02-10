@@ -1,6 +1,6 @@
 import 'package:waultar/core/models/base_model.dart';
-import 'package:waultar/core/models/coordinate_model.dart';
-import 'package:waultar/core/models/service_model.dart';
+import 'package:waultar/core/models/misc/coordinate_model.dart';
+import 'package:waultar/core/models/misc/service_model.dart';
 
 class PlaceModel extends BaseModel {
   String? name;

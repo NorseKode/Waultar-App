@@ -1,6 +1,6 @@
 import 'package:waultar/core/models/base_model.dart';
-import 'package:waultar/core/models/place_model.dart';
-import 'package:waultar/core/models/service_model.dart';
+import 'package:waultar/core/models/misc/place_model.dart';
+import 'package:waultar/core/models/misc/service_model.dart';
 
 class LifeEventModel extends BaseModel {
   

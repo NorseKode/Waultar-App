@@ -1,17 +1,21 @@
-import 'package:waultar/core/models/media_model.dart';
-import 'package:waultar/core/models/service_model.dart';
+import 'package:waultar/core/models/media/media_model.dart';
+import 'package:waultar/core/models/misc/service_model.dart';
 
-class FileModel extends MediaModel {
+class VideoModel extends MediaModel {
   
+  String title;
+  String description;
   Uri? thumbnail;
 
-  FileModel({
+  VideoModel({
     int id = 0,
     required ServiceModel service, 
     required String raw,
     required Uri uri,
     String? metadata,
     DateTime? timestamp,
+    required this.title,
+    required this.description,
     this.thumbnail,
   }) : super(id, service, raw, uri, metadata, timestamp);
 
@@ -35,4 +39,9 @@ class FileModel extends MediaModel {
   //   return "id: $id, path: $path, timestamp: $timestamp";
   // }
 
+
+
+  DateTime getDateTime(var json) {
+    return DateTime.now();
+  }
 }

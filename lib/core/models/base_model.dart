@@ -1,4 +1,4 @@
-import 'package:waultar/core/models/service_model.dart';
+import 'package:waultar/core/models/misc/service_model.dart';
 
 abstract class BaseModel {  
   int id = 0;
