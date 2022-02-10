@@ -13,6 +13,8 @@ class ModelHelper {
       return DateTime.fromMicrosecondsSinceEpoch(
           jsonData[key] * (pow(10, amountOfMissingCharacters).toInt()));
     }
+
+    return null;
   }
 
   static String? trySeveralKeys(var jsonData, List<String> keys) {
@@ -21,5 +23,7 @@ class ModelHelper {
         return key;
       }
     }
+
+    return null;
   }
 }

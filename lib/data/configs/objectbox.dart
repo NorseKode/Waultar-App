@@ -1,5 +1,3 @@
-import 'package:objectbox/objectbox.dart';
-
 import '../entities/misc/appsettings_entity.dart';
 import 'objectbox.g.dart';
 

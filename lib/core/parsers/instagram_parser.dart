@@ -4,7 +4,6 @@ import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/exceptions/parse_exception.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/abstracts/abstract_parsers/base_parser.dart';
-import 'package:waultar/core/models/base_model.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/models/media/video_model.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
