@@ -45,6 +45,7 @@ dependencies:
   tuple: ^2.0.0
   file_picker: ^4.2.4
   msix: ^2.6.3
+  dcdg: ^4.0.1
 
   font_awesome_flutter: ^9.2.0
 
