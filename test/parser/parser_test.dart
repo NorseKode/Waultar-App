@@ -1,37 +1,31 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
-import 'package:path/path.dart' as path_dart;
-import 'package:waultar/core/models/image_model.dart';
-import 'package:waultar/core/models/profile_model.dart';
-import 'package:waultar/core/parsers/naive_parser.dart';
 
 main() {
-  var pathToCurrentFile = path_dart
-      .normalize(path_dart.join(
-          path_dart.dirname(Platform.script.path), "test", "parser"))
-      .substring(1);
+  // var pathToCurrentFile = path_dart
+  //     .normalize(path_dart.join(
+  //         path_dart.dirname(Platform.script.path), "test", "parser"))
+  //     .substring(1);
 
-  var emptyObject =
-      File(path_dart.join(pathToCurrentFile, "data", "empty_object.json"));
-  var emptyList =
-      File(path_dart.join(pathToCurrentFile, "data", "empty_list.json"));
-  var corrupted =
-      File(path_dart.join(pathToCurrentFile, "data", "corrupt.json"));
-  // var mediaJson1 = File(path_dart.join(pathToCurrentFile, "data", "each_media_type_list.json"));
-  var facebookProfile =
-      File(path_dart.join(pathToCurrentFile, "data", "facebook_profile.json"));
-  var instagramProfile =
-      File(path_dart.join(pathToCurrentFile, "data", "instagram_profile.json"));
+  // var emptyObject =
+  //     File(path_dart.join(pathToCurrentFile, "data", "empty_object.json"));
+  // var emptyList =
+  //     File(path_dart.join(pathToCurrentFile, "data", "empty_list.json"));
+  // var corrupted =
+  //     File(path_dart.join(pathToCurrentFile, "data", "corrupt.json"));
+  // // var mediaJson1 = File(path_dart.join(pathToCurrentFile, "data", "each_media_type_list.json"));
+  // var facebookProfile =
+  //     File(path_dart.join(pathToCurrentFile, "data", "facebook_profile.json"));
+  // var instagramProfile =
+  //     File(path_dart.join(pathToCurrentFile, "data", "instagram_profile.json"));
 
-  parserRunner<T>(
-      Function(File file) parser, File fileToRun, String key) async {
-    var result = await parser(fileToRun);
+  // parserRunner<T>(
+  //     Function(File file) parser, File fileToRun, String key) async {
+  //   var result = await parser(fileToRun);
 
-    var object = result[key] as T;
+  //   var object = result[key] as T;
 
-    return object;
-  }
+  //   return object;
+  // }
 
   group("Initial testing of edge cases with: ", () {
   //   test("empty json object", () async {

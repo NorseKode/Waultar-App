@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -38,7 +36,6 @@ class WaultarApp extends StatefulWidget {
 class _WaultarApp extends State<WaultarApp> {
   @override
   void dispose() {
-    Hive.close();
     super.dispose();
   }
 

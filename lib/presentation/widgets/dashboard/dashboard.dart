@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
-import 'package:waultar/presentation/widgets/upload/upload_files.dart';
 import 'package:waultar/presentation/widgets/upload/uploader.dart';
 
 class Dashboard extends StatefulWidget {
@@ -27,13 +26,13 @@ class _DashboardState extends State<Dashboard> {
     return svg;
   }
 
-  _upload(BuildContext context, bool isFile) async {
-    var file = isFile
-        ? await FileUploader.uploadMultiple()
-        : await FileUploader.uploadFilesFromDirectory();
-    file != null ? uploadedFiles = file : null;
-    setState(() {});
-  }
+  // _upload(BuildContext context, bool isFile) async {
+  //   var file = isFile
+  //       ? await FileUploader.uploadMultiple()
+  //       : await FileUploader.uploadFilesFromDirectory();
+  //   file != null ? uploadedFiles = file : null;
+  //   setState(() {});
+  // }
 
   uploadedWidgets() {
     List<Widget> files = [];

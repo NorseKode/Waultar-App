@@ -98,7 +98,6 @@ class FileUploader {
         var finalFile = File(path)
           ..createSync(recursive: true)
           ..writeAsBytesSync(data);
-        print(finalFile.path);
         list.add(finalFile.path);
       } 
     }
