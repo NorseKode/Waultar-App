@@ -12,10 +12,10 @@ import 'package:waultar/core/parsers/instagram_parser.dart';
 import '../test_helper.dart';
 
 main() {
-  var instagramMedia =
-      File(path_dart.join(TestHelper.pathToCurrentFile(), "data", "instagram_media.json"));
-  var facebookMedia =
-      File(path_dart.join(TestHelper.pathToCurrentFile(), "data", "facebook_media.json"));
+  var instagramMedia = File(path_dart.join(
+      TestHelper.pathToCurrentFile(), "data", "instagram_media.json"));
+  var facebookMedia = File(path_dart.join(
+      TestHelper.pathToCurrentFile(), "data", "facebook_media.json"));
 
   group("Testig parsing of media data: ", () {
     group("Instagram, ", () {
@@ -23,7 +23,7 @@ main() {
         // 3 videos 1 image
         var imageCount = 0;
         var videoCount = 0;
-        var medias = await InstragramParser().parseFile(instagramMedia).toList();
+        var medias = await InstagramParser().parseFile(instagramMedia).toList();
 
         expect(medias.length, 4);
 
