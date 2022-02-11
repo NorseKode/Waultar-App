@@ -51,15 +51,40 @@ class PostRepository implements IPostRepository {
     _serviceBox = _context.store.box<ServiceObjectBox>();
   }
 
-  @override
-  void addPost(PostModel post) {
-    // TODO: implement addPost
+  PostObjectBox _makeEntity(PostModel model) {
+    var entity = PostObjectBox(raw: model.raw, timestamp: model.timestamp);
+
+    // check and assigne all nullable fields in model
+    if (model.title != null) {
+      entity.title = model.title;
+    }
+    if (model.description != null) {
+      entity.description = model.description;
+    }
+    if (model.isArchived != null) {
+      entity.isArchived = model.isArchived;
+    }
+    if (model.meta != null) {
+      entity.meta = model.meta;
+    }
+
+    // the profile HAS to be created in db before storing additional data
+    var profileEntity = _profileBox.get(model.profile.id);
+    entity.profile.target = profileEntity;
+
+    return entity;
   }
 
   @override
-  Future addPostAsync(PostModel post) {
-    // TODO: implement addPostAsync
-    throw UnimplementedError();
+  void addPost(PostModel post) {
+    var entity = _makeEntity(post);
+    _postBox.put(entity);
+  }
+
+  @override
+  Future addPostAsync(PostModel post) async {
+    var entity = _makeEntity(post);
+    await _postBox.putAsync(entity);
   }
 
   @override
