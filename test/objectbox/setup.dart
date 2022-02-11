@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:waultar/data/configs/objectbox.dart';
-import 'package:waultar/data/entities/misc/appsettings_entity.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
 
 import 'package:path/path.dart' as dart_path;
+import 'package:waultar/data/entities/index.dart';
 // import 'objectbox.g.dart';
 
 class ObjectBoxMock implements ObjectBox {
@@ -13,9 +13,9 @@ class ObjectBoxMock implements ObjectBox {
 
   ObjectBoxMock._create(this.store) {
     // additional setup code here
-    final appSettingsBox = store.box<AppSettingsBox>();
+    final appSettingsBox = store.box<AppSettingsObjectBox>();
     if (appSettingsBox.isEmpty()) {
-      var initialAppSettings = AppSettingsBox(0, false);
+      var initialAppSettings = AppSettingsObjectBox(0, false);
       appSettingsBox.put(initialAppSettings);
     }
   }

@@ -28,6 +28,7 @@ class EventModel extends BaseModel {
 }
 
 enum EventResponse {
+  unknown,
   interested,
   joined,
   declined
