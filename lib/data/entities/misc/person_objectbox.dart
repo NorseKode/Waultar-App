@@ -1,5 +1,4 @@
 import 'package:objectbox/objectbox.dart';
-import 'package:waultar/core/models/profile/profile_model.dart';
 import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 
 @Entity()

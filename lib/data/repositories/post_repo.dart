@@ -1,4 +1,3 @@
-import 'package:objectbox/objectbox.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/models/content/post_model.dart';
 import 'package:waultar/core/models/index.dart';
@@ -114,7 +113,25 @@ class PostRepository implements IPostRepository {
       entity.links.addAll(linksToAdd);
     }
 
-    
+    var mentions = model.mentions;
+    if (mentions != null) {
+      var mentionsToAdd = <PersonObjectBox>[];
+      for (var person in mentions) {
+        var entity = _makePerson(person);
+        mentionsToAdd.add(entity);
+      }
+      entity.mentions.addAll(mentionsToAdd);
+    }
+
+    var tags = model.tags;
+    if (tags != null) {
+      var tagsToAdd = <TagObjectBox>[];
+      for (var tag in tags) {
+        var entity = _makeTag(tag);
+        tagsToAdd.add(entity);
+      }
+      entity.tags.addAll(tagsToAdd);
+    }
 
     return entity;
   }
@@ -249,6 +266,43 @@ class PostRepository implements IPostRepository {
       }
 
       return entity;
+    } else {
+      return entity;
+    }
+  }
+
+  PersonObjectBox _makePerson(PersonModel model) {
+    QueryBuilder<PersonObjectBox> builder = _personBox.query(PersonObjectBox_.name.equals(model.name));
+    builder.link(PersonObjectBox_.profile, ProfileObjectBox_.id.equals(model.profile.id));
+    Query<PersonObjectBox> query = builder.build();
+    var entity = query.findFirst();
+
+    if (entity == null) {
+      entity = PersonObjectBox(raw: model.raw, name: model.name);
+
+      // the profile HAS to be created in db before storing additional data
+      if (model.profile.id == 0) {
+        throw ObjectBoxException(
+            "Profile Id is 0 - profile must be stored before calling me");
+      } else {
+        var profileEntity = _profileBox.get(model.profile.id);
+        entity.profile.target = profileEntity;
+      }
+
+      if (model.uri != null) {
+        entity.uri = model.uri!.path;
+      }
+
+      return entity;
+    } else {
+      return entity;
+    }
+  }
+
+  TagObjectBox _makeTag(TagModel model) {
+    var entity = _tagBox.query(TagObjectBox_.name.equals(model.name)).build().findUnique();
+    if (entity == null) {
+      return TagObjectBox(name: model.name);
     } else {
       return entity;
     }
