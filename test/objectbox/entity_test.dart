@@ -26,9 +26,6 @@ Future<void> main() async {
       raw: "raw");
   testProfile.service.target = testService;
 
-  // TODO reations
-  // late var profileBox;
-  // late var serviceBox;
   var testFriend = FriendObjectBox(friendType: FriendType.unknown, raw: "raw");
   var testTag = TagObjectBox(name: "waultar");
   var testVideo =
@@ -64,21 +61,8 @@ Future<void> main() async {
   });
 
   group('Test entity insertion and retrieval in objectbox: ', () {
-    // test('- insert service', () {
-    //   var facebookService = testRunnerPut<ServiceObjectBox>(testService);
-
-    //   expect(facebookService.id, 1);
-    // });
-
     test('- insert Profile', () {
-      // serviceBox.put(testService);
-      // var id = profileBox.put(testProfile);
-
-      // var result = profileBox.get(id);
-      // var test = _context.store;
-
       var result = testRunnerPut<ProfileObjectBox>(testProfile);
-      // result.service.target = testRunnerGetter<ServiceObjectBox>(ServiceObjectBox_.name.equals("facebook"));
 
       expect(result.fullName, testProfile.fullName);
       expect(result.service.target!.name, testProfile.service.target!.name);
