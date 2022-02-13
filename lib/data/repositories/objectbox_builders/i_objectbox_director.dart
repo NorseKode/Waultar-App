@@ -1,4 +1,4 @@
 
 abstract class IObjectBoxDirector {
-  T make<T>(Type model);
+  T make<T>(dynamic model);
 }

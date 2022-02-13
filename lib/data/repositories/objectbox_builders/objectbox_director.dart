@@ -35,13 +35,12 @@ class ObjectBoxDirector implements IObjectBoxDirector {
   late final Box<LifeEventObjectBox> _lifeEventBox;
   late final Box<ServiceObjectBox> _serviceBox;
 
-  ObjectBoxDirector(ObjectBox context) {
-    _context = context;
+  ObjectBoxDirector(this._context) {
     _postBox = _context.store.box<PostObjectBox>();
     _profileBox = _context.store.box<ProfileObjectBox>();
     _imageBox = _context.store.box<ImageObjectBox>();
     _videoBox = _context.store.box<VideoObjectBox>();
-    _fileBox = context.store.box<FileObjectBox>();
+    _fileBox = _context.store.box<FileObjectBox>();
     _linkBox = _context.store.box<LinkObjectBox>();
     _personBox = _context.store.box<PersonObjectBox>();
     _tagBox = _context.store.box<TagObjectBox>();
@@ -153,6 +152,7 @@ class ObjectBoxDirector implements IObjectBoxDirector {
     return entity;
   }
 
+
   ImageObjectBox _makeImage(ImageModel model) {
     var entity = _imageBox
         .query(ImageObjectBox_.uri.equals(model.uri.path))
@@ -185,6 +185,7 @@ class ObjectBoxDirector implements IObjectBoxDirector {
       return entity;
     }
   }
+
 
   VideoObjectBox _makeVideo(VideoModel model) {
     var entity = _videoBox
@@ -222,6 +223,7 @@ class ObjectBoxDirector implements IObjectBoxDirector {
     }
   }
 
+
   LinkObjectBox _makeLink(LinkModel model) {
     var entity = _linkBox
         .query(LinkObjectBox_.uri.equals(model.uri.path))
@@ -254,6 +256,7 @@ class ObjectBoxDirector implements IObjectBoxDirector {
       return entity;
     }
   }
+
 
   FileObjectBox _makeFile(FileModel model) {
     var entity = _fileBox
@@ -288,6 +291,7 @@ class ObjectBoxDirector implements IObjectBoxDirector {
     }
   }
 
+
   PersonObjectBox _makePerson(PersonModel model) {
     QueryBuilder<PersonObjectBox> builder = _personBox.query(PersonObjectBox_.name.equals(model.name));
     builder.link(PersonObjectBox_.profile, ProfileObjectBox_.id.equals(model.profile.id));
@@ -316,6 +320,7 @@ class ObjectBoxDirector implements IObjectBoxDirector {
     }
   }
 
+
   TagObjectBox _makeTag(TagModel model) {
     var entity = _tagBox.query(TagObjectBox_.name.equals(model.name)).build().findUnique();
     if (entity == null) {
@@ -323,15 +328,6 @@ class ObjectBoxDirector implements IObjectBoxDirector {
     } else {
       return entity;
     }
-  }
-  
-}
-
-class Blob implements IObjectBoxDirector {
-  @override
-  T make<T>(Type model) {
-    // TODO: implement make
-    throw UnimplementedError();
   }
   
 }
