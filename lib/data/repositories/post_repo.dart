@@ -1,5 +1,7 @@
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/models/content/post_model.dart';
+import 'package:waultar/core/models/index.dart';
+import 'package:waultar/core/models/profile/profile_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
 import 'package:waultar/data/entities/content/post_objectbox.dart';
@@ -41,9 +43,14 @@ class PostRepository implements IPostRepository {
 
   @override
   PostModel getSinglePost(int id) {
-    var entity = _postBox.get(id)!;
-    // PostModel model = PostModel();
-    throw UnimplementedError();
+    var post = _postBox.get(id)!;
+    var profile = post.profile.target!;
+    var service = profile.service.target!;
+    var serviceModel = ServiceModel(service.id, service.name, service.company, Uri(path: service.image));
+    var profileModel = ProfileModel(service: serviceModel, uri: Uri(path: profile.uri), fullName: profile.fullName, emails: [], createdTimestamp: profile.createdTimestamp, activities: [], raw: profile.raw); 
+    PostModel postModel = PostModel(id: post.id, profile: profileModel, raw: post.raw, timestamp: post.timestamp);
+
+    return postModel;
   }
 
   @override

@@ -74,10 +74,10 @@ Future<void> main() async {
           timestamp: DateTime.now());
       _repo.addPost(post);
 
-      var createdEntity = _context.store.box<PostObjectBox>().get(1)!;
+      var createdEntity = _repo.getSinglePost(1);
 
       expect(createdEntity.id, 1);
-      expect(createdEntity.profile.target!.fullName, testProfile.fullName);
+      expect(createdEntity.profile.fullName, testProfile.fullName);
       expect(createdEntity.raw, post.raw);
     });
   });
