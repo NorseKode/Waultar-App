@@ -7,7 +7,7 @@ import 'package:waultar/data/entities/media/link_objectbox.dart';
 import 'package:waultar/data/entities/media/video_objectbox.dart';
 import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 
-ImageObjectBox makeImage(ImageModel model, ObjectBox context) {
+ImageObjectBox makeImageEntity(ImageModel model, ObjectBox context) {
   var entity = context.store
       .box<ImageObjectBox>()
       .query(ImageObjectBox_.uri.equals(model.uri.path))
@@ -42,7 +42,7 @@ ImageObjectBox makeImage(ImageModel model, ObjectBox context) {
   }
 }
 
-VideoObjectBox makeVideo(VideoModel model, ObjectBox context) {
+VideoObjectBox makeVideoEntity(VideoModel model, ObjectBox context) {
   var entity = context.store
       .box<VideoObjectBox>()
       .query(VideoObjectBox_.uri.equals(model.uri.path))
@@ -80,7 +80,7 @@ VideoObjectBox makeVideo(VideoModel model, ObjectBox context) {
   }
 }
 
-LinkObjectBox makeLink(LinkModel model, ObjectBox context) {
+LinkObjectBox makeLinkEntity(LinkModel model, ObjectBox context) {
   var entity = context.store
       .box<LinkObjectBox>()
       .query(LinkObjectBox_.uri.equals(model.uri.path))
@@ -115,7 +115,7 @@ LinkObjectBox makeLink(LinkModel model, ObjectBox context) {
   }
 }
 
-FileObjectBox makeFile(FileModel model, ObjectBox context) {
+FileObjectBox makeFileEntity(FileModel model, ObjectBox context) {
   var entity = context.store
       .box<FileObjectBox>()
       .query(FileObjectBox_.uri.equals(model.uri.path))

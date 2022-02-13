@@ -15,7 +15,7 @@ import 'media_builders.dart';
 import 'misc_builders.dart';
 import 'poll_builder.dart';
 
-PostObjectBox makePost(PostModel model, ObjectBox context) {
+PostObjectBox makePostEntity(PostModel model, ObjectBox context) {
   var entity = PostObjectBox(raw: model.raw, timestamp: model.timestamp);
 
   // check and assigne all nullable fields in model
@@ -53,22 +53,22 @@ PostObjectBox makePost(PostModel model, ObjectBox context) {
     for (var media in mediaList) {
       switch (media.runtimeType) {
         case ImageModel:
-          var entity = makeImage(media as ImageModel, context);
+          var entity = makeImageEntity(media as ImageModel, context);
           imagesToAdd.add(entity);
           break;
 
         case VideoModel:
-          var entity = makeVideo(media as VideoModel, context);
+          var entity = makeVideoEntity(media as VideoModel, context);
           videosToAdd.add(entity);
           break;
 
         case LinkModel:
-          var entity = makeLink(media as LinkModel, context);
+          var entity = makeLinkEntity(media as LinkModel, context);
           linksToAdd.add(entity);
           break;
 
         case FileModel:
-          var entity = makeFile(media as FileModel, context);
+          var entity = makeFileEntity(media as FileModel, context);
           filesToAdd.add(entity);
           break;
       }
@@ -83,7 +83,7 @@ PostObjectBox makePost(PostModel model, ObjectBox context) {
   if (mentions != null) {
     var mentionsToAdd = <PersonObjectBox>[];
     for (var person in mentions) {
-      var entity = makePerson(person, context);
+      var entity = makePersonEntity(person, context);
       mentionsToAdd.add(entity);
     }
     entity.mentions.addAll(mentionsToAdd);
@@ -93,7 +93,7 @@ PostObjectBox makePost(PostModel model, ObjectBox context) {
   if (tags != null) {
     var tagsToAdd = <TagObjectBox>[];
     for (var tag in tags) {
-      var entity = makeTag(tag, context);
+      var entity = makeTagEntity(tag, context);
       tagsToAdd.add(entity);
     }
     entity.tags.addAll(tagsToAdd);
@@ -101,7 +101,7 @@ PostObjectBox makePost(PostModel model, ObjectBox context) {
 
   var event = model.event;
   if (event != null) {
-    var eventToAdd = makeEvent(event, context);
+    var eventToAdd = makeEventEntity(event, context);
     entity.event.target = eventToAdd;
   }
 
@@ -109,7 +109,7 @@ PostObjectBox makePost(PostModel model, ObjectBox context) {
 
   var poll = model.poll;
   if (poll != null) {
-    var pollToAdd = makePoll(poll, context);
+    var pollToAdd = makePollEntity(poll, context);
     entity.poll.target = pollToAdd;
   }
 

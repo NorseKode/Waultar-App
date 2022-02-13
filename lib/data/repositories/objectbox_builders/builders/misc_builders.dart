@@ -7,7 +7,7 @@ import 'package:waultar/data/entities/misc/place_objectbox.dart';
 import 'package:waultar/data/entities/misc/tag_objectbox.dart';
 import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 
-PersonObjectBox makePerson(PersonModel model, ObjectBox context) {
+PersonObjectBox makePersonEntity(PersonModel model, ObjectBox context) {
   QueryBuilder<PersonObjectBox> builder = context.store
       .box<PersonObjectBox>()
       .query(PersonObjectBox_.name.equals(model.name));
@@ -39,7 +39,7 @@ PersonObjectBox makePerson(PersonModel model, ObjectBox context) {
   }
 }
 
-TagObjectBox makeTag(TagModel model, ObjectBox context) {
+TagObjectBox makeTagEntity(TagModel model, ObjectBox context) {
   var entity = context.store
       .box<TagObjectBox>()
       .query(TagObjectBox_.name.equals(model.name))
@@ -52,7 +52,7 @@ TagObjectBox makeTag(TagModel model, ObjectBox context) {
   }
 }
 
-PlaceObjectBox makePlace(PlaceModel model, ObjectBox context) {
+PlaceObjectBox makePlaceEntity(PlaceModel model, ObjectBox context) {
   // it seems like a place (in fb at least) always has a name
   var entity = context.store
       .box<PlaceObjectBox>()
@@ -65,7 +65,7 @@ PlaceObjectBox makePlace(PlaceModel model, ObjectBox context) {
       entity.address = model.address;
     }
     if (model.coordinate != null) {
-      entity.coordinate.target = makeCoordinate(model.coordinate!, context);
+      entity.coordinate.target = makeCoordinateEntity(model.coordinate!, context);
     }
     if (model.uri != null) {
       entity.uri = model.uri!.path;
@@ -84,7 +84,7 @@ PlaceObjectBox makePlace(PlaceModel model, ObjectBox context) {
   }
 }
 
-CoordinateObjectBox makeCoordinate(CoordinateModel model, ObjectBox context) {
+CoordinateObjectBox makeCoordinateEntity(CoordinateModel model, ObjectBox context) {
   var entity = context.store
       .box<CoordinateObjectBox>()
       .query(CoordinateObjectBox_.latitude

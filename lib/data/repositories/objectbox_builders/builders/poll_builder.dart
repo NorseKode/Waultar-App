@@ -4,7 +4,7 @@ import 'package:waultar/data/configs/objectbox.g.dart';
 import 'package:waultar/data/entities/content/poll_objectbox.dart';
 import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 
-PollObjectBox makePoll(PollModel model, ObjectBox context) {
+PollObjectBox makePollEntity(PollModel model, ObjectBox context) {
   var entity = context.store
       .box<PollObjectBox>()
       .query(PollObjectBox_.raw.equals(model.raw))

@@ -6,7 +6,7 @@ import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 
 import 'misc_builders.dart';
 
-EventObjectBox makeEvent(EventModel model, ObjectBox context) {
+EventObjectBox makeEventEntity(EventModel model, ObjectBox context) {
   var entity = context.store
       .box<EventObjectBox>()
       .query(EventObjectBox_.name.equals(model.name))
@@ -42,7 +42,7 @@ EventObjectBox makeEvent(EventModel model, ObjectBox context) {
       entity.dbEventResponse = model.response!.index;
     }
     if (model.place != null) {
-      var place = makePlace(model.place!, context);
+      var place = makePlaceEntity(model.place!, context);
       entity.place.target = place;
     }
 
