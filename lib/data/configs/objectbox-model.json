@@ -39,7 +39,7 @@
           "type": 11,
           "flags": 520,
           "indexId": "1:6609294494622246788",
-          "relationTarget": "ServiceObjectBox"
+          "relationTarget": "ProfileObjectBox"
         },
         {
           "id": "3:1950018273037483508",
@@ -700,7 +700,7 @@
     },
     {
       "id": "19:8527057727816690070",
-      "lastPropertyId": "6:2065110009519391022",
+      "lastPropertyId": "7:4238191806851404930",
       "name": "PlaceObjectBox",
       "properties": [
         {
@@ -739,6 +739,11 @@
           "flags": 520,
           "indexId": "13:9207120286272124524",
           "relationTarget": "CoordinateObjectBox"
+        },
+        {
+          "id": "7:4238191806851404930",
+          "name": "uri",
+          "type": 9
         }
       ],
       "relations": []

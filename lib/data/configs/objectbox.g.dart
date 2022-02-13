@@ -71,7 +71,7 @@ final _entities = <ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const IdUid(1, 6609294494622246788),
-            relationTarget: 'ServiceObjectBox'),
+            relationTarget: 'ProfileObjectBox'),
         ModelProperty(
             id: const IdUid(3, 1950018273037483508),
             name: 'raw',
@@ -721,7 +721,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(19, 8527057727816690070),
       name: 'PlaceObjectBox',
-      lastPropertyId: const IdUid(6, 2065110009519391022),
+      lastPropertyId: const IdUid(7, 4238191806851404930),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -757,7 +757,12 @@ final _entities = <ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const IdUid(13, 9207120286272124524),
-            relationTarget: 'CoordinateObjectBox')
+            relationTarget: 'CoordinateObjectBox'),
+        ModelProperty(
+            id: const IdUid(7, 4238191806851404930),
+            name: 'uri',
+            type: 9,
+            flags: 0)
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
@@ -1377,9 +1382,11 @@ ModelDefinition getObjectBoxModel() {
           final rootOffset = buffer.derefObject(0);
 
           final object = CoordinateObjectBox(
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              const fb.Float64Reader().vTableGet(buffer, rootOffset, 6, 0),
-              const fb.Float64Reader().vTableGet(buffer, rootOffset, 8, 0));
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              longitude:
+                  const fb.Float64Reader().vTableGet(buffer, rootOffset, 6, 0),
+              latitude:
+                  const fb.Float64Reader().vTableGet(buffer, rootOffset, 8, 0));
 
           return object;
         }),
@@ -1785,17 +1792,19 @@ ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (PlaceObjectBox object, fb.Builder fbb) {
           final rawOffset = fbb.writeString(object.raw);
-          final nameOffset =
-              object.name == null ? null : fbb.writeString(object.name!);
+          final nameOffset = fbb.writeString(object.name);
           final addressOffset =
               object.address == null ? null : fbb.writeString(object.address!);
-          fbb.startTable(7);
+          final uriOffset =
+              object.uri == null ? null : fbb.writeString(object.uri!);
+          fbb.startTable(8);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.profile.targetId);
           fbb.addOffset(2, rawOffset);
           fbb.addOffset(3, nameOffset);
           fbb.addOffset(4, addressOffset);
           fbb.addInt64(5, object.coordinate.targetId);
+          fbb.addOffset(6, uriOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1806,10 +1815,12 @@ ModelDefinition getObjectBoxModel() {
           final object = PlaceObjectBox(
               id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
               raw: const fb.StringReader().vTableGet(buffer, rootOffset, 8, ''),
-              name: const fb.StringReader()
-                  .vTableGetNullable(buffer, rootOffset, 10),
+              name:
+                  const fb.StringReader().vTableGet(buffer, rootOffset, 10, ''),
               address: const fb.StringReader()
-                  .vTableGetNullable(buffer, rootOffset, 12));
+                  .vTableGetNullable(buffer, rootOffset, 12),
+              uri: const fb.StringReader()
+                  .vTableGetNullable(buffer, rootOffset, 16));
           object.profile.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
           object.profile.attach(store);
@@ -2117,7 +2128,7 @@ class EventObjectBox_ {
       QueryIntegerProperty<EventObjectBox>(_entities[1].properties[0]);
 
   /// see [EventObjectBox.profile]
-  static final profile = QueryRelationToOne<EventObjectBox, ServiceObjectBox>(
+  static final profile = QueryRelationToOne<EventObjectBox, ProfileObjectBox>(
       _entities[1].properties[1]);
 
   /// see [EventObjectBox.raw]
@@ -2586,6 +2597,10 @@ class PlaceObjectBox_ {
   static final coordinate =
       QueryRelationToOne<PlaceObjectBox, CoordinateObjectBox>(
           _entities[16].properties[5]);
+
+  /// see [PlaceObjectBox.uri]
+  static final uri =
+      QueryStringProperty<PlaceObjectBox>(_entities[16].properties[6]);
 }
 
 /// [PollObjectBox] entity fields to define ObjectBox queries.
