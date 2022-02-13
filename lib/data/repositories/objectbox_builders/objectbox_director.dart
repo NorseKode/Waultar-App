@@ -5,20 +5,18 @@ import 'package:waultar/data/repositories/objectbox_builders/i_objectbox_directo
 import 'builders/index.dart';
 
 class ObjectBoxDirector implements IObjectBoxDirector {
-
   late final ObjectBox _context;
 
   ObjectBoxDirector(this._context);
 
   @override
   T make<T>(dynamic model) {
-
     if (model == null) throw Exception("Model cannot be null");
 
     switch (model.runtimeType) {
       case PostModel:
         return makePost(model as PostModel, _context) as T;
-      
+
       case EventModel:
         return makeEvent(model as EventModel, _context) as T;
 
@@ -48,10 +46,10 @@ class ObjectBoxDirector implements IObjectBoxDirector {
 
       case CoordinateModel:
         return makeCoordinate(model as CoordinateModel, _context) as T;
-        
-      default:
-        throw UnimplementedError("Maker for ${model.runtimeType} has not been implemented"); 
-    }
 
-  }  
+      default:
+        throw UnimplementedError(
+            "Maker for ${model.runtimeType} has not been implemented");
+    }
+  }
 }

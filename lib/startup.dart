@@ -6,6 +6,8 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.d
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/repositories/appsettings_repo.dart';
+import 'package:waultar/data/repositories/model_builders/i_model_director.dart';
+import 'package:waultar/data/repositories/model_builders/model_director.dart';
 import 'package:waultar/data/repositories/objectbox_builders/i_objectbox_director.dart';
 import 'package:waultar/data/repositories/objectbox_builders/objectbox_director.dart';
 import 'package:waultar/data/repositories/post_repo.dart';
@@ -16,6 +18,7 @@ final locator = GetIt.instance;
 late final OS os;
 late final ObjectBox _context;
 late final IObjectBoxDirector _objectboxDirector;
+late final IModelDirector _modelDirector;
 
 Future<void> setupServices() async {
   os = detectPlatform();
@@ -31,6 +34,11 @@ Future<void> setupServices() async {
   _objectboxDirector = ObjectBoxDirector(_context);
   locator.registerSingleton<IObjectBoxDirector>(_objectboxDirector,
       instanceName: 'objectbox_director');
+
+  // model director is the opposite of ObjectBoxDirector
+  // this director maps from entity to model
+  _modelDirector = ModelDirector();
+  locator.registerSingleton<IModelDirector>(_modelDirector, instanceName: 'model_director');
 
   // register all abstract repositores with their conrete implementations
   // each repo gets injected the context (to access the relevant store) 

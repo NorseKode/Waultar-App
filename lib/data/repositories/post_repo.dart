@@ -10,22 +10,22 @@ import 'package:waultar/data/repositories/objectbox_builders/i_objectbox_directo
 class PostRepository implements IPostRepository {
   late final ObjectBox _context;
   late final Box<PostObjectBox> _postBox;
-  late final IObjectBoxDirector _director;
+  late final IObjectBoxDirector _entityDirector;
 
-  PostRepository(this._context, this._director) {
+  PostRepository(this._context, this._entityDirector) {
     _postBox = _context.store.box<PostObjectBox>();
   }
 
   @override
   void addPost(PostModel post) {
-    var entity = _director.make<PostObjectBox>(post);
+    var entity = _entityDirector.make<PostObjectBox>(post);
     _postBox.put(entity);
   }
 
   @override
   // TODO : putAsync does not work if toMany relations has not been set ..
   Future addPostAsync(PostModel post) async {
-    var entity = _director.make<PostObjectBox>(post);
+    var entity = _entityDirector.make<PostObjectBox>(post);
     await _postBox.putAsync(entity);
   }
 
@@ -43,6 +43,7 @@ class PostRepository implements IPostRepository {
 
   @override
   PostModel getSinglePost(int id) {
+    // TODO : make mapper from entity to model ..
     var post = _postBox.get(id)!;
     var profile = post.profile.target!;
     var service = profile.service.target!;
