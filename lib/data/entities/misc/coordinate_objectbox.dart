@@ -6,5 +6,6 @@ class CoordinateObjectBox {
   double longitude;
   double latitude;
 
-  CoordinateObjectBox(this.id, this.longitude, this.latitude);
+  CoordinateObjectBox(
+      {this.id = 0, required this.longitude, required this.latitude});
 }

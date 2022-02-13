@@ -1,12 +1,12 @@
 import 'package:objectbox/objectbox.dart';
 import 'package:waultar/core/models/content/event_model.dart';
 import 'package:waultar/data/entities/misc/place_objectbox.dart';
-import 'package:waultar/data/entities/misc/service_objectbox.dart';
+import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 
 @Entity()
 class EventObjectBox {
   int id;
-  final profile = ToOne<ServiceObjectBox>();
+  final profile = ToOne<ProfileObjectBox>();
   String raw;
   String name;
 

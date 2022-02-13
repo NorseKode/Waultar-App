@@ -1,7 +1,9 @@
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
+import 'package:waultar/data/entities/misc/coordinate_objectbox.dart';
 import 'package:waultar/data/entities/misc/person_objectbox.dart';
+import 'package:waultar/data/entities/misc/place_objectbox.dart';
 import 'package:waultar/data/entities/misc/tag_objectbox.dart';
 import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 
@@ -45,6 +47,58 @@ TagObjectBox makeTag(TagModel model, ObjectBox context) {
       .findUnique();
   if (entity == null) {
     return TagObjectBox(name: model.name);
+  } else {
+    return entity;
+  }
+}
+
+PlaceObjectBox makePlace(PlaceModel model, ObjectBox context) {
+  // it seems like a place (in fb at least) always has a name
+  var entity = context.store
+      .box<PlaceObjectBox>()
+      .query(PlaceObjectBox_.name.equals(model.name))
+      .build()
+      .findFirst();
+  if (entity == null) {
+    entity = PlaceObjectBox(raw: model.raw, name: model.name);
+    if (model.address != null) {
+      entity.address = model.address;
+    }
+    if (model.coordinate != null) {
+      entity.coordinate.target = makeCoordinate(model.coordinate!, context);
+    }
+    if (model.uri != null) {
+      entity.uri = model.uri!.path;
+    }
+    if (model.profile.id == 0) {
+      throw ObjectBoxException(
+          "Profile Id is 0 - profile must be stored before calling me");
+    } else {
+      var profileEntity =
+          context.store.box<ProfileObjectBox>().get(model.profile.id);
+      entity.profile.target = profileEntity;
+    }
+    return entity;
+  } else {
+    return entity;
+  }
+}
+
+CoordinateObjectBox makeCoordinate(CoordinateModel model, ObjectBox context) {
+  var entity = context.store
+      .box<CoordinateObjectBox>()
+      .query(CoordinateObjectBox_.latitude
+          .greaterOrEqual(model.latitude)
+          .and(CoordinateObjectBox_.latitude.lessOrEqual(model.latitude))
+          .and(CoordinateObjectBox_.longitude.greaterOrEqual(model.longitude))
+          .and(CoordinateObjectBox_.latitude.lessOrEqual(model.longitude)))
+      .build()
+      .findFirst();
+
+  if (entity == null) {
+    entity = CoordinateObjectBox(
+        longitude: model.longitude, latitude: model.latitude);
+    return entity;
   } else {
     return entity;
   }

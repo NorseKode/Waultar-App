@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
@@ -11,8 +10,10 @@ import 'package:waultar/data/entities/misc/person_objectbox.dart';
 import 'package:waultar/data/entities/misc/tag_objectbox.dart';
 import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 
+import 'event_builder.dart';
 import 'media_builders.dart';
 import 'misc_builders.dart';
+import 'poll_builder.dart';
 
 PostObjectBox makePost(PostModel model, ObjectBox context) {
   var entity = PostObjectBox(raw: model.raw, timestamp: model.timestamp);
@@ -98,5 +99,23 @@ PostObjectBox makePost(PostModel model, ObjectBox context) {
     entity.tags.addAll(tagsToAdd);
   }
 
+  var event = model.event;
+  if (event != null) {
+    var eventToAdd = makeEvent(event, context);
+    entity.event.target = eventToAdd;
+  }
+
+  // TODO : group .. ??
+
+  var poll = model.poll;
+  if (poll != null) {
+    var pollToAdd = makePoll(poll, context);
+    entity.poll.target = pollToAdd;
+  }
+
+  // TODO : lifeEvent should maybe not be included in a post ? 
+
   return entity;
 }
+
+
