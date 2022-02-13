@@ -25,4 +25,15 @@ export 'profile/follow_model.dart';
 export 'profile/friend_model.dart';
 export 'profile/profile_model.dart';
 
+// content 
+export 'content/comment_model.dart';
+export 'content/event_model.dart';
+export 'content/group_model.dart';
+export 'content/life_event_model.dart';
+export 'content/message_model.dart';
+export 'content/message_thread_model.dart';
+export 'content/page_model.dart';
+export 'content/poll_model.dart';
+export 'content/post_model.dart';
+
 export 'base_model.dart';
