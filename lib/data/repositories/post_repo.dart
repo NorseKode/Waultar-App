@@ -21,6 +21,7 @@ class PostRepository implements IPostRepository {
   }
 
   @override
+  // TODO : putAsync does not work if toMany relations has not been set ..
   Future addPostAsync(PostModel post) async {
     var entity = _director.make<PostObjectBox>(post);
     await _postBox.putAsync(entity);
@@ -40,7 +41,8 @@ class PostRepository implements IPostRepository {
 
   @override
   PostModel getSinglePost(int id) {
-    // TODO: implement getSinglePost
+    var entity = _postBox.get(id)!;
+    // PostModel model = PostModel();
     throw UnimplementedError();
   }
 
