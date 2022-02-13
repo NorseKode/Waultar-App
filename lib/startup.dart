@@ -2,30 +2,47 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get_it/get_it.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/repositories/appsettings_repo.dart';
+import 'package:waultar/data/repositories/objectbox_builders/i_objectbox_director.dart';
+import 'package:waultar/data/repositories/objectbox_builders/objectbox_director.dart';
+import 'package:waultar/data/repositories/post_repo.dart';
 import 'package:waultar/domain/services/appsettings_service.dart';
 import 'configs/globals/os_enum.dart';
 
 final locator = GetIt.instance;
-late OS os;
-late ObjectBox context;
+late final OS os;
+late final ObjectBox _context;
+late final IObjectBoxDirector _objectboxDirector;
 
-Future<void> setupServices({bool testing = false}) async {
-
+Future<void> setupServices() async {
   os = detectPlatform();
   locator.registerSingleton<OS>(os, instanceName: 'platform');
 
   // create objectbox at startup
-  context = await ObjectBox.create();
-  locator.registerSingleton<ObjectBox>(context, instanceName: 'context');
+  // this MUST be the only context throughout runtime
+  _context = await ObjectBox.create();
+  locator.registerSingleton<ObjectBox>(_context, instanceName: 'context');
 
+  // inject context to objectboxDirector, to access the store and boxes
+  // the director is used to map from models to entities in repositories
+  _objectboxDirector = ObjectBoxDirector(_context);
+  locator.registerSingleton<IObjectBoxDirector>(_objectboxDirector,
+      instanceName: 'objectbox_director');
 
-  locator.registerSingleton<IAppSettingsRepository>(AppSettingsRepository(context),
+  // register all abstract repositores with their conrete implementations
+  // each repo gets injected the context (to access the relevant store) 
+  // and the objectboxDirector to map from models to entities
+  locator.registerSingleton<IAppSettingsRepository>(
+      AppSettingsRepository(_context),
       instanceName: 'appSettingsRepo');
+  locator.registerSingleton<IPostRepository>(
+      PostRepository(_context, _objectboxDirector),
+      instanceName: 'postRepo');
 
-
+  // register all services and inject their dependencies
   locator.registerSingleton<IAppSettingsService>(AppSettingsService(),
       instanceName: 'appSettingsService');
 }
@@ -58,20 +75,6 @@ OS detectPlatform() {
   throw Exception('Could not detect platform');
 }
 
-// void configureSQLiteBinaries() {
-//   switch (locator<OS>(instanceName: 'platform')) {
-//     case OS.windows:
-//       open.overrideFor(OperatingSystem.windows, _openOnWindows);
-//       break;
-
-//     case OS.linux:
-//       open.overrideFor(OperatingSystem.linux, _openOnLinux);
-//       break;
-
-//     default:
-//   }
-// }
-
 // DynamicLibrary _openOnWindows() {
 //   final scriptDir = File(Platform.script.toFilePath()).parent;
 //   final libraryNextToScript = File(
@@ -79,9 +82,6 @@ OS detectPlatform() {
 //   return DynamicLibrary.open(libraryNextToScript.path);
 // }
 
-// // TODO : place sqlite.so file in assets
-// // should be the same as for windows but with a sqlite3.so binary instead
-// // just place the .so file in assets next to the .dll
 // DynamicLibrary _openOnLinux() {
 //   final scriptDir = File(Platform.script.toFilePath()).parent;
 //   final libraryNextToScript =
