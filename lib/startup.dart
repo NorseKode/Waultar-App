@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:path/path.dart' as dart_path;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get_it/get_it.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
@@ -23,7 +25,19 @@ late final IObjectBoxDirector _objectboxDirector;
 late final IModelDirector _modelDirector;
 late final AppLogger _logger;
 
+late final String _waultarDirectory;
+late final String _dbFolder;
+late final String _extractsFolder;
+late final String _logFolder;
+
 Future<void> setupServices() async {
+
+  await initApplicationPaths();
+  locator.registerSingleton<String>(_waultarDirectory, instanceName: 'waultar_root_directory');
+  locator.registerSingleton<String>(_dbFolder, instanceName: 'db_folder');
+  locator.registerSingleton<String>(_extractsFolder, instanceName: 'extracts_folder');
+  locator.registerSingleton<String>(_logFolder, instanceName: 'log_folder');
+
   os = detectPlatform();
   locator.registerSingleton<OS>(os, instanceName: 'platform');
 
@@ -87,6 +101,15 @@ OS detectPlatform() {
 
   throw Exception('Could not detect platform');
 }
+
+Future initApplicationPaths() async {
+  final _documentsDirectory = await getApplicationDocumentsDirectory();
+  _waultarDirectory = dart_path.normalize(_documentsDirectory.path + '/waultar/');
+  _dbFolder = dart_path.normalize(_waultarDirectory + '/objectbox/');
+  _extractsFolder = dart_path.normalize(_waultarDirectory + '/extracts/');
+  _logFolder = dart_path.normalize(_waultarDirectory + '/logs/');
+}
+
 
 // DynamicLibrary _openOnWindows() {
 //   final scriptDir = File(Platform.script.toFilePath()).parent;
