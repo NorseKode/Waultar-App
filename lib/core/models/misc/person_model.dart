@@ -3,13 +3,13 @@ import 'package:waultar/core/models/profile/profile_model.dart';
 
 class PersonModel extends BaseModel {
   late String name;
-  String? uri;
+  Uri? uri;
 
   PersonModel(
       {int id = 0,
       required ProfileModel profile,
       required String name,
       required String raw,
-      String? uri})
+      this.uri})
       : super(id, profile, raw);
 }

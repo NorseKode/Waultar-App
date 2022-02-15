@@ -27,6 +27,7 @@ class EventModel extends BaseModel {
     this.response,
   }) : super(id, profile, raw);
 
+
   EventModel.fromJson(Map<String, dynamic> json, ProfileModel profile)
       : name = json["name"],
         startTimestamp = ModelHelper.intToTimestamp(json["start_timestamp"]),
@@ -35,4 +36,9 @@ class EventModel extends BaseModel {
         super(0, profile, json.toString());
 }
 
-enum EventResponse { interested, joined, declined }
+enum EventResponse {
+  unknown,
+  interested,
+  joined,
+  declined
+}

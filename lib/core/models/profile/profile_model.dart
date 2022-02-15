@@ -7,30 +7,30 @@ import 'package:waultar/core/models/misc/service_model.dart';
 import 'package:waultar/core/models/model_helper.dart';
 
 class ProfileModel {
-  final int id;
+  int id;
   late ServiceModel service;
-  final Uri uri;
-  final String? username;
-  final String fullName;
+  Uri uri;
+  String? username;
+  String fullName;
   MediaModel? profilePicture;
   List<String>? otherNames;
-  final List<EmailModel> emails;
-  final String? gender;
-  final String? bio;
-  final String? currentCity;
+  List<EmailModel> emails;
+  String? gender;
+  String? bio;
+  String? currentCity;
   List<String>? phoneNumbers;
-  final bool? isPhoneConfirmed;
-  final DateTime createdTimestamp;
-  final bool? isPrivate;
-  final List<String>? websites;
+  bool? isPhoneConfirmed;
+  DateTime createdTimestamp;
+  bool? isPrivate;
+  List<String>? websites;
   DateTime? dateOfBirth;
-  final String? bloodInfo;
-  final String? friendPeerGroup;
-  final List<ChangeModel>? changes;
-  final List<ActivityModel> activities;
-  final String? eligibility;
+  String? bloodInfo;
+  String? friendPeerGroup;
+  <ChangeModel>? changes;
+  <ActivityModel> activities;
+  String? eligibility;
   List<String>? metadata;
-  final String raw;
+  String raw;
 
   ProfileModel({
     this.id = 0,

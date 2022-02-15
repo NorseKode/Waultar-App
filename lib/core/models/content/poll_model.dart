@@ -7,6 +7,7 @@ class PollModel extends BaseModel {
 
   // store options in raw json
   String? options;
+  DateTime? timestamp;
 
   PollModel({
     int id = 0,
@@ -15,6 +16,7 @@ class PollModel extends BaseModel {
     this.question,
     this.isUsers = false,
     this.options,
+    this.timestamp,
   }) : super(id, profile, raw);
 
   PollModel.fromJson(Map<String, dynamic> json, ProfileModel profile)
