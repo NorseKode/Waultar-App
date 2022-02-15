@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -44,7 +46,9 @@ class _WaultarApp extends State<WaultarApp> {
 
   @override
   void initState() {
-    // TODO: delete logging file
+    if (kDebugMode) {
+      File(locator.get<String>(instanceName: 'log_folder') + "logs.txt").writeAsString("");
+    }
 
     if (kIsWeb) {
       _routerDelegate = AppRouterDelegate(AppRoutePath.sigin());

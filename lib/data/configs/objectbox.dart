@@ -1,3 +1,5 @@
+import 'package:waultar/startup.dart';
+
 import '../entities/misc/appsettings_objectbox.dart';
 import 'objectbox.g.dart';
 
@@ -14,7 +16,7 @@ class ObjectBox {
   }
 
   static Future<ObjectBox> create() async {
-    final store = await openStore();
+    final store = await openStore(directory: locator.get<String>(instanceName: 'db_folder'));
     return ObjectBox._create(store);
   }
 }

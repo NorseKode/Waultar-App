@@ -14,7 +14,6 @@ import 'package:waultar/data/repositories/objectbox_builders/i_objectbox_directo
 import 'package:waultar/data/repositories/objectbox_builders/objectbox_director.dart';
 import 'package:waultar/data/repositories/post_repo.dart';
 import 'package:waultar/domain/services/appsettings_service.dart';
-import 'package:logging/logging.dart';
 import 'configs/globals/app_logger.dart';
 import 'configs/globals/os_enum.dart';
 
@@ -25,18 +24,17 @@ late final IObjectBoxDirector _objectboxDirector;
 late final IModelDirector _modelDirector;
 late final AppLogger _logger;
 
-late final String _waultarDirectory;
-late final String _dbFolder;
-late final String _extractsFolder;
-late final String _logFolder;
+late final String _waultarPath;
+late final String _dbFolderPath;
+late final String _extractsFolderPath;
+late final String _logFolderPath;
 
 Future<void> setupServices() async {
-
   await initApplicationPaths();
-  locator.registerSingleton<String>(_waultarDirectory, instanceName: 'waultar_root_directory');
-  locator.registerSingleton<String>(_dbFolder, instanceName: 'db_folder');
-  locator.registerSingleton<String>(_extractsFolder, instanceName: 'extracts_folder');
-  locator.registerSingleton<String>(_logFolder, instanceName: 'log_folder');
+  locator.registerSingleton<String>(_waultarPath, instanceName: 'waultar_root_directory');
+  locator.registerSingleton<String>(_dbFolderPath, instanceName: 'db_folder');
+  locator.registerSingleton<String>(_extractsFolderPath, instanceName: 'extracts_folder');
+  locator.registerSingleton<String>(_logFolderPath, instanceName: 'log_folder');
 
   os = detectPlatform();
   locator.registerSingleton<OS>(os, instanceName: 'platform');
@@ -104,10 +102,32 @@ OS detectPlatform() {
 
 Future initApplicationPaths() async {
   final _documentsDirectory = await getApplicationDocumentsDirectory();
-  _waultarDirectory = dart_path.normalize(_documentsDirectory.path + '/waultar/');
-  _dbFolder = dart_path.normalize(_waultarDirectory + '/objectbox/');
-  _extractsFolder = dart_path.normalize(_waultarDirectory + '/extracts/');
-  _logFolder = dart_path.normalize(_waultarDirectory + '/logs/');
+  _waultarPath = dart_path.normalize(_documentsDirectory.path + '/waultar/');
+  _dbFolderPath = dart_path.normalize(_waultarPath + '/objectbox/');
+  _extractsFolderPath = dart_path.normalize(_waultarPath + '/extracts/');
+  _logFolderPath = dart_path.normalize(_waultarPath + '/logs/');
+
+  var dbFolderDir = Directory(_dbFolderPath);
+  var extractsFolderDir = Directory(_extractsFolderPath);
+  var logFolderDir = Directory(_logFolderPath);
+
+  dbFolderDir.exists().then((exists) {
+    if (!exists) {
+      dbFolderDir.create(recursive: true);
+    }
+  });
+
+  extractsFolderDir.exists().then((exists) {
+    if (!exists) {
+      extractsFolderDir.create(recursive: true);
+    }
+  });
+
+  logFolderDir.exists().then((exists) {
+    if (!exists) {
+      logFolderDir.create(recursive: true);
+    }
+  });
 }
 
 
