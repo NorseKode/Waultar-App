@@ -1,3 +1,5 @@
+import 'package:waultar/core/models/media/image_model.dart';
+import 'package:waultar/core/models/media/media_model.dart';
 import 'package:waultar/core/models/misc/activity_model.dart';
 import 'package:waultar/core/models/misc/change_model.dart';
 import 'package:waultar/core/models/misc/email_model.dart';
@@ -10,6 +12,7 @@ class ProfileModel {
   final Uri uri;
   final String? username;
   final String fullName;
+  MediaModel? profilePicture;
   List<String>? otherNames;
   final List<EmailModel> emails;
   final String? gender;
@@ -35,6 +38,7 @@ class ProfileModel {
     required this.uri,
     this.username,
     required this.fullName,
+    this.profilePicture,
     this.otherNames,
     required this.emails,
     this.gender,
@@ -55,7 +59,7 @@ class ProfileModel {
     required this.raw,
   });
 
-  ProfileModel.fromJson(Map<String, dynamic> json)
+  ProfileModel.fromFacebook(Map<String, dynamic> json)
       : id = 0,
         uri = Uri(path: json["profile_uri"]),
         username = json["username"],
@@ -112,6 +116,71 @@ class ProfileModel {
       phoneNumbers = (json["phone_numbers"])
           .map<String>((element) => element["phone_number"].toString())
           .toList();
+    }
+
+    // TODO
+    service = ServiceModel(0, 'name', 'company', Uri(path: 'image'));
+  }
+
+  static dynamic _tempData;
+
+  static instagramDataValuesHelper(var json, String key) {
+    _tempData ??= json["string_map_data"];
+    return (_tempData[key])["value"];
+  }
+
+  ProfileModel.fromInstragram(Map<String, dynamic> json)
+      : id = 0,
+        uri = Uri(path: ""),
+        username = instagramDataValuesHelper(json, "Username"),
+        fullName = instagramDataValuesHelper(json, "Name"),
+        otherNames = null,
+        // TODO
+        emails = <EmailModel>[],
+        gender = instagramDataValuesHelper(json, "Gender"),
+        // TODO
+        bio = instagramDataValuesHelper(json, "Bio"),
+        currentCity = instagramDataValuesHelper(json, "City Name"),
+        phoneNumbers = <String>[instagramDataValuesHelper(json, "Phone Number")],
+        isPhoneConfirmed =
+            instagramDataValuesHelper(json, "Phone Confirmed").toLowerCase() == "true"
+                ? true
+                : instagramDataValuesHelper(json, "Phone Confirmed").toLowerCase() == "false"
+                    ? false
+                    : null,
+        createdTimestamp = DateTime.fromMicrosecondsSinceEpoch(0),
+        isPrivate = instagramDataValuesHelper(json, "Private Account").toLowerCase() == "true"
+            ? true
+            : instagramDataValuesHelper(json, "Private Account").toLowerCase() == "false"
+                ? false
+                : null,
+        websites = [instagramDataValuesHelper(json, "Website")],
+        bloodInfo = null,
+        friendPeerGroup = null,
+        // TODO
+        changes = <ChangeModel>[],
+        // TODO
+        activities = <ActivityModel>[],
+        // TODO
+        eligibility = null,
+        // TODO
+        metadata = <String>[],
+        raw = json.toString() {
+    var jsonMapData = json["string_map_data"];
+
+    if (jsonMapData.containsKey("Date of birth")) {
+      var value = (jsonMapData["Date of birth"])["value"].toString();
+      var birthdayObject = value.split("-");
+      dateOfBirth = DateTime.utc(
+          int.parse(birthdayObject[0]), int.parse(birthdayObject[1]), int.parse(birthdayObject[2]));
+    }
+
+    if (jsonMapData.containsKey("Phone Confirmation Method")) {
+      metadata!.add(jsonMapData["Phone Confirmation Method"].toString());
+    }
+
+    if (json.containsKey("media_map_data")) {
+      profilePicture = ImageModel.fromJson((json["media_map_data"])["Profile Photo"], this);
     }
 
     // TODO

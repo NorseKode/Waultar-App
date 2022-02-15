@@ -6,6 +6,7 @@ import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/abstracts/abstract_parsers/base_parser.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/models/media/video_model.dart';
+import 'package:waultar/core/models/profile/profile_model.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
 import 'package:waultar/presentation/widgets/upload/upload_util.dart';
 
@@ -13,7 +14,7 @@ import '../models/content/post_model.dart';
 
 class InstagramParser extends BaseParser {
   @override
-  Stream<BaseModel> parseDirectory(Directory directory) async* {
+  Stream<dynamic> parseDirectory(Directory directory) async* {
     var files = await getAllFilesFrom(directory.path);
 
     for (var file in files) {
@@ -26,13 +27,17 @@ class InstagramParser extends BaseParser {
   }
 
   @override
-  Stream<BaseModel> parseFile(File file) async* {
+  Stream<dynamic> parseFile(File file) async* {
     try {
       var jsonData = await ParseHelper.getJsonStringFromFile(file);
 
       await for (final object in ParseHelper.returnEveryJsonObject(jsonData)) {
-        if (object is Map<String, dynamic> && object.containsKey("media")) {
-          yield PostModel.fromJson(object, ParseHelper.profile);
+        if (object is Map<String, dynamic>) {
+          if (object.containsKey("profile_user")) {
+            yield ProfileModel.fromInstragram(object["profile_user"].first);
+          } else if (object.containsKey("media")) {
+            yield PostModel.fromJson(object, ParseHelper.profile);
+          }
 
           //   var dataMap = ParseHelper.jsonDataAsMap(object, "parentKey", [""]);
 
@@ -48,8 +53,7 @@ class InstagramParser extends BaseParser {
         }
       }
     } on Tuple2<String, dynamic> catch (e) {
-      throw ParseException(
-          "Unexpected error occured in parsing of file", file, e.item2);
+      throw ParseException("Unexpected error occured in parsing of file", file, e.item2);
     } on FormatException catch (e) {
       throw ParseException("Wrong formatted json", file, e);
     }

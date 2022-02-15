@@ -17,7 +17,7 @@ import 'package:path/path.dart' as path_dart;
 
 class FacebookParser extends BaseParser {
   @override
-  Stream<BaseModel> parseDirectory(Directory directory) {
+  Stream<dynamic> parseDirectory(Directory directory) {
     // TODO: implement parseDirectory
     throw UnimplementedError();
   }
@@ -43,7 +43,7 @@ class FacebookParser extends BaseParser {
             // skip
           } else if (object.containsKey("profile_v2")) {
             // TODO: parse groups
-            yield ProfileModel.fromJson(object["profile_v2"]);
+            yield ProfileModel.fromFacebook(object["profile_v2"]);
           } else {
             var mediaKey =
                 object.keys.firstWhere((key) => mediaKeys.contains(key), orElse: () => "");

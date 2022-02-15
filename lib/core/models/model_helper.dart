@@ -1,11 +1,7 @@
 import 'dart:math';
 
 class ModelHelper {
-  static const knownTimestampKeys = [
-    "timestamp",
-    "creation_timestamp",
-    "timestamp_ms"
-  ];
+  static const knownTimestampKeys = ["timestamp", "creation_timestamp", "timestamp_ms"];
 
   static DateTime? getTimestamp(var jsonData) {
     var key = trySeveralKeys(jsonData, knownTimestampKeys);
@@ -30,6 +26,10 @@ class ModelHelper {
   }
 
   static String? trySeveralKeys(var jsonData, List<String> keys) {
+    if (jsonData.containsKey("string_map_data")) {
+      jsonData = jsonData["string_map_data"];
+    }
+
     for (var key in keys) {
       if (jsonData is Map<String, dynamic> && jsonData.containsKey(key)) {
         return key;
