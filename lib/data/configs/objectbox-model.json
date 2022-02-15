@@ -226,7 +226,18 @@
           "relationTarget": "ServiceObjectBox"
         }
       ],
-      "relations": []
+      "relations": [
+        {
+          "id": "7:2922382347006795142",
+          "name": "emails",
+          "targetId": "10:7875674094271168662"
+        },
+        {
+          "id": "8:5633121391346660074",
+          "name": "changes",
+          "targetId": "8:8885644534967304783"
+        }
+      ]
     },
     {
       "id": "7:7610778147039031742",
@@ -1013,7 +1024,7 @@
   ],
   "lastEntityId": "24:1944258851869554230",
   "lastIndexId": "21:1235049878482628590",
-  "lastRelationId": "6:3609669659353406727",
+  "lastRelationId": "8:5633121391346660074",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,

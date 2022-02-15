@@ -255,7 +255,16 @@ final _entities = <ModelEntity>[
             indexId: const IdUid(21, 1235049878482628590),
             relationTarget: 'ServiceObjectBox')
       ],
-      relations: <ModelRelation>[],
+      relations: <ModelRelation>[
+        ModelRelation(
+            id: const IdUid(7, 2922382347006795142),
+            name: 'emails',
+            targetId: const IdUid(10, 7875674094271168662)),
+        ModelRelation(
+            id: const IdUid(8, 5633121391346660074),
+            name: 'changes',
+            targetId: const IdUid(8, 8885644534967304783))
+      ],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
       id: const IdUid(7, 7610778147039031742),
@@ -1039,7 +1048,7 @@ ModelDefinition getObjectBoxModel() {
       entities: _entities,
       lastEntityId: const IdUid(24, 1944258851869554230),
       lastIndexId: const IdUid(21, 1235049878482628590),
-      lastRelationId: const IdUid(6, 3609669659353406727),
+      lastRelationId: const IdUid(8, 5633121391346660074),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [1837511870469432447, 2148786199038735847],
       retiredIndexUids: const [],
@@ -1188,7 +1197,10 @@ ModelDefinition getObjectBoxModel() {
     ProfileObjectBox: EntityDefinition<ProfileObjectBox>(
         model: _entities[3],
         toOneRelations: (ProfileObjectBox object) => [object.service],
-        toManyRelations: (ProfileObjectBox object) => {},
+        toManyRelations: (ProfileObjectBox object) => {
+              RelInfo<ProfileObjectBox>.toMany(7, object.id): object.emails,
+              RelInfo<ProfileObjectBox>.toMany(8, object.id): object.changes
+            },
         getId: (ProfileObjectBox object) => object.id,
         setId: (ProfileObjectBox object, int id) {
           object.id = id;
@@ -1288,6 +1300,16 @@ ModelDefinition getObjectBoxModel() {
           object.service.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 40, 0);
           object.service.attach(store);
+          InternalToManyAccess.setRelInfo(
+              object.emails,
+              store,
+              RelInfo<ProfileObjectBox>.toMany(7, object.id),
+              store.box<ProfileObjectBox>());
+          InternalToManyAccess.setRelInfo(
+              object.changes,
+              store,
+              RelInfo<ProfileObjectBox>.toMany(8, object.id),
+              store.box<ProfileObjectBox>());
           return object;
         }),
     ActivityObjectBox: EntityDefinition<ActivityObjectBox>(
@@ -2264,6 +2286,14 @@ class ProfileObjectBox_ {
   /// see [ProfileObjectBox.service]
   static final service = QueryRelationToOne<ProfileObjectBox, ServiceObjectBox>(
       _entities[3].properties[18]);
+
+  /// see [ProfileObjectBox.emails]
+  static final emails = QueryRelationToMany<ProfileObjectBox, EmailObjectBox>(
+      _entities[3].relations[0]);
+
+  /// see [ProfileObjectBox.changes]
+  static final changes = QueryRelationToMany<ProfileObjectBox, ChangeObjectBox>(
+      _entities[3].relations[1]);
 }
 
 /// [ActivityObjectBox] entity fields to define ObjectBox queries.
