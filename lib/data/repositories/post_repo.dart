@@ -17,16 +17,18 @@ class PostRepository implements IPostRepository {
   }
 
   @override
-  void addPost(PostModel post) {
+  int addPost(PostModel post) {
     var entity = _entityDirector.make<PostObjectBox>(post);
-    _postBox.put(entity);
+    int id = _postBox.put(entity);
+    return id;
   }
 
   @override
   // TODO : putAsync does not work if toMany relations has not been set ..
-  Future addPostAsync(PostModel post) async {
+  Future<int> addPostAsync(PostModel post) async {
     var entity = _entityDirector.make<PostObjectBox>(post);
-    await _postBox.putAsync(entity);
+    int id = await _postBox.putAsync(entity);
+    return id;
   }
 
   @override
