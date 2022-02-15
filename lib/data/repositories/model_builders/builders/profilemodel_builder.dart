@@ -24,7 +24,7 @@ ProfileModel makeProfileModel(ProfileObjectBox entity) {
       gender: entity.gender,
       bio: entity.bio,
       currentCity: entity.currentCity,
-      phoneNumber: entity.phoneNumber,
+      phoneNumbers: entity.phoneNumbers,
       isPhoneConfirmed: entity.isPhoneConfirmed,
       createdTimestamp: entity.createdTimestamp,
       isPrivate: entity.isPrivate,

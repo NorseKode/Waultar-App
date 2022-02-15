@@ -26,18 +26,3 @@ class GroupModel extends BaseModel {
   //           : null,
   //       super(0, profile, json.toString());
 }
-
-extension GroupName on String {
-  String getGroupName() {
-    if (this.contains("Du blev medlem af")) {
-      return this.replaceFirst("Du blev medlem af ", "");
-    }
-
-    if (this.contains("Du er stoppet med at")) {
-      return this
-          .replaceFirst("Du er stoppet med at v\u00c3\u00a6re medlem af ", "");
-    }
-
-    return "";
-  }
-}

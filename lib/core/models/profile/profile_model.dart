@@ -26,8 +26,8 @@ class ProfileModel {
   DateTime? dateOfBirth;
   String? bloodInfo;
   String? friendPeerGroup;
-  <ChangeModel>? changes;
-  <ActivityModel> activities;
+  List<ChangeModel>? changes;
+  List<ActivityModel> activities;
   String? eligibility;
   List<String>? metadata;
   String raw;
@@ -119,7 +119,7 @@ class ProfileModel {
     }
 
     // TODO
-    service = ServiceModel(0, 'name', 'company', Uri(path: 'image'));
+    service = ServiceModel(id: 0, name: 'name', company: 'company', image: Uri(path: 'image'));
   }
 
   static dynamic _tempData;
@@ -184,6 +184,6 @@ class ProfileModel {
     }
 
     // TODO
-    service = ServiceModel(0, 'name', 'company', Uri(path: 'image'));
+    service = ServiceModel(id: 0, name: 'name', company: 'company', image: Uri(path: 'image'));
   }
 }

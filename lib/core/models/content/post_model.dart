@@ -55,11 +55,12 @@ class PostModel extends BaseModel {
   PostModel.fromJson(Map<String, dynamic> json, ProfileModel profile)
       : timestamp = DateTime.fromMicrosecondsSinceEpoch(0),
         super(0, profile, json.toString()) {
-    var eventJson;
-    var pollJson;
+    dynamic eventJson;
+    // ignore: unused_local_variable
+    dynamic pollJson;
     var mediaJson = <dynamic>[];
-    var attachments;
-    var data;
+    dynamic attachments;
+    dynamic data;
 
     if (json.keys.length == 1 && json.containsKey("media")) {
       json = json["media"].first;
@@ -67,16 +68,13 @@ class PostModel extends BaseModel {
 
     if (json.containsKey("attachments") && json["attachments"].isNotEmpty) {
       attachments = json["attachments"].firstWhere(
-          (element) =>
-              element is Map<String, dynamic> && element.containsKey("data"),
+          (element) => element is Map<String, dynamic> && element.containsKey("data"),
           orElse: null);
     }
 
     if (json.containsKey("data") && json["data"].isNotEmpty) {
       data = json["data"].isNotEmpty
-          ? json["data"].firstWhere(
-              (element) => element is Map<String, dynamic>,
-              orElse: null)
+          ? json["data"].firstWhere((element) => element is Map<String, dynamic>, orElse: null)
           : null;
     }
 
@@ -94,9 +92,7 @@ class PostModel extends BaseModel {
       }
     }
 
-    content = mediaJson
-        .map((element) => ParseHelper.parseMedia(element, "media")!)
-        .toList();
+    content = mediaJson.map((element) => ParseHelper.parseMedia(element, "media")!).toList();
     description = json["title"] ?? "";
     title = data != null ? data["post"] : "";
     event = eventJson != null ? EventModel.fromJson(eventJson, profile) : null;

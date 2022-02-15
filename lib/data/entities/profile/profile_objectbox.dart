@@ -11,10 +11,10 @@ class ProfileObjectBox {
   String? username;
   String fullName;
   final emails = ToMany<EmailObjectBox>();
-  bool? gender;
+  String? gender;
   String? bio;
   String? currentCity;
-  String? phoneNumber;
+  List<String>? phoneNumbers;
   bool? isPhoneConfirmed;
   @Property(type: PropertyType.date)
   DateTime createdTimestamp = DateTime.fromMicrosecondsSinceEpoch(0);
@@ -27,7 +27,7 @@ class ProfileObjectBox {
   final changes = ToMany<ChangeObjectBox>();
   // final activities = ToMany<ActivityModel>();
   String? eligibility;
-  String? metadata;
+  List<String>? metadata;
   String raw;
 
   ProfileObjectBox({
@@ -38,7 +38,7 @@ class ProfileObjectBox {
     this.gender,
     this.bio,
     this.currentCity,
-    this.phoneNumber,
+    this.phoneNumbers,
     this.isPhoneConfirmed,
     required this.createdTimestamp,
     this.isPrivate,
