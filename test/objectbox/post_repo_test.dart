@@ -2,7 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
+import 'package:waultar/data/entities/media/file_objectbox.dart';
 import 'package:waultar/data/entities/media/image_objectbox.dart';
+import 'package:waultar/data/entities/media/link_objectbox.dart';
 import 'package:waultar/data/entities/media/video_objectbox.dart';
 import 'package:waultar/data/entities/misc/service_objectbox.dart';
 import 'package:waultar/data/entities/profile/profile_objectbox.dart';
@@ -88,23 +90,49 @@ Future<void> main() async {
     test('- insert post with media relations', () {
       var datetime = DateTime.now();
       var post = PostModel(profile: profileModel, raw: 'blob json', timestamp: datetime);
+
       var image1 = ImageModel(profile: profileModel, raw: 'blob', uri: Uri(path: 'waultar/media/image1'));
       var image2 = ImageModel(profile: profileModel, raw: 'blob', uri: Uri(path: 'waultar/media/image2'), title: 'image with title');
       var video1 = VideoModel(profile: profileModel, raw: 'blob', uri: Uri(path: 'waultar/media/video1'));
+      var link1 = LinkModel(profile: profileModel, raw: 'raw', uri: Uri(path: 'waultar/media/link1'));
+      var file1 = FileModel(profile: profileModel, raw: 'raw', uri: Uri(path: 'waultar/media/file1'));
+      
       post.content = [];
-      post.content!.addAll([image1, image2, video1]);
+      post.content!.addAll([image1, image2, video1, link1, file1]);
 
       int id = _repo.addPost(post);
       var createdModel = _repo.getSinglePost(id);
 
-      expect(createdModel.content!.length, 3);
+      expect(createdModel.content!.length, 5);
 
       var imageCount = _context.store.box<ImageObjectBox>().count();
       expect(imageCount, 2);
 
       var videoCount = _context.store.box<VideoObjectBox>().count();
       expect(videoCount, 1);
+
+      var linkCount = _context.store.box<LinkObjectBox>().count();
+      expect(linkCount, 1);
+
+      var fileCount = _context.store.box<FileObjectBox>().count();
+      expect(fileCount, 1);
       
+    });
+
+    test('- insert post with existing file uri', () {
+      var fileWithSameUri = FileModel(profile: profileModel, raw: 'raw', uri: Uri(path: 'waultar/media/file1'));
+      var post = PostModel(profile: profileModel, raw: 'blob', timestamp: DateTime.now());
+      post.content = [];
+      post.content!.add(fileWithSameUri);
+
+      int id = _repo.addPost(post);
+      // var createdModel = _repo.getSinglePost(id);
+
+      var fileCount = _context.store.box<FileObjectBox>().count();
+      expect(fileCount, 1);
+      
+
+
     });
   });
 }
