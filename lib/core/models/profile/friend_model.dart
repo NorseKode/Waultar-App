@@ -12,4 +12,4 @@ class FriendModel extends BaseModel {
       : super(id, profile, raw);
 }
 
-enum FriendType { friend, deleted, rejected, sentRequest }
+enum FriendType { unknown, friend, deleted, rejected, sentRequest }

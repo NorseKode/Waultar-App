@@ -7,28 +7,28 @@ class ProfileModel {
   final int id;
   final ServiceModel service;
   final Uri uri;
-  final String? username;
-  final String fullName;
-  final List<EmailModel> emails;
-  final bool? gender;
-  final String? bio;
-  final String? currentCity;
-  final String? phoneNumber;
-  final bool? isPhoneConfirmed;
+  String? username;
+  String fullName;
+  List<EmailModel> emails;
+  bool? gender;
+  String? bio;
+  String? currentCity;
+  String? phoneNumber;
+  bool? isPhoneConfirmed;
   final DateTime createdTimestamp;
-  final bool? isPrivate;
-  final List<String>? websites;
-  final DateTime? dateOfBirth;
-  final String? bloodInfo;
-  final String? friendPeerGroup;
-  final List<ChangeModel>? changes;
-  final List<ActivityModel> activities;
-  final String? eligibility;
-  final String? metadata;
-  final String raw;
+  bool? isPrivate;
+  List<String>? websites;
+  DateTime? dateOfBirth;
+  String? bloodInfo;
+  String? friendPeerGroup;
+  List<ChangeModel>? changes;
+  List<ActivityModel> activities;
+  String? eligibility;
+  String? metadata;
+  String raw;
 
   ProfileModel({
-    this.id = 0, 
+    this.id = 0,
     required this.service,
     required this.uri,
     this.username,

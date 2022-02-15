@@ -1,8 +1,12 @@
 class ServiceModel {
-  int id = 0;
+  int id;
   String name;
   String company;
   Uri image;
 
-  ServiceModel(this.id, this.name, this.company, this.image);
+  ServiceModel(
+      {this.id = 0,
+      required this.name,
+      required this.company,
+      required this.image});
 }

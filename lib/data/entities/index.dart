@@ -1,1 +1,1 @@
-export 'misc/appsettings_entity.dart';
+export 'misc/appsettings_objectbox.dart';

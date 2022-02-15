@@ -23,10 +23,10 @@ class ParseHelper {
       raw: '',
       uri: Uri(),
       service: facebook);
-  static ServiceModel facebook =
-      ServiceModel(1, "facebook", "meta", Uri(path: ""));
-  static ServiceModel instagram =
-      ServiceModel(2, "instagram", "meta", Uri(path: ""));
+  static ServiceModel facebook = ServiceModel(
+      id: 1, name: "facebook", company: "meta", image: Uri(path: ""));
+  static ServiceModel instagram = ServiceModel(
+      id: 2, name: "instagram", company: "meta", image: Uri(path: ""));
 
   static MediaModel? parseMedia(var jsonData, String mediaKey) {
     switch (Extensions.getFileType(jsonData[mediaKey])) {

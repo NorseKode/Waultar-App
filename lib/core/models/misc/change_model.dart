@@ -6,5 +6,11 @@ class ChangeModel {
   final DateTime timestamp;
   final String raw;
 
-  ChangeModel(this.id, this.valueName, this.previousValue, this.newValue, this.timestamp, this.raw);
+  ChangeModel(
+      {this.id = 0,
+      required this.valueName,
+      required this.previousValue,
+      required this.newValue,
+      required this.timestamp,
+      required this.raw});
 }

@@ -1,4 +1,4 @@
-import '../entities/misc/appsettings_entity.dart';
+import '../entities/misc/appsettings_objectbox.dart';
 import 'objectbox.g.dart';
 
 class ObjectBox {
@@ -6,9 +6,9 @@ class ObjectBox {
 
   ObjectBox._create(this.store) {
     // additional setup code here
-    final appSettingsBox = store.box<AppSettingsBox>();
+    final appSettingsBox = store.box<AppSettingsObjectBox>();
     if (appSettingsBox.count() == 0) {
-      var initialAppSettings = AppSettingsBox(0, false);
+      var initialAppSettings = AppSettingsObjectBox(0, false);
       appSettingsBox.put(initialAppSettings);
     }
   }
