@@ -8,7 +8,9 @@ import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
 import 'package:waultar/presentation/widgets/upload/upload_util.dart';
 
-class InstragramParser extends BaseParser {
+import '../models/content/post_model.dart';
+
+class InstagramParser extends BaseParser {
   @override
   Stream<BaseModel> parseDirectory(Directory directory) async* {
     var files = await getAllFilesFrom(directory.path);
@@ -28,22 +30,25 @@ class InstragramParser extends BaseParser {
       var jsonData = await ParseHelper.getJsonStringFromFile(file);
 
       await for (final object in ParseHelper.returnEveryJsonObject(jsonData)) {
-        if (object is Map<String, dynamic> && object.containsKey("uri")) {
-          var dataMap = ParseHelper.jsonDataAsMap(object, "parentKey", [""]);
+        if (object is Map<String, dynamic> && object.containsKey("media")) {
+          yield PostModel.fromJson(object, ParseHelper.profile);
 
-          switch (Extensions.getFileType(dataMap["uri"])) {
-            case FileType.image:
-              yield ImageModel.fromJson(dataMap, ParseHelper.profile);
-              break;
-            case FileType.video:
-              yield VideoModel.fromJson(dataMap, ParseHelper.profile);
-              break;
-            default:
-          }
+          //   var dataMap = ParseHelper.jsonDataAsMap(object, "parentKey", [""]);
+
+          //   switch (Extensions.getFileType(dataMap["uri"])) {
+          //     case FileType.image:
+          //       yield ImageModel.fromJson(dataMap, ParseHelper.profile);
+          //       break;
+          //     case FileType.video:
+          //       yield VideoModel.fromJson(dataMap, ParseHelper.profile);
+          //       break;
+          //     default:
+          //   }
         }
       }
     } on Tuple2<String, dynamic> catch (e) {
-      throw ParseException("Unexpected error occured in parsing of file", file, e.item2);
+      throw ParseException(
+          "Unexpected error occured in parsing of file", file, e.item2);
     } on FormatException catch (e) {
       throw ParseException("Wrong formatted json", file, e);
     }

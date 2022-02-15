@@ -28,47 +28,53 @@ class FacebookParser extends BaseParser {
       var filename = path_dart.basenameWithoutExtension(file.path);
       const mediaKeys = ["uri", "content", "link"];
       var uriAlreadyUsed = [];
+      var isPosts = filename.contains("post");
 
       if (filename.contains("post")) {
         for (var post in jsonData) {
-          yield PostModel.fromJson(ParseHelper.jsonDataAsMap(
-              post, "", ["attachements"]), ParseHelper.profile);
-          // TODO: parse media
+          yield PostModel.fromJson(post, ParseHelper.profile);
         }
       }
 
       await for (final object in ParseHelper.returnEveryJsonObject(jsonData)) {
         if (object is Map<String, dynamic>) {
-          var mediaKey = object.keys.firstWhere((key) => mediaKeys.contains(key), orElse: () => "");
+          if (isPosts) {
+            // skip
+          } else {
+            var mediaKey = object.keys
+                .firstWhere((key) => mediaKeys.contains(key), orElse: () => "");
 
-          if (mediaKey != "" && !uriAlreadyUsed.contains(object[mediaKey])) {
-            switch (Extensions.getFileType(object[mediaKey])) {
-              case FileType.image:
-                uriAlreadyUsed.add(object[mediaKey]);
-                yield ImageModel.fromJson(object, ParseHelper.profile);
-                break;
-              case FileType.video:
-                uriAlreadyUsed.add(object[mediaKey]);
-                yield VideoModel.fromJson(object, ParseHelper.profile);
-                break;
-              case FileType.file:
-                uriAlreadyUsed.add(object[mediaKey]);
-                yield FileModel.fromJson(object, ParseHelper.profile);
-                break;
-              case FileType.link:
-                if (object[mediaKey] is String && !object[mediaKey].startsWith("https://interncache")) {
+            if (mediaKey != "" && !uriAlreadyUsed.contains(object[mediaKey])) {
+              switch (Extensions.getFileType(object[mediaKey])) {
+                case FileType.image:
                   uriAlreadyUsed.add(object[mediaKey]);
-                  yield LinkModel.fromJson(object, ParseHelper.profile);
-                }
-                break;
-              default:
-                break;
+                  yield ImageModel.fromJson(object, ParseHelper.profile);
+                  break;
+                case FileType.video:
+                  uriAlreadyUsed.add(object[mediaKey]);
+                  yield VideoModel.fromJson(object, ParseHelper.profile);
+                  break;
+                case FileType.file:
+                  uriAlreadyUsed.add(object[mediaKey]);
+                  yield FileModel.fromJson(object, ParseHelper.profile);
+                  break;
+                case FileType.link:
+                  if (object[mediaKey] is String &&
+                      !object[mediaKey].startsWith("https://interncache")) {
+                    uriAlreadyUsed.add(object[mediaKey]);
+                    yield LinkModel.fromJson(object, ParseHelper.profile);
+                  }
+                  break;
+                default:
+                  break;
+              }
             }
           }
         }
       }
     } on Tuple2<String, dynamic> catch (e) {
-      throw ParseException("Unexpected error occured in parsing of file", file, e.item2);
+      throw ParseException(
+          "Unexpected error occured in parsing of file", file, e.item2);
     } on FormatException catch (e) {
       throw ParseException("Wrong formatted json", file, e);
     }

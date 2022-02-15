@@ -4,6 +4,13 @@ import 'dart:io';
 import 'package:waultar/core/models/misc/service_model.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
 
+import '../../configs/globals/media_extensions.dart';
+import '../models/media/file_model.dart';
+import '../models/media/image_model.dart';
+import '../models/media/link_model.dart';
+import '../models/media/media_model.dart';
+import '../models/media/video_model.dart';
+
 /// A static class that provides functionality used by many of the parser
 /// classes
 class ParseHelper {
@@ -20,6 +27,21 @@ class ParseHelper {
       id: 1, name: "facebook", company: "meta", image: Uri(path: ""));
   static ServiceModel instagram = ServiceModel(
       id: 2, name: "instagram", company: "meta", image: Uri(path: ""));
+
+  static MediaModel? parseMedia(var jsonData, String mediaKey) {
+    switch (Extensions.getFileType(jsonData[mediaKey])) {
+      case FileType.image:
+        return ImageModel.fromJson(jsonData, profile);
+      case FileType.video:
+        return VideoModel.fromJson(jsonData, profile);
+      case FileType.file:
+        return FileModel.fromJson(jsonData, profile);
+      case FileType.link:
+        return LinkModel.fromJson(jsonData, profile);
+      default:
+        return null;
+    }
+  }
 
   static Stream<dynamic> returnEveryJsonObject(var jsonData) async* {
     if (jsonData is Map<String, dynamic>) {

@@ -7,10 +7,12 @@ import 'package:waultar/core/models/content/poll_model.dart';
 import 'package:waultar/core/models/misc/tag_model.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
 
+import '../../parsers/parse_helper.dart';
 import '../base_model.dart';
+import '../model_helper.dart';
 
 class PostModel extends BaseModel {
-  late DateTime timestamp;
+  DateTime timestamp;
 
   // facebook and instagram
   List<MediaModel>? content;
@@ -51,15 +53,58 @@ class PostModel extends BaseModel {
   }) : super(id, profile, raw);
 
   PostModel.fromJson(Map<String, dynamic> json, ProfileModel profile)
-      : content = null,
-        description = json["post"],
-        title = json["title"],
-        event = null,
-        group = null,
-        poll = null,
-        lifeEvent = null,
-        timestamp = DateTime.fromMillisecondsSinceEpoch(json["timestamp"]),
-        super (0, profile, "");
+      : timestamp = DateTime.fromMicrosecondsSinceEpoch(0),
+        super(0, profile, json.toString()) {
+    var eventJson;
+    var pollJson;
+    var mediaJson = <dynamic>[];
+    var attachments;
+    var data;
+
+    if (json.keys.length == 1 && json.containsKey("media")) {
+      json = json["media"].first;
+    }
+
+    if (json.containsKey("attachments") && json["attachments"].isNotEmpty) {
+      attachments = json["attachments"].firstWhere(
+          (element) =>
+              element is Map<String, dynamic> && element.containsKey("data"),
+          orElse: null);
+    }
+
+    if (json.containsKey("data") && json["data"].isNotEmpty) {
+      data = json["data"].isNotEmpty
+          ? json["data"].firstWhere(
+              (element) => element is Map<String, dynamic>,
+              orElse: null)
+          : null;
+    }
+
+    if (attachments != null) {
+      for (var item in attachments["data"]) {
+        if (item is Map<String, dynamic>) {
+          if (item.containsKey("event")) {
+            eventJson = item["event"];
+          } else if (item.containsKey("poll")) {
+            pollJson = item;
+          } else if (item.values.contains("uri")) {
+            mediaJson.add(item);
+          }
+        }
+      }
+    }
+
+    content = mediaJson
+        .map((element) => ParseHelper.parseMedia(element, "media")!)
+        .toList();
+    description = json["title"] ?? "";
+    title = data != null ? data["post"] : "";
+    event = eventJson != null ? EventModel.fromJson(eventJson, profile) : null;
+    group = null; //TODO: group post
+    poll = null; //TODO: poll post
+    lifeEvent = null; //TODO: lifeevent
+    timestamp = ModelHelper.getTimestamp(json)!;
+  }
 
   @override
   String toString() {
