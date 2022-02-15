@@ -5,6 +5,7 @@ import 'package:waultar/data/configs/objectbox.g.dart';
 
 import 'package:path/path.dart' as dart_path;
 import 'package:waultar/data/entities/index.dart';
+import 'package:waultar/data/entities/misc/service_objectbox.dart';
 // import 'objectbox.g.dart';
 
 class ObjectBoxMock implements ObjectBox {
@@ -14,10 +15,14 @@ class ObjectBoxMock implements ObjectBox {
   ObjectBoxMock._create(this.store) {
     // additional setup code here
     final appSettingsBox = store.box<AppSettingsObjectBox>();
+    final facebookService = ServiceObjectBox(name: "Facebook", company: "Meta", image: "../..");
+    final instagramService = ServiceObjectBox(name: "Facebook", company: "Meta", image: "../..");
     if (appSettingsBox.isEmpty()) {
       var initialAppSettings = AppSettingsObjectBox(0, false);
       appSettingsBox.put(initialAppSettings);
     }
+    store.box<ServiceObjectBox>().put(facebookService);
+    store.box<ServiceObjectBox>().put(instagramService);
   }
 
   static Future<ObjectBoxMock> create() async {

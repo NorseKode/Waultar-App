@@ -1,6 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/models/index.dart';
+import 'package:waultar/data/configs/objectbox.g.dart';
+import 'package:waultar/data/entities/media/image_objectbox.dart';
+import 'package:waultar/data/entities/media/video_objectbox.dart';
 import 'package:waultar/data/entities/misc/service_objectbox.dart';
 import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 import 'package:waultar/data/repositories/model_builders/i_model_director.dart';
@@ -17,16 +20,12 @@ Future<void> main() async {
   late final IModelDirector _modelDirector;
   late final IPostRepository _repo;
   late final ProfileModel profileModel;
-  late final ServiceModel serviceModel;
 
-  var testService = ServiceObjectBox(
-      name: "facebook", company: "meta", image: "path to image");
   var testProfile = ProfileObjectBox(
       uri: "test/path",
       fullName: "John Doe",
       createdTimestamp: DateTime.now(),
       raw: "raw");
-  testProfile.service.target = testService;
 
   T testRunnerPut<T>(T testEntity) {
     var box = _context.store.box<T>();
@@ -47,8 +46,13 @@ Future<void> main() async {
     _entityDirector = ObjectBoxDirector(_context);
     _modelDirector = ModelDirector();
     _repo = PostRepository(_context, _entityDirector, _modelDirector);
-    var service = testRunnerPut<ServiceObjectBox>(testService);
-    serviceModel = _modelDirector.make<ServiceModel>(service);
+    var service = _context.store
+        .box<ServiceObjectBox>()
+        .query(ServiceObjectBox_.name.equals("Facebook"))
+        .build()
+        .findFirst()!;
+    // var serviceModel = _modelDirector.make<ServiceModel>(service);
+    testProfile.service.target = service;
     var profile = testRunnerPut<ProfileObjectBox>(testProfile);
     profileModel = _modelDirector.make<ProfileModel>(profile);
   });
@@ -57,9 +61,14 @@ Future<void> main() async {
     test('- created Profile id is 1', () {
       var result = _context.store.box<ProfileObjectBox>().get(1)!;
 
+      var service = _context.store
+          .box<ServiceObjectBox>()
+          .query(ServiceObjectBox_.name.equals("Facebook"))
+          .build()
+          .findFirst()!;
       expect(result.fullName, testProfile.fullName);
       expect(result.service.target!.name, profileModel.service.name);
-      expect(result.service.target!.name, serviceModel.name);
+      expect(result.service.target!.id, service.id);
     });
 
     test('- insert post without any relations besides profile', () {
@@ -74,6 +83,28 @@ Future<void> main() async {
       expect(createdPost.id, 1);
       expect(createdPost.profile.fullName, testProfile.fullName);
       expect(createdPost.raw, post.raw);
+    });
+
+    test('- insert post with media relations', () {
+      var datetime = DateTime.now();
+      var post = PostModel(profile: profileModel, raw: 'blob json', timestamp: datetime);
+      var image1 = ImageModel(profile: profileModel, raw: 'blob', uri: Uri(path: 'waultar/media/image1'));
+      var image2 = ImageModel(profile: profileModel, raw: 'blob', uri: Uri(path: 'waultar/media/image2'), title: 'image with title');
+      var video1 = VideoModel(profile: profileModel, raw: 'blob', uri: Uri(path: 'waultar/media/video1'));
+      post.content = [];
+      post.content!.addAll([image1, image2, video1]);
+
+      int id = _repo.addPost(post);
+      var createdModel = _repo.getSinglePost(id);
+
+      expect(createdModel.content!.length, 3);
+
+      var imageCount = _context.store.box<ImageObjectBox>().count();
+      expect(imageCount, 2);
+
+      var videoCount = _context.store.box<VideoObjectBox>().count();
+      expect(videoCount, 1);
+      
     });
   });
 }

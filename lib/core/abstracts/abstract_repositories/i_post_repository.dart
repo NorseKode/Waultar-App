@@ -8,6 +8,6 @@ abstract class IPostRepository {
   PostModel getAllPosts();
   PostModel getAllPostsPagination(int offset, int limit);
   PostModel getSinglePost(int id);
-  void addPost(PostModel post);
-  Future addPostAsync(PostModel post);
+  int addPost(PostModel post);
+  Future<int> addPostAsync(PostModel post);
 }
