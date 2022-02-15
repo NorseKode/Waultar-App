@@ -9,11 +9,11 @@ abstract class BaseParser {
   /// Followed by an parsing of every file in said directory
   ///
   /// Throws an [ParseException] if something unexpected in encountered
-  Stream<BaseModel> parseDirectory(Directory directory);
+  Stream<dynamic> parseDirectory(Directory directory);
   /// Parses a single [file]
   ///
   /// Throws an [ParseException] if something unexpected in encountered
-  Stream<BaseModel> parseFile(File file);
+  Stream<dynamic> parseFile(File file);
 }
 
 enum DataTypes {
