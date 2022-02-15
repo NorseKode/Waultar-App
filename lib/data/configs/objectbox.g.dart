@@ -154,7 +154,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(6, 1786282357926238948),
       name: 'ProfileObjectBox',
-      lastPropertyId: const IdUid(19, 4608324703007646644),
+      lastPropertyId: const IdUid(20, 1804060657984959427),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -180,7 +180,7 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(5, 1252799269706424912),
             name: 'gender',
-            type: 1,
+            type: 9,
             flags: 0),
         ModelProperty(
             id: const IdUid(6, 5316034422945385717),
@@ -190,11 +190,6 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(7, 3588394692421559318),
             name: 'currentCity',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(8, 3700819771250547759),
-            name: 'phoneNumber',
             type: 9,
             flags: 0),
         ModelProperty(
@@ -240,7 +235,7 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(17, 504423959685726527),
             name: 'metadata',
-            type: 9,
+            type: 30,
             flags: 0),
         ModelProperty(
             id: const IdUid(18, 7323928305982656964),
@@ -253,7 +248,12 @@ final _entities = <ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const IdUid(21, 1235049878482628590),
-            relationTarget: 'ServiceObjectBox')
+            relationTarget: 'ServiceObjectBox'),
+        ModelProperty(
+            id: const IdUid(20, 1804060657984959427),
+            name: 'phoneNumbers',
+            type: 30,
+            flags: 0)
       ],
       relations: <ModelRelation>[
         ModelRelation(
@@ -1059,7 +1059,8 @@ ModelDefinition getObjectBoxModel() {
         2600227792391331024,
         9155762340551357005,
         849533903163781586,
-        7188254403453284626
+        7188254403453284626,
+        3700819771250547759
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -1211,14 +1212,13 @@ ModelDefinition getObjectBoxModel() {
               ? null
               : fbb.writeString(object.username!);
           final fullNameOffset = fbb.writeString(object.fullName);
+          final genderOffset =
+              object.gender == null ? null : fbb.writeString(object.gender!);
           final bioOffset =
               object.bio == null ? null : fbb.writeString(object.bio!);
           final currentCityOffset = object.currentCity == null
               ? null
               : fbb.writeString(object.currentCity!);
-          final phoneNumberOffset = object.phoneNumber == null
-              ? null
-              : fbb.writeString(object.phoneNumber!);
           final websitesOffset = object.websites == null
               ? null
               : fbb.writeList(object.websites!
@@ -1235,17 +1235,23 @@ ModelDefinition getObjectBoxModel() {
               : fbb.writeString(object.eligibility!);
           final metadataOffset = object.metadata == null
               ? null
-              : fbb.writeString(object.metadata!);
+              : fbb.writeList(object.metadata!
+                  .map(fbb.writeString)
+                  .toList(growable: false));
           final rawOffset = fbb.writeString(object.raw);
-          fbb.startTable(20);
+          final phoneNumbersOffset = object.phoneNumbers == null
+              ? null
+              : fbb.writeList(object.phoneNumbers!
+                  .map(fbb.writeString)
+                  .toList(growable: false));
+          fbb.startTable(21);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, uriOffset);
           fbb.addOffset(2, usernameOffset);
           fbb.addOffset(3, fullNameOffset);
-          fbb.addBool(4, object.gender);
+          fbb.addOffset(4, genderOffset);
           fbb.addOffset(5, bioOffset);
           fbb.addOffset(6, currentCityOffset);
-          fbb.addOffset(7, phoneNumberOffset);
           fbb.addBool(8, object.isPhoneConfirmed);
           fbb.addInt64(9, object.createdTimestamp.millisecondsSinceEpoch);
           fbb.addBool(10, object.isPrivate);
@@ -1257,6 +1263,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(16, metadataOffset);
           fbb.addOffset(17, rawOffset);
           fbb.addInt64(18, object.service.targetId);
+          fbb.addOffset(19, phoneNumbersOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1272,14 +1279,15 @@ ModelDefinition getObjectBoxModel() {
                   .vTableGetNullable(buffer, rootOffset, 8),
               fullName:
                   const fb.StringReader().vTableGet(buffer, rootOffset, 10, ''),
-              gender: const fb.BoolReader()
+              gender: const fb.StringReader()
                   .vTableGetNullable(buffer, rootOffset, 12),
               bio: const fb.StringReader()
                   .vTableGetNullable(buffer, rootOffset, 14),
               currentCity: const fb.StringReader()
                   .vTableGetNullable(buffer, rootOffset, 16),
-              phoneNumber: const fb.StringReader()
-                  .vTableGetNullable(buffer, rootOffset, 18),
+              phoneNumbers:
+                  const fb.ListReader<String>(fb.StringReader(), lazy: false)
+                      .vTableGetNullable(buffer, rootOffset, 42),
               isPhoneConfirmed: const fb.BoolReader()
                   .vTableGetNullable(buffer, rootOffset, 20),
               createdTimestamp: DateTime.fromMillisecondsSinceEpoch(
@@ -1288,14 +1296,11 @@ ModelDefinition getObjectBoxModel() {
                   .vTableGetNullable(buffer, rootOffset, 24),
               websites: const fb.ListReader<String>(fb.StringReader(), lazy: false)
                   .vTableGetNullable(buffer, rootOffset, 26),
-              dateOfBirth: dateOfBirthValue == null
-                  ? null
-                  : DateTime.fromMillisecondsSinceEpoch(dateOfBirthValue),
-              bloodInfo:
-                  const fb.StringReader().vTableGetNullable(buffer, rootOffset, 30),
+              dateOfBirth: dateOfBirthValue == null ? null : DateTime.fromMillisecondsSinceEpoch(dateOfBirthValue),
+              bloodInfo: const fb.StringReader().vTableGetNullable(buffer, rootOffset, 30),
               friendPeerGroup: const fb.StringReader().vTableGetNullable(buffer, rootOffset, 32),
               eligibility: const fb.StringReader().vTableGetNullable(buffer, rootOffset, 34),
-              metadata: const fb.StringReader().vTableGetNullable(buffer, rootOffset, 36),
+              metadata: const fb.ListReader<String>(fb.StringReader(), lazy: false).vTableGetNullable(buffer, rootOffset, 36),
               raw: const fb.StringReader().vTableGet(buffer, rootOffset, 38, ''));
           object.service.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 40, 0);
@@ -2229,7 +2234,7 @@ class ProfileObjectBox_ {
 
   /// see [ProfileObjectBox.gender]
   static final gender =
-      QueryBooleanProperty<ProfileObjectBox>(_entities[3].properties[4]);
+      QueryStringProperty<ProfileObjectBox>(_entities[3].properties[4]);
 
   /// see [ProfileObjectBox.bio]
   static final bio =
@@ -2239,53 +2244,53 @@ class ProfileObjectBox_ {
   static final currentCity =
       QueryStringProperty<ProfileObjectBox>(_entities[3].properties[6]);
 
-  /// see [ProfileObjectBox.phoneNumber]
-  static final phoneNumber =
-      QueryStringProperty<ProfileObjectBox>(_entities[3].properties[7]);
-
   /// see [ProfileObjectBox.isPhoneConfirmed]
   static final isPhoneConfirmed =
-      QueryBooleanProperty<ProfileObjectBox>(_entities[3].properties[8]);
+      QueryBooleanProperty<ProfileObjectBox>(_entities[3].properties[7]);
 
   /// see [ProfileObjectBox.createdTimestamp]
   static final createdTimestamp =
-      QueryIntegerProperty<ProfileObjectBox>(_entities[3].properties[9]);
+      QueryIntegerProperty<ProfileObjectBox>(_entities[3].properties[8]);
 
   /// see [ProfileObjectBox.isPrivate]
   static final isPrivate =
-      QueryBooleanProperty<ProfileObjectBox>(_entities[3].properties[10]);
+      QueryBooleanProperty<ProfileObjectBox>(_entities[3].properties[9]);
 
   /// see [ProfileObjectBox.websites]
   static final websites =
-      QueryStringVectorProperty<ProfileObjectBox>(_entities[3].properties[11]);
+      QueryStringVectorProperty<ProfileObjectBox>(_entities[3].properties[10]);
 
   /// see [ProfileObjectBox.dateOfBirth]
   static final dateOfBirth =
-      QueryIntegerProperty<ProfileObjectBox>(_entities[3].properties[12]);
+      QueryIntegerProperty<ProfileObjectBox>(_entities[3].properties[11]);
 
   /// see [ProfileObjectBox.bloodInfo]
   static final bloodInfo =
-      QueryStringProperty<ProfileObjectBox>(_entities[3].properties[13]);
+      QueryStringProperty<ProfileObjectBox>(_entities[3].properties[12]);
 
   /// see [ProfileObjectBox.friendPeerGroup]
   static final friendPeerGroup =
-      QueryStringProperty<ProfileObjectBox>(_entities[3].properties[14]);
+      QueryStringProperty<ProfileObjectBox>(_entities[3].properties[13]);
 
   /// see [ProfileObjectBox.eligibility]
   static final eligibility =
-      QueryStringProperty<ProfileObjectBox>(_entities[3].properties[15]);
+      QueryStringProperty<ProfileObjectBox>(_entities[3].properties[14]);
 
   /// see [ProfileObjectBox.metadata]
   static final metadata =
-      QueryStringProperty<ProfileObjectBox>(_entities[3].properties[16]);
+      QueryStringVectorProperty<ProfileObjectBox>(_entities[3].properties[15]);
 
   /// see [ProfileObjectBox.raw]
   static final raw =
-      QueryStringProperty<ProfileObjectBox>(_entities[3].properties[17]);
+      QueryStringProperty<ProfileObjectBox>(_entities[3].properties[16]);
 
   /// see [ProfileObjectBox.service]
   static final service = QueryRelationToOne<ProfileObjectBox, ServiceObjectBox>(
-      _entities[3].properties[18]);
+      _entities[3].properties[17]);
+
+  /// see [ProfileObjectBox.phoneNumbers]
+  static final phoneNumbers =
+      QueryStringVectorProperty<ProfileObjectBox>(_entities[3].properties[18]);
 
   /// see [ProfileObjectBox.emails]
   static final emails = QueryRelationToMany<ProfileObjectBox, EmailObjectBox>(
