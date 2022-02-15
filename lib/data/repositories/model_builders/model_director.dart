@@ -1,4 +1,3 @@
-import 'package:waultar/core/models/index.dart';
 import 'package:waultar/data/entities/content/event_objectbox.dart';
 import 'package:waultar/data/entities/content/poll_objectbox.dart';
 import 'package:waultar/data/entities/content/post_objectbox.dart';

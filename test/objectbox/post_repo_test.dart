@@ -59,6 +59,7 @@ Future<void> main() async {
 
       expect(result.fullName, testProfile.fullName);
       expect(result.service.target!.name, profileModel.service.name);
+      expect(result.service.target!.name, serviceModel.name);
     });
 
     test('- insert post without any relations besides profile', () {
