@@ -38,16 +38,17 @@ Future<void> setupServices() async {
   // model director is the opposite of ObjectBoxDirector
   // this director maps from entity to model
   _modelDirector = ModelDirector();
-  locator.registerSingleton<IModelDirector>(_modelDirector, instanceName: 'model_director');
+  locator.registerSingleton<IModelDirector>(_modelDirector,
+      instanceName: 'model_director');
 
   // register all abstract repositores with their conrete implementations
-  // each repo gets injected the context (to access the relevant store) 
+  // each repo gets injected the context (to access the relevant store)
   // and the objectboxDirector to map from models to entities
   locator.registerSingleton<IAppSettingsRepository>(
       AppSettingsRepository(_context),
       instanceName: 'appSettingsRepo');
   locator.registerSingleton<IPostRepository>(
-      PostRepository(_context, _objectboxDirector),
+      PostRepository(_context, _objectboxDirector, _modelDirector),
       instanceName: 'postRepo');
 
   // register all services and inject their dependencies

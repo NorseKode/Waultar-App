@@ -1,18 +1,18 @@
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
-import 'package:waultar/core/models/content/post_model.dart';
 import 'package:waultar/core/models/index.dart';
-import 'package:waultar/core/models/profile/profile_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
 import 'package:waultar/data/entities/content/post_objectbox.dart';
+import 'package:waultar/data/repositories/model_builders/i_model_director.dart';
 import 'package:waultar/data/repositories/objectbox_builders/i_objectbox_director.dart';
 
 class PostRepository implements IPostRepository {
   late final ObjectBox _context;
   late final Box<PostObjectBox> _postBox;
   late final IObjectBoxDirector _entityDirector;
+  late final IModelDirector _modelDirector;
 
-  PostRepository(this._context, this._entityDirector) {
+  PostRepository(this._context, this._entityDirector, this._modelDirector) {
     _postBox = _context.store.box<PostObjectBox>();
   }
 
@@ -43,13 +43,8 @@ class PostRepository implements IPostRepository {
 
   @override
   PostModel getSinglePost(int id) {
-    // TODO : make mapper from entity to model ..
-    var post = _postBox.get(id)!;
-    var profile = post.profile.target!;
-    var service = profile.service.target!;
-    var serviceModel = ServiceModel(service.id, service.name, service.company, Uri(path: service.image));
-    var profileModel = ProfileModel(service: serviceModel, uri: Uri(path: profile.uri), fullName: profile.fullName, emails: [], createdTimestamp: profile.createdTimestamp, activities: [], raw: profile.raw); 
-    PostModel postModel = PostModel(id: post.id, profile: profileModel, raw: post.raw, timestamp: post.timestamp);
+    var postEntity = _postBox.get(id)!;
+    var postModel = _modelDirector.make<PostModel>(postEntity);
 
     return postModel;
   }

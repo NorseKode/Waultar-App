@@ -16,10 +16,10 @@ class ParseHelper {
       raw: '',
       uri: Uri(),
       service: facebook);
-  static ServiceModel facebook =
-      ServiceModel(1, "facebook", "meta", Uri(path: ""));
-  static ServiceModel instagram =
-      ServiceModel(2, "instagram", "meta", Uri(path: ""));
+  static ServiceModel facebook = ServiceModel(
+      id: 1, name: "facebook", company: "meta", image: Uri(path: ""));
+  static ServiceModel instagram = ServiceModel(
+      id: 2, name: "instagram", company: "meta", image: Uri(path: ""));
 
   static Stream<dynamic> returnEveryJsonObject(var jsonData) async* {
     if (jsonData is Map<String, dynamic>) {

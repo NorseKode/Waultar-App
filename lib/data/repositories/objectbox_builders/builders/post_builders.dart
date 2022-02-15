@@ -113,9 +113,7 @@ PostObjectBox makePostEntity(PostModel model, ObjectBox context) {
     entity.poll.target = pollToAdd;
   }
 
-  // TODO : lifeEvent should maybe not be included in a post ? 
+  // TODO : lifeEvent should maybe not be included in a post ?
 
   return entity;
 }
-
-

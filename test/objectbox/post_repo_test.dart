@@ -4,6 +4,8 @@ import 'package:waultar/core/models/index.dart';
 import 'package:waultar/data/entities/content/post_objectbox.dart';
 import 'package:waultar/data/entities/misc/service_objectbox.dart';
 import 'package:waultar/data/entities/profile/profile_objectbox.dart';
+import 'package:waultar/data/repositories/model_builders/i_model_director.dart';
+import 'package:waultar/data/repositories/model_builders/model_director.dart';
 import 'package:waultar/data/repositories/objectbox_builders/i_objectbox_director.dart';
 import 'package:waultar/data/repositories/objectbox_builders/objectbox_director.dart';
 import 'package:waultar/data/repositories/post_repo.dart';
@@ -12,7 +14,8 @@ import 'setup.dart';
 
 Future<void> main() async {
   late final ObjectBoxMock _context;
-  late final IObjectBoxDirector _director;
+  late final IObjectBoxDirector _entityDirector;
+  late final IModelDirector _modelDirector;
   late final IPostRepository _repo;
   late final ProfileModel profileModel;
   late final ServiceModel serviceModel;
@@ -37,34 +40,26 @@ Future<void> main() async {
   setUpAll(() async {
     await deleteTestDb();
     _context = await ObjectBoxMock.create();
-    _director = ObjectBoxDirector(_context);
-    _repo = PostRepository(_context, _director);
+    _entityDirector = ObjectBoxDirector(_context);
+    _modelDirector = ModelDirector();
+    _repo = PostRepository(_context, _entityDirector, _modelDirector);
     var service = testRunnerPut<ServiceObjectBox>(testService);
-    serviceModel = ServiceModel(
-        service.id, service.name, service.company, Uri(path: service.image));
+    serviceModel = _modelDirector.make<ServiceModel>(service);
     var profile = testRunnerPut<ProfileObjectBox>(testProfile);
-    profileModel = ProfileModel(
-        id: profile.id,
-        service: serviceModel,
-        uri: Uri(path: '/'),
-        fullName: profile.fullName,
-        emails: [],
-        createdTimestamp: profile.createdTimestamp,
-        activities: [],
-        raw: profile.raw);
-  });
+    profileModel = _modelDirector.make<ProfileModel>(profile);
 
-  tearDownAll(() async {
-    _context.store.close();
-    await deleteTestDb();
-  });
+    tearDownAll(() async {
+      _context.store.close();
+      await deleteTestDb();
+    });
 
-  group('Test entity insertion and retrieval in objectbox: ', () {
-    test('- created Profile id is 1', () {
-      var result = _context.store.box<ProfileObjectBox>().get(1)!;
+    group('Test entity insertion and retrieval in objectbox: ', () {
+      test('- created Profile id is 1', () {
+        var result = _context.store.box<ProfileObjectBox>().get(1)!;
 
-      expect(result.fullName, testProfile.fullName);
-      expect(result.service.target!.name, profileModel.service.name);
+        expect(result.fullName, testProfile.fullName);
+        expect(result.service.target!.name, profileModel.service.name);
+      });
     });
 
     test('- insert post without any relations besides profile', () {

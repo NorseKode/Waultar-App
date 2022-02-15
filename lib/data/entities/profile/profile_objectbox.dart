@@ -1,5 +1,6 @@
 import 'package:objectbox/objectbox.dart';
-import 'package:waultar/core/models/misc/change_model.dart';
+import 'package:waultar/data/entities/misc/change_objectbox.dart';
+import 'package:waultar/data/entities/misc/email_objectbox.dart';
 import 'package:waultar/data/entities/misc/service_objectbox.dart';
 
 @Entity()
@@ -8,8 +9,8 @@ class ProfileObjectBox {
   final service = ToOne<ServiceObjectBox>();
   String uri;
   String? username;
-  String fullName = "";
-  // final emails = ToMany<EmailModel>();
+  String fullName;
+  final emails = ToMany<EmailObjectBox>();
   bool? gender;
   String? bio;
   String? currentCity;
@@ -23,14 +24,14 @@ class ProfileObjectBox {
   DateTime? dateOfBirth;
   String? bloodInfo;
   String? friendPeerGroup;
-  List<ChangeModel>? changes;
+  final changes = ToMany<ChangeObjectBox>();
   // final activities = ToMany<ActivityModel>();
   String? eligibility;
   String? metadata;
-  String raw = "";
+  String raw;
 
   ProfileObjectBox({
-    this.id = 0, 
+    this.id = 0,
     required this.uri,
     this.username,
     required this.fullName,
@@ -45,7 +46,6 @@ class ProfileObjectBox {
     this.dateOfBirth,
     this.bloodInfo,
     this.friendPeerGroup,
-    this.changes,
     this.eligibility,
     this.metadata,
     required this.raw,
