@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
+import 'package:waultar/data/entities/content/event_objectbox.dart';
 import 'package:waultar/data/entities/media/file_objectbox.dart';
 import 'package:waultar/data/entities/media/image_objectbox.dart';
 import 'package:waultar/data/entities/media/link_objectbox.dart';
@@ -89,14 +90,31 @@ Future<void> main() async {
 
     test('- insert post with media relations', () {
       var datetime = DateTime.now();
-      var post = PostModel(profile: profileModel, raw: 'blob json', timestamp: datetime);
+      var post = PostModel(
+          profile: profileModel, raw: 'blob json', timestamp: datetime);
 
-      var image1 = ImageModel(profile: profileModel, raw: 'blob', uri: Uri(path: 'waultar/media/image1'));
-      var image2 = ImageModel(profile: profileModel, raw: 'blob', uri: Uri(path: 'waultar/media/image2'), title: 'image with title');
-      var video1 = VideoModel(profile: profileModel, raw: 'blob', uri: Uri(path: 'waultar/media/video1'));
-      var link1 = LinkModel(profile: profileModel, raw: 'raw', uri: Uri(path: 'waultar/media/link1'));
-      var file1 = FileModel(profile: profileModel, raw: 'raw', uri: Uri(path: 'waultar/media/file1'));
-      
+      var image1 = ImageModel(
+          profile: profileModel,
+          raw: 'blob',
+          uri: Uri(path: 'waultar/media/image1'));
+      var image2 = ImageModel(
+          profile: profileModel,
+          raw: 'blob',
+          uri: Uri(path: 'waultar/media/image2'),
+          title: 'image with title');
+      var video1 = VideoModel(
+          profile: profileModel,
+          raw: 'blob',
+          uri: Uri(path: 'waultar/media/video1'));
+      var link1 = LinkModel(
+          profile: profileModel,
+          raw: 'raw',
+          uri: Uri(path: 'waultar/media/link1'));
+      var file1 = FileModel(
+          profile: profileModel,
+          raw: 'raw',
+          uri: Uri(path: 'waultar/media/file1'));
+
       post.content = [];
       post.content!.addAll([image1, image2, video1, link1, file1]);
 
@@ -116,23 +134,58 @@ Future<void> main() async {
 
       var fileCount = _context.store.box<FileObjectBox>().count();
       expect(fileCount, 1);
-      
     });
 
     test('- insert post with existing file uri', () {
-      var fileWithSameUri = FileModel(profile: profileModel, raw: 'raw', uri: Uri(path: 'waultar/media/file1'));
-      var post = PostModel(profile: profileModel, raw: 'blob', timestamp: DateTime.now());
+      var fileWithSameUri = FileModel(
+          profile: profileModel,
+          raw: 'raw',
+          uri: Uri(path: 'waultar/media/file1'));
+      var post = PostModel(
+          profile: profileModel, raw: 'blob', timestamp: DateTime.now());
       post.content = [];
       post.content!.add(fileWithSameUri);
 
-      int id = _repo.addPost(post);
-      // var createdModel = _repo.getSinglePost(id);
+      _repo.addPost(post);
 
       var fileCount = _context.store.box<FileObjectBox>().count();
       expect(fileCount, 1);
-      
+    });
 
+    test('- insert post with event', () {
+      var coordinate = CoordinateModel(0, 2.0, 3.0);
+      var place = PlaceModel(
+          profile: profileModel,
+          raw: 'blob',
+          name: 'test name',
+          coordinate: coordinate);
+      var event = EventModel(
+          profile: profileModel,
+          raw: 'raw',
+          name: 'test event',
+          isUsers: true,
+          place: place,
+          response: EventResponse.interested);
 
+      var post = PostModel(
+          profile: profileModel,
+          raw: 'raw',
+          timestamp: DateTime.now(),
+          event: event);
+
+      int id = _repo.addPost(post);
+      var createdPost = _repo.getSinglePost(id);
+
+      var eventEntity = _context.store
+          .box<EventObjectBox>()
+          .query(EventObjectBox_.name.equals('test event'))
+          .build()
+          .findFirst()!;
+
+      expect(eventEntity.response, event.response);
+      expect(eventEntity.place.hasValue, true);
+      expect(eventEntity.place.target!.name, place.name);
+      expect(createdPost.event!.name, event.name);
     });
   });
 }
