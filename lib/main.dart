@@ -3,13 +3,14 @@ import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
 import 'package:waultar/configs/navigation/app_state.dart';
 import 'package:waultar/configs/navigation/router/app_route_information_parser.dart';
 import 'package:waultar/configs/navigation/router/app_route_path.dart';
 import 'package:waultar/configs/navigation/router/app_router_delegate.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 
+import 'configs/globals/app_logger.dart';
 import 'startup.dart';
 
 void main() async {
@@ -43,16 +44,22 @@ class _WaultarApp extends State<WaultarApp> {
 
   @override
   void initState() {
+    // TODO: delete logging file
+
     if (kIsWeb) {
       _routerDelegate = AppRouterDelegate(AppRoutePath.sigin());
     } else {
       _routerDelegate = AppRouterDelegate(AppRoutePath.home());
     }
+
+    if (!kDebugMode) {
+      locator.get<AppLogger>(instanceName: 'Logger').setLogLevelRelease();
+    }
+
     super.initState();
   }
 
-  final AppRouteInformationParser _routeInformationParser =
-      AppRouteInformationParser();
+  final AppRouteInformationParser _routeInformationParser = AppRouteInformationParser();
 
   @override
   Widget build(BuildContext context) {

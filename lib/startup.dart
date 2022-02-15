@@ -12,6 +12,8 @@ import 'package:waultar/data/repositories/objectbox_builders/i_objectbox_directo
 import 'package:waultar/data/repositories/objectbox_builders/objectbox_director.dart';
 import 'package:waultar/data/repositories/post_repo.dart';
 import 'package:waultar/domain/services/appsettings_service.dart';
+import 'package:logging/logging.dart';
+import 'configs/globals/app_logger.dart';
 import 'configs/globals/os_enum.dart';
 
 final locator = GetIt.instance;
@@ -19,10 +21,14 @@ late final OS os;
 late final ObjectBox _context;
 late final IObjectBoxDirector _objectboxDirector;
 late final IModelDirector _modelDirector;
+late final AppLogger _logger;
 
 Future<void> setupServices() async {
   os = detectPlatform();
   locator.registerSingleton<OS>(os, instanceName: 'platform');
+
+  _logger = AppLogger(os);
+  locator.registerSingleton<AppLogger>(_logger, instanceName: 'logger');
 
   // create objectbox at startup
   // this MUST be the only context throughout runtime
@@ -38,14 +44,12 @@ Future<void> setupServices() async {
   // model director is the opposite of ObjectBoxDirector
   // this director maps from entity to model
   _modelDirector = ModelDirector();
-  locator.registerSingleton<IModelDirector>(_modelDirector,
-      instanceName: 'model_director');
+  locator.registerSingleton<IModelDirector>(_modelDirector, instanceName: 'model_director');
 
   // register all abstract repositores with their conrete implementations
   // each repo gets injected the context (to access the relevant store)
   // and the objectboxDirector to map from models to entities
-  locator.registerSingleton<IAppSettingsRepository>(
-      AppSettingsRepository(_context),
+  locator.registerSingleton<IAppSettingsRepository>(AppSettingsRepository(_context),
       instanceName: 'appSettingsRepo');
   locator.registerSingleton<IPostRepository>(
       PostRepository(_context, _objectboxDirector, _modelDirector),

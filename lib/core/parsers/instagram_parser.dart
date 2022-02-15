@@ -2,15 +2,17 @@ import 'dart:io';
 
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/exceptions/parse_exception.dart';
+import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/abstracts/abstract_parsers/base_parser.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
 import 'package:waultar/presentation/widgets/upload/upload_util.dart';
-
-import '../models/content/post_model.dart';
+import 'package:waultar/startup.dart';
 
 class InstagramParser extends BaseParser {
+  var appLogger = locator.get<AppLogger>(instanceName: 'logger');
+
   @override
   Stream<dynamic> parseDirectory(Directory directory) async* {
     var files = await getAllFilesFrom(directory.path);
@@ -35,6 +37,8 @@ class InstagramParser extends BaseParser {
             yield ProfileModel.fromInstragram(object["profile_user"].first);
           } else if (object.containsKey("media")) {
             yield PostModel.fromJson(object, ParseHelper.profile);
+          } else {
+            appLogger.logger.info("unknown data: ${object.toString()}");
           }
 
           //   var dataMap = ParseHelper.jsonDataAsMap(object, "parentKey", [""]);
