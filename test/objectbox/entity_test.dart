@@ -1,7 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:objectbox/objectbox.dart';
 import 'package:waultar/core/models/profile/friend_model.dart';
-import 'package:waultar/data/configs/objectbox.g.dart';
 import 'package:waultar/data/entities/content/post_objectbox.dart';
 import 'package:waultar/data/entities/media/image_objectbox.dart';
 import 'package:waultar/data/entities/media/link_objectbox.dart';
@@ -42,11 +40,11 @@ Future<void> main() async {
     return box.get(id)!;
   }
 
-  T testRunnerGetter<T>(Condition<T> queryCondition) {
-    var box = _context.store.box<T>();
+  // T testRunnerGetter<T>(Condition<T> queryCondition) {
+  //   var box = _context.store.box<T>();
 
-    return box.query(queryCondition).build().findFirst()!;
-  }
+  //   return box.query(queryCondition).build().findFirst()!;
+  // }
 
   setUpAll(() async {
     await deleteTestDb();

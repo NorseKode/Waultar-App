@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/models/index.dart';
-import 'package:waultar/data/entities/content/post_objectbox.dart';
 import 'package:waultar/data/entities/misc/service_objectbox.dart';
 import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 import 'package:waultar/data/repositories/model_builders/i_model_director.dart';
@@ -37,6 +36,11 @@ Future<void> main() async {
     return box.get(id)!;
   }
 
+  tearDownAll(() async {
+    _context.store.close();
+    await deleteTestDb();
+  });
+
   setUpAll(() async {
     await deleteTestDb();
     _context = await ObjectBoxMock.create();
@@ -47,19 +51,14 @@ Future<void> main() async {
     serviceModel = _modelDirector.make<ServiceModel>(service);
     var profile = testRunnerPut<ProfileObjectBox>(testProfile);
     profileModel = _modelDirector.make<ProfileModel>(profile);
+  });
 
-    tearDownAll(() async {
-      _context.store.close();
-      await deleteTestDb();
-    });
+  group('Test entity insertion and retrieval in objectbox: ', () {
+    test('- created Profile id is 1', () {
+      var result = _context.store.box<ProfileObjectBox>().get(1)!;
 
-    group('Test entity insertion and retrieval in objectbox: ', () {
-      test('- created Profile id is 1', () {
-        var result = _context.store.box<ProfileObjectBox>().get(1)!;
-
-        expect(result.fullName, testProfile.fullName);
-        expect(result.service.target!.name, profileModel.service.name);
-      });
+      expect(result.fullName, testProfile.fullName);
+      expect(result.service.target!.name, profileModel.service.name);
     });
 
     test('- insert post without any relations besides profile', () {
@@ -69,11 +68,11 @@ Future<void> main() async {
           timestamp: DateTime.now());
       _repo.addPost(post);
 
-      var createdEntity = _repo.getSinglePost(1);
+      var createdPost = _repo.getSinglePost(1);
 
-      expect(createdEntity.id, 1);
-      expect(createdEntity.profile.fullName, testProfile.fullName);
-      expect(createdEntity.raw, post.raw);
+      expect(createdPost.id, 1);
+      expect(createdPost.profile.fullName, testProfile.fullName);
+      expect(createdPost.raw, post.raw);
     });
   });
 }

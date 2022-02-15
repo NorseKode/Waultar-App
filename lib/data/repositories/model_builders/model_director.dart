@@ -35,49 +35,49 @@ class ModelDirector implements IModelDirector {
     if (entity == null) throw Exception("Entity cannot be null");
 
     switch (entity.runtimeType) {
-      case ChangeModel:
+      case ChangeObjectBox:
         return makeChangeModel(entity as ChangeObjectBox) as T;
 
-      case CoordinateModel:
+      case CoordinateObjectBox:
         return makeCoordinateModel(entity as CoordinateObjectBox) as T;
 
-      case EmailModel:
+      case EmailObjectBox:
         return makeEmailModel(entity as EmailObjectBox) as T;
 
-      case EventModel:
+      case EventObjectBox:
         return makeEventModel(entity as EventObjectBox) as T;
 
-      case ImageModel:
+      case ImageObjectBox:
         return makeImageModel(entity as ImageObjectBox) as T;
 
-      case VideoModel:
+      case VideoObjectBox:
         return makeVideoModel(entity as VideoObjectBox) as T;
 
-      case FileModel:
+      case FileObjectBox:
         return makeFileModel(entity as FileObjectBox) as T;
 
-      case LinkModel:
+      case LinkObjectBox:
         return makeLinkModel(entity as LinkObjectBox) as T;
 
-      case PersonModel:
+      case PersonObjectBox:
         return makePersonModel(entity as PersonObjectBox) as T;
 
-      case PlaceModel:
+      case PlaceObjectBox:
         return makePlaceModel(entity as PlaceObjectBox) as T;
 
-      case PollModel:
+      case PollObjectBox:
         return makePollModel(entity as PollObjectBox) as T;
 
-      case PostModel:
+      case PostObjectBox:
         return makePostModel(entity as PostObjectBox) as T;
 
-      case ProfileModel:
+      case ProfileObjectBox:
         return makeProfileModel(entity as ProfileObjectBox) as T;
 
-      case ServiceModel:
+      case ServiceObjectBox:
         return makeServiceModel(entity as ServiceObjectBox) as T;
 
-      case TagModel:
+      case TagObjectBox:
         return makeTagModel(entity as TagObjectBox) as T;
 
       default:
