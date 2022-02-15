@@ -13,7 +13,7 @@ abstract class BaseParser {
   /// Parses a single [file]
   ///
   /// Throws an [ParseException] if something unexpected in encountered
-  Stream<BaseModel> parseFile(File file);
+  Stream<dynamic> parseFile(File file);
 }
 
 enum DataTypes {
