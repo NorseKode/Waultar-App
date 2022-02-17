@@ -8,8 +8,6 @@ import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
 import 'package:waultar/presentation/widgets/upload/upload_util.dart';
 
-import '../models/content/post_model.dart';
-
 class InstagramParser extends BaseParser {
   @override
   Stream<dynamic> parseDirectory(Directory directory) async* {

@@ -6,7 +6,6 @@ EmailModel makeEmailModel(EmailObjectBox entity) {
       id: entity.id,
       email: entity.email,
       isCurrent: entity.isCurrent,
-      timestamp: entity.timestamp,
       raw: entity.raw);
   return modelToReturn;
 }

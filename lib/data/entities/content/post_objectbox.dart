@@ -1,8 +1,4 @@
 import 'package:objectbox/objectbox.dart';
-import 'package:waultar/data/entities/content/event_objectbox.dart';
-import 'package:waultar/data/entities/content/group_objectbox.dart';
-import 'package:waultar/data/entities/content/life_event_objectbox.dart';
-import 'package:waultar/data/entities/content/poll_objectbox.dart';
 import 'package:waultar/data/entities/media/file_objectbox.dart';
 import 'package:waultar/data/entities/media/image_objectbox.dart';
 import 'package:waultar/data/entities/media/link_objectbox.dart';
@@ -32,17 +28,11 @@ class PostObjectBox {
   final mentions = ToMany<PersonObjectBox>();
   final tags = ToMany<TagObjectBox>();
 
-  // only for facebook
-  final event = ToOne<EventObjectBox>();
-  final group = ToOne<GroupObjectBox>();
-  final poll = ToOne<PollObjectBox>();
-  final lifeEvent = ToOne<LifeEventObjectBox>();
-
   // only for instagram
   bool? isArchived;
 
   // meta should be misc/other
-  String? meta;
+  String? metadata;
 
   PostObjectBox({
     this.id = 0,
@@ -51,6 +41,6 @@ class PostObjectBox {
     this.description,
     this.title,
     this.isArchived = false,
-    this.meta,
+    this.metadata,
   });
 }

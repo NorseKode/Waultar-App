@@ -106,7 +106,9 @@
         {
           "id": "2:1725457736171191026",
           "name": "name",
-          "type": 9
+          "type": 9,
+          "flags": 2080,
+          "indexId": "33:288077928328734405"
         },
         {
           "id": "3:940101614267539913",
@@ -123,7 +125,7 @@
     },
     {
       "id": "6:1786282357926238948",
-      "lastPropertyId": "20:1804060657984959427",
+      "lastPropertyId": "21:9112241958124057223",
       "name": "ProfileObjectBox",
       "properties": [
         {
@@ -224,6 +226,14 @@
           "id": "20:1804060657984959427",
           "name": "phoneNumbers",
           "type": 30
+        },
+        {
+          "id": "21:9112241958124057223",
+          "name": "profilePictureId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "32:506722211155650551",
+          "relationTarget": "ImageObjectBox"
         }
       ],
       "relations": [
@@ -345,17 +355,14 @@
         {
           "id": "3:4290218182173158043",
           "name": "email",
-          "type": 9
+          "type": 9,
+          "flags": 2080,
+          "indexId": "31:5712778092258947273"
         },
         {
           "id": "4:2251849766147901154",
           "name": "isCurrent",
           "type": 1
-        },
-        {
-          "id": "5:6279596052872176822",
-          "name": "timestamp",
-          "type": 10
         }
       ],
       "relations": []
@@ -539,46 +546,6 @@
           "id": "8:2368861643283958423",
           "name": "raw",
           "type": 9
-        }
-      ],
-      "relations": []
-    },
-    {
-      "id": "15:4521581829489353372",
-      "lastPropertyId": "5:5101253906812243554",
-      "name": "LifeEventObjectBox",
-      "properties": [
-        {
-          "id": "1:5273233428025161888",
-          "name": "id",
-          "type": 6,
-          "flags": 1
-        },
-        {
-          "id": "2:5770586634777914851",
-          "name": "raw",
-          "type": 9
-        },
-        {
-          "id": "3:5929238326069376370",
-          "name": "profileId",
-          "type": 11,
-          "flags": 520,
-          "indexId": "7:1108142740720186972",
-          "relationTarget": "ProfileObjectBox"
-        },
-        {
-          "id": "4:3638688937140434513",
-          "name": "title",
-          "type": 9
-        },
-        {
-          "id": "5:5101253906812243554",
-          "name": "placeId",
-          "type": 11,
-          "flags": 520,
-          "indexId": "8:9218158865254685125",
-          "relationTarget": "PlaceObjectBox"
         }
       ],
       "relations": []
@@ -808,7 +775,7 @@
     },
     {
       "id": "21:1840073705676171105",
-      "lastPropertyId": "12:7987839579535190084",
+      "lastPropertyId": "13:835770916803498873",
       "name": "PostObjectBox",
       "properties": [
         {
@@ -846,45 +813,13 @@
           "type": 9
         },
         {
-          "id": "7:5341811089859233541",
-          "name": "eventId",
-          "type": 11,
-          "flags": 520,
-          "indexId": "16:2188429983658332891",
-          "relationTarget": "EventObjectBox"
-        },
-        {
-          "id": "8:2929942333910987479",
-          "name": "groupId",
-          "type": 11,
-          "flags": 520,
-          "indexId": "17:8915507866262722089",
-          "relationTarget": "GroupObjectBox"
-        },
-        {
-          "id": "9:7092817798915765009",
-          "name": "pollId",
-          "type": 11,
-          "flags": 520,
-          "indexId": "18:6223371104317611347",
-          "relationTarget": "PollObjectBox"
-        },
-        {
-          "id": "10:2568006049428907002",
-          "name": "lifeEventId",
-          "type": 11,
-          "flags": 520,
-          "indexId": "19:5171466753838581702",
-          "relationTarget": "LifeEventObjectBox"
-        },
-        {
           "id": "11:3172795338753121399",
           "name": "isArchived",
           "type": 1
         },
         {
-          "id": "12:7987839579535190084",
-          "name": "meta",
+          "id": "13:835770916803498873",
+          "name": "metadata",
           "type": 9
         }
       ],
@@ -1020,19 +955,163 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "25:4086169253660006799",
+      "lastPropertyId": "3:3809220749861387188",
+      "name": "PostEventObjectBox",
+      "properties": [
+        {
+          "id": "1:8578133956546392342",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3646708541747581425",
+          "name": "postId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "27:6199763989066676576",
+          "relationTarget": "PostObjectBox"
+        },
+        {
+          "id": "3:3809220749861387188",
+          "name": "eventId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "28:7774270727457958200",
+          "relationTarget": "EventObjectBox"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "26:2276414571011661887",
+      "lastPropertyId": "3:7106747955455146310",
+      "name": "PostGroupObjectBox",
+      "properties": [
+        {
+          "id": "1:3101386282716348944",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:803195302545796336",
+          "name": "postId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "22:2343511044454247014",
+          "relationTarget": "PostObjectBox"
+        },
+        {
+          "id": "3:7106747955455146310",
+          "name": "groupId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "23:3737125920199740772",
+          "relationTarget": "GroupObjectBox"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "27:2032965002741414734",
+      "lastPropertyId": "6:2172108371217098976",
+      "name": "PostLifeEventObjectBox",
+      "properties": [
+        {
+          "id": "1:2872414773936526827",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3173102850031238213",
+          "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "3:3346362798652492444",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "24:2261227718267588817",
+          "relationTarget": "ProfileObjectBox"
+        },
+        {
+          "id": "4:3099398029695854183",
+          "name": "postId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "25:1133926443079500484",
+          "relationTarget": "PostObjectBox"
+        },
+        {
+          "id": "5:3616310120091163928",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "6:2172108371217098976",
+          "name": "placeId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "26:6054947262125064693",
+          "relationTarget": "PlaceObjectBox"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "28:7488143885786011622",
+      "lastPropertyId": "3:6842474864796798589",
+      "name": "PostPollObjectBox",
+      "properties": [
+        {
+          "id": "1:7767473684492233222",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3037015619063221144",
+          "name": "postId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "29:7210693632542921249",
+          "relationTarget": "PostObjectBox"
+        },
+        {
+          "id": "3:6842474864796798589",
+          "name": "pollId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "30:2488340538773290869",
+          "relationTarget": "PollObjectBox"
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "24:1944258851869554230",
-  "lastIndexId": "21:1235049878482628590",
+  "lastEntityId": "28:7488143885786011622",
+  "lastIndexId": "33:288077928328734405",
   "lastRelationId": "8:5633121391346660074",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [
     1837511870469432447,
-    2148786199038735847
+    2148786199038735847,
+    4521581829489353372
   ],
-  "retiredIndexUids": [],
+  "retiredIndexUids": [
+    2188429983658332891,
+    8915507866262722089,
+    6223371104317611347,
+    5171466753838581702
+  ],
   "retiredPropertyUids": [
     219800542496953078,
     7926224797411893663,
@@ -1041,7 +1120,18 @@
     9155762340551357005,
     849533903163781586,
     7188254403453284626,
-    3700819771250547759
+    3700819771250547759,
+    5341811089859233541,
+    2929942333910987479,
+    7092817798915765009,
+    2568006049428907002,
+    7987839579535190084,
+    5273233428025161888,
+    5770586634777914851,
+    5929238326069376370,
+    3638688937140434513,
+    5101253906812243554,
+    6279596052872176822
   ],
   "retiredRelationUids": [],
   "version": 1
