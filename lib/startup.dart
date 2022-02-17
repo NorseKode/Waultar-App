@@ -29,6 +29,11 @@ late final String _dbFolderPath;
 late final String _extractsFolderPath;
 late final String _logFolderPath;
 
+late final String _waultarDirectory;
+late final String _dbFolder;
+late final String _extractsFolder;
+late final String _logFolder;
+
 Future<void> setupServices() async {
   await initApplicationPaths();
   locator.registerSingleton<String>(_waultarPath, instanceName: 'waultar_root_directory');
