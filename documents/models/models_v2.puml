@@ -1,0 +1,411 @@
+@startuml
+set namespaceSeparator ::
+
+class "waultar::core::models::activity::page_activity.dart::PageActivity" {
+  +DateTime timestamp
+  +Activity activity
+  +PageModel page
+}
+
+"waultar::core::models::activity::page_activity.dart::PageActivity" o-- "waultar::core::models::activity::page_activity.dart::Activity"
+"waultar::core::models::activity::page_activity.dart::PageActivity" o-- "waultar::core::models::content::page_model.dart::PageModel"
+"waultar::core::models::base_model.dart::BaseModel" <|-- "waultar::core::models::activity::page_activity.dart::PageActivity"
+
+class "waultar::core::models::activity::page_activity.dart::Activity" {
+  +int index
+  {static} +List<Activity> values
+  {static} +Activity like
+  {static} +Activity unlike
+  {static} +Activity follow
+  {static} +Activity unfollow
+}
+
+"waultar::core::models::activity::page_activity.dart::Activity" o-- "waultar::core::models::activity::page_activity.dart::Activity"
+"dart::core::Enum" <|-- "waultar::core::models::activity::page_activity.dart::Activity"
+
+abstract class "waultar::core::models::base_model.dart::BaseModel" {
+  +int id
+  +ProfileModel profile
+  +String raw
+}
+
+"waultar::core::models::base_model.dart::BaseModel" o-- "waultar::core::models::profile::profile_model.dart::ProfileModel"
+
+class "waultar::core::models::content::comment_model.dart::CommentModel" {
+  +PersonModel commenter
+  +String text
+  +DateTime tiemstamp
+  +List<MediaModel>? media
+  +GroupModel? group
+  +ReactionModel reaction
+}
+
+"waultar::core::models::content::comment_model.dart::CommentModel" o-- "waultar::core::models::misc::person_model.dart::PersonModel"
+"waultar::core::models::content::comment_model.dart::CommentModel" o-- "waultar::core::models::content::group_model.dart::GroupModel"
+"waultar::core::models::content::comment_model.dart::CommentModel" o-- "waultar::core::models::misc::reaction_model.dart::ReactionModel"
+"waultar::core::models::base_model.dart::BaseModel" <|-- "waultar::core::models::content::comment_model.dart::CommentModel"
+
+class "waultar::core::models::content::event_model.dart::EventModel" {
+  +String name
+  +DateTime? startTimestamp
+  +DateTime? endTimestamp
+  +DateTime? createdTimestamp
+  +String? description
+  +bool isUsers
+  +PlaceModel? place
+  +EventResponse? response
+}
+
+"waultar::core::models::content::event_model.dart::EventModel" o-- "waultar::core::models::misc::place_model.dart::PlaceModel"
+"waultar::core::models::content::event_model.dart::EventModel" o-- "waultar::core::models::content::event_model.dart::EventResponse"
+"waultar::core::models::base_model.dart::BaseModel" <|-- "waultar::core::models::content::event_model.dart::EventModel"
+
+class "waultar::core::models::content::event_model.dart::EventResponse" {
+  +int index
+  {static} +List<EventResponse> values
+  {static} +EventResponse unknown
+  {static} +EventResponse interested
+  {static} +EventResponse joined
+  {static} +EventResponse declined
+}
+
+"waultar::core::models::content::event_model.dart::EventResponse" o-- "waultar::core::models::content::event_model.dart::EventResponse"
+"dart::core::Enum" <|-- "waultar::core::models::content::event_model.dart::EventResponse"
+
+class "waultar::core::models::content::group_model.dart::GroupModel" {
+  +String name
+  +bool isUsers
+  +String? badge
+  +DateTime? timestamp
+}
+
+"waultar::core::models::base_model.dart::BaseModel" <|-- "waultar::core::models::content::group_model.dart::GroupModel"
+
+class "waultar::core::models::content::message_model.dart::MessageModel" {
+  +PersonModel person
+  +DateTime timestamp
+  +String text
+  +MediaModel? media
+  +String type
+  +bool isSent
+  +ReactionModel reaction
+  +Duration callDuration
+}
+
+"waultar::core::models::content::message_model.dart::MessageModel" o-- "waultar::core::models::misc::person_model.dart::PersonModel"
+"waultar::core::models::content::message_model.dart::MessageModel" o-- "waultar::core::models::media::media_model.dart::MediaModel"
+"waultar::core::models::content::message_model.dart::MessageModel" o-- "waultar::core::models::misc::reaction_model.dart::ReactionModel"
+"waultar::core::models::base_model.dart::BaseModel" <|-- "waultar::core::models::content::message_model.dart::MessageModel"
+
+class "waultar::core::models::content::message_thread_model.dart::MessageThreadModel" {
+  +String title
+  +bool isParticiapting
+  +String magicWord
+  +List<PersonModel> participants
+  +List<MessageModel> messages
+  +MessageType messageType
+}
+
+"waultar::core::models::content::message_thread_model.dart::MessageThreadModel" o-- "waultar::core::models::content::message_thread_model.dart::MessageType"
+"waultar::core::models::base_model.dart::BaseModel" <|-- "waultar::core::models::content::message_thread_model.dart::MessageThreadModel"
+
+class "waultar::core::models::content::message_thread_model.dart::MessageType" {
+  +int index
+  {static} +List<MessageType> values
+  {static} +MessageType unknown
+  {static} +MessageType inbox
+}
+
+"waultar::core::models::content::message_thread_model.dart::MessageType" o-- "waultar::core::models::content::message_thread_model.dart::MessageType"
+"dart::core::Enum" <|-- "waultar::core::models::content::message_thread_model.dart::MessageType"
+
+class "waultar::core::models::content::page_model.dart::PageModel" {
+  +String name
+  +bool isUsers
+  +Uri? uri
+}
+
+"waultar::core::models::base_model.dart::BaseModel" <|-- "waultar::core::models::content::page_model.dart::PageModel"
+
+class "waultar::core::models::content::poll_model.dart::PollModel" {
+  +String? question
+  +bool isUsers
+  +String? options
+  +DateTime? timestamp
+}
+
+"waultar::core::models::base_model.dart::BaseModel" <|-- "waultar::core::models::content::poll_model.dart::PollModel"
+
+class "waultar::core::models::content::post_event_model.dart::PostEventModel" {
+  +int id
+  +PostModel post
+  +EventModel event
+}
+
+"waultar::core::models::content::post_event_model.dart::PostEventModel" o-- "waultar::core::models::content::post_model.dart::PostModel"
+"waultar::core::models::content::post_event_model.dart::PostEventModel" o-- "waultar::core::models::content::event_model.dart::EventModel"
+
+class "waultar::core::models::content::post_group_model.dart::PostGroupModel" {
+  +int id
+  +PostModel post
+  +GroupModel group
+}
+
+"waultar::core::models::content::post_group_model.dart::PostGroupModel" o-- "waultar::core::models::content::post_model.dart::PostModel"
+"waultar::core::models::content::post_group_model.dart::PostGroupModel" o-- "waultar::core::models::content::group_model.dart::GroupModel"
+
+class "waultar::core::models::content::post_lifeevent_model.dart::PostLifeEventModel" {
+  +int id
+  +PostModel post
+  +String title
+  +PlaceModel? place
+  +String? raw
+}
+
+"waultar::core::models::content::post_lifeevent_model.dart::PostLifeEventModel" o-- "waultar::core::models::content::post_model.dart::PostModel"
+"waultar::core::models::content::post_lifeevent_model.dart::PostLifeEventModel" o-- "waultar::core::models::misc::place_model.dart::PlaceModel"
+
+class "waultar::core::models::content::post_model.dart::PostModel" {
+  +DateTime timestamp
+  +String? description
+  +String? title
+  +List<MediaModel>? medias
+  +List<TagModel>? tags
+  +List<PersonModel>? mentions
+  +bool? isArchived
+  +String? metadata
+  +String toString()
+}
+
+"waultar::core::models::base_model.dart::BaseModel" <|-- "waultar::core::models::content::post_model.dart::PostModel"
+
+class "waultar::core::models::content::post_poll_model.dart::PostPollModel" {
+  +int id
+  +PostModel post
+  +PollModel poll
+}
+
+"waultar::core::models::content::post_poll_model.dart::PostPollModel" o-- "waultar::core::models::content::post_model.dart::PostModel"
+"waultar::core::models::content::post_poll_model.dart::PostPollModel" o-- "waultar::core::models::content::poll_model.dart::PollModel"
+
+class "waultar::core::models::media::file_model.dart::FileModel" {
+  +Uri? thumbnail
+}
+
+"waultar::core::models::media::media_model.dart::MediaModel" <|-- "waultar::core::models::media::file_model.dart::FileModel"
+
+class "waultar::core::models::media::image_model.dart::ImageModel" {
+  +String? title
+  +String? description
+}
+
+"waultar::core::models::media::media_model.dart::MediaModel" <|-- "waultar::core::models::media::image_model.dart::ImageModel"
+
+class "waultar::core::models::media::link_model.dart::LinkModel" {
+  +String? source
+}
+
+"waultar::core::models::media::media_model.dart::MediaModel" <|-- "waultar::core::models::media::link_model.dart::LinkModel"
+
+abstract class "waultar::core::models::media::media_model.dart::MediaModel" {
+  +Uri uri
+  +String? metadata
+  +DateTime? timestamp
+}
+
+"waultar::core::models::base_model.dart::BaseModel" <|-- "waultar::core::models::media::media_model.dart::MediaModel"
+
+class "waultar::core::models::media::video_model.dart::VideoModel" {
+  +String? title
+  +String? description
+  +Uri? thumbnail
+}
+
+"waultar::core::models::media::media_model.dart::MediaModel" <|-- "waultar::core::models::media::video_model.dart::VideoModel"
+
+class "waultar::core::models::misc::activity_model.dart::ActivityModel" {
+  +int id
+  +DateTime timestamp
+  +String raw
+}
+
+class "waultar::core::models::misc::appsettings_model.dart::AppSettingsModel" {
+  +int? id
+  +bool darkmode
+}
+
+class "waultar::core::models::misc::change_model.dart::ChangeModel" {
+  +int id
+  +String valueName
+  +String previousValue
+  +String newValue
+  +DateTime timestamp
+  +String raw
+}
+
+class "waultar::core::models::misc::coordinate_model.dart::CoordinateModel" {
+  +int id
+  +double longitude
+  +double latitude
+}
+
+class "waultar::core::models::misc::email_model.dart::EmailModel" {
+  +int id
+  +String email
+  +bool isCurrent
+  +DateTime timestamp
+  +String raw
+}
+
+class "waultar::core::models::misc::person_model.dart::PersonModel" {
+  +String name
+  +Uri? uri
+}
+
+"waultar::core::models::base_model.dart::BaseModel" <|-- "waultar::core::models::misc::person_model.dart::PersonModel"
+
+class "waultar::core::models::misc::place_model.dart::PlaceModel" {
+  +String name
+  +String? address
+  +CoordinateModel? coordinate
+  +Uri? uri
+}
+
+"waultar::core::models::misc::place_model.dart::PlaceModel" o-- "waultar::core::models::misc::coordinate_model.dart::CoordinateModel"
+"waultar::core::models::base_model.dart::BaseModel" <|-- "waultar::core::models::misc::place_model.dart::PlaceModel"
+
+class "waultar::core::models::misc::reaction_model.dart::ReactionModel" {
+  +String reaction
+}
+
+"waultar::core::models::base_model.dart::BaseModel" <|-- "waultar::core::models::misc::reaction_model.dart::ReactionModel"
+
+class "waultar::core::models::misc::service_model.dart::ServiceModel" {
+  +int id
+  +String name
+  +String company
+  +Uri image
+}
+
+class "waultar::core::models::misc::tag_model.dart::TagModel" {
+  +int id
+  +String name
+}
+
+class "waultar::core::models::model_helper.dart::ModelHelper" {
+  {static} +List<String> knownTimestampKeys
+  {static} +DateTime? getTimestamp()
+  {static} +DateTime? intToTimestamp()
+  {static} +String? trySeveralKeys()
+}
+
+class "waultar::core::models::profile::follow_model.dart::FollowModel" {
+  +PersonModel person
+  +FollowType followType
+  +DateTime timestamp
+}
+
+"waultar::core::models::profile::follow_model.dart::FollowModel" o-- "waultar::core::models::misc::person_model.dart::PersonModel"
+"waultar::core::models::profile::follow_model.dart::FollowModel" o-- "waultar::core::models::profile::follow_model.dart::FollowType"
+"waultar::core::models::base_model.dart::BaseModel" <|-- "waultar::core::models::profile::follow_model.dart::FollowModel"
+
+class "waultar::core::models::profile::follow_model.dart::FollowType" {
+  +int index
+  {static} +List<FollowType> values
+  {static} +FollowType unknown
+  {static} +FollowType follower
+  {static} +FollowType following
+}
+
+"waultar::core::models::profile::follow_model.dart::FollowType" o-- "waultar::core::models::profile::follow_model.dart::FollowType"
+"dart::core::Enum" <|-- "waultar::core::models::profile::follow_model.dart::FollowType"
+
+class "waultar::core::models::profile::friend_model.dart::FriendModel" {
+  +PersonModel friend
+  +FriendType friendType
+  +DateTime timestamp
+}
+
+"waultar::core::models::profile::friend_model.dart::FriendModel" o-- "waultar::core::models::misc::person_model.dart::PersonModel"
+"waultar::core::models::profile::friend_model.dart::FriendModel" o-- "waultar::core::models::profile::friend_model.dart::FriendType"
+"waultar::core::models::base_model.dart::BaseModel" <|-- "waultar::core::models::profile::friend_model.dart::FriendModel"
+
+class "waultar::core::models::profile::friend_model.dart::FriendType" {
+  +int index
+  {static} +List<FriendType> values
+  {static} +FriendType unknown
+  {static} +FriendType friend
+  {static} +FriendType deleted
+  {static} +FriendType rejected
+  {static} +FriendType sentRequest
+}
+
+"waultar::core::models::profile::friend_model.dart::FriendType" o-- "waultar::core::models::profile::friend_model.dart::FriendType"
+"dart::core::Enum" <|-- "waultar::core::models::profile::friend_model.dart::FriendType"
+
+class "waultar::core::models::profile::profile_model.dart::ProfileModel" {
+  +int id
+  +ServiceModel service
+  +Uri uri
+  +String? username
+  +String fullName
+  +MediaModel? profilePicture
+  +List<String>? otherNames
+  +List<EmailModel> emails
+  +String? gender
+  +String? bio
+  +String? currentCity
+  +List<String>? phoneNumbers
+  +bool? isPhoneConfirmed
+  +DateTime createdTimestamp
+  +bool? isPrivate
+  +List<String>? websites
+  +DateTime? dateOfBirth
+  +String? bloodInfo
+  +String? friendPeerGroup
+  +List<ChangeModel>? changes
+  +List<ActivityModel> activities
+  +String? eligibility
+  +List<String>? metadata
+  +String raw
+  {static} -dynamic _tempData
+  {static} +dynamic instagramDataValuesHelper()
+}
+
+"waultar::core::models::profile::profile_model.dart::ProfileModel" o-- "waultar::core::models::misc::service_model.dart::ServiceModel"
+"waultar::core::models::profile::profile_model.dart::ProfileModel" o-- "waultar::core::models::media::media_model.dart::MediaModel"
+
+
+@endumlid
+  +ServiceModel service
+  +Uri uri
+  +String? username
+  +String fullName
+  +MediaModel? profilePicture
+  +List<String>? otherNames
+  +List<EmailModel> emails
+  +String? gender
+  +String? bio
+  +String? currentCity
+  +List<String>? phoneNumbers
+  +bool? isPhoneConfirmed
+  +DateTime createdTimestamp
+  +bool? isPrivate
+  +List<String>? websites
+  +DateTime? dateOfBirth
+  +String? bloodInfo
+  +String? friendPeerGroup
+  +List<ChangeModel>? changes
+  +List<ActivityModel> activities
+  +String? eligibility
+  +List<String>? metadata
+  +String raw
+  {static} -dynamic _tempData
+  {static} +dynamic instagramDataValuesHelper()
+}
+
+"waultar::core::models::profile::profile_model.dart::ProfileModel" o-- "waultar::core::models::misc::service_model.dart::ServiceModel"
+"waultar::core::models::profile::profile_model.dart::ProfileModel" o-- "waultar::core::models::media::media_model.dart::MediaModel"
+
+
+@enduml

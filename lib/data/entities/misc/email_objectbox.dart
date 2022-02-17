@@ -4,16 +4,15 @@ import 'package:objectbox/objectbox.dart';
 class EmailObjectBox {
   int id;
   String raw;
+
+  @Unique()
   String email;
   bool isCurrent;
 
-  @Property(type: PropertyType.date)
-  DateTime timestamp;
-
-  EmailObjectBox(
-      {this.id = 0,
-      required this.raw,
-      required this.email,
-      this.isCurrent = false,
-      required this.timestamp});
+  EmailObjectBox({
+    this.id = 0,
+    required this.raw,
+    required this.email,
+    this.isCurrent = false,
+  });
 }
