@@ -1,7 +1,15 @@
+import 'package:waultar/core/models/content/post_event_model.dart';
+import 'package:waultar/core/models/content/post_lifeevent_model.dart';
+import 'package:waultar/core/models/content/post_poll_model.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
+import 'package:waultar/data/entities/content/event_objectbox.dart';
+import 'package:waultar/data/entities/content/poll_objectbox.dart';
+import 'package:waultar/data/entities/content/post_event_objectbox.dart';
+import 'package:waultar/data/entities/content/post_life_event_objectbox.dart';
 import 'package:waultar/data/entities/content/post_objectbox.dart';
+import 'package:waultar/data/entities/content/post_poll_objectbox.dart';
 import 'package:waultar/data/entities/media/file_objectbox.dart';
 import 'package:waultar/data/entities/media/image_objectbox.dart';
 import 'package:waultar/data/entities/media/link_objectbox.dart';
@@ -16,7 +24,6 @@ import 'misc_builders.dart';
 PostObjectBox makePostEntity(PostModel model, ObjectBox context) {
   var entity = PostObjectBox(raw: model.raw, timestamp: model.timestamp);
 
-  // check and assigne all nullable fields in model
   if (model.title != null) {
     entity.title = model.title;
   }
@@ -97,21 +104,53 @@ PostObjectBox makePostEntity(PostModel model, ObjectBox context) {
     entity.tags.addAll(tagsToAdd);
   }
 
-  // var event = model.event;
-  // if (event != null) {
-  //   var eventToAdd = makeEventEntity(event, context);
-  //   entity.event.target = eventToAdd;
-  // }
+  return entity;
+}
 
-  // TODO : group .. ??
+PostPollObjectBox makePostPollEntity(PostPollModel model, ObjectBox context) {
+  var entity = PostPollObjectBox();
 
-  // var poll = model.poll;
-  // if (poll != null) {
-  //   var pollToAdd = makePollEntity(poll, context);
-  //   entity.poll.target = pollToAdd;
-  // }
+  var post = context.store.box<PostObjectBox>().get(model.post.id)!;
+  var poll = context.store.box<PollObjectBox>().get(model.poll.id)!;
 
-  // TODO : lifeEvent should maybe not be included in a post ?
+  entity.post.target = post;
+  entity.poll.target = poll;
+  
+  return entity;
+}
+
+PostEventObjectBox makePostEventEntity(PostEventModel model, ObjectBox context) {
+  var entity = PostEventObjectBox();
+
+  var post = context.store.box<PostObjectBox>().get(model.post.id)!;
+  var event = context.store.box<EventObjectBox>().get(model.event.id)!;
+
+  entity.post.target = post;
+  entity.event.target = event;
+  
+  return entity;
+}
+
+PostLifeEventObjectBox makePostLifeEventEntity(PostLifeEventModel model, ObjectBox context) {
+  var entity = PostLifeEventObjectBox(raw: model.raw, title: model.title);
+
+  // the profile HAS to be created in db before storing additional data
+  if (model.post.profile.id == 0) {
+    throw ObjectBoxException(
+        "Profile Id is 0 - profile must be stored before calling me");
+  } else {
+    var profileEntity =
+        context.store.box<ProfileObjectBox>().get(model.post.profile.id);
+    entity.profile.target = profileEntity;
+  }
+
+  if (model.place != null) {
+    var place = makePlaceEntity(model.place!, context);
+    entity.place.target = place;
+  }
+
+  var post = makePostEntity(model.post, context);
+  entity.post.target = post;
 
   return entity;
 }

@@ -28,12 +28,6 @@ class PostObjectBox {
   final mentions = ToMany<PersonObjectBox>();
   final tags = ToMany<TagObjectBox>();
 
-  // only for facebook
-  // final event = ToOne<EventObjectBox>();
-  // final group = ToOne<GroupObjectBox>();
-  // final poll = ToOne<PollObjectBox>();
-  // final lifeEvent = ToOne<LifeEventObjectBox>();
-
   // only for instagram
   bool? isArchived;
 

@@ -1,7 +1,5 @@
-import 'package:waultar/core/models/base_model.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/models/model_helper.dart';
-import 'package:waultar/core/models/profile/profile_model.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
 
 class PostModel extends BaseModel {

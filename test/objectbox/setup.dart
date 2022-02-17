@@ -15,14 +15,30 @@ class ObjectBoxMock implements ObjectBox {
   ObjectBoxMock._create(this.store) {
     // additional setup code here
     final appSettingsBox = store.box<AppSettingsObjectBox>();
-    final facebookService = ServiceObjectBox(name: "Facebook", company: "Meta", image: "../..");
-    final instagramService = ServiceObjectBox(name: "Facebook", company: "Meta", image: "../..");
     if (appSettingsBox.isEmpty()) {
       var initialAppSettings = AppSettingsObjectBox(0, false);
       appSettingsBox.put(initialAppSettings);
     }
-    store.box<ServiceObjectBox>().put(facebookService);
-    store.box<ServiceObjectBox>().put(instagramService);
+
+    var facebookService = store
+        .box<ServiceObjectBox>()
+        .query(ServiceObjectBox_.name.equals('Facebook'))
+        .build()
+        .findUnique();
+    if (facebookService == null) {
+      facebookService = ServiceObjectBox(name: 'Facebook', company: 'Meta', image: '/TODO');
+      store.box<ServiceObjectBox>().put(facebookService);
+    }
+
+    var instagramService = store
+        .box<ServiceObjectBox>()
+        .query(ServiceObjectBox_.name.equals('Instagram'))
+        .build()
+        .findUnique();
+    if (instagramService == null) {
+      instagramService = ServiceObjectBox(name: 'Instagram', company: 'Meta', image: '/TODO');
+      store.box<ServiceObjectBox>().put(instagramService);
+    }
   }
 
   static Future<ObjectBoxMock> create() async {

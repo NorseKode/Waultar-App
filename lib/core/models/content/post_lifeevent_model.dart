@@ -6,13 +6,13 @@ class PostLifeEventModel {
   PostModel post;
   String title;
   PlaceModel? place;
-  String? raw;
+  String raw;
 
   PostLifeEventModel({
     this.id = 0,
     required this.post,
     required this.title,
     this.place,
-    this.raw,
+    required this.raw,
   });
 }

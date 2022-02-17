@@ -1,4 +1,5 @@
 import 'package:objectbox/objectbox.dart';
+import 'package:waultar/data/entities/media/image_objectbox.dart';
 import 'package:waultar/data/entities/misc/change_objectbox.dart';
 import 'package:waultar/data/entities/misc/email_objectbox.dart';
 import 'package:waultar/data/entities/misc/service_objectbox.dart';
@@ -10,6 +11,7 @@ class ProfileObjectBox {
   String uri;
   String? username;
   String fullName;
+  final profilePicture = ToOne<ImageObjectBox>();
   final emails = ToMany<EmailObjectBox>();
   String? gender;
   String? bio;

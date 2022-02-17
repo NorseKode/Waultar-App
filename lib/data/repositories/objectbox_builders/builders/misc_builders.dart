@@ -2,17 +2,17 @@ import 'package:waultar/core/models/index.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
 import 'package:waultar/data/entities/misc/coordinate_objectbox.dart';
+import 'package:waultar/data/entities/misc/email_objectbox.dart';
 import 'package:waultar/data/entities/misc/person_objectbox.dart';
 import 'package:waultar/data/entities/misc/place_objectbox.dart';
+import 'package:waultar/data/entities/misc/service_objectbox.dart';
 import 'package:waultar/data/entities/misc/tag_objectbox.dart';
 import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 
 PersonObjectBox makePersonEntity(PersonModel model, ObjectBox context) {
-  QueryBuilder<PersonObjectBox> builder = context.store
-      .box<PersonObjectBox>()
-      .query(PersonObjectBox_.name.equals(model.name));
-  builder.link(
-      PersonObjectBox_.profile, ProfileObjectBox_.id.equals(model.profile.id));
+  QueryBuilder<PersonObjectBox> builder =
+      context.store.box<PersonObjectBox>().query(PersonObjectBox_.name.equals(model.name));
+  builder.link(PersonObjectBox_.profile, ProfileObjectBox_.id.equals(model.profile.id));
   Query<PersonObjectBox> query = builder.build();
   var entity = query.findFirst();
 
@@ -21,11 +21,9 @@ PersonObjectBox makePersonEntity(PersonModel model, ObjectBox context) {
 
     // the profile HAS to be created in db before storing additional data
     if (model.profile.id == 0) {
-      throw ObjectBoxException(
-          "Profile Id is 0 - profile must be stored before calling me");
+      throw ObjectBoxException("Profile Id is 0 - profile must be stored before calling me");
     } else {
-      var profileEntity =
-          context.store.box<ProfileObjectBox>().get(model.profile.id);
+      var profileEntity = context.store.box<ProfileObjectBox>().get(model.profile.id);
       entity.profile.target = profileEntity;
     }
 
@@ -71,11 +69,9 @@ PlaceObjectBox makePlaceEntity(PlaceModel model, ObjectBox context) {
       entity.uri = model.uri!.path;
     }
     if (model.profile.id == 0) {
-      throw ObjectBoxException(
-          "Profile Id is 0 - profile must be stored before calling me");
+      throw ObjectBoxException("Profile Id is 0 - profile must be stored before calling me");
     } else {
-      var profileEntity =
-          context.store.box<ProfileObjectBox>().get(model.profile.id);
+      var profileEntity = context.store.box<ProfileObjectBox>().get(model.profile.id);
       entity.profile.target = profileEntity;
     }
     return entity;
@@ -96,10 +92,36 @@ CoordinateObjectBox makeCoordinateEntity(CoordinateModel model, ObjectBox contex
       .findFirst();
 
   if (entity == null) {
-    entity = CoordinateObjectBox(
-        longitude: model.longitude, latitude: model.latitude);
+    entity = CoordinateObjectBox(longitude: model.longitude, latitude: model.latitude);
     return entity;
   } else {
     return entity;
   }
+}
+
+EmailObjectBox makeEmailEntity(EmailModel model, ObjectBox context) {
+  var entity = context.store
+      .box<EmailObjectBox>()
+      .query(EmailObjectBox_.email.equals(model.email))
+      .build()
+      .findUnique();
+
+  if (entity == null) {
+    entity = EmailObjectBox(raw: model.raw, email: model.email, isCurrent: model.isCurrent);
+    return entity;
+  } else {
+    return entity;
+  }
+}
+
+ServiceObjectBox makeServiceEntity(ServiceModel model, ObjectBox context) {
+  var entity =
+      context.store.box<ServiceObjectBox>().query(ServiceObjectBox_.name.equals(model.name)).build().findUnique();
+
+  if (entity == null) {
+    return ServiceObjectBox(name: model.name, company: model.company, image: model.image.path);
+  } else {
+    return entity;
+  }
+
 }
