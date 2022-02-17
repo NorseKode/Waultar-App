@@ -17,6 +17,11 @@ main() {
   var facebookMedia = File(path_dart.join(
       TestHelper.pathToCurrentFile(), "data", "facebook_media.json"));
 
+  setUpAll(() {
+    TestHelper.clearTestLogger();
+    TestHelper.createTestLogger();
+  });
+
   group("Testig parsing of media data: ", () {
     group("Instagram, ", () {
       test("mixed media data, parse single file", () async {
