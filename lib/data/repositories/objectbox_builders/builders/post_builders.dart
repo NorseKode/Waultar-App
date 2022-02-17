@@ -10,10 +10,8 @@ import 'package:waultar/data/entities/misc/person_objectbox.dart';
 import 'package:waultar/data/entities/misc/tag_objectbox.dart';
 import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 
-import 'event_builder.dart';
 import 'media_builders.dart';
 import 'misc_builders.dart';
-import 'poll_builder.dart';
 
 PostObjectBox makePostEntity(PostModel model, ObjectBox context) {
   var entity = PostObjectBox(raw: model.raw, timestamp: model.timestamp);
@@ -28,8 +26,8 @@ PostObjectBox makePostEntity(PostModel model, ObjectBox context) {
   if (model.isArchived != null) {
     entity.isArchived = model.isArchived;
   }
-  if (model.meta != null) {
-    entity.meta = model.meta;
+  if (model.metadata != null) {
+    entity.metadata = model.metadata;
   }
 
   // the profile HAS to be created in db before storing additional data
@@ -43,7 +41,7 @@ PostObjectBox makePostEntity(PostModel model, ObjectBox context) {
   }
 
   // initiate targets for media
-  var mediaList = model.content;
+  var mediaList = model.medias;
   if (mediaList != null) {
     var imagesToAdd = <ImageObjectBox>[];
     var videosToAdd = <VideoObjectBox>[];
@@ -99,19 +97,19 @@ PostObjectBox makePostEntity(PostModel model, ObjectBox context) {
     entity.tags.addAll(tagsToAdd);
   }
 
-  var event = model.event;
-  if (event != null) {
-    var eventToAdd = makeEventEntity(event, context);
-    entity.event.target = eventToAdd;
-  }
+  // var event = model.event;
+  // if (event != null) {
+  //   var eventToAdd = makeEventEntity(event, context);
+  //   entity.event.target = eventToAdd;
+  // }
 
   // TODO : group .. ??
 
-  var poll = model.poll;
-  if (poll != null) {
-    var pollToAdd = makePollEntity(poll, context);
-    entity.poll.target = pollToAdd;
-  }
+  // var poll = model.poll;
+  // if (poll != null) {
+  //   var pollToAdd = makePollEntity(poll, context);
+  //   entity.poll.target = pollToAdd;
+  // }
 
   // TODO : lifeEvent should maybe not be included in a post ?
 

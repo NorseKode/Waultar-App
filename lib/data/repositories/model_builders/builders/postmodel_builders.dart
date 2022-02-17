@@ -1,9 +1,7 @@
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/data/entities/content/post_objectbox.dart';
 
-import 'eventmodel_builder.dart';
 import 'mediamodel_builder.dart';
-import 'pollmodel_builder.dart';
 import 'profilemodel_builder.dart';
 import 'personmodel_builder.dart';
 import 'tagmodel_builder.dart';
@@ -20,19 +18,19 @@ PostModel makePostModel(PostObjectBox entity) {
     mentions:
         entity.mentions.map((element) => makePersonModel(element)).toList(),
     tags: entity.tags.map((element) => makeTagModel(element)).toList(),
-    event: entity.event.target != null
-        ? makeEventModel(entity.event.target!)
-        : null,
-    // TODO
-    group: null,
-    poll:
-        entity.poll.target != null ? makePollModel(entity.poll.target!) : null,
-    // TODO
-    lifeEvent: null,
+    // event: entity.event.target != null
+    //     ? makeEventModel(entity.event.target!)
+    //     : null,
+    // // TODO
+    // group: null,
+    // poll:
+    //     entity.poll.target != null ? makePollModel(entity.poll.target!) : null,
+    // // TODO
+    // lifeEvent: null,
     description: entity.description,
     title: entity.title,
     isArchived: entity.isArchived,
-    meta: entity.meta,
+    metadata: entity.metadata,
   );
 
   var media = <MediaModel>[];
@@ -57,7 +55,7 @@ PostModel makePostModel(PostObjectBox entity) {
     }
   }
 
-  if (media.isNotEmpty) modelToReturn.content = media;
+  if (media.isNotEmpty) modelToReturn.medias = media;
 
   return modelToReturn;
 }
