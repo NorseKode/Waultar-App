@@ -14,6 +14,11 @@ main() {
   var instagramPost = File(path_dart.join(
       TestHelper.pathToCurrentFile(), "data", "instagram_post.json"));
 
+  setUpAll(() {
+    TestHelper.clearTestLogger();
+    TestHelper.createTestLogger();
+  });
+
   group("Testig parsing of post data: ", () {
     group("Instagram", () {
       test("Parse all post", () async {

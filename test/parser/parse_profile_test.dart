@@ -15,6 +15,11 @@ main() {
   var instagramProfile =
       File(path_dart.join(TestHelper.pathToCurrentFile(), "data", "instagram_profile.json"));
 
+  setUpAll(() {
+    TestHelper.clearTestLogger();
+    TestHelper.createTestLogger();
+  });
+
   group("Testig parsing of profile data: ", () {
     test('Facebook', () async {
       var result = await FacebookParser().parseFile(facebookProfile).toList();
