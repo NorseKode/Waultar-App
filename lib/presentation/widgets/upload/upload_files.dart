@@ -20,8 +20,7 @@ class FileUploader {
 
   /// Returns a list of files if users picks any file, reutrns `null` otherwise
   static Future<List<File>?> uploadMultiple() async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(allowMultiple: true);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: true);
 
     if (result != null) {
       return result.paths.map((path) => File(path!)).toList();
@@ -51,9 +50,7 @@ class FileUploader {
     var dir = Directory(path);
     List<File> files = [];
 
-    await dir
-        .list(recursive: true, followLinks: false)
-        .forEach((element) async {
+    await dir.list(recursive: true, followLinks: false).forEach((element) async {
       var stat = await element.stat();
       var isFile = stat.type == FileSystemEntityType.file;
 
@@ -69,9 +66,7 @@ class FileUploader {
     var dir = Directory(path);
     List<String> files = [];
 
-    await dir
-        .list(recursive: true, followLinks: false)
-        .forEach((element) async {
+    await dir.list(recursive: true, followLinks: false).forEach((element) async {
       var stat = await element.stat();
       var isFile = stat.type == FileSystemEntityType.file;
 
@@ -95,12 +90,13 @@ class FileUploader {
       final filename = file.name;
       if (file.isFile) {
         final data = file.content as List<int>;
-        var path = dart_path.normalize(locator.get<String>(instanceName: 'extracts_folder') + filename);
+        var path =
+            dart_path.normalize(locator.get<String>(instanceName: 'extracts_folder') + filename);
         var finalFile = File(path)
           ..createSync(recursive: true)
           ..writeAsBytesSync(data);
         list.add(finalFile.path);
-      } 
+      }
     }
 
     return list;
