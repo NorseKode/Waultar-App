@@ -12,8 +12,14 @@ import '../test_helper.dart';
 main() {
   var facebookProfile =
       File(path_dart.join(TestHelper.pathToCurrentFile(), "data", "facebook_profile.json"));
-  var instagramProfile =
-      File(path_dart.join(TestHelper.pathToCurrentFile(), "data", "instagram_profile.json"));
+  var instagramProfileMain =
+      File(path_dart.join(TestHelper.pathToCurrentFile(), "data", "personal_information.json"));
+  var instagramCreationDate =
+      File(path_dart.join(TestHelper.pathToCurrentFile(), "data", "signup_information.json"));
+  var instagramProfileFiles = [
+    instagramProfileMain,
+    instagramCreationDate,
+  ];
 
   setUpAll(() {
     TestHelper.clearTestLogger();
@@ -44,8 +50,27 @@ main() {
       expect(profile.metadata!.length, 9);
     });
 
+    test('Instagram get profile', () async {
+      var profile = (await InstagramParser()
+              .parseProfile(instagramProfileFiles.map((e) => e.path).toList())
+              .toList())
+          .first;
+      
+      expect(profile.bio, "REDACTED BIO");
+      expect(profile.fullName, "REDACTED NAME");
+      expect(profile.dateOfBirth, DateTime.utc(2021, 2, 12));
+      expect(profile.gender, "male");
+      // expect(profile.profilePicture!.uri.path,"media/other/33479950_2070043303318549_5971154643487555584_n_17935673491101223.jpg");
+      expect(profile.phoneNumbers!.length, 1);
+      expect(profile.username, "REDACTED USERNAME");
+      expect(profile.currentCity, "REDACTED CITY");
+      expect(profile.websites!.length, 1);
+      expect(profile.metadata!.length, 1);
+    });
+
     test('Instagram', () async {
-      var result = await InstagramParser().parseFile(instagramProfile).toList();
+      // var result = (await InstagramParser().parseListOfPaths(instagramProfileFiles.map((e) => e.path).toList()).toList()).first;
+      var result = await InstagramParser().parseFile(instagramProfileMain).toList();
 
       expect(result.length, 1);
 
