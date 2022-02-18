@@ -4,8 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
+import 'package:waultar/domain/services/parser_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
+import 'package:waultar/presentation/widgets/upload/upload_files.dart';
 import 'package:waultar/presentation/widgets/upload/uploader.dart';
+import 'package:waultar/startup.dart';
+import 'package:path/path.dart' as dart_path;
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -18,6 +23,8 @@ class _DashboardState extends State<Dashboard> {
   late AppLocalizations localizer;
   late ThemeProvider themeProvider;
   List<File> uploadedFiles = [];
+  final IServiceRepository _serviceRepo =
+      locator.get<IServiceRepository>(instanceName: 'serviceRepo');
 
   Widget addIcon(double size, Color color) {
     const assetName = 'lib/assets/icons/fi-rr-plus.svg';
@@ -102,70 +109,27 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget addButton(BuildContext parentContext) {
-    return PopupMenuButton(
-      tooltip: '',
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(5.0),
-        ),
-      ),
-      elevation: 4,
-      offset: const Offset(0.0, 40.0),
-      color: themeProvider.themeMode().highlightedPrimary,
-      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-        // PopupMenuItem<String>(
-        PopupMenuItem(
-            // onTap: () async => await _upload(context, true),
-            onTap: () async {
-              await Uploader.uploadDialogue(parentContext);
+    return ElevatedButton(
+      onPressed: () async {
+        var files = await Uploader.uploadDialogue(context);
+        if (files != null) {
+          var service = _serviceRepo.get(files.item2);
 
-              // print("break");
-            },
-            padding: EdgeInsets.zero,
-            value: localizer.newData,
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: ListTile(
-                dense: true,
-                title: Row(children: [
-                  addIcon(15, Colors.grey),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Text(
-                    localizer.newData,
-                    style: themeProvider.themeMode().bodyText3,
-                  )
-                ]),
-              ),
-            )),
-        PopupMenuItem<String>(
-            onTap: () {},
-            padding: EdgeInsets.zero,
-            value: localizer.newWidget,
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: ListTile(
-                dense: true,
-                title: Row(children: [
-                  addIcon(15, Colors.grey),
-                  const SizedBox(
-                    width: 20,
-                  ),
-                  Text(
-                    localizer.newWidget,
-                    style: themeProvider.themeMode().bodyText3,
-                  )
-                ]),
-              ),
-            ))
-      ],
+          if (service != null) {
+            var zipFiles =
+                files.item1.where((element) => dart_path.extension(element) == ".zip").toList();
+            var uploadedFiles = await FileUploader.extractZip(dart_path.normalize(zipFiles.first));
+            await ParserService().parseAll(uploadedFiles, service);
+          }
+        }
+      },
       child: Container(
-          padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
-          decoration: BoxDecoration(
-              color: themeProvider.themeMode().themeColor,
-              borderRadius: const BorderRadius.all(Radius.circular(5))),
-          child: Row(children: [
+        padding: const EdgeInsets.fromLTRB(15, 5, 15, 5),
+        decoration: BoxDecoration(
+            color: themeProvider.themeMode().themeColor,
+            borderRadius: const BorderRadius.all(Radius.circular(5))),
+        child: Row(
+          children: [
             addIcon(10, Colors.white),
             const SizedBox(
               width: 10,
@@ -174,7 +138,9 @@ class _DashboardState extends State<Dashboard> {
               localizer.add,
               style: themeProvider.themeData().textTheme.bodyText2,
             )
-          ])),
+          ],
+        ),
+      ),
     );
   }
 

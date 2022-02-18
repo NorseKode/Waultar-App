@@ -16,6 +16,18 @@ import 'package:path/path.dart' as path_dart;
 
 class FacebookParser extends BaseParser {
   @override
+  Stream parseListOfPaths(List<String> paths) async* {
+    for (var path in paths) {
+      if (Extensions.isJson(path)) {
+        var file = File(path);
+        await for (final result in parseFile(file)) {
+          yield result;
+        }
+      }
+    }
+  }
+
+  @override
   Stream<dynamic> parseDirectory(Directory directory) {
     // TODO: implement parseDirectory
     throw UnimplementedError();

@@ -74,8 +74,7 @@ class ObjectBoxDirector implements IObjectBoxDirector {
         return makeServiceEntity(model as ServiceModel, _context) as T;
 
       default:
-        throw UnimplementedError(
-            "Maker for ${model.runtimeType} has not been implemented");
+        throw UnimplementedError("Maker for ${model.runtimeType} has not been implemented");
     }
   }
 }

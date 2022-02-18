@@ -12,6 +12,23 @@ import 'package:waultar/startup.dart';
 
 class InstagramParser extends BaseParser {
   var appLogger = locator.get<AppLogger>(instanceName: 'logger');
+  ProfileModel? _profile;
+
+  setProfile(ProfileModel profile) {
+    _profile = profile;
+  }
+
+  @override
+  Stream parseListOfPaths(List<String> paths) async* {
+    for (var path in paths) {
+      if (Extensions.isJson(path)) {
+        var file = File(path);
+        await for (final result in parseFile(file)) {
+          yield result;
+        }
+      }
+    }
+  }
 
   @override
   Stream<dynamic> parseDirectory(Directory directory) async* {
@@ -34,11 +51,15 @@ class InstagramParser extends BaseParser {
       await for (final object in ParseHelper.returnEveryJsonObject(jsonData)) {
         if (object is Map<String, dynamic>) {
           if (object.containsKey("profile_user")) {
-            yield ProfileModel.fromInstragram(object["profile_user"].first);
+            var result = ProfileModel.fromInstragram(object["profile_user"].first);
+            appLogger.logger.info("parsed object: ${result.toString()}");
+            yield result;
           } else if (object.containsKey("media")) {
-            yield PostModel.fromJson(object, ParseHelper.profile);
+            var result = PostModel.fromJson(object, _profile ?? ParseHelper.profile);
+            appLogger.logger.info("parsed object: ${result.toString()}");
+            yield result;
           } else {
-            appLogger.logger.info("unknown data: ${object.toString()}");
+            // appLogger.logger.info("unknown data: ${object.toString()}");
           }
 
           //   var dataMap = ParseHelper.jsonDataAsMap(object, "parentKey", [""]);
