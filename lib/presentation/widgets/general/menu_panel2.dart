@@ -192,13 +192,12 @@ class _MenuPanel2State extends State<MenuPanel2> {
       onTap: () async {
         var uploadedFiles = await Uploader.uploadDialogue(context);
 
-        if (uploadedFiles != null) {
-          var zipFiles = uploadedFiles.where((element) => dart_path.extension(element) == ".zip").toList();
-          if (zipFiles.length == 1) {
-            uploadedFiles = await FileUploader.extractZip(dart_path.normalize(zipFiles.first));
-          }
-
-        }
+        // if (uploadedFiles != null) {
+        //   var zipFiles = uploadedFiles.where((element) => dart_path.extension(element) == ".zip").toList();
+        //   if (zipFiles.length == 1) {
+        //     uploadedFiles = await FileUploader.extractZip(dart_path.normalize(zipFiles.first));
+        //   }
+        // }
       },
       child: SizedBox(
         height: 30,

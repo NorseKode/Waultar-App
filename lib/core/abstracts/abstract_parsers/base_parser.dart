@@ -1,6 +1,8 @@
 import 'dart:io';
 
 abstract class BaseParser {
+  Stream<dynamic> parseListOfPaths(List<String> paths);
+
   /// Parses all files in [directory]
   ///
   /// Takes a directory [directory] and reads all files in said directory.

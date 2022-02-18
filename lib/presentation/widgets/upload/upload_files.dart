@@ -4,6 +4,7 @@ import 'package:archive/archive.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as dart_path;
+import 'package:waultar/startup.dart';
 
 class FileUploader {
   /// Returns file with if user picks a file, otherwise it returns `null`
@@ -94,7 +95,7 @@ class FileUploader {
       final filename = file.name;
       if (file.isFile) {
         final data = file.content as List<int>;
-        var path = dart_path.normalize(folder.path + '/extracts/' + filename);
+        var path = dart_path.normalize(locator.get<String>(instanceName: 'extracts_folder') + filename);
         var finalFile = File(path)
           ..createSync(recursive: true)
           ..writeAsBytesSync(data);

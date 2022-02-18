@@ -14,6 +14,18 @@ class InstagramParser extends BaseParser {
   var appLogger = locator.get<AppLogger>(instanceName: 'logger');
 
   @override
+  Stream parseListOfPaths(List<String> paths) async* {
+    for (var path in paths) {
+      if (Extensions.isJson(path)) {
+        var file = File(path);
+        await for (final result in parseFile(file)) {
+          yield result;
+        }
+      }
+    }
+  }
+
+  @override
   Stream<dynamic> parseDirectory(Directory directory) async* {
     var files = await getAllFilesFrom(directory.path);
 
