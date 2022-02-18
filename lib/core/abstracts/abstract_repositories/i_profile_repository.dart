@@ -1,8 +1,7 @@
+import 'package:waultar/core/models/index.dart';
 
-// import 'package:waultar/core/models/profile_model.dart';
-
-// abstract class IProfileRepository {
-//   Future<int> addProfile(ProfileModel profile);
-//   Future<ProfileModel> getProfileById(int id);
-//   Future<List<ProfileModel>> getAllProfiles();
-// }
+abstract class IProfileRepository {
+  int addProfile(ProfileModel profile);
+  ProfileModel getProfileById(int id);
+  List<ProfileModel> getAllProfiles();
+}
