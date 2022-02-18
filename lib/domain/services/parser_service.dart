@@ -1,11 +1,10 @@
+import 'dart:io';
+
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
-import 'package:waultar/core/models/content/post_model.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
 import 'package:waultar/core/models/index.dart';
-import 'package:waultar/core/models/misc/service_model.dart';
 import 'package:waultar/core/parsers/facebook_parser.dart';
 import 'package:waultar/core/parsers/instagram_parser.dart';
-import 'package:waultar/data/configs/objectbox.dart';
-import 'package:waultar/data/repositories/post_repo.dart';
 import 'package:waultar/startup.dart';
 
 abstract class ParserServiceBase {
@@ -19,34 +18,52 @@ abstract class ParserServiceBase {
 
 class ParserService extends ParserServiceBase {
   final IPostRepository _postRepo = locator.get<IPostRepository>(instanceName: 'postRepo');
+  final IProfileRepository _profileRepo =
+      locator.get<IProfileRepository>(instanceName: 'profileRepo');
 
   @override
-  parseAll(List<String> paths, ServiceModel service) async* {
-    // TODO: implement parseAll
+  Future parseAll(List<String> paths, ServiceModel service) async {
     switch (service.name) {
       case "Facebook":
         await for (final entity in FacebookParser().parseListOfPaths(paths)) {
-          _todoName(entity);
+          _makeEntity(entity);
         }
         break;
 
       case "Instagram":
-        InstagramParser().parseListOfPaths(paths);
+        var parser = InstagramParser();
+
+        var profilePath =
+            paths.firstWhere((element) => element.contains("personal_information.json"));
+        paths.remove(profilePath);
+
+        var profile = (await parser.parseFile(File(profilePath)).toList()).first;
+        var tempId = _makeEntity(profile);
+        var profileModel = _profileRepo.getProfileById(tempId);
+
+        parser.setProfile(profileModel);
+
+        await for (final entity in parser.parseListOfPaths(paths)) {
+          _makeEntity(entity);
+        }
         break;
+
       default:
     }
+
+    return 1;
   }
 
-  _todoName(dynamic model) {
+  int _makeEntity(dynamic model) {
     switch (model.runtimeType) {
       case ProfileModel:
-        break;
+        return _profileRepo.addProfile(model);
 
       case PostModel:
-        _postRepo.addPost(model);
-        break;
+        return _postRepo.addPost(model);
 
       default:
+        return -1;
     }
   }
 }

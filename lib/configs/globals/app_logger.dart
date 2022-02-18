@@ -31,11 +31,11 @@ class AppLogger {
     Object? exception,
     StackTrace? stackTrace,
   }) {
-    var file =
-        File(_testPath ?? dart_path.normalize(locator.get<String>(instanceName: 'log_folder') + "/logs.txt"));
+    var file = File(_testPath ??
+        dart_path.normalize(locator.get<String>(instanceName: 'log_folder') + "/logs.txt"));
 
     file.writeAsString(
-        "time: $time, level: ${logLevel.name}, message: $message, exception: $exception, stackTrace: $stackTrace",
+        "time: $time, level: ${logLevel.name}, message: $message, exception: $exception, stackTrace: $stackTrace\n",
         mode: FileMode.append);
   }
 }

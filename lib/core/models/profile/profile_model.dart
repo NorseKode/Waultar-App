@@ -1,4 +1,3 @@
-import 'package:waultar/core/models/media/image_model.dart';
 import 'package:waultar/core/models/media/media_model.dart';
 import 'package:waultar/core/models/misc/activity_model.dart';
 import 'package:waultar/core/models/misc/change_model.dart';
@@ -124,9 +123,14 @@ class ProfileModel {
 
   static dynamic _tempData;
 
-  static instagramDataValuesHelper(var json, String key) {
+  static dynamic instagramDataValuesHelper(var json, String key) {
     _tempData ??= json["string_map_data"];
-    return (_tempData[key])["value"];
+
+    if (_tempData.containsKey(key)) {
+      return (_tempData[key])["value"];
+    } else {
+      return null;
+    }
   }
 
   ProfileModel.fromInstragram(Map<String, dynamic> json)
@@ -179,11 +183,16 @@ class ProfileModel {
       metadata!.add(jsonMapData["Phone Confirmation Method"].toString());
     }
 
-    if (json.containsKey("media_map_data")) {
-      profilePicture = ImageModel.fromJson((json["media_map_data"])["Profile Photo"], this);
-    }
+    // if (json.containsKey("media_map_data")) {
+    //   profilePicture = ImageModel.fromJson((json["media_map_data"])["Profile Photo"], this);
+    // }
 
     // TODO
     service = ServiceModel(id: 0, name: 'name', company: 'company', image: Uri(path: 'image'));
+  }
+
+  @override
+  String toString() {
+    return "username: $username, fullname: $fullName";
   }
 }

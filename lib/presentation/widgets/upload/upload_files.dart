@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:archive/archive.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as dart_path;
 import 'package:waultar/startup.dart';
 
@@ -81,8 +80,7 @@ class FileUploader {
   static Future<List<String>> extractZip(String path) async {
     final bytes = File(path).readAsBytesSync();
     final archive = ZipDecoder().decodeBytes(bytes);
-
-    final folder = await getApplicationDocumentsDirectory();
+    // final folder = await getApplicationDocumentsDirectory();
 
     var list = <String>[];
 
@@ -90,8 +88,8 @@ class FileUploader {
       final filename = file.name;
       if (file.isFile) {
         final data = file.content as List<int>;
-        var path =
-            dart_path.normalize(locator.get<String>(instanceName: 'extracts_folder') + filename);
+        var path = dart_path
+            .normalize(locator.get<String>(instanceName: 'extracts_folder') + "/" + filename);
         var finalFile = File(path)
           ..createSync(recursive: true)
           ..writeAsBytesSync(data);

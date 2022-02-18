@@ -32,9 +32,8 @@ class PostRepository implements IPostRepository {
   }
 
   @override
-  PostModel getAllPosts() {
-    // TODO: implement getAllPosts
-    throw UnimplementedError();
+  List<PostModel> getAllPosts() {
+    return _postBox.getAll().map((e) => _modelDirector.make<PostModel>(e)).toList();
   }
 
   @override

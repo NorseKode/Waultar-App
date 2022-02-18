@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
 import 'package:waultar/data/configs/objectbox.dart';
@@ -14,9 +15,9 @@ import 'package:waultar/data/repositories/model_builders/model_director.dart';
 import 'package:waultar/data/repositories/objectbox_builders/i_objectbox_director.dart';
 import 'package:waultar/data/repositories/objectbox_builders/objectbox_director.dart';
 import 'package:waultar/data/repositories/post_repo.dart';
+import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/data/repositories/service_repo.dart';
 import 'package:waultar/domain/services/appsettings_service.dart';
-import 'package:waultar/domain/services/parser_service.dart';
 import 'configs/globals/app_logger.dart';
 import 'configs/globals/os_enum.dart';
 
@@ -32,9 +33,13 @@ late final String _dbFolderPath;
 late final String _extractsFolderPath;
 late final String _logFolderPath;
 
+// ignore: unused_element
 late final String _waultarDirectory;
+// ignore: unused_element
 late final String _dbFolder;
+// ignore: unused_element
 late final String _extractsFolder;
+// ignore: unused_element
 late final String _logFolder;
 
 Future<void> setupServices() async {
@@ -77,6 +82,9 @@ Future<void> setupServices() async {
   locator.registerSingleton<IServiceRepository>(
       ServiceRepo(_context, _objectboxDirector, _modelDirector),
       instanceName: 'serviceRepo');
+  locator.registerSingleton<IProfileRepository>(
+      ProfileRepository(_context, _objectboxDirector, _modelDirector),
+      instanceName: 'profileRepo');
 
   // register all services and inject their dependencies
   locator.registerSingleton<IAppSettingsService>(AppSettingsService(),

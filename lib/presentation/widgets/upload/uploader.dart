@@ -14,7 +14,7 @@ class Uploader {
       context: context,
       builder: (BuildContext context) {
         var services = ["Facebook", "Instagram"];
-        var dropDownValue = services[1];
+        var dropDownValue = services[0];
 
         return SimpleDialog(
           title: Text(localizer.upload),

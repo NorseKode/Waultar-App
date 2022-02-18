@@ -55,8 +55,7 @@ main() {
       expect(profile.fullName, "REDACTED NAME");
       expect(profile.dateOfBirth, DateTime.utc(2021, 2, 12));
       expect(profile.gender, "male");
-      expect(profile.profilePicture!.uri.path,
-          "media/other/33479950_2070043303318549_5971154643487555584_n_17935673491101223.jpg");
+      // expect(profile.profilePicture!.uri.path,"media/other/33479950_2070043303318549_5971154643487555584_n_17935673491101223.jpg");
       expect(profile.phoneNumbers!.length, 1);
       expect(profile.username, "REDACTED USERNAME");
       expect(profile.currentCity, "REDACTED CITY");

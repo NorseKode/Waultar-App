@@ -119,8 +119,7 @@ class _DashboardState extends State<Dashboard> {
             var zipFiles =
                 files.item1.where((element) => dart_path.extension(element) == ".zip").toList();
             var uploadedFiles = await FileUploader.extractZip(dart_path.normalize(zipFiles.first));
-
-            ParserService().parseAll(uploadedFiles, service);
+            await ParserService().parseAll(uploadedFiles, service);
           }
         }
       },

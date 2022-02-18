@@ -1,9 +1,7 @@
-import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
-import 'package:waultar/data/entities/content/post_objectbox.dart';
 import 'package:waultar/data/entities/misc/service_objectbox.dart';
 import 'package:waultar/data/repositories/model_builders/i_model_director.dart';
 import 'package:waultar/data/repositories/objectbox_builders/i_objectbox_director.dart';
@@ -11,6 +9,7 @@ import 'package:waultar/data/repositories/objectbox_builders/i_objectbox_directo
 class ServiceRepo implements IServiceRepository {
   late final ObjectBox _context;
   late final Box<ServiceObjectBox> _serviceBox;
+  // ignore: unused_field
   late final IObjectBoxDirector _entityDirector;
   late final IModelDirector _modelDirector;
 
