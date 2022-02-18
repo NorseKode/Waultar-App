@@ -1,4 +1,3 @@
-
 import 'package:objectbox/objectbox.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
