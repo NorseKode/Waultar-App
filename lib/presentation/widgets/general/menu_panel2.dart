@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/presentation/presentation_helper.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/menu_screens.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -17,6 +18,7 @@ class _MenuPanel2State extends State<MenuPanel2> {
   var active = MenuScreens.dashboard;
   late ThemeProvider themeProvider;
   double menuWidth = 200;
+  
 
   Widget logo() {
     var logo = SvgPicture.asset('lib/assets/graphics/logov4.svg',
@@ -184,17 +186,10 @@ class _MenuPanel2State extends State<MenuPanel2> {
     );
   }
 
-  Widget uploadButton(BuildContext context) {
+  Widget logDatabaseButton(BuildContext context) {
     return InkWell(
-      onTap: () async {
-        // var uploadedFiles = await Uploader.uploadDialogue(context);
-
-        // if (uploadedFiles != null) {
-        //   var zipFiles = uploadedFiles.where((element) => dart_path.extension(element) == ".zip").toList();
-        //   if (zipFiles.length == 1) {
-        //     uploadedFiles = await FileUploader.extractZip(dart_path.normalize(zipFiles.first));
-        //   }
-        // }
+      onTap: () {
+        PresentationHelper.logDatabase();
       },
       child: SizedBox(
         height: 30,
@@ -203,7 +198,27 @@ class _MenuPanel2State extends State<MenuPanel2> {
           children: [
             menuIcon('edit', false),
             const SizedBox(width: 10),
-            Text(localizer.upload,
+            Text(localizer.loadData,
+                style: TextStyle(fontSize: 12, color: themeProvider.themeMode().iconColor))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget nukeDatabaseButton(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        PresentationHelper.nukeDatabase();
+      },
+      child: SizedBox(
+        height: 30,
+        width: menuWidth,
+        child: Row(
+          children: [
+            menuIcon('edit', false),
+            const SizedBox(width: 10),
+            Text(localizer.nukeDatabase,
                 style: TextStyle(fontSize: 12, color: themeProvider.themeMode().iconColor))
           ],
         ),
@@ -233,7 +248,8 @@ class _MenuPanel2State extends State<MenuPanel2> {
                   collections(),
                   const SizedBox(height: 20),
                   darkmodeButton(),
-                  uploadButton(context),
+                  logDatabaseButton(context),
+                  nukeDatabaseButton(context),
                 ],
               ),
               Column(

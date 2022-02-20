@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/parsers/facebook_parser.dart';
 import 'package:waultar/core/parsers/instagram_parser.dart';
@@ -20,6 +21,7 @@ class ParserService extends ParserServiceBase {
   final IPostRepository _postRepo = locator.get<IPostRepository>(instanceName: 'postRepo');
   final IProfileRepository _profileRepo =
       locator.get<IProfileRepository>(instanceName: 'profileRepo');
+  final IServiceRepository _serviceRepo = locator.get<IServiceRepository>(instanceName: 'serviceRepo');
 
   @override
   Future parseAll(List<String> paths, ServiceModel service) async {
@@ -31,19 +33,17 @@ class ParserService extends ParserServiceBase {
         break;
 
       case "Instagram":
+        var service = _serviceRepo.get('Instagram');
         var parser = InstagramParser();
 
-        var profilePath =
-            paths.firstWhere((element) => element.contains("personal_information.json"));
-        paths.remove(profilePath);
+        var profileAndPaths = await parser.parseProfile(paths, service: service);
+        var profile = profileAndPaths.item1;
+        paths = profileAndPaths.item2;
 
-        var profile = (await parser.parseFile(File(profilePath)).toList()).first;
         var tempId = _makeEntity(profile);
         var profileModel = _profileRepo.getProfileById(tempId);
 
-        parser.setProfile(profileModel);
-
-        await for (final entity in parser.parseListOfPaths(paths)) {
+        await for (final entity in parser.parseListOfPaths(paths, profile: profileModel)) {
           _makeEntity(entity);
         }
         break;

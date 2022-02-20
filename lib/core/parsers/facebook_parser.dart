@@ -5,6 +5,7 @@ import 'package:waultar/core/models/media/file_model.dart';
 import 'package:waultar/core/models/media/image_model.dart';
 import 'package:waultar/core/models/media/link_model.dart';
 import 'package:waultar/core/models/media/video_model.dart';
+import 'package:waultar/core/models/misc/service_model.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
 
@@ -16,25 +17,7 @@ import 'package:path/path.dart' as path_dart;
 
 class FacebookParser extends BaseParser {
   @override
-  Stream parseListOfPaths(List<String> paths) async* {
-    for (var path in paths) {
-      if (Extensions.isJson(path)) {
-        var file = File(path);
-        await for (final result in parseFile(file)) {
-          yield result;
-        }
-      }
-    }
-  }
-
-  @override
-  Stream<dynamic> parseDirectory(Directory directory) {
-    // TODO: implement parseDirectory
-    throw UnimplementedError();
-  }
-
-  @override
-  Stream<dynamic> parseFile(File file) async* {
+  Stream<dynamic> parseFile(File file, {ProfileModel? profile}) async* {
     try {
       var jsonData = await ParseHelper.getJsonStringFromFile(file);
       var filename = path_dart.basenameWithoutExtension(file.path);
@@ -93,4 +76,34 @@ class FacebookParser extends BaseParser {
       throw ParseException("Wrong formatted json", file, e);
     }
   }
+  
+  @override
+  Stream parseFileLookForKey(File file, String key) {
+    // TODO: implement parseFileLookForKey
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Tuple2<ProfileModel, List<String>>> parseProfile(List<String> paths, {ServiceModel? service}) {
+    // TODO: implement parseProfile
+    throw UnimplementedError();
+  }
+  
+  @override
+  Stream parseListOfPaths(List<String> paths) async* {
+    for (var path in paths) {
+      if (Extensions.isJson(path)) {
+        var file = File(path);
+        await for (final result in parseFile(file)) {
+          yield result;
+        }
+      }
+    }
+  }
+
+  @override
+  Stream<dynamic> parseDirectory(Directory directory) {
+    // TODO: implement parseDirectory
+    throw UnimplementedError();
+  }  
 }

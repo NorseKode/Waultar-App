@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/rendering.dart';
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/exceptions/parse_exception.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
@@ -15,90 +14,11 @@ import 'package:waultar/startup.dart';
 
 class InstagramParser extends BaseParser {
   var appLogger = locator.get<AppLogger>(instanceName: 'logger');
-  ProfileModel? _profile;
-  var _profileFiles = ["personal_information", "signup_information", "profile_photos"];
+  static const _profileFiles = ["personal_information", "signup_information"];
 
-  setProfile(ProfileModel profile) {
-    _profile = profile;
-  }
   
-  Stream<ProfileModel> parseProfile(List<String> paths) async* {
-    ProfileModel profile = ParseHelper.profile;
-    var profileMain = paths.firstWhere((element) => element.contains(_profileFiles[0]));
-    paths.remove(profileMain);
-
-    await for (final object in parseFile(File(profileMain))) {
-      if (object is Map<String, dynamic> && object.containsKey("profile_user")) {
-        profile = ProfileModel.fromInstragram(object["profile_user"]);
-      }
-    }
-
-    var profileCreationDate = paths.firstWhere((element) => element.contains(_profileFiles[1]));
-    paths.remove(profileCreationDate);
-
-    await for (final object in parseFile(File(profileMain))) {
-      if (object is Map<String, dynamic> && object.containsKey("Time")) {
-        var datetime = ModelHelper.getTimestamp((object["Time"])["timestamp"]);
-        profile.createdTimestamp = datetime ?? DateTime.fromMicrosecondsSinceEpoch(0);
-      }
-    }
-
-    yield profile;
-  }
-
   @override
-  Stream parseListOfPaths(List<String> paths) async* {
-    // var profile = null;
-    // var profileMain = paths.firstWhere((element) => element.contains(_profileFiles[0]));
-    // paths.remove(profileMain);
-
-    // await for (final object in parseFile(File(profileMain))) {
-    //   if (object is Map<String, dynamic> && object.containsKey("profile_user")) {
-    //     profile = ProfileModel.fromInstragram(object["profile_user"]);
-    //   }
-    // }
-
-    // var profileCreationDate = paths.firstWhere((element) => element.contains(_profileFiles[1]));
-    // paths.remove(profileCreationDate);
-
-    // await for (final object in parseFile(File(profileMain))) {
-    //   if (object is Map<String, dynamic> && object.containsKey("Time")) {
-    //     var datetime = ModelHelper.getTimestamp((object["Time"])["timestamp"]);
-    //     profile.createdTimestamp = datetime ?? DateTime.fromMicrosecondsSinceEpoch(0);
-    //   }
-    // }
-
-    // var id = _profileRepo.addProfile(profile);
-    // profile = _profileRepo.getProfileById(id);
-    // _profile = profile;
-
-    // // TODO: profile picture
-
-    // for (var path in paths) {
-    //   if (Extensions.isJson(path)) {
-    //     var file = File(path);
-    //     await for (final result in parseFile(file)) {
-    //       yield result;
-    //     }
-    //   }
-    // }
-  }
-
-  @override
-  Stream<dynamic> parseDirectory(Directory directory) async* {
-    var files = await getAllFilesFrom(directory.path);
-
-    for (var file in files) {
-      if (Extensions.isJson(file.path)) {
-        await for (final result in parseFile(file)) {
-          yield result;
-        }
-      }
-    }
-  }
-
-  @override
-  Stream<dynamic> parseFile(File file) async* {
+  Stream<dynamic> parseFile(File file, {ProfileModel? profile}) async* {
     try {
       var jsonData = await ParseHelper.getJsonStringFromFile(file);
 
@@ -109,7 +29,7 @@ class InstagramParser extends BaseParser {
             appLogger.logger.info("parsed object: ${result.toString()}");
             yield result;
           } else if (object.containsKey("media")) {
-            var result = PostModel.fromJson(object, _profile ?? ParseHelper.profile);
+            var result = PostModel.fromJson(object, profile ?? ParseHelper.profile);
             appLogger.logger.info("parsed object: ${result.toString()}");
             yield result;
           } else {
@@ -135,4 +55,74 @@ class InstagramParser extends BaseParser {
       throw ParseException("Wrong formatted json", file, e);
     }
   }
+
+  @override
+  Stream<dynamic> parseFileLookForKey(File file, String key) async* {
+    try {
+      var jsonData = await ParseHelper.getJsonStringFromFile(file);
+
+      await for (final object in ParseHelper.returnEveryJsonObject(jsonData)) {
+        if (object is Map<String, dynamic>) {
+          if (object.containsKey(key)) {
+            yield object[key];
+          }
+        }
+      }
+    } on Tuple2<String, dynamic> catch (e) {
+      throw ParseException("Unexpected error occured in parsing of file", file, e.item2);
+    } on FormatException catch (e) {
+      throw ParseException("Wrong formatted json", file, e);
+    }
+  }
+
+  @override
+  Future<Tuple2<ProfileModel, List<String>>> parseProfile(List<String> paths, {ServiceModel? service}) async {
+    var profileMain = paths.firstWhere((element) => element.contains(_profileFiles[0]));
+    paths.remove(profileMain);
+
+    ProfileModel profile =
+        await parseFile(File(profileMain)).where((event) => event is ProfileModel).first;
+
+    if (service != null) {
+      profile.service = service;
+    }
+
+    var profileCreationDate = paths.firstWhere((element) => element.contains(_profileFiles[1]));
+    paths.remove(profileCreationDate);
+
+    await parseFileLookForKey(File(profileCreationDate), "Time")
+        .first
+        .then((value) => profile.createdTimestamp =
+            ModelHelper.getTimestamp(value) ??
+                DateTime.fromMicrosecondsSinceEpoch(0));
+
+    return Tuple2(profile, paths);
+  }
+
+  @override
+  Stream parseListOfPaths(List<String> paths, {ProfileModel? profile}) async* {
+    for (var path in paths) {
+      if (Extensions.isJson(path)) {
+        var file = File(path);
+        await for (final result in parseFile(file, profile: profile ?? ParseHelper.profile)) {
+          yield result;
+        }
+      }
+    }
+  }
+
+  @override
+  Stream<dynamic> parseDirectory(Directory directory) async* {
+    var files = await getAllFilesFrom(directory.path);
+
+    for (var file in files) {
+      if (Extensions.isJson(file.path)) {
+        await for (final result in parseFile(file)) {
+          yield result;
+        }
+      }
+    }
+  }
+
+  
 }
