@@ -5,7 +5,6 @@ import 'package:waultar/configs/exceptions/parse_exception.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/abstracts/abstract_parsers/base_parser.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/models/model_helper.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';

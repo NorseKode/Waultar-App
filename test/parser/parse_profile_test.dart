@@ -55,39 +55,17 @@ main() {
           (await InstagramParser().parseProfile(instagramProfileFiles.map((e) => e.path).toList()))
               .item1;
 
-      Uri uri;
       expect(profile.bio, "REDACTED BIO");
       expect(profile.fullName, "REDACTED NAME");
       expect(profile.otherNames, null);
       expect(profile.emails.length, 1);
       expect(profile.dateOfBirth, DateTime.utc(2021, 2, 12));
       expect(profile.gender, "male");
-      expect(profile.profilePicture!.uri.path,"media/other/33479950_2070043303318549_5971154643487555584_n_17935673491101223.jpg");
-      expect(profile.phoneNumbers!.length, 1);
-      bool? isPhoneConfirmed;
-      DateTime createdTimestamp;
-      bool? isPrivate;
-      expect(profile.username, "REDACTED USERNAME");
-      expect(profile.currentCity, "REDACTED CITY");
-      expect(profile.websites!.length, 1);
-      expect(profile.metadata!.length, 1);
-      String? bloodInfo;
-    });
-
-    test('Instagram', () async {
-      // var result = (await InstagramParser().parseListOfPaths(instagramProfileFiles.map((e) => e.path).toList()).toList()).first;
-      var result = await InstagramParser().parseFile(instagramProfileMain).toList();
-
-      expect(result.length, 1);
-
-      ProfileModel profile = result.first;
-
-      expect(profile.bio, "REDACTED BIO");
-      expect(profile.fullName, "REDACTED NAME");
-      expect(profile.dateOfBirth, DateTime.utc(2021, 2, 12));
-      expect(profile.gender, "male");
       // expect(profile.profilePicture!.uri.path,"media/other/33479950_2070043303318549_5971154643487555584_n_17935673491101223.jpg");
       expect(profile.phoneNumbers!.length, 1);
+      expect(profile.isPhoneConfirmed, false);
+      expect(profile.createdTimestamp, ModelHelper.intToTimestamp(1499666437));
+      expect(profile.isPrivate, false);
       expect(profile.username, "REDACTED USERNAME");
       expect(profile.currentCity, "REDACTED CITY");
       expect(profile.websites!.length, 1);

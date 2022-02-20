@@ -9,14 +9,19 @@ class PresentationHelper {
   static final AppLogger _appLogger = locator.get<AppLogger>(instanceName: 'logger');
 
   static void logDatabase() {
-    var _profiles = _profileRepo.getAllProfiles();
-    var _posts = _postRepo.getAllPosts();
+    var profiles = _profileRepo.getAllProfiles();
+    var posts = _postRepo.getAllPosts();
 
-    _profiles.forEach((e) => _appLogger.logger.info("Profile: ${e.toString()}"));
-    _posts.forEach((e) => _appLogger.logger.info("Post: ${e.toString()}"));
+    for (var profile in profiles) {
+    _appLogger.logger.info("Profile: ${profile.toString()}");
+    }
 
-    _appLogger.logger.info("Found ${_profiles.length} profiles in the database");
-    _appLogger.logger.info("Found ${_posts.length} profiles in the database");
+    for (var post in posts) {
+    _appLogger.logger.info("Post: ${post.toString()}");
+    }
+    
+    _appLogger.logger.info("Found ${profiles.length} profiles in the database");
+    _appLogger.logger.info("Found ${posts.length} profiles in the database");
   }
 
   static void nukeDatabase() {
