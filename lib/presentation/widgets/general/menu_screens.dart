@@ -7,5 +7,6 @@ enum MenuScreens {
   profile,
   settings,
   logout,
+  theme,
   alt
 }
