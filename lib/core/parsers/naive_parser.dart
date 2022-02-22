@@ -107,7 +107,7 @@ class NaiveParser extends BaseParser {
   }
 
   @override
-  Stream<BaseModel> parseFile(File file) async* {
+  Stream<BaseModel> parseFile(File file, {ProfileModel? profile}) async* {
     // var mapOfAcc = _setupAccumulators();
 
     var jsonData = await ParseHelper.getJsonStringFromFile(file);
@@ -146,6 +146,18 @@ class NaiveParser extends BaseParser {
   @override
   Stream parseListOfPaths(List<String> paths) {
     // TODO: implement parseListOfPaths
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream parseFileLookForKey(File file, String key) {
+    // TODO: implement parseFileLookForKey
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Tuple2<ProfileModel, List<String>>> parseProfile(List<String> paths, {ServiceModel? service}) {
+    // TODO: implement parseProfile
     throw UnimplementedError();
   }
 

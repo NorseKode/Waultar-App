@@ -172,6 +172,10 @@ class ProfileModel {
         raw = json.toString() {
     var jsonMapData = json["string_map_data"];
 
+    if (jsonMapData.containsKey("Email")) {
+      emails.add(EmailModel.fromJson(jsonMapData["Email"], isCurrent: true));
+    }
+
     if (jsonMapData.containsKey("Date of birth")) {
       var value = (jsonMapData["Date of birth"])["value"].toString();
       var birthdayObject = value.split("-");

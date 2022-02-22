@@ -46,4 +46,9 @@ class ProfileRepository implements IProfileRepository {
     var profile = _profileBox.get(id)!;
     return _modelDirector.make<ProfileModel>(profile);
   }
+
+  @override
+  int removeAllProfiles() {
+    return _profileBox.removeAll();
+  }
 }

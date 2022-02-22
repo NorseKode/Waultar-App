@@ -16,7 +16,9 @@
     "findAllKeys": "Find all keys",
     "upload": "Upload",
     "uploadFiles": "Upload files",
-    "uploadDirectory": "Upload firectory",
+    "uploadDirectory": "Upload directory",
+    "loadData": "Load data",
+    "nukeDatabase": "Nuke database",
     "@helloWorld": {
       "description": "The conventional newborn programmer greeting"
     },
@@ -69,6 +71,12 @@
       "description": ""
     },
     "@uploadDirectory": {
+      "description": ""
+    },
+    "@loadData": {
+      "description": ""
+    },
+    "@nukeDatabase": {
       "description": ""
     }
 }

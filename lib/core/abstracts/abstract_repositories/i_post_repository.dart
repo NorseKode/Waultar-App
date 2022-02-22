@@ -9,4 +9,5 @@ abstract class IPostRepository {
   PostModel getSinglePost(int id);
   int addPost(PostModel post);
   Future<int> addPostAsync(PostModel post);
+  int removeAllPosts();
 }
