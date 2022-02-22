@@ -57,17 +57,16 @@ class _DashboardState extends State<Dashboard> {
             child:
                 SingleChildScrollView(child: Text(polls[index].toString()))));
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            localizer.dashboard,
-            style: themeProvider.themeData().textTheme.headline3,
-          ),
-          SizedBox(height: 20),
-          SingleChildScrollView(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          localizer.dashboard,
+          style: themeProvider.themeData().textTheme.headline3,
+        ),
+        SizedBox(height: 20),
+        Expanded(
+          child: SingleChildScrollView(
               child: Container(
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,16 +85,17 @@ class _DashboardState extends State<Dashboard> {
                 const SizedBox(height: 20),
                 const Text("Your social data overview"),
                 const SizedBox(height: 20),
-                // Column(
-                //     children: List.generate(
-                //         dashboardWidgets.length,
-                //         (index) => Padding(
-                //               padding: EdgeInsets.only(right: 20, bottom: 20),
-                //               child: dashboardWidgets[index],
-                //             ))),
-              ])))
-        ],
-      ),
+                Row(children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: dashboardWidgets,
+                    ),
+                  )
+                ]),
+              ]))),
+        )
+      ],
     );
   }
 }

@@ -16,26 +16,22 @@ class HomePageView extends StatefulWidget {
 }
 
 class _HomePageViewState extends State<HomePageView> {
-  var _screens = {
-    ViewScreen.dashboard: Dashboard(),
-    ViewScreen.browse: Browse(),
+  final _screens = {
+    ViewScreen.dashboard: const Dashboard(),
+    ViewScreen.browse: const Browse(),
   };
 
   var _activeScreen = ViewScreen.dashboard;
 
   @override
   Widget build(BuildContext context) {
-    void Function(ViewScreen) updateTabs = (ViewScreen screen) {
-      print("here");
+    void updateTabs(ViewScreen screen) {
       if (screen != _activeScreen) {
-        print(screen);
         setState(() {
           _activeScreen = screen;
         });
       }
-    };
-
-    var themeProvider = Provider.of<ThemeProvider>(context);
+    }
 
     return getScaffoldMain(
         context,
@@ -52,8 +48,10 @@ class _HomePageViewState extends State<HomePageView> {
                       const TopPanel(),
                       Expanded(
                         child: Container(
-                          child: _screens[
-                              _activeScreen], //TODO: Navigation: Screen to change across views.
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                            child: _screens[_activeScreen],
+                          ),
                         ),
                       )
                     ]),
