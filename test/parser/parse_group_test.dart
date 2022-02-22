@@ -31,6 +31,7 @@ main() {
       expect(profile.fullName, "REDACTED FULLNAME");
       expect(groups.length, 2);
       expect(groups.first.name, 'Group 2');
+      expect(groups.last.name, 'Group 1');
     });
   });
 }
