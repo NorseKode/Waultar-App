@@ -124,7 +124,7 @@ class FacebookParser extends BaseParser {
       {ServiceModel? service}) async {
     var profilePath = paths.firstWhere((element) => element.contains(_profileFiles[0]));
     // The file ins't removed as it still contains the list of groups which hasn't been parsed yet
-    print(profilePath);
+
     ProfileModel profile =
         await parseFile(File(profilePath)).where((event) => event is ProfileModel).first;
 

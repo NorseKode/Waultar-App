@@ -11,11 +11,6 @@ class PresentationHelper {
   static final IProfileRepository _profileRepo =
       locator.get<IProfileRepository>(instanceName: 'profileRepo');
   static final IPostRepository _postRepo = locator.get<IPostRepository>(instanceName: 'postRepo');
-  static final IImageRepository _imageRepo =
-      locator.get<IImageRepository>(instanceName: 'imageRepo');
-  static final IVideoRepository _videoRepo =
-      locator.get<IVideoRepository>(instanceName: 'videoRepo');
-  static final IFileRepository _fileRepo = locator.get<IFileRepository>(instanceName: 'fileRepo');
   static final ILinkRepository _linkRepo = locator.get<ILinkRepository>(instanceName: 'linkRepo');
   static final AppLogger _appLogger = locator.get<AppLogger>(instanceName: 'logger');
 
