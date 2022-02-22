@@ -1,8 +1,11 @@
 enum ViewScreen {
+  unknown,
   signin,
   signup,
   home,
-  unknown,
   uploader,
   testScreen1,
+  dashboard,
+  browse,
+  theme,
 }

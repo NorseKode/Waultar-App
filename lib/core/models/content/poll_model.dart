@@ -25,4 +25,9 @@ class PollModel extends BaseModel {
         options =
             json.containsKey("options") ? json["options"].toString() : null,
         super(0, profile, json.toString());
+
+  @override
+  String toString() {
+    return "optionns: ${options}";
+  }
 }

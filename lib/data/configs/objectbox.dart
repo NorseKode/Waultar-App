@@ -1,5 +1,6 @@
 import 'package:waultar/startup.dart';
 import 'package:waultar/data/entities/misc/service_objectbox.dart';
+import 'package:path/path.dart' as dart_path;
 
 import '../entities/misc/appsettings_objectbox.dart';
 import 'objectbox.g.dart';
@@ -21,7 +22,10 @@ class ObjectBox {
         .build()
         .findUnique();
     if (facebookService == null) {
-      facebookService = ServiceObjectBox(name: 'Facebook', company: 'Meta', image: '/TODO');
+      facebookService = ServiceObjectBox(
+          name: 'Facebook',
+          company: 'Meta',
+          image: dart_path.normalize('/assests/service_icons/todo.svg'));
       store.box<ServiceObjectBox>().put(facebookService);
     }
 
@@ -31,14 +35,17 @@ class ObjectBox {
         .build()
         .findUnique();
     if (instagramService == null) {
-      instagramService = ServiceObjectBox(name: 'Instagram', company: 'Meta', image: '/TODO');
+      instagramService = ServiceObjectBox(
+          name: 'Instagram',
+          company: 'Meta',
+          image: dart_path.normalize('/assests/service_icons/todo.svg'));
       store.box<ServiceObjectBox>().put(instagramService);
     }
-
   }
 
   static Future<ObjectBox> create() async {
-    final store = await openStore(directory: locator.get<String>(instanceName: 'db_folder'));
+    final store = await openStore(
+        directory: locator.get<String>(instanceName: 'db_folder'));
     return ObjectBox._create(store);
   }
 }

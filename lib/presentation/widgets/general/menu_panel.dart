@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/configs/navigation/screen.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
-import 'package:waultar/presentation/widgets/general/menu_screens.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MenuPanel extends StatefulWidget {
-  const MenuPanel({Key? key}) : super(key: key);
+  final ViewScreen active;
+  final Function(ViewScreen screen) updateActive;
+  const MenuPanel({required this.active, required this.updateActive, Key? key})
+      : super(key: key);
 
   @override
   _MenuPanelState createState() => _MenuPanelState();
@@ -15,7 +18,6 @@ class MenuPanel extends StatefulWidget {
 
 class _MenuPanelState extends State<MenuPanel> {
   late AppLocalizations localizer;
-  var active = MenuScreens.dashboard;
   late ThemeProvider themeProvider;
   double menuWidth = 250;
 
@@ -73,7 +75,8 @@ class _MenuPanelState extends State<MenuPanel> {
   Widget menuButton(
     IconData icon,
     String title,
-    MenuScreens screen,
+    ViewScreen screen,
+    Function(ViewScreen screen) onPressed,
   ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
@@ -82,15 +85,12 @@ class _MenuPanelState extends State<MenuPanel> {
           style: ButtonStyle(
             shape: MaterialStateProperty.all(RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10.0))),
-            backgroundColor: MaterialStateProperty.all(active == screen
+            backgroundColor: MaterialStateProperty.all(widget.active == screen
                 ? Color(0xFF2F2F4A)
                 : Colors.black.withOpacity(0.0)),
           ),
           onPressed: () async {
-            active = screen;
-            screen == MenuScreens.theme
-                ? await themeProvider.toggleThemeData()
-                : null;
+            onPressed(screen);
             setState(() {});
           },
           child: Padding(
@@ -99,7 +99,9 @@ class _MenuPanelState extends State<MenuPanel> {
               children: [
                 Icon(
                   icon,
-                  color: active == screen ? Colors.white : Color(0xFFABAAB8),
+                  color: widget.active == screen
+                      ? Colors.white
+                      : Color(0xFFABAAB8),
                   size: 12,
                 ),
                 const SizedBox(width: 12),
@@ -107,7 +109,7 @@ class _MenuPanelState extends State<MenuPanel> {
                     style: TextStyle(
                         fontWeight: FontWeight.w400,
                         fontSize: 12,
-                        color: active == screen
+                        color: widget.active == screen
                             ? Colors.white
                             : Color(0xFFABAAB8)))
               ],
@@ -140,13 +142,15 @@ class _MenuPanelState extends State<MenuPanel> {
                   logo(),
                   Divider(height: 40, thickness: 2, color: Color(0xFF363747)),
                   menuButton(Iconsax.music_dashboard, localizer.dashboard,
-                      MenuScreens.dashboard),
+                      ViewScreen.dashboard, widget.updateActive),
                   menuButton(Iconsax.command, localizer.collections,
-                      MenuScreens.comments),
+                      ViewScreen.browse, widget.updateActive),
                   menuButton(
                       themeProvider.isLightTheme ? Iconsax.sun : Iconsax.moon,
                       localizer.changeTheme,
-                      MenuScreens.theme),
+                      ViewScreen.unknown, (_) async {
+                    await themeProvider.toggleThemeData();
+                  }),
                   Divider(height: 40, thickness: 2, color: Color(0xFF363747)),
                 ],
               ),
@@ -155,9 +159,9 @@ class _MenuPanelState extends State<MenuPanel> {
                 children: [
                   //profile(),
                   menuButton(Iconsax.setting, localizer.settings,
-                      MenuScreens.settings),
-                  menuButton(
-                      Iconsax.logout, localizer.logout, MenuScreens.logout)
+                      ViewScreen.unknown, (_) {}),
+                  menuButton(Iconsax.logout, localizer.logout,
+                      ViewScreen.signin, (_) {})
                 ],
               ),
             ],
