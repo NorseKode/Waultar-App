@@ -1,13 +1,7 @@
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
-import 'package:waultar/core/models/content/post_model.dart';
-import 'package:waultar/core/models/media/file_model.dart';
-import 'package:waultar/core/models/media/image_model.dart';
-import 'package:waultar/core/models/media/link_model.dart';
-import 'package:waultar/core/models/media/video_model.dart';
-import 'package:waultar/core/models/misc/service_model.dart';
-import 'package:waultar/core/models/profile/profile_model.dart';
+import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
 import 'package:waultar/startup.dart';
 
@@ -49,10 +43,19 @@ class FacebookParser extends BaseParser {
           if (isPosts) {
             // skip
           } else if (object.containsKey("profile_v2")) {
-            // TODO: parse groups
             var profileModel = ProfileModel.fromFacebook(object["profile_v2"]);
             _appLogger.logger.info("Parsed Facebook Profile: ${profileModel.toString()}");
             yield profileModel;
+          } else if (object.containsKey("profile_v2") && profile != null) {
+            var groupObjects = object["groups"];
+            if (groupObjects is List<dynamic>) {
+              for (var group in groupObjects) {
+                var groupModel = GroupModel.fromJson(group, profile); 
+                _appLogger.logger.info("Parsed Facebook group: ${groupModel.toString()}");
+                yield groupModel;
+              }
+            }
+
           } else {
             var mediaKey =
                 object.keys.firstWhere((key) => mediaKeys.contains(key), orElse: () => "");

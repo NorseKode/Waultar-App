@@ -17,12 +17,16 @@ class GroupModel extends BaseModel {
     this.timestamp,
   }) : super(id, profile, raw);
 
-  // GroupModel.fromJson(Map<String, dynamic> json, ProfileModel profile)
-  //     : name = json.containsKey("title")
-  //           ? json["title"].toString().getGroupName()
-  //           : "",
-  //       timestamp = json.containsKey("timestamp")
-  //           ? DateTime.fromMillisecondsSinceEpoch(json["timestamp"])
-  //           : null,
-  //       super(0, profile, json.toString());
+  GroupModel.fromJson(Map<String, dynamic> json, ProfileModel profile)
+      : name = json.containsKey("name") ? json["name"].toString() : "",
+        timestamp = json.containsKey("timestamp")
+            ? DateTime.fromMillisecondsSinceEpoch(json["timestamp"])
+            : null,
+        isUsers = false,
+        super(0, profile, json.toString());
+
+  @override
+  String toString() {
+    return "Name: $name, isUsers: ${isUsers.toString()}, timestamp: ${timestamp.toString()}, profile: ${profile.fullName}";
+  }
 }
