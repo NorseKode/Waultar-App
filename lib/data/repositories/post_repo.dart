@@ -67,4 +67,9 @@ class PostRepository implements IPostRepository {
     // TODO: implement watchInstagramPosts
     throw UnimplementedError();
   }
+
+  @override
+  int removeAllPosts() {
+    return _postBox.removeAll();
+  }
 }
