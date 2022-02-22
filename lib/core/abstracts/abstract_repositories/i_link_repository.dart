@@ -6,4 +6,5 @@ abstract class ILinkRepository {
   List<LinkModel>? getAllLinks();
   List<LinkModel>? getAllLinksByService(ServiceModel service);
   List<LinkModel>? getAllLinksByProfile(ProfileModel profile);
+  int removeAll();
 }

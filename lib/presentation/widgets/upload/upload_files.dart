@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:archive/archive_io.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as dart_path;
-import 'package:waultar/startup.dart';
-
 class FileUploader {
   /// Returns file with if user picks a file, otherwise it returns `null`
   static Future<File?> uploadSingle() async {
@@ -17,7 +15,7 @@ class FileUploader {
     }
   }
 
-  /// Returns a list of files if users picks any file, reutrns `null` otherwise
+  /// Returns a list of files if users picks any file, returns `null` otherwise
   static Future<List<File>?> uploadMultiple() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: true);
 
@@ -28,7 +26,7 @@ class FileUploader {
     }
   }
 
-  /// Returns a list of files if users picks a directory, reutrns `null` otherwise
+  /// Returns a list of files if users picks a directory, returns `null` otherwise
   static Future<List<File>?> uploadFilesFromDirectory() async {
     String? path = await FilePicker.platform.getDirectoryPath();
 
@@ -77,29 +75,33 @@ class FileUploader {
     return files;
   }
 
-  static Future<List<String>> extractZip(String path) async {
-    // using inputFileStream to access zip without storing it in memory
-    final inputStream = InputFileStream(path);
+}
 
-    // decode the zip via the stream - the archive will have the contents of the zip
-    // without having to store it in memory
-    final archive = ZipDecoder().decodeBuffer(inputStream);
-    String tempDestDirPath = locator.get<String>(instanceName: 'extracts_folder') + "/";
-    final destDirPath = dart_path.normalize(tempDestDirPath);
+List<String> extractZip(Map<String, String> input) {
 
-    var list = <String>[];
-    for (var file in archive.files) {
-      // only take the files and not the directories
-      if (file.isFile) {
-        var filePath = dart_path.normalize(destDirPath + '/' + file.name);
-        final f = File(filePath);
-        f.parent.createSync(recursive: true);
-        f.writeAsBytesSync(file.content as List<int>);
-        list.add(f.path);
-      }
+  // using inputFileStream to access zip without storing it in memory
+  final inputStream = InputFileStream(input['path'] as String);
+
+  // decode the zip via the stream - the archive will have the contents of the zip
+  // without having to store it in memory
+  final archive = ZipDecoder().decodeBuffer(inputStream);
+  String tempDestDirPath = input["extracts_folder"]! + "/";
+  final destDirPath = dart_path.normalize(tempDestDirPath);
+
+  var list = <String>[];
+  for (var file in archive.files) {
+    // only take the files and not the directories
+    if (file.isFile) {
+      var filePath = dart_path.normalize(destDirPath + '/' + file.name);
+      final outputStream = OutputFileStream(filePath);
+      file.writeContent(outputStream);
+      list.add(outputStream.path);
+      outputStream.close();
     }
-
-    return list;
   }
 
+  inputStream.close();
+
+  return list;
 }
+

@@ -85,4 +85,9 @@ class LinkRepository implements ILinkRepository {
       return _modelDirector.make<LinkModel>(link);
     }
   }
+
+  @override
+  int removeAll() {
+    return _linkBox.removeAll();
+  }
 }

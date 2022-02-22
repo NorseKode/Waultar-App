@@ -85,4 +85,9 @@ class FileRepository implements IFileRepository {
       return _modelDirector.make<FileModel>(file);
     }
   }
+
+  @override
+  int removeAll() {
+    return _fileBox.removeAll();
+  }
 }

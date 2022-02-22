@@ -10,7 +10,7 @@ import '../test_helper.dart';
 
 main() {
   var faceBookPost = File(path_dart.join(
-      TestHelper.pathToCurrentFile(), "data", "facebook_post.json"));
+      TestHelper.pathToCurrentFile(), "data", "your_posts_1.json"));
   var instagramPost = File(path_dart.join(
       TestHelper.pathToCurrentFile(), "data", "instagram_post.json"));
 

@@ -87,4 +87,9 @@ class ImageRepository implements IImageRepository {
       return _modelDirector.make<ImageModel>(image);
     }
   }
+
+  @override
+  int removeAll() {
+    return _imageBox.removeAll();
+  }
 }

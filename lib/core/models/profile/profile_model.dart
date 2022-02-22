@@ -69,7 +69,9 @@ class ProfileModel {
         gender = (json["gender"])["gender_option"],
         // TODO
         bio = json["bio"],
-        currentCity = (json["current_city"])["name"],
+        currentCity = json.containsKey("current_city") 
+          ? (json["current_city"])["name"]
+          : null,
         phoneNumbers = <String>[],
         // TODO
         isPhoneConfirmed = false,

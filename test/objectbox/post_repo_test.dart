@@ -75,7 +75,7 @@ Future<void> main() async {
           PostModel(profile: profileModel, raw: "this is some raw json", timestamp: DateTime.now());
       _repo.addPost(post);
 
-      var createdPost = _repo.getSinglePost(1);
+      var createdPost = _repo.getSinglePost(1)!;
 
       expect(createdPost.id, 1);
       expect(createdPost.profile.fullName, testProfile.fullName);
@@ -104,7 +104,7 @@ Future<void> main() async {
       post.medias!.addAll([image1, image2, video1, link1, file1]);
 
       int id = _repo.addPost(post);
-      var createdModel = _repo.getSinglePost(id);
+      var createdModel = _repo.getSinglePost(id)!;
 
       expect(createdModel.medias!.length, 5);
 

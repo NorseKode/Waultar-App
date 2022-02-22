@@ -182,7 +182,7 @@ class ParseHelper {
         }
       }
     }
-    // The data parsed is a josn list
+    // The data parsed is a json list
     else if (jsonData is List<dynamic>) {
       for (var item in jsonData) {
         set = _aux(item, set);

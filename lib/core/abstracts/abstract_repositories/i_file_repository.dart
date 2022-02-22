@@ -6,4 +6,5 @@ abstract class IFileRepository {
   List<FileModel>? getAllFiles();
   List<FileModel>? getAllFilesByService(ServiceModel service);
   List<FileModel>? getAllFilesByProfile(ProfileModel profile);
+  int removeAll();
 }

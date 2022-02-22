@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as path_dart;
 import 'package:waultar/core/models/model_helper.dart';
-import 'package:waultar/core/models/profile/profile_model.dart';
 import 'package:waultar/core/parsers/facebook_parser.dart';
 import 'package:waultar/core/parsers/instagram_parser.dart';
 
@@ -11,7 +10,7 @@ import '../test_helper.dart';
 
 main() {
   var facebookProfile =
-      File(path_dart.join(TestHelper.pathToCurrentFile(), "data", "facebook_profile.json"));
+      File(path_dart.join(TestHelper.pathToCurrentFile(), "data", "profile_information.json"));
   var instagramProfileMain =
       File(path_dart.join(TestHelper.pathToCurrentFile(), "data", "personal_information.json"));
   var instagramCreationDate =
@@ -28,11 +27,12 @@ main() {
 
   group("Testig parsing of profile data: ", () {
     test('Facebook', () async {
-      var result = await FacebookParser().parseFile(facebookProfile).toList();
+      var profile = (await FacebookParser().parseProfile([facebookProfile.path])).item1;
+      // var result = await FacebookParser().parseFile(facebookProfile).toList();
 
-      expect(1, result.length);
+      // expect(1, result.length);
 
-      ProfileModel profile = result.first;
+      // ProfileModel profile = result.first;
 
       expect(profile.bio, null);
       expect(profile.fullName, "REDACTED FULLNAME");
