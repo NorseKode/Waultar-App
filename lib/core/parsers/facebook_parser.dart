@@ -59,6 +59,16 @@ class FacebookParser extends BaseParser {
                 yield groupModel;
               }
             }
+            
+          } else if (object.containsKey("groups_admined_v2")) {
+            var groupsAdminedObjects = object['groups_admined_v2'];
+            if (groupsAdminedObjects is List<dynamic>) {
+              for (var group in groupsAdminedObjects) {
+                var groupModel = GroupModel.fromJson(group, profile!);
+                groupModel.isUsers = true;
+                yield groupModel;
+              }
+            }
           } else {
             var mediaKey = object.keys
                 .firstWhere((key) => mediaKeys.contains(key), orElse: () => "");
