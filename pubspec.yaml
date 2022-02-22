@@ -65,7 +65,7 @@ dependencies:
   path: ^1.8.0
 
   # used for zip extraction
-  archive: ^3.1.11
+  archive: ^3.2.1
 
 dev_dependencies:
   flutter_test:
