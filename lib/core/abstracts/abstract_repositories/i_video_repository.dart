@@ -6,4 +6,5 @@ abstract class IVideoRepository {
   List<VideoModel>? getAllVideos();
   List<VideoModel>? getAllVideosByService(ServiceModel service);
   List<VideoModel>? getAllVideosByProfile(ProfileModel profile);
+  int removeAll();
 }

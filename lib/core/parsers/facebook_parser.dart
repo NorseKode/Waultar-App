@@ -1,4 +1,5 @@
 import 'package:tuple/tuple.dart';
+import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/models/content/post_model.dart';
 import 'package:waultar/core/models/media/file_model.dart';
@@ -8,6 +9,7 @@ import 'package:waultar/core/models/media/video_model.dart';
 import 'package:waultar/core/models/misc/service_model.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
+import 'package:waultar/startup.dart';
 
 import 'dart:io';
 
@@ -16,6 +18,9 @@ import '../abstracts/abstract_parsers/base_parser.dart';
 import 'package:path/path.dart' as path_dart;
 
 class FacebookParser extends BaseParser {
+  final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
+  static const _profileFiles = ["profile_information"];
+
   @override
   Stream<dynamic> parseFile(File file, {ProfileModel? profile}) async* {
     try {
@@ -23,11 +28,19 @@ class FacebookParser extends BaseParser {
       var filename = path_dart.basenameWithoutExtension(file.path);
       const mediaKeys = ["uri", "content", "link"];
       var uriAlreadyUsed = [];
-      var isPosts = filename.contains("post");
+      var postFilenameRegex = RegExp(r"your_posts_\d+");
+      
+      var isPosts = false;
+      var matchedFile = postFilenameRegex.firstMatch(filename);
+      if (matchedFile != null) {
+        isPosts = true;
+      }
 
-      if (filename.contains("post")) {
+      if (isPosts) {
         for (var post in jsonData) {
-          yield PostModel.fromJson(post, ParseHelper.profile);
+          var postModel = PostModel.fromJson(post, profile ?? ParseHelper.profile);
+          _appLogger.logger.info("Parsed Facebook profile: ${postModel.toString()}");
+          yield postModel;
         }
       }
 
@@ -37,7 +50,9 @@ class FacebookParser extends BaseParser {
             // skip
           } else if (object.containsKey("profile_v2")) {
             // TODO: parse groups
-            yield ProfileModel.fromFacebook(object["profile_v2"]);
+            var profileModel = ProfileModel.fromFacebook(object["profile_v2"]);
+            _appLogger.logger.info("Parsed Facebook Profile: ${profileModel.toString()}");
+            yield profileModel;
           } else {
             var mediaKey =
                 object.keys.firstWhere((key) => mediaKeys.contains(key), orElse: () => "");
@@ -46,21 +61,29 @@ class FacebookParser extends BaseParser {
               switch (Extensions.getFileType(object[mediaKey])) {
                 case FileType.image:
                   uriAlreadyUsed.add(object[mediaKey]);
-                  yield ImageModel.fromJson(object, ParseHelper.profile);
+                  var imageModel = ImageModel.fromJson(object, profile ?? ParseHelper.profile);
+                  _appLogger.logger.info("Parsed Facebook image: ${imageModel.toString()}");
+                  yield imageModel;
                   break;
                 case FileType.video:
                   uriAlreadyUsed.add(object[mediaKey]);
-                  yield VideoModel.fromJson(object, ParseHelper.profile);
+                  var videoModel = VideoModel.fromJson(object, ParseHelper.profile);
+                  _appLogger.logger.info("Parsed Facebook : ${videoModel.toString()}");
+                  yield videoModel;
                   break;
                 case FileType.file:
                   uriAlreadyUsed.add(object[mediaKey]);
-                  yield FileModel.fromJson(object, ParseHelper.profile);
+                  var fileModel = FileModel.fromJson(object, ParseHelper.profile);
+                  _appLogger.logger.info("Parsed Facebook : ${fileModel.toString()}");
+                  yield fileModel;
                   break;
                 case FileType.link:
                   if (object[mediaKey] is String &&
                       !object[mediaKey].startsWith("https://interncache")) {
                     uriAlreadyUsed.add(object[mediaKey]);
-                    yield LinkModel.fromJson(object, ParseHelper.profile);
+                    var linkModel = LinkModel.fromJson(object, ParseHelper.profile);
+                    _appLogger.logger.info("Parsed Facebook : ${linkModel.toString()}");
+                    yield linkModel;
                   }
                   break;
                 default:
@@ -76,25 +99,48 @@ class FacebookParser extends BaseParser {
       throw ParseException("Wrong formatted json", file, e);
     }
   }
-  
+
   @override
-  Stream parseFileLookForKey(File file, String key) {
-    // TODO: implement parseFileLookForKey
-    throw UnimplementedError();
+  Stream<dynamic> parseFileLookForKey(File file, String key) async* {
+    try {
+      var jsonData = await ParseHelper.getJsonStringFromFile(file);
+
+      await for (final object in ParseHelper.returnEveryJsonObject(jsonData)) {
+        if (object is Map<String, dynamic>) {
+          if (object.containsKey(key)) {
+            yield object[key];
+          }
+        }
+      }
+    } on Tuple2<String, dynamic> catch (e) {
+      throw ParseException("Unexpected error occured in parsing of file", file, e.item2);
+    } on FormatException catch (e) {
+      throw ParseException("Wrong formatted json", file, e);
+    }
   }
 
   @override
-  Future<Tuple2<ProfileModel, List<String>>> parseProfile(List<String> paths, {ServiceModel? service}) {
-    // TODO: implement parseProfile
-    throw UnimplementedError();
+  Future<Tuple2<ProfileModel, List<String>>> parseProfile(List<String> paths,
+      {ServiceModel? service}) async {
+    var profilePath = paths.firstWhere((element) => element.contains(_profileFiles[0]));
+    // The file ins't removed as it still contains the list of groups which hasn't been parsed yet
+    print(profilePath);
+    ProfileModel profile =
+        await parseFile(File(profilePath)).where((event) => event is ProfileModel).first;
+
+    if (service != null) {
+      profile.service = service;
+    }
+
+    return Tuple2(profile, paths);
   }
-  
+
   @override
-  Stream parseListOfPaths(List<String> paths) async* {
+  Stream parseListOfPaths(List<String> paths, {ProfileModel? profile}) async* {
     for (var path in paths) {
       if (Extensions.isJson(path)) {
         var file = File(path);
-        await for (final result in parseFile(file)) {
+        await for (final result in parseFile(file, profile: profile ?? ParseHelper.profile)) {
           yield result;
         }
       }
@@ -105,5 +151,5 @@ class FacebookParser extends BaseParser {
   Stream<dynamic> parseDirectory(Directory directory) {
     // TODO: implement parseDirectory
     throw UnimplementedError();
-  }  
+  }
 }

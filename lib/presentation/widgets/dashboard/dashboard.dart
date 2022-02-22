@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:tuple/tuple.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/domain/services/parser_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
@@ -25,6 +28,8 @@ class _DashboardState extends State<Dashboard> {
   List<File> uploadedFiles = [];
   final IServiceRepository _serviceRepo =
       locator.get<IServiceRepository>(instanceName: 'serviceRepo');
+
+  bool loading = false;
 
   Widget addIcon(double size, Color color) {
     const assetName = 'lib/assets/icons/fi-rr-plus.svg';
@@ -116,10 +121,17 @@ class _DashboardState extends State<Dashboard> {
           var service = _serviceRepo.get(files.item2);
 
           if (service != null) {
+            setState(() {
+              loading = true;
+            });
             var zipFiles =
                 files.item1.where((element) => dart_path.extension(element) == ".zip").toList();
-            var uploadedFiles = await FileUploader.extractZip(dart_path.normalize(zipFiles.first));
-            await ParserService().parseAll(uploadedFiles, service);
+
+            var inputMap = {'path': dart_path.normalize(zipFiles.first), 'extracts_folder': locator.get<String>(instanceName: 'extracts_folder')};
+            var uploadedFiles = await compute(extractZip, inputMap);
+            await ParserService().parseAll(uploadedFiles, service).whenComplete(() => setState(() {
+                  loading = false;
+                }));
           }
         }
       },
@@ -149,26 +161,28 @@ class _DashboardState extends State<Dashboard> {
     localizer = AppLocalizations.of(context)!;
 
     themeProvider = Provider.of<ThemeProvider>(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(35, 22.5, 35, 0),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                localizer.dashboard,
-                style: themeProvider.themeData().textTheme.headline3,
-              ),
-              addButton(context),
-            ],
-          ),
-          const SizedBox(height: 22.5),
-          Expanded(
-            child: SingleChildScrollView(child: uploadedWidgets()),
-          )
-        ],
-      ),
-    );
+    return loading
+        ? const Center(child: CircularProgressIndicator())
+        : Padding(
+            padding: const EdgeInsets.fromLTRB(35, 22.5, 35, 0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      localizer.dashboard,
+                      style: themeProvider.themeData().textTheme.headline3,
+                    ),
+                    addButton(context),
+                  ],
+                ),
+                const SizedBox(height: 22.5),
+                Expanded(
+                  child: SingleChildScrollView(child: uploadedWidgets()),
+                )
+              ],
+            ),
+          );
   }
 }

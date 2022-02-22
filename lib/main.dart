@@ -47,7 +47,7 @@ class _WaultarApp extends State<WaultarApp> {
   @override
   void initState() {
     if (kDebugMode) {
-      File(locator.get<String>(instanceName: 'log_folder') + "logs.txt").writeAsString("");
+      File(locator.get<String>(instanceName: 'log_folder') + "/logs.txt").writeAsString("");
     }
 
     if (kIsWeb) {
