@@ -1,3 +1,4 @@
+import 'package:waultar/core/abstracts/abstract_repositories/i_group_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
@@ -7,9 +8,12 @@ import 'package:waultar/core/parsers/instagram_parser.dart';
 import 'package:waultar/startup.dart';
 
 class ParserService implements IParserService {
-  final IPostRepository _postRepo = locator.get<IPostRepository>(instanceName: 'postRepo');
+  final IPostRepository _postRepo =
+      locator.get<IPostRepository>(instanceName: 'postRepo');
   final IProfileRepository _profileRepo =
       locator.get<IProfileRepository>(instanceName: 'profileRepo');
+  final IGroupRepository _groupRepo =
+      locator.get<IGroupRepository>(instanceName: 'groupRepo');
 
   @override
   Future parseAll(List<String> paths, ServiceModel service) async {
@@ -24,7 +28,8 @@ class ParserService implements IParserService {
         var tempId = _makeEntity(profile);
         var profileModel = _profileRepo.getProfileById(tempId);
 
-        await for (final entity in FacebookParser().parseListOfPaths(paths, profile: profileModel)) {
+        await for (final entity in FacebookParser()
+            .parseListOfPaths(paths, profile: profileModel)) {
           _makeEntity(entity);
         }
         break;
@@ -32,14 +37,16 @@ class ParserService implements IParserService {
       case "Instagram":
         var parser = InstagramParser();
 
-        var profileAndPaths = await parser.parseProfile(paths, service: service);
+        var profileAndPaths =
+            await parser.parseProfile(paths, service: service);
         var profile = profileAndPaths.item1;
         paths = profileAndPaths.item2;
 
         var tempId = _makeEntity(profile);
         var profileModel = _profileRepo.getProfileById(tempId);
 
-        await for (final entity in parser.parseListOfPaths(paths, profile: profileModel)) {
+        await for (final entity
+            in parser.parseListOfPaths(paths, profile: profileModel)) {
           _makeEntity(entity);
         }
         break;
@@ -56,6 +63,9 @@ class ParserService implements IParserService {
       case PostModel:
         return _postRepo.addPost(model);
 
+      case GroupModel:
+        return _groupRepo.addGroup(model);
+        
       default:
         return -1;
     }
