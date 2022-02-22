@@ -19,15 +19,13 @@ main() {
   group("Testig parsing of group data: ", () {
     test('Facebook', () async {
       var parser = FacebookParser();
-      var profile =
-          (await parser.parseProfile([facebookProfile.path])).item1;
+      var profile = (await parser.parseProfile([facebookProfile.path])).item1;
 
-      var result = await parser.parseFile(facebookProfile, profile: profile).toList();
+      var result =
+          (await parser.parseGroupNames([facebookProfile.path], profile)).item1;
       var groups = <GroupModel>[];
       for (var group in result) {
-        if (group is GroupModel) {
-          groups.add(group);
-        }
+        groups.add(group);
       }
 
       expect(profile.fullName, "REDACTED FULLNAME");

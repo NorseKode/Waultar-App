@@ -123,5 +123,10 @@ class InstagramParser extends BaseParser {
     }
   }
 
+  @override
+  Future<Tuple2<List<GroupModel>, List<String>>> parseGroupNames(List<String> paths, ProfileModel profile) {
+    throw UnimplementedError();
+  }
+
   
 }

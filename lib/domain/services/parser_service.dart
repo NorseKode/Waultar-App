@@ -28,6 +28,13 @@ class ParserService implements IParserService {
         var tempId = _makeEntity(profile);
         var profileModel = _profileRepo.getProfileById(tempId);
 
+        var groupsAndPaths = await parser.parseGroupNames(paths, profileModel);
+        var groups = groupsAndPaths.item1;
+        _groupRepo.addMany(groups);
+
+        // profile_information.json has now been removed
+        paths = groupsAndPaths.item2;
+
         await for (final entity in FacebookParser()
             .parseListOfPaths(paths, profile: profileModel)) {
           _makeEntity(entity);
@@ -65,6 +72,7 @@ class ParserService implements IParserService {
 
       case GroupModel:
         return _groupRepo.addGroup(model);
+        
         
       default:
         return -1;

@@ -24,6 +24,13 @@ class GroupRepository implements IGroupRepository {
   }
 
   @override
+  void addMany(List<GroupModel> groups) {
+    var entities =
+        groups.map((g) => _entityDirector.make<GroupObjectBox>(g)).toList();
+    _groupBox.putMany(entities);
+  }
+
+  @override
   GroupModel? getSingleGroup(int id) {
     var entity = _groupBox.get(id);
     if (entity != null) {
@@ -38,7 +45,9 @@ class GroupRepository implements IGroupRepository {
   List<GroupModel>? getAllGroups() {
     var groupEntities = _groupBox.getAll();
     if (groupEntities.isNotEmpty) {
-      return groupEntities.map((g) => _modelDirector.make<GroupModel>(g)).toList();
+      return groupEntities
+          .map((g) => _modelDirector.make<GroupModel>(g))
+          .toList();
     } else {
       return null;
     }
@@ -46,9 +55,12 @@ class GroupRepository implements IGroupRepository {
 
   @override
   List<GroupModel>? getAllGroupsOwnedByUser() {
-    var groupEntities = _groupBox.query(GroupObjectBox_.isUsers.equals(true)).build().find();
+    var groupEntities =
+        _groupBox.query(GroupObjectBox_.isUsers.equals(true)).build().find();
     if (groupEntities.isNotEmpty) {
-      return groupEntities.map((g) => _modelDirector.make<GroupModel>(g)).toList();
+      return groupEntities
+          .map((g) => _modelDirector.make<GroupModel>(g))
+          .toList();
     } else {
       return null;
     }

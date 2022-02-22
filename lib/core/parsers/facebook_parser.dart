@@ -154,6 +154,24 @@ class FacebookParser extends BaseParser {
   }
 
   @override
+  Future<Tuple2<List<GroupModel>, List<String>>> parseGroupNames(
+      List<String> paths, ProfileModel profile) async {
+    var profilePath =
+        paths.firstWhere((element) => element.contains(_profileFiles[0]));
+
+    var groups =
+        await parseFile(File(profilePath), profile: profile)
+            .where((event) => event is GroupModel).cast<GroupModel>()
+            .toList();
+    if (groups.isEmpty) {
+      _appLogger.logger.info('While parsing group names in file $profilePath no groups were found');
+    }
+
+    paths.remove(profilePath);
+    return Tuple2(groups, paths);
+  }
+
+  @override
   Stream parseListOfPaths(List<String> paths, {ProfileModel? profile}) async* {
     for (var path in paths) {
       if (Extensions.isJson(path)) {
