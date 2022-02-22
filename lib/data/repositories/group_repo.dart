@@ -32,8 +32,21 @@ class GroupRepository implements IGroupRepository {
 
   @override
   int updateGroup(GroupModel group) {
-    var entity = _groupBox.query(GroupObjectBox_.name.equals(group.name)).build().findFirst()!;
-    
+    var entity = _groupBox
+        .query(GroupObjectBox_.name.equals(group.name))
+        .build()
+        .findFirst();
+
+    if (entity != null) {
+      entity.isUsers = group.isUsers;
+      entity.badge = group.badge;
+      
+      return _groupBox.put(entity);
+    } else {
+      return -1;
+    }
+
+
   }
 
   @override

@@ -59,7 +59,6 @@ class FacebookParser extends BaseParser {
                 yield groupModel;
               }
             }
-            
           } else if (object.containsKey("groups_admined_v2")) {
             var groupsAdminedObjects = object['groups_admined_v2'];
             if (groupsAdminedObjects is List<dynamic>) {
@@ -67,6 +66,30 @@ class FacebookParser extends BaseParser {
                 var groupModel = GroupModel.fromJson(group, profile!);
                 groupModel.isUsers = true;
                 yield groupModel;
+              }
+            }
+          } else if (object.containsKey('group_badges_v2')) {
+            var badges = object['group_badges_v2'];
+            if (badges is Map<String, dynamic>) {
+              var groups = <GroupModel>[];
+              badges.entries.map((element) {
+                var name = element.key;
+                String badge = '';
+                if (element.value is List<String>) {
+                  badge = element.value.first;
+                }
+                var model = GroupModel(
+                  profile: profile!,
+                  raw: badges.toString(),
+                  name: name,
+                  isUsers: true,
+                  badge: badge,
+                );
+                groups.add(model);
+              });
+
+              for (var group in groups) {
+                yield group;
               }
             }
           } else {
@@ -169,12 +192,13 @@ class FacebookParser extends BaseParser {
     var profilePath =
         paths.firstWhere((element) => element.contains(_profileFiles[0]));
 
-    var groups =
-        await parseFile(File(profilePath), profile: profile)
-            .where((event) => event is GroupModel).cast<GroupModel>()
-            .toList();
+    var groups = await parseFile(File(profilePath), profile: profile)
+        .where((event) => event is GroupModel)
+        .cast<GroupModel>()
+        .toList();
     if (groups.isEmpty) {
-      _appLogger.logger.info('While parsing group names in file $profilePath no groups were found');
+      _appLogger.logger.info(
+          'While parsing group names in file $profilePath no groups were found');
     }
 
     paths.remove(profilePath);

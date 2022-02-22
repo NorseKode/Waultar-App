@@ -71,8 +71,8 @@ class ParserService implements IParserService {
         return _postRepo.addPost(model);
 
       case GroupModel:
-        return _groupRepo.addGroup(model);
-        
+        return _groupRepo.updateGroup(model);
+
         
       default:
         return -1;
