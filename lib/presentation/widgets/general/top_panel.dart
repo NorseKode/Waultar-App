@@ -17,9 +17,10 @@ class _TopPanelState extends State<TopPanel> {
     themeProvider = Provider.of<ThemeProvider>(context);
 
     return Container(
-        height: 75,
-        width: MediaQuery.of(context).size.width - 200,
-        color: themeProvider.themeData().primaryColor,
-        child: Text("toppanel"));
+      height: 75,
+      width: MediaQuery.of(context).size.width - 250,
+      color: themeProvider.themeData().primaryColor,
+      //child: Text("toppanel") //TODO:toppanel
+    );
   }
 }

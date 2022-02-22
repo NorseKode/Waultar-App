@@ -14,6 +14,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
   @override
   Widget build(BuildContext context) {
     return WidgetBody(
+      width: 200,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

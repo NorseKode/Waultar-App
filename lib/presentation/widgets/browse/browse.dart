@@ -88,17 +88,21 @@ class _BrowseState extends State<Browse> {
           Expanded(
             child: SingleChildScrollView(
               child: _models != null
-                  ? Column(
-                      children: List.generate(
-                        _models!.length,
-                        (index) => DefaultWidget(
-                          title: "Title",
-                          child: Text(
-                            _models![index].toString(),
+                  ? Container(
+                      width: MediaQuery.of(context).size.width - 290,
+                      child: Wrap(
+                        spacing: 20,
+                        runSpacing: 20,
+                        children: List.generate(
+                          _models!.length,
+                          (index) => DefaultWidget(
+                            title: "Title",
+                            child: Text(
+                              _models![index].toString(),
+                            ),
                           ),
                         ),
-                      ),
-                    )
+                      ))
                   : Container(),
             ),
           )

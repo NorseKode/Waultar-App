@@ -85,14 +85,12 @@ class _DashboardState extends State<Dashboard> {
                 const SizedBox(height: 20),
                 const Text("Your social data overview"),
                 const SizedBox(height: 20),
-                Row(children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: dashboardWidgets,
-                    ),
-                  )
-                ]),
+                Container(
+                    width: MediaQuery.of(context).size.width - 290,
+                    child: Wrap(
+                        spacing: 20,
+                        runSpacing: 20,
+                        children: dashboardWidgets))
               ]))),
         )
       ],

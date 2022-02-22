@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 class WidgetBody extends StatefulWidget {
   final Widget child;
-  const WidgetBody({Key? key, required this.child}) : super(key: key);
+  final double? width;
+  const WidgetBody({Key? key, required this.child, this.width})
+      : super(key: key);
 
   @override
   _WidgetBodyState createState() => _WidgetBodyState();
@@ -12,7 +14,7 @@ class _WidgetBodyState extends State<WidgetBody> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 200,
+      width: widget.width ?? 400,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10), color: Color(0xFF272837)),
       child: Padding(
