@@ -39,7 +39,7 @@ class _MenuPanelState extends State<MenuPanel> {
               children: [
                 Text(
                   localizer.waultarBoard,
-                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
                 ),
                 const SizedBox(height: 3),
                 Row(

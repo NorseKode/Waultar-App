@@ -4,6 +4,6 @@ import 'package:waultar/core/models/profile/profile_model.dart';
 
 abstract class IBrowseService {
   List<ProfileModel> getProfiles();
-  List<PostModel> getPosts();
+  List<PostModel>? getPosts();
   List<GroupModel> getGroups();
 }
