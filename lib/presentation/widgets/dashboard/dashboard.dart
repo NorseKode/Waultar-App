@@ -72,7 +72,7 @@ class _DashboardState extends State<Dashboard> {
                           )),
                 )),
                 const SizedBox(height: 20),
-                const Text("Your social data overview"),
+                Text(localizer.yourSocialDataOverview),
                 const SizedBox(height: 20),
                 SizedBox(
                 width: MediaQuery.of(context).size.width - 290,

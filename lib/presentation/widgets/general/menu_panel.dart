@@ -37,16 +37,16 @@ class _MenuPanelState extends State<MenuPanel> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Waultar Board",
+                Text(
+                  localizer.waultarBoard,
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
                 ),
                 const SizedBox(height: 3),
                 Row(
                   children: [
-                const Text(
-                  "Last upload:",
-                  style: TextStyle(
+                Text(
+                  localizer.lastUpload + ":",
+                  style: const TextStyle(
                       color: Color(0xFFABAAB8),
                       fontSize: 10,
                       fontWeight: FontWeight.w200),

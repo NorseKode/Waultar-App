@@ -17,6 +17,12 @@
     "upload": "Upload",
     "uploadFiles": "Upload files",
     "uploadDirectory": "Upload firectory",
+    "profile": "Profile",
+    "posts": "Posts",
+    "groups": "Groups",
+    "yourSocialDataOverview": "Your social data overview",
+    "waultarBoard": "Waultar board",
+    "lastUpload": "Last upload",
     "@helloWorld": {
       "description": "The conventional newborn programmer greeting"
     },
@@ -69,6 +75,24 @@
       "description": ""
     },
     "@uploadDirectory": {
+      "description": ""
+    },
+    "@profile": {
+      "description": ""
+    },
+    "@posts": {
+      "description": ""
+    },
+    "@groups": {
+      "description": ""
+    },
+    "@yourSocialDataOverview": {
+      "description": ""
+    },
+    "@waultarBoard": {
+      "description": ""
+    },
+    "@lastUpload": {
       "description": ""
     }
 }

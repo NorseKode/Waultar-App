@@ -6,6 +6,7 @@ import 'package:waultar/core/parsers/parse_helper.dart';
 import 'package:waultar/domain/services/browse_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/dashboard/default_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class Browse extends StatefulWidget {
   const Browse({Key? key}) : super(key: key);
@@ -15,62 +16,65 @@ class Browse extends StatefulWidget {
 }
 
 class _BrowseState extends State<Browse> {
+  late AppLocalizations localizer;
   final _browseService = BrowseService();
   List<dynamic>? _models;
   late ThemeProvider themeProvider;
 
+  buttons() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _models = _browseService.getProfiles();
+              });
+            },
+            child: Text(localizer.profile),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                // _models = _browseService.getPosts();
+                _models = List.generate(
+                    20,
+                    (index) => PostModel(
+                        profile: ParseHelper.profile,
+                        raw: "raw",
+                        timestamp: DateTime.now(),
+                        title: "Yeah"));
+              });
+            },
+            child: Text(localizer.posts),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // setState(() {
+              //   _models = _browseService.getGroups();
+              // });
+            },
+            child: Text(localizer.groups),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    localizer = AppLocalizations.of(context)!;
     themeProvider = Provider.of<ThemeProvider>(context);
-    buttons() {
-      return SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  _models = _browseService.getProfiles();
-                });
-              },
-              child: const Text("Profile"),
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  // _models = _browseService.getPosts();
-                  _models = List.generate(
-                      20,
-                      (index) => PostModel(
-                          profile: ParseHelper.profile,
-                          raw: "raw",
-                          timestamp: DateTime.now(),
-                          title: "Yeah"));
-                });
-              },
-              child: const Text("Posts"),
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                // setState(() {
-                //   _models = _browseService.getGroups();
-                // });
-              },
-              child: const Text("Groups - Doesn't work yet"),
-            ),
-            const SizedBox(
-              width: 20,
-            ),
-          ],
-        ),
-      );
-    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
