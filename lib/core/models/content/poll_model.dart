@@ -28,6 +28,6 @@ class PollModel extends BaseModel {
 
   @override
   String toString() {
-    return "optionns: ${options}";
+    return "optionns: $options";
   }
 }

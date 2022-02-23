@@ -37,35 +37,34 @@ class _MenuPanelState extends State<MenuPanel> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   "Waultar Board",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
                 ),
-                SizedBox(height: 3),
-                Container(
-                    child: Row(
+                const SizedBox(height: 3),
+                Row(
                   children: [
-                    Text(
-                      "Last upload:",
-                      style: TextStyle(
-                          color: Color(0xFFABAAB8),
-                          fontSize: 10,
-                          fontWeight: FontWeight.w200),
-                    ),
-                    SizedBox(width: 5),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Color(0xFF4FB376),
-                          borderRadius: BorderRadius.circular(100)),
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-                        child: Text("Feb 2. 2022",
-                            style: TextStyle(
-                                fontSize: 9, fontWeight: FontWeight.w200)),
-                      ),
-                    )
+                const Text(
+                  "Last upload:",
+                  style: TextStyle(
+                      color: Color(0xFFABAAB8),
+                      fontSize: 10,
+                      fontWeight: FontWeight.w200),
+                ),
+                const SizedBox(width: 5),
+                Container(
+                  decoration: BoxDecoration(
+                      color: const Color(0xFF4FB376),
+                      borderRadius: BorderRadius.circular(100)),
+                  child: const Padding(
+                    padding: EdgeInsets.fromLTRB(8, 2, 8, 2),
+                    child: Text("Feb 2. 2022",
+                        style: TextStyle(
+                            fontSize: 9, fontWeight: FontWeight.w200)),
+                  ),
+                )
                   ],
-                ))
+                )
               ])
         ],
       ),
@@ -80,40 +79,38 @@ class _MenuPanelState extends State<MenuPanel> {
   ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Container(
-        child: TextButton(
-          style: ButtonStyle(
-            shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0))),
-            backgroundColor: MaterialStateProperty.all(widget.active == screen
-                ? Color(0xFF2F2F4A)
-                : Colors.black.withOpacity(0.0)),
-          ),
-          onPressed: () async {
-            onPressed(screen);
-            setState(() {});
-          },
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(6, 12, 6, 12),
-            child: Row(
-              children: [
-                Icon(
-                  icon,
-                  color: widget.active == screen
-                      ? Colors.white
-                      : Color(0xFFABAAB8),
-                  size: 12,
-                ),
-                const SizedBox(width: 12),
-                Text(title,
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12,
-                        color: widget.active == screen
-                            ? Colors.white
-                            : Color(0xFFABAAB8)))
-              ],
-            ),
+      child: TextButton(
+        style: ButtonStyle(
+          shape: MaterialStateProperty.all(RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0))),
+          backgroundColor: MaterialStateProperty.all(widget.active == screen
+              ? const Color(0xFF2F2F4A)
+              : Colors.black.withOpacity(0.0)),
+        ),
+        onPressed: () async {
+          onPressed(screen);
+          setState(() {});
+        },
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(6, 12, 6, 12),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                color: widget.active == screen
+                    ? Colors.white
+                    : const Color(0xFFABAAB8),
+                size: 12,
+              ),
+              const SizedBox(width: 12),
+              Text(title,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 12,
+                      color: widget.active == screen
+                          ? Colors.white
+                          : const Color(0xFFABAAB8)))
+            ],
           ),
         ),
       ),
@@ -128,7 +125,7 @@ class _MenuPanelState extends State<MenuPanel> {
     return Container(
         width: menuWidth,
         height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             color: Color(0xFF272837),
             borderRadius: BorderRadius.only(topRight: Radius.circular(10))),
         child: Padding(
@@ -140,7 +137,7 @@ class _MenuPanelState extends State<MenuPanel> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   logo(),
-                  Divider(height: 40, thickness: 2, color: Color(0xFF363747)),
+                  const Divider(height: 40, thickness: 2, color: Color(0xFF363747)),
                   menuButton(Iconsax.music_dashboard, localizer.dashboard,
                       ViewScreen.dashboard, widget.updateActive),
                   menuButton(Iconsax.command, localizer.collections,
@@ -151,7 +148,7 @@ class _MenuPanelState extends State<MenuPanel> {
                       ViewScreen.unknown, (_) async {
                     await themeProvider.toggleThemeData();
                   }),
-                  Divider(height: 40, thickness: 2, color: Color(0xFF363747)),
+                  const Divider(height: 40, thickness: 2, color: Color(0xFF363747)),
                 ],
               ),
               Column(

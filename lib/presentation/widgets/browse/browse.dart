@@ -33,7 +33,7 @@ class _BrowseState extends State<Browse> {
                   _models = _browseService.getProfiles();
                 });
               },
-              child: Text("Profile"),
+              child: const Text("Profile"),
             ),
             const SizedBox(
               width: 20,
@@ -51,7 +51,7 @@ class _BrowseState extends State<Browse> {
                           title: "Yeah"));
                 });
               },
-              child: Text("Posts"),
+              child: const Text("Posts"),
             ),
             const SizedBox(
               width: 20,
@@ -62,7 +62,7 @@ class _BrowseState extends State<Browse> {
                 //   _models = _browseService.getGroups();
                 // });
               },
-              child: Text("Groups - Doesn't work yet"),
+              child: const Text("Groups - Doesn't work yet"),
             ),
             const SizedBox(
               width: 20,
@@ -72,43 +72,43 @@ class _BrowseState extends State<Browse> {
       );
     }
 
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Browse",
-            style: themeProvider.themeData().textTheme.headline3,
-          ),
-          SizedBox(height: 20),
-          buttons(),
-          SizedBox(
-            height: 20,
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: _models != null
-                  ? Container(
-                      width: MediaQuery.of(context).size.width - 290,
-                      child: Wrap(
-                        spacing: 20,
-                        runSpacing: 20,
-                        children: List.generate(
-                          _models!.length,
-                          (index) => DefaultWidget(
-                            title: "Title",
-                            child: Text(
-                              _models![index].toString(),
-                            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Browse",
+          style: themeProvider.themeData().textTheme.headline3,
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        buttons(),
+        const SizedBox(
+          height: 20,
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            child: _models != null
+                ? SizedBox(
+                    width: MediaQuery.of(context).size.width - 290,
+                    child: Wrap(
+                      spacing: 20,
+                      runSpacing: 20,
+                      children: List.generate(
+                        _models!.length,
+                        (index) => DefaultWidget(
+                          title: "Title",
+                          child: Text(
+                            _models![index].toString(),
                           ),
                         ),
-                      ))
-                  : Container(),
-            ),
-          )
-          // idgets
-        ],
-      ),
+                      ),
+                    ))
+                : Container(),
+          ),
+        )
+        // idgets
+      ],
     );
   }
 }

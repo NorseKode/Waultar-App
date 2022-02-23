@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:waultar/configs/globals/scaffold_main.dart';
 import 'package:waultar/configs/navigation/screen.dart';
-import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/browse/browse.dart';
 import 'package:waultar/presentation/widgets/dashboard/dashboard.dart';
 import 'package:waultar/presentation/widgets/general/menu_panel.dart';
@@ -39,7 +37,7 @@ class _HomePageViewState extends State<HomePageView> {
           children: [
             MenuPanel(active: _activeScreen, updateActive: updateTabs),
             Expanded(
-              child: Container(
+              child: SizedBox(
                 height: MediaQuery.of(context).size.height,
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -47,11 +45,9 @@ class _HomePageViewState extends State<HomePageView> {
                     children: [
                       const TopPanel(),
                       Expanded(
-                        child: Container(
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                            child: _screens[_activeScreen],
-                          ),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                          child: _screens[_activeScreen],
                         ),
                       )
                     ]),

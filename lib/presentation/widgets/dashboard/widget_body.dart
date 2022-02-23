@@ -16,9 +16,9 @@ class _WidgetBodyState extends State<WidgetBody> {
     return Container(
       width: widget.width ?? 400,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), color: Color(0xFF272837)),
+          borderRadius: BorderRadius.circular(10), color: const Color(0xFF272837)),
       child: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -26,8 +26,8 @@ class _WidgetBodyState extends State<WidgetBody> {
             Expanded(
               child: widget.child,
             ),
-            SizedBox(width: 15),
-            Container(
+            const SizedBox(width: 15),
+            SizedBox(
               height: 15,
               width: 5,
               child: Column(
@@ -37,7 +37,7 @@ class _WidgetBodyState extends State<WidgetBody> {
                   (index) => Container(
                     width: 3,
                     height: 3,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         color: Colors.white, shape: BoxShape.circle),
                   ),
                 ),
