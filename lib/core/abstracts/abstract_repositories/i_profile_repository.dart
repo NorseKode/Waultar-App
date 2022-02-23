@@ -4,4 +4,5 @@ abstract class IProfileRepository {
   int addProfile(ProfileModel profile);
   ProfileModel getProfileById(int id);
   List<ProfileModel> getAllProfiles();
+  int removeAllProfiles();
 }

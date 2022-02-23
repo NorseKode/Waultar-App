@@ -9,4 +9,9 @@ abstract class MediaModel extends BaseModel {
   MediaModel(int id, ProfileModel profile, String raw, this.uri, this.metadata,
       this.timestamp)
       : super(id, profile, raw);
+  
+  @override
+  String toString() {
+    return "id: $id, uri: ${uri.path}, timestamp: $timestamp, metadata: $metadata";
+  }
 }

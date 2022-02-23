@@ -32,39 +32,53 @@ class PostRepository implements IPostRepository {
   }
 
   @override
-  List<PostModel> getAllPosts() {
-    return _postBox.getAll().map((e) => _modelDirector.make<PostModel>(e)).toList();
+  List<PostModel>? getAllPosts() {
+    var postEntities = _postBox.getAll();
+    if (postEntities.isNotEmpty) {
+      return _postBox.getAll().map((e) => _modelDirector.make<PostModel>(e)).toList();
+    } else {
+      return null;
+    }
   }
 
   @override
-  PostModel getAllPostsPagination(int offset, int limit) {
+  PostModel? getAllPostsPagination(int offset, int limit) {
     // TODO: implement getAllPostsPagination
     throw UnimplementedError();
   }
 
   @override
-  PostModel getSinglePost(int id) {
-    var postEntity = _postBox.get(id)!;
-    var postModel = _modelDirector.make<PostModel>(postEntity);
+  PostModel? getSinglePost(int id) {
+    var postEntity = _postBox.get(id);
 
-    return postModel;
+    if (postEntity != null) {
+      var postModel = _modelDirector.make<PostModel>(postEntity);
+      return postModel;
+    } else {
+      return null;
+    }
   }
 
   @override
-  Stream<PostModel> watchAllPosts() {
+  Stream<PostModel>? watchAllPosts() {
     // TODO: implement watchAllPosts
     throw UnimplementedError();
   }
 
   @override
-  Stream<PostModel> watchFacebookPosts() {
+  Stream<PostModel>? watchFacebookPosts() {
     // TODO: implement watchFacebookPosts
     throw UnimplementedError();
   }
 
   @override
-  Stream<PostModel> watchInstagramPosts() {
+  Stream<PostModel>? watchInstagramPosts() {
     // TODO: implement watchInstagramPosts
     throw UnimplementedError();
+  }
+
+  @override
+  int removeAllPosts() {
+    return _postBox.removeAll();
   }
 }

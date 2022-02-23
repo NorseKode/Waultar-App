@@ -16,13 +16,15 @@
     "findAllKeys": "Find all keys",
     "upload": "Upload",
     "uploadFiles": "Upload files",
-    "uploadDirectory": "Upload firectory",
     "profile": "Profile",
     "posts": "Posts",
     "groups": "Groups",
     "yourSocialDataOverview": "Your social data overview",
     "waultarBoard": "Waultar board",
     "lastUpload": "Last upload",
+    "uploadDirectory": "Upload directory",
+    "loadData": "Load data",
+    "nukeDatabase": "Nuke database",
     "@helloWorld": {
       "description": "The conventional newborn programmer greeting"
     },
@@ -93,6 +95,12 @@
       "description": ""
     },
     "@lastUpload": {
+      "description": ""
+    },
+    "@loadData": {
+      "description": ""
+    },
+    "@nukeDatabase": {
       "description": ""
     }
 }

@@ -10,32 +10,24 @@ class AppLogger {
   final Logger logger = Logger("Logger");
   final OS os;
   String? _testPath;
+  late File _logFile;
 
   AppLogger(this.os) {
+    _logFile =
+        File(dart_path.normalize(locator.get<String>(instanceName: 'log_folder') + "/logs.txt"));
+
     logger.onRecord.listen((event) {
-      _writeToLogFile(event.message, event.level, DateTime.now(),
-          exception: event.error, stackTrace: event.stackTrace);
+      _logFile.writeAsStringSync(
+          "time: ${event.time}, level: ${event.level.name}, message: ${event.message}, exception: ${event.error}, stackTrace: ${event.stackTrace}\n",
+          mode: FileMode.append);
     });
   }
 
-  AppLogger.test(this.os, this._testPath);
+  AppLogger.test(this.os, this._testPath) {
+    _logFile = _logFile = File(_testPath!);
+  }
 
   setLogLevelRelease() {
     Logger.root.level = Level.SEVERE;
-  }
-
-  _writeToLogFile(
-    String message,
-    Level logLevel,
-    DateTime time, {
-    Object? exception,
-    StackTrace? stackTrace,
-  }) {
-    var file = File(_testPath ??
-        dart_path.normalize(locator.get<String>(instanceName: 'log_folder') + "/logs.txt"));
-
-    file.writeAsString(
-        "time: $time, level: ${logLevel.name}, message: $message, exception: $exception, stackTrace: $stackTrace\n",
-        mode: FileMode.append);
   }
 }

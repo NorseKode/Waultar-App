@@ -4,12 +4,21 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_event_repository.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_file_repository.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_image_repository.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_link_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_video_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/repositories/appsettings_repo.dart';
+import 'package:waultar/data/repositories/event_repo.dart';
+import 'package:waultar/data/repositories/file_repo.dart';
+import 'package:waultar/data/repositories/image_repo.dart';
+import 'package:waultar/data/repositories/link_repo.dart';
 import 'package:waultar/data/repositories/model_builders/i_model_director.dart';
 import 'package:waultar/data/repositories/model_builders/model_director.dart';
 import 'package:waultar/data/repositories/objectbox_builders/i_objectbox_director.dart';
@@ -17,6 +26,7 @@ import 'package:waultar/data/repositories/objectbox_builders/objectbox_director.
 import 'package:waultar/data/repositories/post_repo.dart';
 import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/data/repositories/service_repo.dart';
+import 'package:waultar/data/repositories/video_repo.dart';
 import 'package:waultar/domain/services/appsettings_service.dart';
 import 'configs/globals/app_logger.dart';
 import 'configs/globals/os_enum.dart';
@@ -71,7 +81,7 @@ Future<void> setupServices() async {
   _modelDirector = ModelDirector();
   locator.registerSingleton<IModelDirector>(_modelDirector, instanceName: 'model_director');
 
-  // register all abstract repositores with their conrete implementations
+  // register all abstract repositories with their concrete implementations
   // each repo gets injected the context (to access the relevant store)
   // and the objectboxDirector to map from models to entities
   locator.registerSingleton<IAppSettingsRepository>(AppSettingsRepository(_context),
@@ -85,6 +95,21 @@ Future<void> setupServices() async {
   locator.registerSingleton<IProfileRepository>(
       ProfileRepository(_context, _objectboxDirector, _modelDirector),
       instanceName: 'profileRepo');
+  locator.registerSingleton<IEventRepository>(
+      EventRepository(_context, _objectboxDirector, _modelDirector),
+      instanceName: 'eventRepo');
+  locator.registerSingleton<IImageRepository>(
+      ImageRepository(_context, _objectboxDirector, _modelDirector),
+      instanceName: 'imageRepo');
+  locator.registerSingleton<IVideoRepository>(
+      VideoRepository(_context, _objectboxDirector, _modelDirector),
+      instanceName: 'videoRepo');
+  locator.registerSingleton<ILinkRepository>(
+      LinkRepository(_context, _objectboxDirector, _modelDirector),
+      instanceName: 'linkRepo');
+  locator.registerSingleton<IFileRepository>(
+      FileRepository(_context, _objectboxDirector, _modelDirector),
+      instanceName: 'fileRepo');
 
   // register all services and inject their dependencies
   locator.registerSingleton<IAppSettingsService>(AppSettingsService(),

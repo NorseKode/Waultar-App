@@ -69,7 +69,9 @@ class ProfileModel {
         gender = (json["gender"])["gender_option"],
         // TODO
         bio = json["bio"],
-        currentCity = (json["current_city"])["name"],
+        currentCity = json.containsKey("current_city") 
+          ? (json["current_city"])["name"]
+          : null,
         phoneNumbers = <String>[],
         // TODO
         isPhoneConfirmed = false,
@@ -171,6 +173,10 @@ class ProfileModel {
         metadata = <String>[],
         raw = json.toString() {
     var jsonMapData = json["string_map_data"];
+
+    if (jsonMapData.containsKey("Email")) {
+      emails.add(EmailModel.fromJson(jsonMapData["Email"], isCurrent: true));
+    }
 
     if (jsonMapData.containsKey("Date of birth")) {
       var value = (jsonMapData["Date of birth"])["value"].toString();

@@ -85,4 +85,9 @@ class VideoRepository implements IVideoRepository {
       return _modelDirector.make<VideoModel>(video);
     }
   }
+
+  @override
+  int removeAll() {
+    return _videoBox.removeAll();
+  }
 }

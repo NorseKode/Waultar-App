@@ -6,4 +6,5 @@ abstract class IImageRepository {
   List<ImageModel>? getAllImages();
   List<ImageModel>? getAllImagesByService(ServiceModel service);
   List<ImageModel>? getAllImagesByProfile(ProfileModel profile);
+  int removeAll();
 }
