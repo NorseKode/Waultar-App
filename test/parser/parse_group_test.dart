@@ -17,7 +17,7 @@ main() {
   var your_groups = File(path_dart.join(
       TestHelper.pathToCurrentFile(), "data", "your_groups.json"));
 
-  late final FacebookParser parser; 
+  late final FacebookParser parser;
 
   setUpAll(() {
     TestHelper.clearTestLogger();
@@ -53,6 +53,19 @@ main() {
       expect(userGroups.last.isUsers, true);
       expect(userGroups.first.name, 'Group 1');
       expect(userGroups.last.name, 'Group 2');
+    });
+
+    test('parse creator badges from creator_badges.json', () async {
+      var profile = (await parser.parseProfile([facebookProfile.path])).item1;
+      var result = parser.parseFile(creatorBadges, profile: profile);
+      var groupsStream = result.cast<GroupModel>();
+      var groups = await groupsStream.toList();
+
+      expect(groups.length, 2);
+      expect(groups.first.name, 'Group 1');
+      expect(groups.last.name, 'Group 2');
+      expect(groups.first.badge, 'Administrator');
+      expect(groups.last.badge, 'Administrator');
     });
   });
 }

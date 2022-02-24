@@ -71,25 +71,21 @@ class FacebookParser extends BaseParser {
           } else if (object.containsKey('group_badges_v2')) {
             var badges = object['group_badges_v2'];
             if (badges is Map<String, dynamic>) {
-              var groups = <GroupModel>[];
-              badges.entries.map((element) {
-                var name = element.key;
-                String badge = '';
-                if (element.value is List<String>) {
-                  badge = element.value.first;
-                }
+              var entries = badges.entries;
+              for (var item in entries) {
+                var name = item.key;
+                var badge = item.value[0];
                 var model = GroupModel(
                   profile: profile!,
-                  raw: badges.toString(),
+                  raw: item.toString(),
                   name: name,
-                  isUsers: true,
                   badge: badge,
+                  isUsers: true,
                 );
-                groups.add(model);
-              });
+                _appLogger.logger.info(
+                    'Parsed badge to group ${model.name} : ${model.toString()}');
 
-              for (var group in groups) {
-                yield group;
+                yield model;
               }
             }
           } else {
