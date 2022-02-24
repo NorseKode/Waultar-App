@@ -1,12 +1,20 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/models/content/post_model.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
 import 'package:waultar/domain/services/browse_service.dart';
+import 'package:waultar/domain/services/parser_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/dashboard/default_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:waultar/presentation/widgets/snackbar_custom.dart';
+import 'package:waultar/presentation/widgets/upload/upload_files.dart';
+import 'package:waultar/presentation/widgets/upload/uploader.dart';
+import 'package:waultar/startup.dart';
+import 'package:path/path.dart' as dart_path;
 
 class Browse extends StatefulWidget {
   const Browse({Key? key}) : super(key: key);
@@ -20,6 +28,9 @@ class _BrowseState extends State<Browse> {
   final _browseService = BrowseService();
   List<dynamic>? _models;
   late ThemeProvider themeProvider;
+  final IServiceRepository _serviceRepo =
+      locator.get<IServiceRepository>(instanceName: 'serviceRepo');
+  bool isLoading = false;
 
   buttons() {
     return SingleChildScrollView(
@@ -40,14 +51,7 @@ class _BrowseState extends State<Browse> {
           ElevatedButton(
             onPressed: () {
               setState(() {
-                // _models = _browseService.getPosts();
-                _models = List.generate(
-                    20,
-                    (index) => PostModel(
-                        profile: ParseHelper.profile,
-                        raw: "raw",
-                        timestamp: DateTime.now(),
-                        title: "Yeah"));
+                _models = _browseService.getPosts() ?? [];
               });
             },
             child: Text(localizer.posts),
@@ -66,6 +70,53 @@ class _BrowseState extends State<Browse> {
           const SizedBox(
             width: 20,
           ),
+          ElevatedButton(
+            onPressed: () async {
+              var files = await Uploader.uploadDialogue(context);
+
+              SnackBarCustom.useSnackbarOfContext(context, localizer.startedLoadingOfData);
+              
+              if (files != null) {
+                var service = _serviceRepo.get(files.item2);
+
+                if (service != null) {
+                  setState(() {
+                    isLoading = true;
+                  });
+                  var zipFiles = files.item1
+                      .where((element) => dart_path.extension(element) == ".zip")
+                      .toList();
+
+                  var inputMap = {
+                    'path': dart_path.normalize(zipFiles.first),
+                    'extracts_folder': locator.get<String>(instanceName: 'extracts_folder')
+                  };
+                  var uploadedFiles = await compute(extractZip, inputMap);
+                  await ParserService()
+                      .parseAll(uploadedFiles, service)
+                      .whenComplete(() => setState(() {
+                            isLoading = false;
+                            SnackBarCustom.useSnackbarOfContext(context, localizer.doneLoadingData);
+                          }));
+                }
+              }
+            },
+            child: Text(localizer.upload),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _models = [];
+              });
+            },
+            child: Text(localizer.clear),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
         ],
       ),
     );
@@ -76,7 +127,9 @@ class _BrowseState extends State<Browse> {
     localizer = AppLocalizations.of(context)!;
     themeProvider = Provider.of<ThemeProvider>(context);
 
-    return Column(
+    return isLoading
+      ? const Center(child: CircularProgressIndicator())
+      : Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
