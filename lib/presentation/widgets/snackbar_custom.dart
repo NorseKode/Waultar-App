@@ -4,7 +4,7 @@ class SnackBarCustom {
   static useSnackbarOfContext(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        backgroundColor: Color(0xFF272837),
+        backgroundColor: const Color(0xFF272837),
         content: Text(
           message,
           style: const TextStyle(
