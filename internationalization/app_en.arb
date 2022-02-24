@@ -16,6 +16,12 @@
     "findAllKeys": "Find all keys",
     "upload": "Upload",
     "uploadFiles": "Upload files",
+    "profile": "Profile",
+    "posts": "Posts",
+    "groups": "Groups",
+    "yourSocialDataOverview": "Your social data overview",
+    "waultarBoard": "Waultar board",
+    "lastUpload": "Last upload",
     "uploadDirectory": "Upload directory",
     "loadData": "Load data",
     "nukeDatabase": "Nuke database",
@@ -71,6 +77,24 @@
       "description": ""
     },
     "@uploadDirectory": {
+      "description": ""
+    },
+    "@profile": {
+      "description": ""
+    },
+    "@posts": {
+      "description": ""
+    },
+    "@groups": {
+      "description": ""
+    },
+    "@yourSocialDataOverview": {
+      "description": ""
+    },
+    "@waultarBoard": {
+      "description": ""
+    },
+    "@lastUpload": {
       "description": ""
     },
     "@loadData": {
