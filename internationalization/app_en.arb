@@ -25,6 +25,9 @@
     "uploadDirectory": "Upload directory",
     "loadData": "Load data",
     "nukeDatabase": "Nuke database",
+    "clear": "clear",
+    "startedLoadingOfData": "Started loading of data",
+    "doneLoadingData": "Done loading data",
     "@helloWorld": {
       "description": "The conventional newborn programmer greeting"
     },
@@ -101,6 +104,15 @@
       "description": ""
     },
     "@nukeDatabase": {
+      "description": ""
+    },
+    "@clear": {
+      "description": ""
+    },
+    "@startedLoadingOfData": {
+      "description": ""
+    },
+    "@doneLoadingData": {
       "description": ""
     }
 }

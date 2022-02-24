@@ -26,16 +26,11 @@ class Uploader {
             //   },
             //   child: Text(localizer.uploadDirectory),
             // ),
-            SimpleDialogOption(
-              onPressed: () async {
-                var files = await FileUploader.uploadMultiple() ?? <File>[];
-
-                Navigator.pop(context, Tuple2(files.map((e) => e.path).toList(), dropDownValue));
-              },
-              child: Row(
-                children: [
-                  Text(localizer.uploadFiles),
-                  DropdownButton<String>(
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: StatefulBuilder(
+                builder: (BuildContext context, StateSetter dropDownState) {
+                  return DropdownButton<String>(
                     value: dropDownValue,
                     items: services.map<DropdownMenuItem<String>>(
                       (String service) {
@@ -43,15 +38,21 @@ class Uploader {
                       },
                     ).toList(),
                     onChanged: (String? temp) {
-                      dropDownValue = temp!;
+                      dropDownState(() {
+                        dropDownValue = temp!;
+                      });
                     },
-                  ),
-                  //         (String? newValue) {
-                  // setState(() {
-                  //   dropdownValue = newValue!;
-                  // });
-                ],
+                  );
+                },
               ),
+            ),
+            SimpleDialogOption(
+              onPressed: () async {
+                var files = await FileUploader.uploadMultiple() ?? <File>[];
+                
+                Navigator.pop(context, Tuple2(files.map((e) => e.path).toList(), dropDownValue));
+              },
+              child: Text(localizer.uploadFiles),
             ),
           ],
         );
