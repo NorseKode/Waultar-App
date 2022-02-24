@@ -74,9 +74,8 @@ class _BrowseState extends State<Browse> {
             onPressed: () async {
               var files = await Uploader.uploadDialogue(context);
 
-              SnackBarCustom.useSnackbarOfContext(context, localizer.startedLoadingOfData);
-              
               if (files != null) {
+                SnackBarCustom.useSnackbarOfContext(context, localizer.startedLoadingOfData);
                 var service = _serviceRepo.get(files.item2);
 
                 if (service != null) {

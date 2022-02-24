@@ -147,7 +147,7 @@ msix_config:
   display_name: Waultar
   publisher_display_name: NorseKode
   identity_name: NorseKode.Waultar.Windows
-  msix_version: 0.0.2.0
+  msix_version: 0.0.1.0
   logo_path: .\lib\assets\graphics\Logo.png
 
 objectbox: 
