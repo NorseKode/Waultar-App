@@ -54,9 +54,13 @@ late final String _logFolder;
 
 Future<void> setupServices() async {
   await initApplicationPaths();
-  locator.registerSingleton<String>(_waultarPath, instanceName: 'waultar_root_directory');
+  Directory _docDir = await getApplicationDocumentsDirectory();
+  locator.registerSingleton<String>(_docDir.path, instanceName: 'docDir');
+  locator.registerSingleton<String>(_waultarPath,
+      instanceName: 'waultar_root_directory');
   locator.registerSingleton<String>(_dbFolderPath, instanceName: 'db_folder');
-  locator.registerSingleton<String>(_extractsFolderPath, instanceName: 'extracts_folder');
+  locator.registerSingleton<String>(_extractsFolderPath,
+      instanceName: 'extracts_folder');
   locator.registerSingleton<String>(_logFolderPath, instanceName: 'log_folder');
 
   os = detectPlatform();
@@ -79,12 +83,14 @@ Future<void> setupServices() async {
   // model director is the opposite of ObjectBoxDirector
   // this director maps from entity to model
   _modelDirector = ModelDirector();
-  locator.registerSingleton<IModelDirector>(_modelDirector, instanceName: 'model_director');
+  locator.registerSingleton<IModelDirector>(_modelDirector,
+      instanceName: 'model_director');
 
   // register all abstract repositories with their concrete implementations
   // each repo gets injected the context (to access the relevant store)
   // and the objectboxDirector to map from models to entities
-  locator.registerSingleton<IAppSettingsRepository>(AppSettingsRepository(_context),
+  locator.registerSingleton<IAppSettingsRepository>(
+      AppSettingsRepository(_context),
       instanceName: 'appSettingsRepo');
   locator.registerSingleton<IPostRepository>(
       PostRepository(_context, _objectboxDirector, _modelDirector),

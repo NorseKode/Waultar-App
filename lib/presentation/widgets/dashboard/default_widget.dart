@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:waultar/presentation/widgets/dashboard/widget_body.dart';
 
 class DefaultWidget extends StatefulWidget {
   final String title;
@@ -19,14 +18,27 @@ class DefaultWidget extends StatefulWidget {
 class _DefaultWidgetState extends State<DefaultWidget> {
   @override
   Widget build(BuildContext context) {
-    return WidgetBody(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(widget.title),
-        const Divider(thickness: 2, height: 40, color: Color(0xFF4D4F68)),
-        widget.child
-      ],
-    ));
+    return Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: const Color(0xFF272837)),
+        child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(widget.title),
+                SizedBox(height: 10),
+                Container(
+                    decoration: BoxDecoration(
+                        border: Border(
+                            top: BorderSide(
+                                color: Color(0xFF4D4F68), width: 2))),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: widget.child,
+                    )),
+              ],
+            )));
   }
 }
