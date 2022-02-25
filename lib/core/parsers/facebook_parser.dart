@@ -101,6 +101,36 @@ class FacebookParser extends BaseParser {
                 yield model;
               }
             }
+          } else if (object.containsKey('your_events_v2')) {
+            var yourEvents = object['your_events_v2'] as List<dynamic>;
+            for (var event in yourEvents) {
+              yield EventModel.fromJson(event, profile!);
+            }
+          } else if (object.containsKey('event_responses_v2')) {
+            var joined = object['event_responses_v2']['events_joined'];
+            var declined = object['event_responses_v2']['events_declined'];
+            var interested = object['event_responses_v2']['events_interested'];
+            for (var event in joined) {
+              var model = EventModel.fromJson(event, profile!);
+              model.response = EventResponse.joined;
+              yield model;
+            }
+            for (var event in declined) {
+              var model = EventModel.fromJson(event, profile!);
+              model.response = EventResponse.declined;
+              yield model;
+            }
+            for (var event in interested) {
+              var model = EventModel.fromJson(event, profile!);
+              model.response = EventResponse.interested;
+              yield model;
+            }
+
+          } else if (object.containsKey('events_invited_v2')) {
+            var eventsInvited = object['events_invited_v2'] as List<dynamic>;
+            for (var event in eventsInvited) {
+              yield EventModel.fromJson(event, profile!);
+            }
           } else {
             var mediaKey = object.keys
                 .firstWhere((key) => mediaKeys.contains(key), orElse: () => "");

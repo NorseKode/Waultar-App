@@ -8,14 +8,22 @@ class PlaceModel extends BaseModel {
   CoordinateModel? coordinate;
   Uri? uri;
 
-  PlaceModel({
-    int id = 0, 
-    required ProfileModel profile,
-    required String raw,
-    required this.name,
-    this.address,
-    this.coordinate,
-    this.uri
-  }) : super(id, profile, raw);
-  
+  PlaceModel(
+      {int id = 0,
+      required ProfileModel profile,
+      required String raw,
+      required this.name,
+      this.address,
+      this.coordinate,
+      this.uri})
+      : super(id, profile, raw);
+
+  PlaceModel.fromJson(Map<String, dynamic> json, ProfileModel profile)
+      : name = json['name'],
+        address = json.containsKey('address') ? json['address'] : null,
+        uri = json.containsKey('uri') ? Uri(path: json['url']) : null,
+        coordinate = json.containsKey('coordinate')
+            ? CoordinateModel.fromJson(json['coordinate'])
+            : null,
+        super(0, profile, json.toString());
 }

@@ -24,7 +24,10 @@ Future<void> main() async {
   late final ProfileModel profileModel;
 
   var testProfile = ProfileObjectBox(
-      uri: "test/path", fullName: "John Doe", createdTimestamp: DateTime.now(), raw: "raw");
+      uri: "test/path",
+      fullName: "John Doe",
+      createdTimestamp: DateTime.now(),
+      raw: "raw");
 
   T testRunnerPut<T>(T testEntity) {
     var box = _context.store.box<T>();
@@ -71,8 +74,10 @@ Future<void> main() async {
     });
 
     test('- insert post without any relations besides profile', () {
-      var post =
-          PostModel(profile: profileModel, raw: "this is some raw json", timestamp: DateTime.now());
+      var post = PostModel(
+          profile: profileModel,
+          raw: "this is some raw json",
+          timestamp: DateTime.now());
       _repo.addPost(post);
 
       var createdPost = _repo.getSinglePost(1)!;
@@ -84,21 +89,30 @@ Future<void> main() async {
 
     test('- insert post with media relations', () {
       var datetime = DateTime.now();
-      var post = PostModel(profile: profileModel, raw: 'blob json', timestamp: datetime);
+      var post = PostModel(
+          profile: profileModel, raw: 'blob json', timestamp: datetime);
 
-      var image1 =
-          ImageModel(profile: profileModel, raw: 'blob', uri: Uri(path: 'waultar/media/image1'));
+      var image1 = ImageModel(
+          profile: profileModel,
+          raw: 'blob',
+          uri: Uri(path: 'waultar/media/image1'));
       var image2 = ImageModel(
           profile: profileModel,
           raw: 'blob',
           uri: Uri(path: 'waultar/media/image2'),
           title: 'image with title');
-      var video1 =
-          VideoModel(profile: profileModel, raw: 'blob', uri: Uri(path: 'waultar/media/video1'));
-      var link1 =
-          LinkModel(profile: profileModel, raw: 'raw', uri: Uri(path: 'waultar/media/link1'));
-      var file1 =
-          FileModel(profile: profileModel, raw: 'raw', uri: Uri(path: 'waultar/media/file1'));
+      var video1 = VideoModel(
+          profile: profileModel,
+          raw: 'blob',
+          uri: Uri(path: 'waultar/media/video1'));
+      var link1 = LinkModel(
+          profile: profileModel,
+          raw: 'raw',
+          uri: Uri(path: 'waultar/media/link1'));
+      var file1 = FileModel(
+          profile: profileModel,
+          raw: 'raw',
+          uri: Uri(path: 'waultar/media/file1'));
 
       post.medias = [];
       post.medias!.addAll([image1, image2, video1, link1, file1]);
@@ -122,9 +136,12 @@ Future<void> main() async {
     });
 
     test('- insert post with existing file uri', () {
-      var fileWithSameUri =
-          FileModel(profile: profileModel, raw: 'raw', uri: Uri(path: 'waultar/media/file1'));
-      var post = PostModel(profile: profileModel, raw: 'blob', timestamp: DateTime.now());
+      var fileWithSameUri = FileModel(
+          profile: profileModel,
+          raw: 'raw',
+          uri: Uri(path: 'waultar/media/file1'));
+      var post = PostModel(
+          profile: profileModel, raw: 'blob', timestamp: DateTime.now());
       post.medias = [];
       post.medias!.add(fileWithSameUri);
 
@@ -135,9 +152,12 @@ Future<void> main() async {
     });
 
     test('- insert post with event', () {
-      var coordinate = CoordinateModel(0, 2.0, 3.0);
-      var place =
-          PlaceModel(profile: profileModel, raw: 'blob', name: 'test name', coordinate: coordinate);
+      var coordinate = CoordinateModel(id: 0, latitude: 2.0, longitude: 3.0);
+      var place = PlaceModel(
+          profile: profileModel,
+          raw: 'blob',
+          name: 'test name',
+          coordinate: coordinate);
       // ignore: unused_local_variable
       var event = EventModel(
           profile: profileModel,
