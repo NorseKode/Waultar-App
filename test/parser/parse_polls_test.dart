@@ -5,7 +5,6 @@ import 'package:path/path.dart' as path_dart;
 import 'package:waultar/core/models/content/post_poll_model.dart';
 import 'package:waultar/core/models/model_helper.dart';
 import 'package:waultar/core/parsers/facebook_parser.dart';
-import 'package:waultar/core/parsers/instagram_parser.dart';
 
 import '../test_helper.dart';
 
@@ -45,7 +44,7 @@ main() {
     test('Facebook polls in groups', () async {
       var results = await FacebookParser().parseFile(facebookGroups, profile: facebookProfile).toList();
 
-      var polls = results.where((element) => element is PostPollModel);
+      var polls = results.whereType<PostPollModel>();
 
       expect(polls.length, 1);
 

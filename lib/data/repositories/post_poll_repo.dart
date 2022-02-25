@@ -1,4 +1,3 @@
-import 'package:waultar/core/abstracts/abstract_repositories/i_link_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_poll_repository.dart';
 import 'package:waultar/core/models/content/post_poll_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
@@ -19,7 +18,6 @@ class PostPollRepository implements IPostPollRepository {
 
   @override
   int addPostPoll(PostPollModel model) {
-    print("added to box");
     return _postPollBox.put(_entityDirector.make<PostPollObjectBox>(model));
   }
 
@@ -33,7 +31,7 @@ class PostPollRepository implements IPostPollRepository {
   @override
   List<PostPollModel> getAllPostPolls() {
     var postPollModels = <PostPollModel>[];
-    var temp = _postPollBox.getAll();
+    
     for (var postPoll in _postPollBox.getAll()) {
       postPollModels.add(_modelDirector.make<PostPollModel>(postPoll));
     }
