@@ -48,9 +48,11 @@ class Uploader {
             ),
             SimpleDialogOption(
               onPressed: () async {
-                var files = await FileUploader.uploadMultiple() ?? <File>[];
+                var files = await FileUploader.uploadMultiple();
                 
-                Navigator.pop(context, Tuple2(files.map((e) => e.path).toList(), dropDownValue));
+                if (files != null) {
+                  Navigator.pop(context, Tuple2(files.map((e) => e.path).toList(), dropDownValue));
+                }
               },
               child: Text(localizer.uploadFiles),
             ),
