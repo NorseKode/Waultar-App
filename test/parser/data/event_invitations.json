@@ -1,0 +1,34 @@
+{
+    "events_invited_v2": [
+        {
+            "name": "Event 1",
+            "start_timestamp": 1639759500,
+            "end_timestamp": 0
+        },
+        {
+            "name": "Event 2",
+            "start_timestamp": 1639759500,
+            "end_timestamp": 0
+        },
+        {
+            "name": "Event 5",
+            "start_timestamp": 1639759500,
+            "end_timestamp": 0
+        },
+        {
+            "name": "Event 7",
+            "start_timestamp": 1639759500,
+            "end_timestamp": 0
+        },
+        {
+            "name": "Event 8",
+            "start_timestamp": 1639759500,
+            "end_timestamp": 0
+        },
+        {
+            "name": "Event 9",
+            "start_timestamp": 1639759500,
+            "end_timestamp": 0
+        }
+    ]
+}

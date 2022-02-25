@@ -1,0 +1,61 @@
+{
+    "event_responses_v2": {
+        "events_joined": [
+            {
+                "name": "Event 1",
+                "start_timestamp": 1639759500,
+                "end_timestamp": 0
+            },
+            {
+                "name": "Event 2",
+                "start_timestamp": 1639759500,
+                "end_timestamp": 0
+            },
+            {
+                "name": "Test event 1",
+                "start_timestamp": 1489856400,
+                "end_timestamp": 0,
+                "place": {
+                    "name": "Rued Langgaardsvej 7",
+                    "coordinate": {
+                        "latitude": 55.659964,
+                        "longitude": 12.591105
+                    }
+                },
+                "description": "Party at ITU",
+                "create_timestamp": 1489524301
+            },
+            {
+                "name": "Coding camp at ITU",
+                "start_timestamp": 1338469200,
+                "end_timestamp": 0,
+                "description": "Hosted by Thore",
+                "create_timestamp": 1339354724
+            }
+        ],
+        "events_declined": [
+            {
+                "name": "Event 3",
+                "start_timestamp": 1639759500,
+                "end_timestamp": 0
+            },
+            {
+                "name": "Event 4",
+                "start_timestamp": 1639759500,
+                "end_timestamp": 1651145400
+            }
+        ],
+        "events_interested": [
+            {
+                "name": "Event 5",
+                "start_timestamp": 1639759500,
+                "end_timestamp": 0
+            },
+            {
+                "name": "Event 6",
+                "start_timestamp": 1639759500,
+                "end_timestamp": 1651145400
+            }
+        ]
+    }
+}

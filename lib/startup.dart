@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_event_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_file_repository.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_group_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_image_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_link_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_poll_repository.dart';
@@ -18,6 +19,7 @@ import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/repositories/appsettings_repo.dart';
 import 'package:waultar/data/repositories/event_repo.dart';
 import 'package:waultar/data/repositories/file_repo.dart';
+import 'package:waultar/data/repositories/group_repo.dart';
 import 'package:waultar/data/repositories/image_repo.dart';
 import 'package:waultar/data/repositories/link_repo.dart';
 import 'package:waultar/data/repositories/model_builders/i_model_director.dart';
@@ -56,9 +58,11 @@ late final String _logFolder;
 
 Future<void> setupServices() async {
   await initApplicationPaths();
-  locator.registerSingleton<String>(_waultarPath, instanceName: 'waultar_root_directory');
+  locator.registerSingleton<String>(_waultarPath,
+      instanceName: 'waultar_root_directory');
   locator.registerSingleton<String>(_dbFolderPath, instanceName: 'db_folder');
-  locator.registerSingleton<String>(_extractsFolderPath, instanceName: 'extracts_folder');
+  locator.registerSingleton<String>(_extractsFolderPath,
+      instanceName: 'extracts_folder');
   locator.registerSingleton<String>(_logFolderPath, instanceName: 'log_folder');
 
   os = detectPlatform();
@@ -81,12 +85,14 @@ Future<void> setupServices() async {
   // model director is the opposite of ObjectBoxDirector
   // this director maps from entity to model
   _modelDirector = ModelDirector();
-  locator.registerSingleton<IModelDirector>(_modelDirector, instanceName: 'model_director');
+  locator.registerSingleton<IModelDirector>(_modelDirector,
+      instanceName: 'model_director');
 
   // register all abstract repositories with their concrete implementations
   // each repo gets injected the context (to access the relevant store)
   // and the objectboxDirector to map from models to entities
-  locator.registerSingleton<IAppSettingsRepository>(AppSettingsRepository(_context),
+  locator.registerSingleton<IAppSettingsRepository>(
+      AppSettingsRepository(_context),
       instanceName: 'appSettingsRepo');
   locator.registerSingleton<IPostRepository>(
       PostRepository(_context, _objectboxDirector, _modelDirector),
@@ -100,6 +106,9 @@ Future<void> setupServices() async {
   locator.registerSingleton<IEventRepository>(
       EventRepository(_context, _objectboxDirector, _modelDirector),
       instanceName: 'eventRepo');
+  locator.registerSingleton<IGroupRepository>(
+      GroupRepository(_context, _objectboxDirector, _modelDirector), 
+      instanceName: 'groupRepo');
   locator.registerSingleton<IImageRepository>(
       ImageRepository(_context, _objectboxDirector, _modelDirector),
       instanceName: 'imageRepo');

@@ -161,6 +161,12 @@ class NaiveParser extends BaseParser {
     throw UnimplementedError();
   }
 
+  @override
+  Future<Tuple2<List<GroupModel>, List<String>>> parseGroupNames(List<String> paths, ProfileModel profile) {
+    // TODO: implement parseGroupNames
+    throw UnimplementedError();
+  }
+
   // static _imageCriteria(List<ImageModel> acc, var data) {
   //   imageCriteria(var value) =>
   //       value is Map<String, dynamic> &&

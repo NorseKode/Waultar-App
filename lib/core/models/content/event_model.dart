@@ -27,18 +27,20 @@ class EventModel extends BaseModel {
     this.response,
   }) : super(id, profile, raw);
 
-
   EventModel.fromJson(Map<String, dynamic> json, ProfileModel profile)
       : name = json["name"],
         startTimestamp = ModelHelper.intToTimestamp(json["start_timestamp"]),
         endTimestamp = ModelHelper.intToTimestamp(json["end_timestamp"]),
-        isUsers = true,
+        createdTimestamp = json.containsKey('create_timestamp')
+            ? ModelHelper.intToTimestamp(json["create_timestamp"])
+            : null,
+        description =
+            json.containsKey('description') ? json['description'] : null,
+        isUsers = false,
+        place = json.containsKey('place')
+            ? PlaceModel.fromJson(json['place'], profile)
+            : null, 
         super(0, profile, json.toString());
 }
 
-enum EventResponse {
-  unknown,
-  interested,
-  joined,
-  declined
-}
+enum EventResponse { unknown, interested, joined, declined }

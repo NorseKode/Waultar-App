@@ -1,4 +1,5 @@
 import 'package:waultar/data/entities/content/event_objectbox.dart';
+import 'package:waultar/data/entities/content/group_objectbox.dart';
 import 'package:waultar/data/entities/content/post_event_objectbox.dart';
 import 'package:waultar/data/entities/content/post_life_event_objectbox.dart';
 import 'package:waultar/data/entities/content/post_objectbox.dart';
@@ -15,6 +16,7 @@ import 'package:waultar/data/entities/misc/place_objectbox.dart';
 import 'package:waultar/data/entities/misc/service_objectbox.dart';
 import 'package:waultar/data/entities/misc/tag_objectbox.dart';
 import 'package:waultar/data/entities/profile/profile_objectbox.dart';
+import 'package:waultar/data/repositories/model_builders/builders/groupmodel_builder.dart';
 import 'package:waultar/data/repositories/model_builders/builders/postlifeevent_builder.dart';
 
 import 'builders/changemodel_builder.dart';
@@ -41,6 +43,9 @@ class ModelDirector implements IModelDirector {
       // everything content related
       case EventObjectBox:
         return makeEventModel(entity as EventObjectBox) as T;
+
+      case GroupObjectBox:
+        return makeGroupModel(entity as GroupObjectBox) as T;
 
       // everything media related
       case ImageObjectBox:
