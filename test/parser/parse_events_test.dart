@@ -39,6 +39,8 @@ main() {
       expect(userEvents.first.name, 'Test event 1');
       expect(userEvents.last.name, 'Coding camp at ITU');
       expect(userEvents.last.description, 'Hosted by Thore');
+      expect(userEvents.first.isUsers, true);
+      expect(userEvents.last.isUsers, true);
       expect(userEvents.first.place != null, true);
       expect(userEvents.first.place!.address, null);
       expect(userEvents.first.place!.name, 'Rued Langgaardsvej 7');

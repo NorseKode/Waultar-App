@@ -104,7 +104,9 @@ class FacebookParser extends BaseParser {
           } else if (object.containsKey('your_events_v2')) {
             var yourEvents = object['your_events_v2'] as List<dynamic>;
             for (var event in yourEvents) {
-              yield EventModel.fromJson(event, profile!);
+              var model = EventModel.fromJson(event, profile!);
+              model.isUsers = true;
+              yield model;
             }
           } else if (object.containsKey('event_responses_v2')) {
             var joined = object['event_responses_v2']['events_joined'];

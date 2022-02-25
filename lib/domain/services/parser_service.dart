@@ -1,3 +1,4 @@
+import 'package:waultar/core/abstracts/abstract_repositories/i_event_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_group_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
@@ -14,6 +15,8 @@ class ParserService implements IParserService {
       locator.get<IProfileRepository>(instanceName: 'profileRepo');
   final IGroupRepository _groupRepo =
       locator.get<IGroupRepository>(instanceName: 'groupRepo');
+  final IEventRepository _eventRepo =
+      locator.get<IEventRepository>(instanceName: 'eventRepo');
 
   @override
   Future parseAll(List<String> paths, ServiceModel service) async {
@@ -74,6 +77,9 @@ class ParserService implements IParserService {
 
       case GroupModel:
         return _groupRepo.updateGroup(model);
+
+      case EventModel:
+        return _eventRepo.addEvent(model);
 
       default:
         return -1;

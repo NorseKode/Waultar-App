@@ -9,7 +9,9 @@ import 'misc_builders.dart';
 EventObjectBox makeEventEntity(EventModel model, ObjectBox context) {
   var entity = context.store
       .box<EventObjectBox>()
-      .query(EventObjectBox_.name.equals(model.name))
+      .query(EventObjectBox_.name
+          .equals(model.name)
+          .and(EventObjectBox_.startTimestamp.equals(model.startTimestamp!.millisecondsSinceEpoch)))
       .build()
       .findFirst();
   if (entity == null) {
@@ -48,6 +50,10 @@ EventObjectBox makeEventEntity(EventModel model, ObjectBox context) {
 
     return entity;
   } else {
+    // it is possible to parse the response after the event has initially been parsed
+    if (model.response != null) {
+      entity.dbEventResponse = model.response!.index;
+    }
     return entity;
   }
 }
