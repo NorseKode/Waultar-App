@@ -57,8 +57,6 @@ Future<void> deleteTestDb() async {
     await datafile.delete();
     await lockfile.delete();
   } catch (e) {
-    // ignore: avoid_print
-    print(e);
     return;
   }
 }

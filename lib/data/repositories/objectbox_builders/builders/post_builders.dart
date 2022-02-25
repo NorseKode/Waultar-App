@@ -5,7 +5,6 @@ import 'package:waultar/core/models/index.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
 import 'package:waultar/data/entities/content/event_objectbox.dart';
-import 'package:waultar/data/entities/content/poll_objectbox.dart';
 import 'package:waultar/data/entities/content/post_event_objectbox.dart';
 import 'package:waultar/data/entities/content/post_life_event_objectbox.dart';
 import 'package:waultar/data/entities/content/post_objectbox.dart';
@@ -39,11 +38,9 @@ PostObjectBox makePostEntity(PostModel model, ObjectBox context) {
 
   // the profile HAS to be created in db before storing additional data
   if (model.profile.id == 0) {
-    throw ObjectBoxException(
-        "Profile Id is 0 - profile must be stored before calling me");
+    throw ObjectBoxException("Profile Id is 0 - profile must be stored before calling me");
   } else {
-    var profileEntity =
-        context.store.box<ProfileObjectBox>().get(model.profile.id);
+    var profileEntity = context.store.box<ProfileObjectBox>().get(model.profile.id);
     entity.profile.target = profileEntity;
   }
 
@@ -108,14 +105,13 @@ PostObjectBox makePostEntity(PostModel model, ObjectBox context) {
 }
 
 PostPollObjectBox makePostPollEntity(PostPollModel model, ObjectBox context) {
-  var entity = PostPollObjectBox();
+  var entity = PostPollObjectBox(isUsers: model.isUsers);
 
-  var post = context.store.box<PostObjectBox>().get(model.post.id)!;
-  var poll = context.store.box<PollObjectBox>().get(model.poll.id)!;
+  entity.post.target = makePostEntity(model.post, context);
+  entity.isUsers = model.isUsers;
+  entity.options = model.options;
+  entity.timestamp = model.timestamp;
 
-  entity.post.target = post;
-  entity.poll.target = poll;
-  
   return entity;
 }
 
@@ -127,7 +123,7 @@ PostEventObjectBox makePostEventEntity(PostEventModel model, ObjectBox context) 
 
   entity.post.target = post;
   entity.event.target = event;
-  
+
   return entity;
 }
 
@@ -136,11 +132,9 @@ PostLifeEventObjectBox makePostLifeEventEntity(PostLifeEventModel model, ObjectB
 
   // the profile HAS to be created in db before storing additional data
   if (model.post.profile.id == 0) {
-    throw ObjectBoxException(
-        "Profile Id is 0 - profile must be stored before calling me");
+    throw ObjectBoxException("Profile Id is 0 - profile must be stored before calling me");
   } else {
-    var profileEntity =
-        context.store.box<ProfileObjectBox>().get(model.post.profile.id);
+    var profileEntity = context.store.box<ProfileObjectBox>().get(model.post.profile.id);
     entity.profile.target = profileEntity;
   }
 

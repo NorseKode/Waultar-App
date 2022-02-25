@@ -2,6 +2,7 @@ import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_file_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_image_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_link_repository.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_post_poll_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_video_repository.dart';
@@ -53,8 +54,10 @@ class PresentationHelper {
         (locator.get<IVideoRepository>(instanceName: 'videoRepo')).removeAll().toString());
     _appLogger.logger.info("Posts deleted: " +
         (locator.get<IFileRepository>(instanceName: 'fileRepo').removeAll()).toString());
-    _appLogger.logger.info("Posts deleted: " +
+    _appLogger.logger.info("Links deleted: " +
         (locator.get<ILinkRepository>(instanceName: 'linkRepo').removeAll()).toString());
+    _appLogger.logger.info("PostPolls deleted: " +
+        (locator.get<IPostPollRepository>(instanceName: 'postPollRepo').removeAll()).toString());
 
     _appLogger.logger.info("Nuke database => removed all elements");
   }

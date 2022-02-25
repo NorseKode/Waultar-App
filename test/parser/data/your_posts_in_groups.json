@@ -1,0 +1,60 @@
+{
+    "group_posts_v2": [
+        {
+            "timestamp": 1294509294,
+            "title": "REDACTED TITLE"
+        },
+        {
+            "timestamp": 1307279530,
+            "attachments": [
+                {
+                    "data": [
+                        {
+                            "media": {
+                                "uri": "posts/media/your_posts/251785_1703163148960_3263280_n_1703163148960.jpg",
+                                "creation_timestamp": 1307279637,
+                                "media_metadata": {
+                                    "photo_metadata": {
+                                        "exif_data": [
+                                            {
+                                                "upload_ip": "11.111.1.11"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "title": ""
+                            }
+                        }
+                    ]
+                }
+            ],
+            "data": [],
+            "title": "REDACTED TITLE"
+        },
+        {
+            "timestamp": 1449761175,
+            "attachments": [
+                {
+                    "data": [
+                        {
+                            "poll": {
+                                "question": "REDACTED QUESTION",
+                                "options": [
+                                    {
+                                        "option": "Option 1",
+                                        "voted": false
+                                    },
+                                    {
+                                        "option": "Option 2",
+                                        "voted": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ],
+            "title": "REDACTED TITLE"
+        }
+    ]
+}
