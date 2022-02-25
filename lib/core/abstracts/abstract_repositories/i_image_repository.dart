@@ -1,9 +1,10 @@
-
 import 'package:waultar/core/models/index.dart';
 
 abstract class IImageRepository {
-  Future<int> addImage(ImageModel image);
-  Future<ImageModel> getImageById(int id);
-  Future<List<ImageModel>> getAllImages();
-  Future<List<ImageModel>> getAllImagesSortedByDate();
+  int addImage(ImageModel image);
+  ImageModel? getImageById(int id);
+  List<ImageModel>? getAllImages();
+  List<ImageModel>? getAllImagesByService(ServiceModel service);
+  List<ImageModel>? getAllImagesByProfile(ProfileModel profile);
+  int removeAll();
 }

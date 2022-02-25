@@ -2,16 +2,16 @@ import 'package:objectbox/objectbox.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
 import 'package:waultar/core/models/misc/appsettings_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
-import 'package:waultar/data/entities/misc/appsettings_entity.dart';
+import 'package:waultar/data/entities/misc/appsettings_objectbox.dart';
 
 class AppSettingsRepository implements IAppSettingsRepository {
   // final ObjectBox context = locator<ObjectBox>(instanceName: 'context');
   late final ObjectBox _context;
-  late final Box<AppSettingsBox> _appSettingsBox;
+  late final Box<AppSettingsObjectBox> _appSettingsBox;
 
   AppSettingsRepository(ObjectBox context) {
     _context = context;
-    _appSettingsBox = _context.store.box<AppSettingsBox>();
+    _appSettingsBox = _context.store.box<AppSettingsObjectBox>();
   }
 
   @override

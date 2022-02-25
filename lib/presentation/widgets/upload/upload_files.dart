@@ -1,8 +1,7 @@
 import 'dart:io';
 
-import 'package:archive/archive.dart';
+import 'package:archive/archive_io.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as dart_path;
 
 class FileUploader {
@@ -17,7 +16,7 @@ class FileUploader {
     }
   }
 
-  /// Returns a list of files if users picks any file, reutrns `null` otherwise
+  /// Returns a list of files if users picks any file, returns `null` otherwise
   static Future<List<File>?> uploadMultiple() async {
     FilePickerResult? result =
         await FilePicker.platform.pickFiles(allowMultiple: true);
@@ -29,7 +28,7 @@ class FileUploader {
     }
   }
 
-  /// Returns a list of files if users picks a directory, reutrns `null` otherwise
+  /// Returns a list of files if users picks a directory, returns `null` otherwise
   static Future<List<File>?> uploadFilesFromDirectory() async {
     String? path = await FilePicker.platform.getDirectoryPath();
 
@@ -81,27 +80,30 @@ class FileUploader {
 
     return files;
   }
+}
 
-  static Future<List<String>> extractZip(String path) async {
-    final bytes = File(path).readAsBytesSync();
-    final archive = ZipDecoder().decodeBytes(bytes);
+List<String> extractZip(Map<String, String> input) {
+  // using inputFileStream to access zip without storing it in memory
+  final inputStream = InputFileStream(input['path'] as String);
+  final serviceName = input['service_name'] as String;
+  // decode the zip via the stream - the archive will have the contents of the zip
+  // without having to store it in memory
+  final archive = ZipDecoder().decodeBuffer(inputStream);
+  String tempDestDirPath = input["extracts_folder"]! + "/" + serviceName;
+  final destDirPath = dart_path.normalize(tempDestDirPath);
 
-    final folder = await getApplicationDocumentsDirectory();
-
-    var list = <String>[];
-
-    for (final file in archive) {
-      final filename = file.name;
-      if (file.isFile) {
-        final data = file.content as List<int>;
-        var path = dart_path.normalize(folder.path + '/extracts/' + filename);
-        var finalFile = File(path)
-          ..createSync(recursive: true)
-          ..writeAsBytesSync(data);
-        list.add(finalFile.path);
-      } 
+  var list = <String>[];
+  for (var file in archive.files) {
+    // only take the files and skip the optional .zip.enc file
+    if (file.isFile && !file.name.endsWith('zip.enc')) {
+      var filePath = dart_path.normalize(destDirPath + '/' + file.name);
+      final outputStream = OutputFileStream(filePath);
+      file.writeContent(outputStream);
+      list.add(outputStream.path);
+      outputStream.close();
     }
-
-    return list;
   }
+
+  inputStream.close();
+  return list;
 }

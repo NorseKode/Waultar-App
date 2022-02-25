@@ -1,10 +1,11 @@
 import 'dart:io';
 
 import 'package:waultar/data/configs/objectbox.dart';
-import 'package:waultar/data/entities/misc/appsettings_entity.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
 
 import 'package:path/path.dart' as dart_path;
+import 'package:waultar/data/entities/index.dart';
+import 'package:waultar/data/entities/misc/service_objectbox.dart';
 // import 'objectbox.g.dart';
 
 class ObjectBoxMock implements ObjectBox {
@@ -13,10 +14,30 @@ class ObjectBoxMock implements ObjectBox {
 
   ObjectBoxMock._create(this.store) {
     // additional setup code here
-    final appSettingsBox = store.box<AppSettingsBox>();
+    final appSettingsBox = store.box<AppSettingsObjectBox>();
     if (appSettingsBox.isEmpty()) {
-      var initialAppSettings = AppSettingsBox(0, false);
+      var initialAppSettings = AppSettingsObjectBox(0, false);
       appSettingsBox.put(initialAppSettings);
+    }
+
+    var facebookService = store
+        .box<ServiceObjectBox>()
+        .query(ServiceObjectBox_.name.equals('Facebook'))
+        .build()
+        .findUnique();
+    if (facebookService == null) {
+      facebookService = ServiceObjectBox(name: 'Facebook', company: 'Meta', image: '/TODO');
+      store.box<ServiceObjectBox>().put(facebookService);
+    }
+
+    var instagramService = store
+        .box<ServiceObjectBox>()
+        .query(ServiceObjectBox_.name.equals('Instagram'))
+        .build()
+        .findUnique();
+    if (instagramService == null) {
+      instagramService = ServiceObjectBox(name: 'Instagram', company: 'Meta', image: '/TODO');
+      store.box<ServiceObjectBox>().put(instagramService);
     }
   }
 
@@ -36,8 +57,6 @@ Future<void> deleteTestDb() async {
     await datafile.delete();
     await lockfile.delete();
   } catch (e) {
-    // ignore: avoid_print
-    print(e);
     return;
   }
 }

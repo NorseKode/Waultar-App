@@ -96,25 +96,22 @@ class NaiveParser extends BaseParser {
           // var data = await ParseHelper.getJsonStringFromFile(file);
           // _imageCriteria(mapOfAcc["Images"]! as List<ImageModel>, data);
         } on Tuple2<String, dynamic> catch (e) {
-          throw ParseException(
-              "Unexpected error occured in parsing of file", file, e.item2);
+          throw ParseException("Unexpected error occured in parsing of file", file, e.item2);
         } on FormatException catch (e) {
           throw ParseException("Wrong formatted json", file, e);
         }
       }
     }
 
-
     // return mapOfAcc;
   }
 
   @override
-  Stream<BaseModel> parseFile(File file) async* {
+  Stream<BaseModel> parseFile(File file, {ProfileModel? profile}) async* {
     // var mapOfAcc = _setupAccumulators();
 
     var jsonData = await ParseHelper.getJsonStringFromFile(file);
-    var isProfileData =
-        _probleJsonMap(jsonData, ["profile_v2", "profile_user"], 1);
+    var isProfileData = _probleJsonMap(jsonData, ["profile_v2", "profile_user"], 1);
 
     if (isProfileData) {
       // var profile = _profileCriteria(jsonData);
@@ -137,13 +134,37 @@ class NaiveParser extends BaseParser {
     // return mapOfAcc;
   }
 
-  static bool _probleJsonMap(var jsonData, List<String> keysToLookFor,
-      int amountOfUniqueKeysNeeded) {
+  static bool _probleJsonMap(
+      var jsonData, List<String> keysToLookFor, int amountOfUniqueKeysNeeded) {
     var keys = ParseHelper.findAllKeysInJson(jsonData);
 
     var result = keys.where((e) => keysToLookFor.contains(e));
 
     return result.length >= amountOfUniqueKeysNeeded ? true : false;
+  }
+
+  @override
+  Stream parseListOfPaths(List<String> paths, {ProfileModel? profile}) {
+    // TODO: implement parseListOfPaths
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream parseFileLookForKey(File file, String key) {
+    // TODO: implement parseFileLookForKey
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Tuple2<ProfileModel, List<String>>> parseProfile(List<String> paths, {ServiceModel? service}) {
+    // TODO: implement parseProfile
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Tuple2<List<GroupModel>, List<String>>> parseGroupNames(List<String> paths, ProfileModel profile) {
+    // TODO: implement parseGroupNames
+    throw UnimplementedError();
   }
 
   // static _imageCriteria(List<ImageModel> acc, var data) {

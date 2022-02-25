@@ -1,65 +1,78 @@
-import 'package:waultar/core/models/content/event_model.dart';
-import 'package:waultar/core/models/content/group_model.dart';
-import 'package:waultar/core/models/content/life_event_model.dart';
-import 'package:waultar/core/models/media/media_model.dart';
-import 'package:waultar/core/models/misc/person_model.dart';
-import 'package:waultar/core/models/content/poll_model.dart';
-import 'package:waultar/core/models/misc/tag_model.dart';
-import 'package:waultar/core/models/profile/profile_model.dart';
-
-import '../base_model.dart';
+import 'package:waultar/core/models/index.dart';
+import 'package:waultar/core/models/model_helper.dart';
+import 'package:waultar/core/parsers/parse_helper.dart';
 
 class PostModel extends BaseModel {
-  late DateTime timestamp;
-
-  // facebook and instagram
-  List<MediaModel>? content;
+  DateTime timestamp;
   String? description;
   String? title;
-
-  List<PersonModel>? mentions;
+  List<MediaModel>? medias;
   List<TagModel>? tags;
-
-  // only for facebook
-  EventModel? event;
-  GroupModel? group;
-  PollModel? poll;
-  LifeEventModel? lifeEvent;
-
-  // only for instagram
+  List<PersonModel>? mentions;
   bool? isArchived;
-
-  // meta should be misc/other
-  String? meta;
+  String? metadata;
 
   PostModel({
     int id = 0,
     required ProfileModel profile,
     required String raw,
     required this.timestamp,
-    this.content,
-    this.description,
     this.title,
-    this.mentions,
+    this.description,
+    this.medias,
     this.tags,
-    this.event,
-    this.group,
-    this.poll,
-    this.lifeEvent,
-    this.isArchived = false,
-    this.meta,
+    this.mentions,
+    this.isArchived,
+    this.metadata
   }) : super(id, profile, raw);
 
   PostModel.fromJson(Map<String, dynamic> json, ProfileModel profile)
-      : content = null,
-        description = json["post"],
-        title = json["title"],
-        event = null,
-        group = null,
-        poll = null,
-        lifeEvent = null,
-        timestamp = DateTime.fromMillisecondsSinceEpoch(json["timestamp"]),
-        super (0, profile, "");
+      : timestamp = DateTime.fromMicrosecondsSinceEpoch(0),
+        super(0, profile, json.toString()) {
+    // ignore: unused_local_variable
+    dynamic eventJson;
+    // ignore: unused_local_variable
+    dynamic pollJson;
+    var mediaJson = <dynamic>[];
+    dynamic attachments;
+    dynamic data;
+
+    if (json.keys.length == 1 && json.containsKey("media")) {
+      json = json["media"].first;
+    }
+
+    if (json.containsKey("attachments") && json["attachments"].isNotEmpty) {
+      attachments = json["attachments"].firstWhere(
+          (element) => element is Map<String, dynamic> && element.containsKey("data"),
+          orElse: null);
+    }
+
+    if (json.containsKey("data") && json["data"].isNotEmpty) {
+      data = json["data"].isNotEmpty
+          ? json["data"].firstWhere((element) => element is Map<String, dynamic>, orElse: null)
+          : null;
+    }
+
+    if (attachments != null) {
+      for (var item in attachments["data"]) {
+        if (item is Map<String, dynamic>) {
+          if (item.containsKey("event")) {
+            eventJson = item["event"];
+          } else if (item.containsKey("poll")) {
+            pollJson = item;
+          } else if (item.values.contains("uri")) {
+            mediaJson.add(item);
+          }
+        }
+      }
+    }
+
+    medias = mediaJson.map((element) => ParseHelper.parseMedia(element, "media")!).toList();
+    description = json["title"] ?? "";
+    title = data != null ? data["post"] : "";
+    // event = eventJson != null ? EventModel.fromJson(eventJson, profile) : null;
+    timestamp = ModelHelper.getTimestamp(json)!;
+  }
 
   @override
   String toString() {

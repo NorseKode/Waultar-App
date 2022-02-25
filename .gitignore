@@ -44,3 +44,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# flutter desktop
+**/generated_plugin_registrant.cc
+**/generated_plugins.cmake

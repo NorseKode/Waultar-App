@@ -3,8 +3,8 @@ import 'package:waultar/core/models/model_helper.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
 
 class VideoModel extends MediaModel {
-  String title;
-  String description;
+  String? title;
+  String? description;
   Uri? thumbnail;
 
   VideoModel({
@@ -14,8 +14,8 @@ class VideoModel extends MediaModel {
     required Uri uri,
     String? metadata,
     DateTime? timestamp,
-    required this.title,
-    required this.description,
+    this.title,
+    this.description,
     this.thumbnail,
   }) : super(id, profile, raw, uri, metadata, timestamp);
 
