@@ -1,7 +1,6 @@
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
-import 'package:waultar/core/models/content/poll_model.dart';
 import 'package:waultar/core/models/content/post_model.dart';
 import 'package:waultar/core/models/content/post_poll_model.dart';
 import 'package:waultar/core/models/media/file_model.dart';

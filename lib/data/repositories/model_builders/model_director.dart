@@ -1,5 +1,4 @@
 import 'package:waultar/data/entities/content/event_objectbox.dart';
-import 'package:waultar/data/entities/content/poll_objectbox.dart';
 import 'package:waultar/data/entities/content/post_event_objectbox.dart';
 import 'package:waultar/data/entities/content/post_life_event_objectbox.dart';
 import 'package:waultar/data/entities/content/post_objectbox.dart';
@@ -25,7 +24,6 @@ import 'builders/eventmodel_builder.dart';
 import 'builders/mediamodel_builder.dart';
 import 'builders/personmodel_builder.dart';
 import 'builders/placemodel_builder.dart';
-import 'builders/pollmodel_builder.dart';
 import 'builders/postevent_builder.dart';
 import 'builders/postmodel_builders.dart';
 import 'builders/postpoll_builder.dart';
@@ -43,9 +41,6 @@ class ModelDirector implements IModelDirector {
       // everything content related
       case EventObjectBox:
         return makeEventModel(entity as EventObjectBox) as T;
-
-      case PollObjectBox:
-        return makePollModel(entity as PollObjectBox) as T;
 
       // everything media related
       case ImageObjectBox:

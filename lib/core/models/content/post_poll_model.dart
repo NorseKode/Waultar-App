@@ -1,5 +1,4 @@
 import 'package:waultar/configs/globals/app_logger.dart';
-import 'package:waultar/core/models/content/poll_model.dart';
 import 'package:waultar/core/models/content/post_model.dart';
 import 'package:waultar/core/models/model_helper.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
@@ -60,5 +59,21 @@ class PostPollModel {
     } else {
       isUsers = false;
     }
+  }
+
+  @override
+  String toString() {
+    var builder = StringBuffer();
+    builder.write("Title: ${post.title}\ndescription: ${post.description}\nisUsers: $isUsers\nTimestamp: $timestamp\n");
+    
+    if (options != null) {
+      builder.writeln("options:");
+
+      for (var i = 0; i < options!.length; i += 2) {
+        builder.writeln("    Option: ${options![i]}, voted: ${options![i + 1]}");
+      }
+    }
+
+    return builder.toString();
   }
 }

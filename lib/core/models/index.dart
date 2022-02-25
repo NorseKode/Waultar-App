@@ -32,7 +32,6 @@ export 'content/group_model.dart';
 export 'content/message_model.dart';
 export 'content/message_thread_model.dart';
 export 'content/page_model.dart';
-export 'content/poll_model.dart';
 export 'content/post_model.dart';
 
 export 'base_model.dart';

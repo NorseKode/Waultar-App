@@ -68,6 +68,17 @@ class _BrowseState extends State<Browse> {
             width: 20,
           ),
           ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _models = _browseService.getPostPolls();
+              });
+            },
+            child: Text(localizer.postsWithPolls),
+          ),
+          const SizedBox(
+            width: 20,
+          ),
+          ElevatedButton(
             onPressed: () async {
               var files = await Uploader.uploadDialogue(context);
 

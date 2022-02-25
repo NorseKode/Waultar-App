@@ -28,6 +28,7 @@
     "clear": "clear",
     "startedLoadingOfData": "Started loading of data",
     "doneLoadingData": "Done loading data",
+    "postsWithPolls": "Posts with Polls",
     "@helloWorld": {
       "description": "The conventional newborn programmer greeting"
     },
@@ -113,6 +114,9 @@
       "description": ""
     },
     "@doneLoadingData": {
+      "description": ""
+    },
+    "@postsWithPolls": {
       "description": ""
     }
 }

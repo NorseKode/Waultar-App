@@ -1,5 +1,4 @@
 import 'package:objectbox/objectbox.dart';
-import 'package:waultar/data/entities/content/poll_objectbox.dart';
 import 'package:waultar/data/entities/content/post_objectbox.dart';
 
 @Entity()
@@ -10,6 +9,7 @@ class PostPollObjectBox {
 
   // store options in raw json
   List<String>? options;
+  @Property(type: PropertyType.date)
   DateTime? timestamp;
 
   PostPollObjectBox({
