@@ -2,6 +2,7 @@ import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/models/index.dart';
+import 'package:waultar/core/models/content/post_poll_model.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
 import 'package:waultar/startup.dart';
 
@@ -127,11 +128,27 @@ class FacebookParser extends BaseParser {
               model.response = EventResponse.interested;
               yield model;
             }
-
           } else if (object.containsKey('events_invited_v2')) {
             var eventsInvited = object['events_invited_v2'] as List<dynamic>;
             for (var event in eventsInvited) {
               yield EventModel.fromJson(event, profile!);
+            }
+          } else if (object.containsKey("poll_votes_v2")) {
+            for (var poll in object["poll_votes_v2"]) {
+              var pollModel = PostPollModel.fromJson(poll, profile!);
+              _appLogger.logger
+                  .info("Parsed Facebook Poll: ${pollModel.toString()}");
+              yield pollModel;
+            }
+          } else if (object.containsKey("group_posts_v2")) {
+            for (var post in object["group_posts_v2"]) {
+              var keysInPost = ParseHelper.findAllKeysInJson(post);
+              if (keysInPost.contains("poll")) {
+                var postPollModel = PostPollModel.fromJson(post, profile!);
+                _appLogger.logger
+                    .info("Parsed Facebook Poll: ${postPollModel.toString()}");
+                yield postPollModel;
+              }
             }
           } else {
             var mediaKey = object.keys
@@ -259,7 +276,6 @@ class FacebookParser extends BaseParser {
     }
     paths.remove(profilePath);
     return Tuple2(groups, paths);
-
   }
 
   @override

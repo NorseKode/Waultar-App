@@ -1,0 +1,57 @@
+{
+    "poll_votes_v2": [
+        {
+            "timestamp": 1507814224,
+            "attachments": [
+                {
+                    "data": [
+                        {
+                            "poll": {
+                                "options": [
+                                    {
+                                        "option": "Option 1",
+                                        "voted": true
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ],
+            "title": "The user voted on some other user's poll."
+        },
+        {
+            "timestamp": 1505670564,
+            "attachments": [
+                {
+                    "data": [
+                        {
+                            "poll": {
+                                "question": "Option question",
+                                "options": [
+                                    {
+                                        "option": "Option 1",
+                                        "voted": true
+                                    },
+                                    {
+                                        "option": "Option 2",
+                                        "voted": false
+                                    },
+                                    {
+                                        "option": "Option 3",
+                                        "voted": true
+                                    },
+                                    {
+                                        "option": "Option 4",
+                                        "voted": false
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ],
+            "title": "The user voted on same or other user's poll."
+        }
+    ]
+}

@@ -39,9 +39,6 @@ class ObjectBoxDirector implements IObjectBoxDirector {
       case EventModel:
         return makeEventEntity(model as EventModel, _context) as T;
 
-      case PollModel:
-        return makePollEntity(model as PollModel, _context) as T;
-
       case GroupModel:
         return makeGroupEntity(model as GroupModel, _context) as T;
 

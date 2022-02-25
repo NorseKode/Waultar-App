@@ -1,8 +1,10 @@
 import 'package:waultar/core/abstracts/abstract_repositories/i_event_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_group_repository.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_post_poll_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
+import 'package:waultar/core/models/content/post_poll_model.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/parsers/facebook_parser.dart';
 import 'package:waultar/core/parsers/instagram_parser.dart';
@@ -17,6 +19,8 @@ class ParserService implements IParserService {
       locator.get<IGroupRepository>(instanceName: 'groupRepo');
   final IEventRepository _eventRepo =
       locator.get<IEventRepository>(instanceName: 'eventRepo');
+  final IPostPollRepository _postPollRepo =
+      locator.get<IPostPollRepository>(instanceName: 'postPollRepo');
 
   @override
   Future parseAll(List<String> paths, ServiceModel service) async {
@@ -80,6 +84,9 @@ class ParserService implements IParserService {
 
       case EventModel:
         return _eventRepo.addEvent(model);
+
+      case PostPollModel:
+        return _postPollRepo.addPostPoll(model);
 
       default:
         return -1;
