@@ -11,11 +11,17 @@ main() {
   var facebookProfile = File(path_dart.join(
       TestHelper.pathToCurrentFile(), "data", "profile_information.json"));
 
+  var facebookProfilev2 = File(path_dart.join(
+      TestHelper.pathToCurrentFile(), "data", "profile_information_v2.json"));
+
   var creatorBadges = File(path_dart.join(
       TestHelper.pathToCurrentFile(), "data", "creator_badges.json"));
 
-  var your_groups = File(path_dart.join(
+  var yourGroups = File(path_dart.join(
       TestHelper.pathToCurrentFile(), "data", "your_groups.json"));
+
+  var groupMembershipActivity = File(path_dart.join(
+      TestHelper.pathToCurrentFile(), "data", "your_group_membership_activity.json"));
 
   late final FacebookParser parser;
 
@@ -25,7 +31,7 @@ main() {
     parser = FacebookParser();
   });
 
-  group("Testig parsing of group data: ", () {
+  group("Testing parsing of group data: ", () {
     test('parse group names from profile_information.json', () async {
       var profile = (await parser.parseProfile([facebookProfile.path])).item1;
 
@@ -44,7 +50,7 @@ main() {
 
     test('parse groups belonging to user from your_groups.json', () async {
       var profile = (await parser.parseProfile([facebookProfile.path])).item1;
-      var result = parser.parseFile(your_groups, profile: profile);
+      var result = parser.parseFile(yourGroups, profile: profile);
       var userGroupsStream = result.cast<GroupModel>();
       var userGroups = await userGroupsStream.toList();
 
@@ -66,6 +72,16 @@ main() {
       expect(groups.last.name, 'Group 2');
       expect(groups.first.badge, 'Administrator');
       expect(groups.last.badge, 'Administrator');
+    });
+
+    test('parse groups via your_group_membership_activity.json', () async {
+      var profile = (await parser.parseProfile([facebookProfilev2.path])).item1;
+      var result = await parser.parseGroupNames([groupMembershipActivity.path, facebookProfilev2.path], profile);
+      var groups = result.item1;
+
+      expect(groups.length, 3);
+      expect(groups.first.name, 'Group 3');
+      expect(groups.last.name, 'Group 1');
     });
   });
 }

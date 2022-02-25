@@ -30,7 +30,9 @@ class ParserService implements IParserService {
 
         var groupsAndPaths = await parser.parseGroupNames(paths, profileModel);
         var groups = groupsAndPaths.item1;
-        _groupRepo.addMany(groups);
+        if (groups.isNotEmpty) {
+          _groupRepo.addMany(groups);
+        }
 
         // profile_information.json has now been removed
         paths = groupsAndPaths.item2;
@@ -73,7 +75,6 @@ class ParserService implements IParserService {
       case GroupModel:
         return _groupRepo.updateGroup(model);
 
-        
       default:
         return -1;
     }

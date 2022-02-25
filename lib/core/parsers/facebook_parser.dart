@@ -59,6 +59,19 @@ class FacebookParser extends BaseParser {
                 yield groupModel;
               }
             }
+          } else if (object.containsKey('groups_joined_v2')) {
+            var groupObjects = object['groups_joined_v2'];
+            if (groupObjects is List<dynamic>) {
+              for (var group in groupObjects) {
+                if (group.containsKey('data')) {
+                  var data = group['data'] as List<dynamic>;
+                  var name = data.first['name'];
+                  group.putIfAbsent('name', () => name);
+                  var model = GroupModel.fromJson(group, profile!);
+                  yield model;
+                }
+              }
+            }
           } else if (object.containsKey("groups_admined_v2")) {
             var groupsAdminedObjects = object['groups_admined_v2'];
             if (groupsAdminedObjects is List<dynamic>) {
@@ -195,10 +208,26 @@ class FacebookParser extends BaseParser {
     if (groups.isEmpty) {
       _appLogger.logger.info(
           'While parsing group names in file $profilePath no groups were found');
-    }
 
+      var groupsPath = paths.firstWhere(
+          (element) => element.contains('your_group_membership_activity'));
+      var groupsStream = parseFile(File(groupsPath), profile: profile)
+          .where((event) => event is GroupModel);
+      var groups = await groupsStream.toList();
+      if (groups.isNotEmpty) {
+        var groupModels = groups.cast<GroupModel>();
+        paths.remove(profilePath);
+        paths.remove(groupsPath);
+        return Tuple2(groupModels, paths);
+      } else {
+        paths.remove(groupsPath);
+        paths.remove(profilePath);
+        return Tuple2([], paths);
+      }
+    }
     paths.remove(profilePath);
     return Tuple2(groups, paths);
+
   }
 
   @override
