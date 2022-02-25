@@ -1,7 +1,9 @@
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
+import 'package:waultar/core/models/content/poll_model.dart';
 import 'package:waultar/core/models/content/post_model.dart';
+import 'package:waultar/core/models/content/post_poll_model.dart';
 import 'package:waultar/core/models/media/file_model.dart';
 import 'package:waultar/core/models/media/image_model.dart';
 import 'package:waultar/core/models/media/link_model.dart';
@@ -53,6 +55,21 @@ class FacebookParser extends BaseParser {
             var profileModel = ProfileModel.fromFacebook(object["profile_v2"]);
             _appLogger.logger.info("Parsed Facebook Profile: ${profileModel.toString()}");
             yield profileModel;
+          } else if (object.containsKey("poll_votes_v2")) {
+            for (var poll in object["poll_votes_v2"]) {
+              var pollModel = PostPollModel.fromJson(poll, profile!);
+              _appLogger.logger.info("Parsed Facebook Poll: ${pollModel.toString()}");
+              yield pollModel;
+            }
+          } else if (object.containsKey("group_posts_v2")) {
+            for (var post in object["group_posts_v2"]) {
+              var keysInPost = ParseHelper.findAllKeysInJson(post);
+              if (keysInPost.contains("poll")) {
+                var postPollModel = PostPollModel.fromJson(post, profile!);
+                _appLogger.logger.info("Parsed Facebook Poll: ${postPollModel.toString()}");
+                yield postPollModel;
+              }
+            }
           } else {
             var mediaKey =
                 object.keys.firstWhere((key) => mediaKeys.contains(key), orElse: () => "");

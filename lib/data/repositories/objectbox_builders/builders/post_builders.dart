@@ -108,13 +108,14 @@ PostObjectBox makePostEntity(PostModel model, ObjectBox context) {
 }
 
 PostPollObjectBox makePostPollEntity(PostPollModel model, ObjectBox context) {
-  var entity = PostPollObjectBox();
+  var entity = PostPollObjectBox(isUsers: model.isUsers);
 
   var post = context.store.box<PostObjectBox>().get(model.post.id)!;
-  var poll = context.store.box<PollObjectBox>().get(model.poll.id)!;
-
+  
   entity.post.target = post;
-  entity.poll.target = poll;
+  entity.isUsers = model.isUsers;
+  entity.options = model.options;
+  entity.timestamp = model.timestamp;
   
   return entity;
 }

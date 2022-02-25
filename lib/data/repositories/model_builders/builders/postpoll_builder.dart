@@ -7,6 +7,8 @@ PostPollModel makePostPollModel(PostPollObjectBox entity) {
   return PostPollModel(
     id: entity.id,
     post: makePostModel(entity.post.target!),
-    poll: makePollModel(entity.poll.target!),
+    isUsers: entity.isUsers,
+    options: entity.options,
+    timestamp: entity.timestamp,
   );
 }

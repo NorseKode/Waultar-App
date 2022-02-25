@@ -1069,7 +1069,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(28, 7488143885786011622),
       name: 'PostPollObjectBox',
-      lastPropertyId: const IdUid(3, 6842474864796798589),
+      lastPropertyId: const IdUid(6, 5736488270946385826),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -1085,12 +1085,20 @@ final _entities = <ModelEntity>[
             indexId: const IdUid(29, 7210693632542921249),
             relationTarget: 'PostObjectBox'),
         ModelProperty(
-            id: const IdUid(3, 6842474864796798589),
-            name: 'pollId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(30, 2488340538773290869),
-            relationTarget: 'PollObjectBox')
+            id: const IdUid(4, 7726449972473777776),
+            name: 'isUsers',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 2108411948107739115),
+            name: 'options',
+            type: 30,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 5736488270946385826),
+            name: 'timestamp',
+            type: 10,
+            flags: 0)
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[])
@@ -1129,7 +1137,8 @@ ModelDefinition getObjectBoxModel() {
         2188429983658332891,
         8915507866262722089,
         6223371104317611347,
-        5171466753838581702
+        5171466753838581702,
+        2488340538773290869
       ],
       retiredPropertyUids: const [
         219800542496953078,
@@ -1150,7 +1159,8 @@ ModelDefinition getObjectBoxModel() {
         5929238326069376370,
         3638688937140434513,
         5101253906812243554,
-        6279596052872176822
+        6279596052872176822,
+        6842474864796798589
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -2271,33 +2281,44 @@ ModelDefinition getObjectBoxModel() {
         }),
     PostPollObjectBox: EntityDefinition<PostPollObjectBox>(
         model: _entities[24],
-        toOneRelations: (PostPollObjectBox object) =>
-            [object.post, object.poll],
+        toOneRelations: (PostPollObjectBox object) => [object.post],
         toManyRelations: (PostPollObjectBox object) => {},
         getId: (PostPollObjectBox object) => object.id,
         setId: (PostPollObjectBox object, int id) {
           object.id = id;
         },
         objectToFB: (PostPollObjectBox object, fb.Builder fbb) {
-          fbb.startTable(4);
+          final optionsOffset = object.options == null
+              ? null
+              : fbb.writeList(
+                  object.options!.map(fbb.writeString).toList(growable: false));
+          fbb.startTable(7);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.post.targetId);
-          fbb.addInt64(2, object.poll.targetId);
+          fbb.addBool(3, object.isUsers);
+          fbb.addOffset(4, optionsOffset);
+          fbb.addInt64(5, object.timestamp?.millisecondsSinceEpoch);
           fbb.finish(fbb.endTable());
           return object.id;
         },
         objectFromFB: (Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
-
+          final timestampValue =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 14);
           final object = PostPollObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0));
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              isUsers: const fb.BoolReader()
+                  .vTableGet(buffer, rootOffset, 10, false),
+              options:
+                  const fb.ListReader<String>(fb.StringReader(), lazy: false)
+                      .vTableGetNullable(buffer, rootOffset, 12),
+              timestamp: timestampValue == null
+                  ? null
+                  : DateTime.fromMillisecondsSinceEpoch(timestampValue));
           object.post.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
           object.post.attach(store);
-          object.poll.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0);
-          object.poll.attach(store);
           return object;
         })
   };
@@ -3007,7 +3028,15 @@ class PostPollObjectBox_ {
   static final post = QueryRelationToOne<PostPollObjectBox, PostObjectBox>(
       _entities[24].properties[1]);
 
-  /// see [PostPollObjectBox.poll]
-  static final poll = QueryRelationToOne<PostPollObjectBox, PollObjectBox>(
-      _entities[24].properties[2]);
+  /// see [PostPollObjectBox.isUsers]
+  static final isUsers =
+      QueryBooleanProperty<PostPollObjectBox>(_entities[24].properties[2]);
+
+  /// see [PostPollObjectBox.options]
+  static final options =
+      QueryStringVectorProperty<PostPollObjectBox>(_entities[24].properties[3]);
+
+  /// see [PostPollObjectBox.timestamp]
+  static final timestamp =
+      QueryIntegerProperty<PostPollObjectBox>(_entities[24].properties[4]);
 }

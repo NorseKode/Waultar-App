@@ -1,4 +1,5 @@
 import 'package:waultar/core/models/base_model.dart';
+import 'package:waultar/core/models/model_helper.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
 
 class PollModel extends BaseModel {
@@ -20,7 +21,9 @@ class PollModel extends BaseModel {
   }) : super(id, profile, raw);
 
   PollModel.fromJson(Map<String, dynamic> json, ProfileModel profile)
-      : question = json.containsKey("question") ? json["question"] : null,
+      : timestamp = json.containsKey("timestamp") 
+        ? ModelHelper.getTimestamp(json["timestamp"]) 
+        : DateTime.fromMicrosecondsSinceEpoch(0),
         isUsers = json.containsKey("question") ? true : false,
         options =
             json.containsKey("options") ? json["options"].toString() : null,
@@ -28,6 +31,6 @@ class PollModel extends BaseModel {
 
   @override
   String toString() {
-    return "optionns: $options";
+    return "Question: $question, Options: $options, isUsers: $isUsers, Timestamp: $timestamp";
   }
 }

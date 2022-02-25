@@ -6,9 +6,16 @@ import 'package:waultar/data/entities/content/post_objectbox.dart';
 class PostPollObjectBox {
   int id;
   final post = ToOne<PostObjectBox>();
-  final poll = ToOne<PollObjectBox>();
+  bool isUsers;
+
+  // store options in raw json
+  List<String>? options;
+  DateTime? timestamp;
 
   PostPollObjectBox({
     this.id = 0,
+    required this.isUsers,
+    this.options,
+    this.timestamp,
   });
 }
