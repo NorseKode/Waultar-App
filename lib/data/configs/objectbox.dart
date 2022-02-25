@@ -43,9 +43,10 @@ class ObjectBox {
     }
   }
 
-  static Future<ObjectBox> create() async {
-    final store = await openStore(
-        directory: locator.get<String>(instanceName: 'db_folder'));
+  static Future<ObjectBox> create(String path) async {
+    // var path = locator.get<String>(instanceName: 'db_folder');
+    // print(path);
+    final store = await openStore(directory: path);
     return ObjectBox._create(store);
   }
 }

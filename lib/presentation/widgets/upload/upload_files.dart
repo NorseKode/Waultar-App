@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:archive/archive_io.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as dart_path;
+
 class FileUploader {
   /// Returns file with if user picks a file, otherwise it returns `null`
   static Future<File?> uploadSingle() async {
@@ -17,7 +18,8 @@ class FileUploader {
 
   /// Returns a list of files if users picks any file, returns `null` otherwise
   static Future<List<File>?> uploadMultiple() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: true);
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(allowMultiple: true);
 
     if (result != null) {
       return result.paths.map((path) => File(path!)).toList();
@@ -47,7 +49,9 @@ class FileUploader {
     var dir = Directory(path);
     List<File> files = [];
 
-    await dir.list(recursive: true, followLinks: false).forEach((element) async {
+    await dir
+        .list(recursive: true, followLinks: false)
+        .forEach((element) async {
       var stat = await element.stat();
       var isFile = stat.type == FileSystemEntityType.file;
 
@@ -63,7 +67,9 @@ class FileUploader {
     var dir = Directory(path);
     List<String> files = [];
 
-    await dir.list(recursive: true, followLinks: false).forEach((element) async {
+    await dir
+        .list(recursive: true, followLinks: false)
+        .forEach((element) async {
       var stat = await element.stat();
       var isFile = stat.type == FileSystemEntityType.file;
 
@@ -74,11 +80,9 @@ class FileUploader {
 
     return files;
   }
-
 }
 
 List<String> extractZip(Map<String, String> input) {
-
   // using inputFileStream to access zip without storing it in memory
   final inputStream = InputFileStream(input['path'] as String);
 
@@ -90,8 +94,11 @@ List<String> extractZip(Map<String, String> input) {
 
   var list = <String>[];
   for (var file in archive.files) {
-    // only take the files and not the directories
-    if (file.isFile) {
+    // only take the files and skip the optional .zip.enc file
+    if (file.name.endsWith('zip.enc')) {
+      print(file.name);
+    }
+    if (file.isFile && !file.name.endsWith('zip.enc')) {
       var filePath = dart_path.normalize(destDirPath + '/' + file.name);
       final outputStream = OutputFileStream(filePath);
       file.writeContent(outputStream);
@@ -99,9 +106,10 @@ List<String> extractZip(Map<String, String> input) {
       outputStream.close();
     }
   }
+  print('done unzipping');
 
   inputStream.close();
 
+  print(list.length);
   return list;
 }
-
