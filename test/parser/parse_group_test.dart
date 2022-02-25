@@ -12,7 +12,7 @@ main() {
       TestHelper.pathToCurrentFile(), "data", "profile_information.json"));
 
   var facebookProfilev2 = File(path_dart.join(
-      TestHelper.pathToCurrentFile(), "data", "profile_information_v2.json"));
+      TestHelper.pathToCurrentFile(), "data", "v2_profile_information.json"));
 
   var creatorBadges = File(path_dart.join(
       TestHelper.pathToCurrentFile(), "data", "creator_badges.json"));

@@ -85,19 +85,16 @@ class FileUploader {
 List<String> extractZip(Map<String, String> input) {
   // using inputFileStream to access zip without storing it in memory
   final inputStream = InputFileStream(input['path'] as String);
-
+  final serviceName = input['service_name'] as String;
   // decode the zip via the stream - the archive will have the contents of the zip
   // without having to store it in memory
   final archive = ZipDecoder().decodeBuffer(inputStream);
-  String tempDestDirPath = input["extracts_folder"]! + "/";
+  String tempDestDirPath = input["extracts_folder"]! + "/" + serviceName;
   final destDirPath = dart_path.normalize(tempDestDirPath);
 
   var list = <String>[];
   for (var file in archive.files) {
     // only take the files and skip the optional .zip.enc file
-    if (file.name.endsWith('zip.enc')) {
-      print(file.name);
-    }
     if (file.isFile && !file.name.endsWith('zip.enc')) {
       var filePath = dart_path.normalize(destDirPath + '/' + file.name);
       final outputStream = OutputFileStream(filePath);
@@ -106,10 +103,7 @@ List<String> extractZip(Map<String, String> input) {
       outputStream.close();
     }
   }
-  print('done unzipping');
 
   inputStream.close();
-
-  print(list.length);
   return list;
 }

@@ -96,7 +96,8 @@ class _BrowseState extends State<Browse> {
 
                   var inputMap = {
                     'path': dart_path.normalize(zipFiles.first),
-                    'extracts_folder': locator.get<String>(instanceName: 'extracts_folder')
+                    'extracts_folder': locator.get<String>(instanceName: 'extracts_folder'),
+                    'service_name': service.name
                   };
                   var uploadedFiles = await compute(extractZip, inputMap);
                   await ParserService()

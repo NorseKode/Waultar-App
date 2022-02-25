@@ -1,4 +1,3 @@
-import 'package:waultar/startup.dart';
 import 'package:waultar/data/entities/misc/service_objectbox.dart';
 import 'package:path/path.dart' as dart_path;
 
@@ -44,8 +43,6 @@ class ObjectBox {
   }
 
   static Future<ObjectBox> create(String path) async {
-    // var path = locator.get<String>(instanceName: 'db_folder');
-    // print(path);
     final store = await openStore(directory: path);
     return ObjectBox._create(store);
   }

@@ -10,7 +10,7 @@ import '../test_helper.dart';
 main() {
   
   var facebookProfilev2 = File(path_dart.join(
-      TestHelper.pathToCurrentFile(), "data", "profile_information_v2.json"));
+      TestHelper.pathToCurrentFile(), "data", "v2_profile_information.json"));
   var eventInvitations = File(path_dart.join(
       TestHelper.pathToCurrentFile(), "data", "event_invitations.json"));
   var eventResponses = File(path_dart.join(

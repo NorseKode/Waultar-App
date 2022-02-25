@@ -14,7 +14,6 @@ import 'package:path/path.dart' as path_dart;
 
 class FacebookParser extends BaseParser {
   final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
-  static const _profileFiles = ["profile_information"];
 
   @override
   Stream<dynamic> parseFile(File file, {ProfileModel? profile}) async* {
@@ -230,8 +229,7 @@ class FacebookParser extends BaseParser {
   Future<Tuple2<ProfileModel, List<String>>> parseProfile(List<String> paths,
       {ServiceModel? service}) async {
     var profilePath =
-        paths.firstWhere((element) => element.contains(_profileFiles[0]));
-    // The file ins't removed as it still contains the list of groups which hasn't been parsed yet
+        paths.firstWhere((element) => element.contains('profile_information.json'));
 
     ProfileModel profile = await parseFile(File(profilePath))
         .where((event) => event is ProfileModel)
@@ -248,7 +246,7 @@ class FacebookParser extends BaseParser {
   Future<Tuple2<List<GroupModel>, List<String>>> parseGroupNames(
       List<String> paths, ProfileModel profile) async {
     var profilePath =
-        paths.firstWhere((element) => element.contains(_profileFiles[0]));
+        paths.firstWhere((element) => element.contains('profile_information.json'));
 
     var groups = await parseFile(File(profilePath), profile: profile)
         .where((event) => event is GroupModel)
