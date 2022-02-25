@@ -41,15 +41,26 @@ jobs:
       - name: Build Windows Application
         run: flutter build windows
       
-      - name: Build msi
-        run: flutter pub run msix:create
+      #- name: Build msi
+        #run: flutter pub run msix:create
+      
+      - name: Zip files
+        uses: papeloto/action-zip@v1
+        with: 
+          files: build/windows/runner/Release/
+          dest: waultar-windows.zip
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: waultar-windows.zip
+          path: build/windows/runner/Release/
       
        # Upload generated apk to the artifacts, is included in the github
        # action build
-      - uses: actions/upload-artifact@v2
-        with:
-          name: Waultar.msi
-          path: build/windows/runner/Release/
+      #- uses: actions/upload-artifact@v2
+        #with:
+          #name: Waultar.msi
+          #path: build/windows/runner/Release/
       
       - name: release
         uses: actions/create-release@v1
@@ -62,12 +73,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
-      - name: upload windows msi
+      #- name: upload windows msi
+        #uses: actions/upload-release-asset@v1
+        #env:
+          #GITHUB_TOKEN: ${{ github.token }}
+        #with:
+          #upload_url: ${{ steps.create_release.outputs.upload_url }}
+          #asset_path: build/windows/runner/Release/
+          #asset_name: Waultar.msi
+          #asset_content_type: application/msi
+
+      - name: upload windows zip
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: build/windows/runner/Release/
-          asset_name: Waultar.msi
-          asset_content_type: application/msi
+          asset_name: waultar-windows.zip
+          asset_content_type: application/zip
