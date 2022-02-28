@@ -159,8 +159,12 @@ class InodeParser {
       if (count > 1) {
         var list = [];
         for (var item in acc) {
-          var flattenedInner = _flattenRecurse(keyState, item);
-          list.add(flattenedInner);
+          if (item is Map<String, dynamic> || item is List<dynamic>) {
+            var flattenedInner = _flattenRecurse(keyState, item);
+            list.add(flattenedInner);
+          } else {
+            list.add(item);
+          }
         }
         return {keyState: list};
       }
@@ -168,7 +172,6 @@ class InodeParser {
 
     // handle json map
     if (acc is Map<String, dynamic>) {
-        
       var entries = acc.entries;
       var count = entries.length;
 
@@ -192,49 +195,26 @@ class InodeParser {
 
           toRemove.add(key);
           toReplace.add(_flattenRecurse(key, value));
-
-          // return _flattenRecurse(key, value);
-
-
-          // if (value is Map<String, dynamic> || value is List<dynamic>) {
-          //   var count = value.length;
-
-          //   if (count == 1) {
-          //     toRemove.add(key);
-          //     toReplace.add(_flattenRecurse(key, value));
-          //   } else {
-          //     // acc.update(key, (x) => _flattenRecurse(key, value));
-          //     // return _flattenRecurse(key, value);
-          //   }
-
-            // }
-            // } else {
-              
-            //   _flattenRecurse(key, value);
-            // }
-          // }
-
-          // if (value is List<dynamic>) {
-
-          // }
         }
 
         for (var i = 0; i < toRemove.length; i++) {
           acc.remove(toRemove[i]);
           acc.addAll(toReplace[i]);
         }
-
-        // return acc;
       }
+    }
+
+    if (keyState.isEmpty) {
+      // this is the outermost entry in the json
+      return acc;
     }
 
     // if the acc is neither a list or map, we reached a leaf
     // e.g. we either reached null, datetime, number or string
     return {keyState: acc};
-    // return acc;
   }
 
-  Map<String, dynamic> flatten(String nameToFallBackOn, dynamic json) {
+  Map<String, dynamic> flatten(dynamic json, {String nameToFallBackOn = ""}) {
     var result = _flattenRecurse(nameToFallBackOn, json);
     return result;
   }

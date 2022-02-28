@@ -45,8 +45,8 @@ main() {
 
     test('flatten test', () async {
       var json = await _parser.getJson(simpleFlatten);
-      var result = _parser.flatten(simpleFlatten.path, json);
-      
+      var result = _parser.flatten(json);
+
       // ignore: avoid_print
       print(prettyJson(result));
     });
