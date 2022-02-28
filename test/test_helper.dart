@@ -27,9 +27,9 @@ class TestHelper {
       .substring(1);
   static final _appLogger = AppLogger.test(detectPlatform(), _logFilePath);
 
-  static String pathToCurrentFile() {
+  static String pathToCurrentFile({String folder = 'parser'}) {
     return path_dart
-        .normalize(path_dart.join(path_dart.dirname(Platform.script.path), "test", "parser"))
+        .normalize(path_dart.join(path_dart.dirname(Platform.script.path), "test", folder))
         .substring(1);
   }
 

@@ -55,6 +55,8 @@ dependencies:
   objectbox_flutter_libs: any
 
   pretty_json: ^2.0.0
+  enough_convert: ^1.4.0
+  deep_pick: ^0.10.0
 
   # to use drift query APIs with the sqlite3 lib
   # drift: ^1.0.1 
