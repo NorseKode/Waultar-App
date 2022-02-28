@@ -179,20 +179,7 @@ class InodeParser {
       if (count == 1) {
         var key = entries.first.key;
         var value = entries.first.value;
-
-        if (value is Map<String, dynamic>) {
-          acc.remove(key);
-          acc.addAll(_flattenRecurse(keyState, value));
-          return acc;
-        }
-
-        if (value is List<dynamic>) {
-          acc.remove(key);
-          acc.addAll(_flattenRecurse(key, value));
-          return acc;
-        }
-
-        return acc;
+        return _flattenRecurse(key, value);
       }
 
       if (count > 1) {
@@ -200,26 +187,32 @@ class InodeParser {
         var toReplace = [];
 
         for (var item in entries) {
-          var value = item.value;
           var key = item.key;
+          var value = item.value;
 
-          if (value is Map<String, dynamic> || value is List<dynamic>) {
-            var count = value.length;
+          toRemove.add(key);
+          toReplace.add(_flattenRecurse(key, value));
 
-            if (count == 1) {
-              toRemove.add(key);
-              toReplace.add(_flattenRecurse(key, value));
-            } else {
-              // acc.update(key, (x) => _flattenRecurse(key, value));
-              // return _flattenRecurse(key, value);
-            }
+          // return _flattenRecurse(key, value);
+
+
+          // if (value is Map<String, dynamic> || value is List<dynamic>) {
+          //   var count = value.length;
+
+          //   if (count == 1) {
+          //     toRemove.add(key);
+          //     toReplace.add(_flattenRecurse(key, value));
+          //   } else {
+          //     // acc.update(key, (x) => _flattenRecurse(key, value));
+          //     // return _flattenRecurse(key, value);
+          //   }
 
             // }
             // } else {
               
             //   _flattenRecurse(key, value);
             // }
-          }
+          // }
 
           // if (value is List<dynamic>) {
 
@@ -231,14 +224,14 @@ class InodeParser {
           acc.addAll(toReplace[i]);
         }
 
-        return acc;
+        // return acc;
       }
     }
 
     // if the acc is neither a list or map, we reached a leaf
     // e.g. we either reached null, datetime, number or string
-    // return {keyState: acc};
-    return acc;
+    return {keyState: acc};
+    // return acc;
   }
 
   Map<String, dynamic> flatten(String nameToFallBackOn, dynamic json) {
