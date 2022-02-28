@@ -30,7 +30,8 @@
                                     {
                                         "upload_ip": "192.192.192.128"
                                     }
-                                ]
+                                ],
+                                "other_data" : "shit"
                             }
                         },
                         "title": "Mobiloverf\u00c3\u00b8rsler",

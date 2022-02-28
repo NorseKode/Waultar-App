@@ -129,24 +129,6 @@ class InodeParser {
       if (count == 1) {
         var type = acc.first;
         return _flattenRecurse(keyState, type);
-        // if (type is List<dynamic>) {
-        //   acc.first = _flattenRecurse("", acc.first);
-        // } else if (type is Map<String, dynamic>) {
-        //   // var entries = type.entries;
-        //   // for (var item in entries) {
-        //   //   return _flattenRecurse(keyState, acc);
-        //   // }
-        //   if (type.length == 1) {
-        //     var key = type.entries.first.key;
-        //     var value = type.entries.first.value;
-        //     return _flattenRecurse(key, value);
-        //   } else if (type.length > 1) {
-        //     print(type.length);
-        //   }
-
-        // } else {
-        //   return {keyState: acc.first};
-        // }
       }
 
       if (count > 1) {
@@ -179,22 +161,17 @@ class InodeParser {
       }
 
       if (count > 1) {
-        var toRemove = [];
-        var toReplace = [];
+        Map<String, dynamic> updated = {};
 
         for (var item in entries) {
           var key = item.key;
           var value = item.value;
 
-          toRemove.add(key);
-          toReplace.add(_flattenRecurse(key, value));
+          var flattenedInner = _flattenRecurse(key, value);
+          updated.addAll(flattenedInner);
         }
 
-        for (var i = 0; i < toRemove.length; i++) {
-          acc.remove(toRemove[i]);
-          acc.addAll(toReplace[i]);
-        }
-        
+        acc = updated;
       }
     }
 
