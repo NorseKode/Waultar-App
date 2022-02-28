@@ -90,21 +90,6 @@ class InodeParser {
                     }
                   }
 
-                  // TODO : flatten the value :
-                  // if list :
-                  //    check for 'attachments' and 'data' keys
-                  //    if found -> flatten the json
-
-                  // if list and length of list == 1
-                  //    flatten and use the key for attribute name and store the one value found
-                  //    as its value in a map
-
-                  // if list and length of list == 0
-                  //    flatten and use the key for attribute name
-                  //    store 'no data' as the value
-
-                  // right now we are saving the entire valuesMap
-                  // clean and flatten before doing so
                   dataPoint.values = jsonEncode(dataPoint.valuesMap);
 
                   if (item.value is DateTime) {
@@ -119,17 +104,6 @@ class InodeParser {
 
               yield dataPoint;
             }
-
-            // if (amountOfKeys > 1) {}
-
-            // switch (item.keys.first) {
-            //   case 'profile_v2':
-            //     var json = item['profile_v2'];
-            //     if (json is Map<String, dynamic>) {}
-
-            //     break;
-            //   default:
-            // }
           }
         }
 
@@ -153,14 +127,26 @@ class InodeParser {
       }
 
       if (count == 1) {
-        return _flattenRecurse(keyState, acc.first);
+        var type = acc.first;
+
+        if (type is List<dynamic>) {
+          acc.first = _flattenRecurse("", acc.first);
+        } else if (type is Map<String, dynamic>) {
+          if (type.length == 1) {
+            var key = type.entries.first.key;
+            var value = type.entries.first.value;
+            return _flattenRecurse(key, value);
+          }
+        } else {
+          return {keyState: acc.first};
+        }
       }
 
-      if (count > 1) {
+      if (count >= 1) {
         var list = [];
         for (var item in acc) {
           if (item is Map<String, dynamic> || item is List<dynamic>) {
-            var flattenedInner = _flattenRecurse(keyState, item);
+            var flattenedInner = _flattenRecurse("", item);
             list.add(flattenedInner);
           } else {
             list.add(item);
@@ -205,7 +191,6 @@ class InodeParser {
     }
 
     if (keyState.isEmpty) {
-      // this is the outermost entry in the json
       return acc;
     }
 

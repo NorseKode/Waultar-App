@@ -18,6 +18,9 @@ main() {
   var simpleFlatten = File(path_dart.join(
       TestHelper.pathToCurrentFile(folder: 'inodes'), "data", "one_flatten_data.json"));
 
+  var singlePostFlatten = File(path_dart.join(
+      TestHelper.pathToCurrentFile(folder: 'inodes'), "data", "single_post.json"));
+
   final InodeParser _parser = InodeParser();
 
   setUpAll(() {
@@ -43,13 +46,28 @@ main() {
       expect(dataPoints.length, 1);
     });
 
-    test('flatten test', () async {
-      var json = await _parser.getJson(simpleFlatten);
+    test('basic flatten test', () async {
+      var json = await _parser.getJson(facebookProfileV2File);
+      var result = _parser.flatten(json);
+
+      // ignore: avoid_print
+      print(prettyJson(result));
+
+      var jsonSimple = await _parser.getJson(simpleFlatten);
+      var resultSimple = _parser.flatten(jsonSimple);
+      // ignore: avoid_print
+      print(prettyJson(resultSimple));
+    });
+
+    test('post entry flatten test', () async {
+      var json = await _parser.getJson(singlePostFlatten);
       var result = _parser.flatten(json);
 
       // ignore: avoid_print
       print(prettyJson(result));
     });
+
+    
 
   });
 }

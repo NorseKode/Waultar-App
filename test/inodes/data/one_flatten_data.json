@@ -18,7 +18,8 @@
                 "hello": 3,
                 "bye": 4
             }
-        }
+        },
+        "hej"
     ],
     "nested_map": {
         "keep_me": 0,
