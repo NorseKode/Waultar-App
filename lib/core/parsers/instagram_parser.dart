@@ -25,13 +25,20 @@ class InstagramParser extends BaseParser {
         if (object is Map<String, dynamic>) {
           if (object.containsKey("profile_user")) {
             var result = ProfileModel.fromInstragram(object["profile_user"].first);
-            appLogger.logger.info("parsed object: ${result.toString()}");
+            appLogger.logger.info("Parsed Instagram Profile: ${result.toString()}");
             yield result;
           } else if (object.containsKey("media")) {
             var result = PostModel.fromJson(object, profile ?? ParseHelper.profile);
-            appLogger.logger.info("parsed object: ${result.toString()}");
+            appLogger.logger.info("Parsed Instagram Post: ${result.toString()}");
             yield result;
-          } else {
+          } else if (object.containsKey("comments_media_comments")) {
+            for (var comment in object["comments_media_comments"]) {
+              var commentModel = CommentModel.fromJson(comment, profile!);
+              appLogger.logger.info("Parsed Instagram Comment: ${comment.toString()}");
+              yield commentModel;
+            }
+          }
+          else {
             // appLogger.logger.info("unknown data: ${object.toString()}");
           }
 
