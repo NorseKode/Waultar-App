@@ -78,4 +78,11 @@ class PostModel extends BaseModel {
   String toString() {
     return "Title: $title, description: $description, timestamp: ${timestamp.toString()}";
   }
+
+  toMap() {
+    return {
+      'title': title,
+      'description': description,
+    };
+  }
 }
