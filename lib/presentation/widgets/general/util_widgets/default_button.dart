@@ -30,40 +30,60 @@ class _DefaultButtonState extends State<DefaultButton> {
         fontSize: widget.size ?? 11,
         fontWeight: FontWeight.w200);
 
-    return TextButton(
+    return Container(
+      decoration: BoxDecoration(
+          color: widget.color ?? const Color(0xFF806DFF),
+          borderRadius: widget.icon != null && widget.text == null
+              ? BorderRadius.circular(100)
+              : BorderRadius.circular(5)),
+      child: TextButton(
+        style: TextButton.styleFrom(
+            padding: widget.icon != null && widget.text == null
+                ? const EdgeInsets.symmetric(horizontal: 5, vertical: 13)
+                : const EdgeInsets.symmetric(horizontal: 10, vertical: 13),
+            minimumSize: const Size(0, 0)),
         onPressed: widget.onPressed,
-        child: Container(
-            decoration: BoxDecoration(
-                color: widget.color ?? const Color(0xFF806DFF),
-                borderRadius: widget.icon != null && widget.text == null
-                    ? BorderRadius.circular(100)
-                    : BorderRadius.circular(5)),
-            child: Padding(
-              padding: widget.icon != null && widget.text == null
-                  ? const EdgeInsets.fromLTRB(5, 5, 5, 5)
-                  : const EdgeInsets.fromLTRB(10, 3, 10, 3),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  widget.icon != null
-                      ? Icon(widget.icon!,
-                          color: widget.textColor ?? Colors.white,
-                          size: widget.size != null ? widget.size! + 2 : 13)
-                      : Container(),
-                  widget.icon != null && widget.text != null
-                      ? SizedBox(width: 5)
-                      : Container(),
-                  widget.text != null
-                      ? Text(
-                          widget.text!,
-                          style: textStyle,
-                        )
-                      : Container(),
-                  widget.text == null && widget.icon == null
-                      ? Text("Button", style: textStyle)
-                      : Container()
-                ],
-              ),
-            )));
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          widget.icon != null
+              ? Icon(widget.icon!,
+                  color: widget.textColor ?? Colors.white,
+                  size: widget.size != null ? widget.size! + 2 : 13)
+              : Container(),
+          widget.icon != null && widget.text != null
+              ? const SizedBox(width: 10)
+              : Container(),
+          widget.text != null
+              ? Text(
+                  widget.text!,
+                  style: textStyle,
+                )
+              : Container(),
+          widget.text == null && widget.icon == null
+              ? Text("Button", style: textStyle)
+              : Container()
+        ]),
+        // Row(
+        //   children: [
+        //     widget.icon != null
+        //         ? Icon(widget.icon!,
+        //             color: widget.textColor ?? Colors.white,
+        //             size: widget.size != null ? widget.size! + 2 : 13)
+        //         : Container(),
+        //     widget.icon != null && widget.text != null
+        //         ? const SizedBox(width: 5)
+        //         : Container(),
+        //     widget.text != null
+        //         ? Text(
+        //             widget.text!,
+        //             style: textStyle,
+        //           )
+        //         : Container(),
+        //     widget.text == null && widget.icon == null
+        //         ? Text("Button", style: textStyle)
+        //         : Container()
+        //   ],
+        // ),
+      ),
+    );
   }
 }
