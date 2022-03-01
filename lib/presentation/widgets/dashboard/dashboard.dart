@@ -1,11 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
-import 'package:waultar/presentation/widgets/dashboard/service_widget.dart';
+
+import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/service_widget.dart';
+import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
+
 import 'package:waultar/startup.dart';
 
 class Dashboard extends StatefulWidget {
@@ -38,12 +43,11 @@ class _DashboardState extends State<Dashboard> {
     //         raw: "",
     //         options: "Shit works + $index"));
 
-    // List<Widget> dashboardWidgets = List.generate(
-    //     polls.length,
-    //     (index) => DefaultWidget(
-    //         title: "Poll $index",
-    //         child:
-    //             SingleChildScrollView(child: Text(polls[index].toString()))));
+    List<Widget> dashboardWidgets = List.generate(
+        polls.length,
+        (index) => DefaultWidget(
+            title: "Poll $index", child: Text(polls[index].toString())));
+
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,6 +63,8 @@ class _DashboardState extends State<Dashboard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SingleChildScrollView(
+                    //service widgets
+
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,15 +76,26 @@ class _DashboardState extends State<Dashboard> {
                               )),
                     )),
                 const SizedBox(height: 20),
-                Text(localizer.yourSocialDataOverview),
+                Text(localizer.yourSocialDataOverview), //dashboard widgets
                 const SizedBox(height: 20),
-                // SizedBox(
-                //   width: MediaQuery.of(context).size.width - 290,
-                //   child: Wrap(spacing: 20, runSpacing: 20, children: dashboardWidgets),
-                // ),
-              ],
-            ),
-          ),
+                DefaultButton(onPressed: () {}),
+                DefaultButton(
+                    text: "Press me!", onPressed: () {}, color: Colors.blue),
+                DefaultButton(
+                  icon: Iconsax.add,
+                  onPressed: () {},
+                  textColor: Colors.black,
+                ),
+                DefaultButton(
+                    text: "Add", icon: Iconsax.add, onPressed: () {}, size: 15),
+                SizedBox(
+                    width: MediaQuery.of(context).size.width - 290,
+                    child: Wrap(
+                        spacing: 20,
+                        runSpacing: 20,
+                        children: dashboardWidgets)),
+              ])),
+
         )
       ],
     );

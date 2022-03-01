@@ -21,7 +21,7 @@ class ServiceModel {
       color = const Color(0xFFD82F7F);
       icon = Iconsax.message_question;
     } else {
-      color = const Color(0x00000000);
+      color = const Color(0xFFABAAB8);
       icon = Iconsax.message_question;
     }
   }
