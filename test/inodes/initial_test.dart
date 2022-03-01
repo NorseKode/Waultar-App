@@ -21,6 +21,9 @@ main() {
   var singlePostFlatten = File(path_dart.join(
       TestHelper.pathToCurrentFile(folder: 'inodes'), "data", "single_post.json"));
 
+  var facebookPosts = File(path_dart.join(
+      TestHelper.pathToCurrentFile(folder: 'inodes'), "data", "your_posts_1.json"));
+
   final InodeParser _parser = InodeParser();
 
   setUpAll(() {
@@ -28,46 +31,60 @@ main() {
     TestHelper.createTestLogger();
   });
 
-  group("Test parsing of profile data as inodes : ", () {
-    test('Facebook profile via v2_profile_information.json', () async {
-      var resultStream = _parser.parseFile(facebookProfileV2File);
-      var dataPoints = await resultStream
-          .where((event) => event is InodeDataPoint)
-          .cast<InodeDataPoint>()
-          .where((datapoint) =>
-              datapoint.dataPointName.target!.name == 'profile_v2')
-          .toList();
+  group("Test parsing of multiple posts", () {
 
-      // for (var element in dataPoints) {
-      //   // ignore: avoid_print
-      //   print(element.toString());
-      // }
+    test(" - facebook posts", () async {
+      var resultStream = _parser.parseFile(facebookPosts);
+      var result = await resultStream.toList();
 
-      expect(dataPoints.length, 1);
+      for (var item in result) {
+        // ignore: avoid_print
+        print(item.toString());
+      }
     });
 
-    test('basic flatten test', () async {
-      var json = await _parser.getJson(facebookProfileV2File);
-      var result = _parser.flatten(json);
+  });
 
-      // ignore: avoid_print
-      print(prettyJson(result));
+  // group("Test parsing of profile data as inodes : ", () {
+  //   test('Facebook profile via v2_profile_information.json', () async {
+  //     var resultStream = _parser.parseFile(facebookProfileV2File);
+  //     var dataPoints = await resultStream
+  //         .where((event) => event is DataPoint)
+  //         .cast<DataPoint>()
+  //         .where((datapoint) =>
+  //             datapoint.dataPointName.target!.name == 'profile_v2')
+  //         .toList();
 
-      var jsonSimple = await _parser.getJson(simpleFlatten);
-      var resultSimple = _parser.flatten(jsonSimple);
-      // ignore: avoid_print
-      print(prettyJson(resultSimple));
-    });
+  //     for (var element in dataPoints) {
+  //       // ignore: avoid_print
+  //       print(element.toString());
+  //     }
 
-    test('post entry flatten test', () async {
-      var json = await _parser.getJson(singlePostFlatten);
-      var result = _parser.flatten(json);
+  //     expect(dataPoints.length, 1);
+  //   });
 
-      // ignore: avoid_print
-      print(prettyJson(result));
-    });
+  //   test('basic flatten test', () async {
+  //     var json = await _parser.getJson(facebookProfileV2File);
+  //     var result = _parser.flatten(json);
+
+  //     // ignore: avoid_print
+  //     print(prettyJson(result));
+
+  //     var jsonSimple = await _parser.getJson(simpleFlatten);
+  //     var resultSimple = _parser.flatten(jsonSimple);
+  //     // ignore: avoid_print
+  //     print(prettyJson(resultSimple));
+  //   });
+
+  //   test('post entry flatten test', () async {
+  //     var json = await _parser.getJson(singlePostFlatten);
+  //     var result = _parser.flatten(json);
+
+  //     // ignore: avoid_print
+  //     print(prettyJson(result));
+  //   });
 
     
 
-  });
+  // });
 }
