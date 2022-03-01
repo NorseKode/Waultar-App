@@ -1,17 +1,17 @@
-import 'package:waultar/core/models/index.dart';
+import 'package:waultar/core/models/content/group_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
-import 'package:waultar/data/entities/content/poll_objectbox.dart';
+import 'package:waultar/data/entities/content/group_objectbox.dart';
 import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 
-PollObjectBox makePollEntity(PollModel model, ObjectBox context) {
+GroupObjectBox makeGroupEntity(GroupModel model, ObjectBox context) {
   var entity = context.store
-      .box<PollObjectBox>()
-      .query(PollObjectBox_.raw.equals(model.raw))
+      .box<GroupObjectBox>()
+      .query(GroupObjectBox_.name.equals(model.name))
       .build()
       .findFirst();
   if (entity == null) {
-    entity = PollObjectBox(raw: model.raw);
+    entity = GroupObjectBox(raw: model.raw, name: model.name);
 
     // the profile HAS to be created in db before storing additional data
     if (model.profile.id == 0) {
@@ -23,21 +23,18 @@ PollObjectBox makePollEntity(PollModel model, ObjectBox context) {
       entity.profile.target = profileEntity;
     }
 
+    entity.isUsers = model.isUsers;
+
     if (model.timestamp != null) {
       entity.timestamp = model.timestamp;
     }
 
-    if (model.options != null) {
-      entity.options = model.options;
+    if (model.badge != null) {
+      entity.badge = model.badge;
     }
-
-    if (model.question != null) {
-      entity.question = model.question;
-    }
-
-    entity.isUsers = model.isUsers;
 
     return entity;
+
   } else {
     return entity;
   }

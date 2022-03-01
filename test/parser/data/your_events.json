@@ -1,0 +1,25 @@
+{
+    "your_events_v2": [
+      {
+        "name": "Test event 1",
+        "start_timestamp": 1489856400,
+        "end_timestamp": 0,
+        "place": {
+          "name": "Rued Langgaardsvej 7",
+          "coordinate": {
+            "latitude": 55.659964,
+            "longitude": 12.591105
+          }
+        },
+        "description": "Party at ITU",
+        "create_timestamp": 1489524301
+      },
+      {
+        "name": "Coding camp at ITU",
+        "start_timestamp": 1338469200,
+        "end_timestamp": 0,
+        "description": "Hosted by Thore",
+        "create_timestamp": 1339354724
+      }
+    ]
+  }

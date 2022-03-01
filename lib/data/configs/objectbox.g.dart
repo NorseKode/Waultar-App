@@ -12,7 +12,6 @@ import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 import '../../data/entities/content/event_objectbox.dart';
 import '../../data/entities/content/group_objectbox.dart';
 import '../../data/entities/content/page_objectbox.dart';
-import '../../data/entities/content/poll_objectbox.dart';
 import '../../data/entities/content/post_event_objectbox.dart';
 import '../../data/entities/content/post_group_objectbox.dart';
 import '../../data/entities/content/post_life_event_objectbox.dart';
@@ -745,52 +744,6 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(20, 2652951279138236051),
-      name: 'PollObjectBox',
-      lastPropertyId: const IdUid(7, 4392723400432572784),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 7248422152794599389),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 1888721063681089551),
-            name: 'profileId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(14, 6523281121605597108),
-            relationTarget: 'ProfileObjectBox'),
-        ModelProperty(
-            id: const IdUid(3, 1465752729792948772),
-            name: 'raw',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 2781293098887226224),
-            name: 'timestamp',
-            type: 10,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 3972303150322710599),
-            name: 'question',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(6, 8828556671193391659),
-            name: 'isUsers',
-            type: 1,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(7, 4392723400432572784),
-            name: 'options',
-            type: 9,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
       id: const IdUid(21, 1840073705676171105),
       name: 'PostObjectBox',
       lastPropertyId: const IdUid(13, 835770916803498873),
@@ -1069,7 +1022,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(28, 7488143885786011622),
       name: 'PostPollObjectBox',
-      lastPropertyId: const IdUid(3, 6842474864796798589),
+      lastPropertyId: const IdUid(6, 5736488270946385826),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -1085,12 +1038,20 @@ final _entities = <ModelEntity>[
             indexId: const IdUid(29, 7210693632542921249),
             relationTarget: 'PostObjectBox'),
         ModelProperty(
-            id: const IdUid(3, 6842474864796798589),
-            name: 'pollId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(30, 2488340538773290869),
-            relationTarget: 'PollObjectBox')
+            id: const IdUid(4, 7726449972473777776),
+            name: 'isUsers',
+            type: 1,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 2108411948107739115),
+            name: 'options',
+            type: 30,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 5736488270946385826),
+            name: 'timestamp',
+            type: 10,
+            flags: 0)
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[])
@@ -1123,13 +1084,15 @@ ModelDefinition getObjectBoxModel() {
       retiredEntityUids: const [
         1837511870469432447,
         2148786199038735847,
-        4521581829489353372
+        4521581829489353372,
+        2652951279138236051
       ],
       retiredIndexUids: const [
         2188429983658332891,
         8915507866262722089,
         6223371104317611347,
-        5171466753838581702
+        5171466753838581702,
+        2488340538773290869
       ],
       retiredPropertyUids: const [
         219800542496953078,
@@ -1150,7 +1113,15 @@ ModelDefinition getObjectBoxModel() {
         5929238326069376370,
         3638688937140434513,
         5101253906812243554,
-        6279596052872176822
+        6279596052872176822,
+        6842474864796798589,
+        7248422152794599389,
+        1888721063681089551,
+        1465752729792948772,
+        2781293098887226224,
+        3972303150322710599,
+        8828556671193391659,
+        4392723400432572784
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -1910,56 +1881,8 @@ ModelDefinition getObjectBoxModel() {
           object.coordinate.attach(store);
           return object;
         }),
-    PollObjectBox: EntityDefinition<PollObjectBox>(
-        model: _entities[16],
-        toOneRelations: (PollObjectBox object) => [object.profile],
-        toManyRelations: (PollObjectBox object) => {},
-        getId: (PollObjectBox object) => object.id,
-        setId: (PollObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (PollObjectBox object, fb.Builder fbb) {
-          final rawOffset = fbb.writeString(object.raw);
-          final questionOffset = object.question == null
-              ? null
-              : fbb.writeString(object.question!);
-          final optionsOffset =
-              object.options == null ? null : fbb.writeString(object.options!);
-          fbb.startTable(8);
-          fbb.addInt64(0, object.id);
-          fbb.addInt64(1, object.profile.targetId);
-          fbb.addOffset(2, rawOffset);
-          fbb.addInt64(3, object.timestamp?.millisecondsSinceEpoch);
-          fbb.addOffset(4, questionOffset);
-          fbb.addBool(5, object.isUsers);
-          fbb.addOffset(6, optionsOffset);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-          final timestampValue =
-              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 10);
-          final object = PollObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              raw: const fb.StringReader().vTableGet(buffer, rootOffset, 8, ''),
-              timestamp: timestampValue == null
-                  ? null
-                  : DateTime.fromMillisecondsSinceEpoch(timestampValue),
-              question: const fb.StringReader()
-                  .vTableGetNullable(buffer, rootOffset, 12),
-              isUsers: const fb.BoolReader()
-                  .vTableGet(buffer, rootOffset, 14, false),
-              options: const fb.StringReader()
-                  .vTableGetNullable(buffer, rootOffset, 16));
-          object.profile.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
-          object.profile.attach(store);
-          return object;
-        }),
     PostObjectBox: EntityDefinition<PostObjectBox>(
-        model: _entities[17],
+        model: _entities[16],
         toOneRelations: (PostObjectBox object) => [object.profile],
         toManyRelations: (PostObjectBox object) => {
               RelInfo<PostObjectBox>.toMany(1, object.id): object.images,
@@ -2048,7 +1971,7 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     ReactionObjectBox: EntityDefinition<ReactionObjectBox>(
-        model: _entities[18],
+        model: _entities[17],
         toOneRelations: (ReactionObjectBox object) => [],
         toManyRelations: (ReactionObjectBox object) => {},
         getId: (ReactionObjectBox object) => object.id,
@@ -2078,7 +2001,7 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     TagObjectBox: EntityDefinition<TagObjectBox>(
-        model: _entities[19],
+        model: _entities[18],
         toOneRelations: (TagObjectBox object) => [],
         toManyRelations: (TagObjectBox object) => {},
         getId: (TagObjectBox object) => object.id,
@@ -2105,7 +2028,7 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     VideoObjectBox: EntityDefinition<VideoObjectBox>(
-        model: _entities[20],
+        model: _entities[19],
         toOneRelations: (VideoObjectBox object) => [object.profile],
         toManyRelations: (VideoObjectBox object) => {},
         getId: (VideoObjectBox object) => object.id,
@@ -2166,7 +2089,7 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     PostEventObjectBox: EntityDefinition<PostEventObjectBox>(
-        model: _entities[21],
+        model: _entities[20],
         toOneRelations: (PostEventObjectBox object) =>
             [object.post, object.event],
         toManyRelations: (PostEventObjectBox object) => {},
@@ -2197,7 +2120,7 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     PostGroupObjectBox: EntityDefinition<PostGroupObjectBox>(
-        model: _entities[22],
+        model: _entities[21],
         toOneRelations: (PostGroupObjectBox object) =>
             [object.post, object.group],
         toManyRelations: (PostGroupObjectBox object) => {},
@@ -2228,7 +2151,7 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     PostLifeEventObjectBox: EntityDefinition<PostLifeEventObjectBox>(
-        model: _entities[23],
+        model: _entities[22],
         toOneRelations: (PostLifeEventObjectBox object) =>
             [object.profile, object.post, object.place],
         toManyRelations: (PostLifeEventObjectBox object) => {},
@@ -2270,34 +2193,45 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     PostPollObjectBox: EntityDefinition<PostPollObjectBox>(
-        model: _entities[24],
-        toOneRelations: (PostPollObjectBox object) =>
-            [object.post, object.poll],
+        model: _entities[23],
+        toOneRelations: (PostPollObjectBox object) => [object.post],
         toManyRelations: (PostPollObjectBox object) => {},
         getId: (PostPollObjectBox object) => object.id,
         setId: (PostPollObjectBox object, int id) {
           object.id = id;
         },
         objectToFB: (PostPollObjectBox object, fb.Builder fbb) {
-          fbb.startTable(4);
+          final optionsOffset = object.options == null
+              ? null
+              : fbb.writeList(
+                  object.options!.map(fbb.writeString).toList(growable: false));
+          fbb.startTable(7);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.post.targetId);
-          fbb.addInt64(2, object.poll.targetId);
+          fbb.addBool(3, object.isUsers);
+          fbb.addOffset(4, optionsOffset);
+          fbb.addInt64(5, object.timestamp?.millisecondsSinceEpoch);
           fbb.finish(fbb.endTable());
           return object.id;
         },
         objectFromFB: (Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
-
+          final timestampValue =
+              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 14);
           final object = PostPollObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0));
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              isUsers: const fb.BoolReader()
+                  .vTableGet(buffer, rootOffset, 10, false),
+              options:
+                  const fb.ListReader<String>(fb.StringReader(), lazy: false)
+                      .vTableGetNullable(buffer, rootOffset, 12),
+              timestamp: timestampValue == null
+                  ? null
+                  : DateTime.fromMillisecondsSinceEpoch(timestampValue));
           object.post.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
           object.post.attach(store);
-          object.poll.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0);
-          object.poll.attach(store);
           return object;
         })
   };
@@ -2783,231 +2717,208 @@ class PlaceObjectBox_ {
       QueryStringProperty<PlaceObjectBox>(_entities[15].properties[6]);
 }
 
-/// [PollObjectBox] entity fields to define ObjectBox queries.
-class PollObjectBox_ {
-  /// see [PollObjectBox.id]
-  static final id =
-      QueryIntegerProperty<PollObjectBox>(_entities[16].properties[0]);
-
-  /// see [PollObjectBox.profile]
-  static final profile = QueryRelationToOne<PollObjectBox, ProfileObjectBox>(
-      _entities[16].properties[1]);
-
-  /// see [PollObjectBox.raw]
-  static final raw =
-      QueryStringProperty<PollObjectBox>(_entities[16].properties[2]);
-
-  /// see [PollObjectBox.timestamp]
-  static final timestamp =
-      QueryIntegerProperty<PollObjectBox>(_entities[16].properties[3]);
-
-  /// see [PollObjectBox.question]
-  static final question =
-      QueryStringProperty<PollObjectBox>(_entities[16].properties[4]);
-
-  /// see [PollObjectBox.isUsers]
-  static final isUsers =
-      QueryBooleanProperty<PollObjectBox>(_entities[16].properties[5]);
-
-  /// see [PollObjectBox.options]
-  static final options =
-      QueryStringProperty<PollObjectBox>(_entities[16].properties[6]);
-}
-
 /// [PostObjectBox] entity fields to define ObjectBox queries.
 class PostObjectBox_ {
   /// see [PostObjectBox.id]
   static final id =
-      QueryIntegerProperty<PostObjectBox>(_entities[17].properties[0]);
+      QueryIntegerProperty<PostObjectBox>(_entities[16].properties[0]);
 
   /// see [PostObjectBox.raw]
   static final raw =
-      QueryStringProperty<PostObjectBox>(_entities[17].properties[1]);
+      QueryStringProperty<PostObjectBox>(_entities[16].properties[1]);
 
   /// see [PostObjectBox.profile]
   static final profile = QueryRelationToOne<PostObjectBox, ProfileObjectBox>(
-      _entities[17].properties[2]);
+      _entities[16].properties[2]);
 
   /// see [PostObjectBox.timestamp]
   static final timestamp =
-      QueryIntegerProperty<PostObjectBox>(_entities[17].properties[3]);
+      QueryIntegerProperty<PostObjectBox>(_entities[16].properties[3]);
 
   /// see [PostObjectBox.description]
   static final description =
-      QueryStringProperty<PostObjectBox>(_entities[17].properties[4]);
+      QueryStringProperty<PostObjectBox>(_entities[16].properties[4]);
 
   /// see [PostObjectBox.title]
   static final title =
-      QueryStringProperty<PostObjectBox>(_entities[17].properties[5]);
+      QueryStringProperty<PostObjectBox>(_entities[16].properties[5]);
 
   /// see [PostObjectBox.isArchived]
   static final isArchived =
-      QueryBooleanProperty<PostObjectBox>(_entities[17].properties[6]);
+      QueryBooleanProperty<PostObjectBox>(_entities[16].properties[6]);
 
   /// see [PostObjectBox.metadata]
   static final metadata =
-      QueryStringProperty<PostObjectBox>(_entities[17].properties[7]);
+      QueryStringProperty<PostObjectBox>(_entities[16].properties[7]);
 
   /// see [PostObjectBox.images]
   static final images = QueryRelationToMany<PostObjectBox, ImageObjectBox>(
-      _entities[17].relations[0]);
+      _entities[16].relations[0]);
 
   /// see [PostObjectBox.videos]
   static final videos = QueryRelationToMany<PostObjectBox, VideoObjectBox>(
-      _entities[17].relations[1]);
+      _entities[16].relations[1]);
 
   /// see [PostObjectBox.files]
   static final files = QueryRelationToMany<PostObjectBox, FileObjectBox>(
-      _entities[17].relations[2]);
+      _entities[16].relations[2]);
 
   /// see [PostObjectBox.links]
   static final links = QueryRelationToMany<PostObjectBox, LinkObjectBox>(
-      _entities[17].relations[3]);
+      _entities[16].relations[3]);
 
   /// see [PostObjectBox.mentions]
   static final mentions = QueryRelationToMany<PostObjectBox, PersonObjectBox>(
-      _entities[17].relations[4]);
+      _entities[16].relations[4]);
 
   /// see [PostObjectBox.tags]
   static final tags = QueryRelationToMany<PostObjectBox, TagObjectBox>(
-      _entities[17].relations[5]);
+      _entities[16].relations[5]);
 }
 
 /// [ReactionObjectBox] entity fields to define ObjectBox queries.
 class ReactionObjectBox_ {
   /// see [ReactionObjectBox.id]
   static final id =
-      QueryIntegerProperty<ReactionObjectBox>(_entities[18].properties[0]);
+      QueryIntegerProperty<ReactionObjectBox>(_entities[17].properties[0]);
 
   /// see [ReactionObjectBox.raw]
   static final raw =
-      QueryStringProperty<ReactionObjectBox>(_entities[18].properties[1]);
+      QueryStringProperty<ReactionObjectBox>(_entities[17].properties[1]);
 
   /// see [ReactionObjectBox.reaction]
   static final reaction =
-      QueryStringProperty<ReactionObjectBox>(_entities[18].properties[2]);
+      QueryStringProperty<ReactionObjectBox>(_entities[17].properties[2]);
 }
 
 /// [TagObjectBox] entity fields to define ObjectBox queries.
 class TagObjectBox_ {
   /// see [TagObjectBox.id]
   static final id =
-      QueryIntegerProperty<TagObjectBox>(_entities[19].properties[0]);
+      QueryIntegerProperty<TagObjectBox>(_entities[18].properties[0]);
 
   /// see [TagObjectBox.name]
   static final name =
-      QueryStringProperty<TagObjectBox>(_entities[19].properties[1]);
+      QueryStringProperty<TagObjectBox>(_entities[18].properties[1]);
 }
 
 /// [VideoObjectBox] entity fields to define ObjectBox queries.
 class VideoObjectBox_ {
   /// see [VideoObjectBox.id]
   static final id =
-      QueryIntegerProperty<VideoObjectBox>(_entities[20].properties[0]);
+      QueryIntegerProperty<VideoObjectBox>(_entities[19].properties[0]);
 
   /// see [VideoObjectBox.profile]
   static final profile = QueryRelationToOne<VideoObjectBox, ProfileObjectBox>(
-      _entities[20].properties[1]);
+      _entities[19].properties[1]);
 
   /// see [VideoObjectBox.uri]
   static final uri =
-      QueryStringProperty<VideoObjectBox>(_entities[20].properties[2]);
+      QueryStringProperty<VideoObjectBox>(_entities[19].properties[2]);
 
   /// see [VideoObjectBox.metadata]
   static final metadata =
-      QueryStringProperty<VideoObjectBox>(_entities[20].properties[3]);
+      QueryStringProperty<VideoObjectBox>(_entities[19].properties[3]);
 
   /// see [VideoObjectBox.timestamp]
   static final timestamp =
-      QueryIntegerProperty<VideoObjectBox>(_entities[20].properties[4]);
+      QueryIntegerProperty<VideoObjectBox>(_entities[19].properties[4]);
 
   /// see [VideoObjectBox.title]
   static final title =
-      QueryStringProperty<VideoObjectBox>(_entities[20].properties[5]);
+      QueryStringProperty<VideoObjectBox>(_entities[19].properties[5]);
 
   /// see [VideoObjectBox.description]
   static final description =
-      QueryStringProperty<VideoObjectBox>(_entities[20].properties[6]);
+      QueryStringProperty<VideoObjectBox>(_entities[19].properties[6]);
 
   /// see [VideoObjectBox.thumbnail]
   static final thumbnail =
-      QueryStringProperty<VideoObjectBox>(_entities[20].properties[7]);
+      QueryStringProperty<VideoObjectBox>(_entities[19].properties[7]);
 
   /// see [VideoObjectBox.raw]
   static final raw =
-      QueryStringProperty<VideoObjectBox>(_entities[20].properties[8]);
+      QueryStringProperty<VideoObjectBox>(_entities[19].properties[8]);
 }
 
 /// [PostEventObjectBox] entity fields to define ObjectBox queries.
 class PostEventObjectBox_ {
   /// see [PostEventObjectBox.id]
   static final id =
-      QueryIntegerProperty<PostEventObjectBox>(_entities[21].properties[0]);
+      QueryIntegerProperty<PostEventObjectBox>(_entities[20].properties[0]);
 
   /// see [PostEventObjectBox.post]
   static final post = QueryRelationToOne<PostEventObjectBox, PostObjectBox>(
-      _entities[21].properties[1]);
+      _entities[20].properties[1]);
 
   /// see [PostEventObjectBox.event]
   static final event = QueryRelationToOne<PostEventObjectBox, EventObjectBox>(
-      _entities[21].properties[2]);
+      _entities[20].properties[2]);
 }
 
 /// [PostGroupObjectBox] entity fields to define ObjectBox queries.
 class PostGroupObjectBox_ {
   /// see [PostGroupObjectBox.id]
   static final id =
-      QueryIntegerProperty<PostGroupObjectBox>(_entities[22].properties[0]);
+      QueryIntegerProperty<PostGroupObjectBox>(_entities[21].properties[0]);
 
   /// see [PostGroupObjectBox.post]
   static final post = QueryRelationToOne<PostGroupObjectBox, PostObjectBox>(
-      _entities[22].properties[1]);
+      _entities[21].properties[1]);
 
   /// see [PostGroupObjectBox.group]
   static final group = QueryRelationToOne<PostGroupObjectBox, GroupObjectBox>(
-      _entities[22].properties[2]);
+      _entities[21].properties[2]);
 }
 
 /// [PostLifeEventObjectBox] entity fields to define ObjectBox queries.
 class PostLifeEventObjectBox_ {
   /// see [PostLifeEventObjectBox.id]
   static final id =
-      QueryIntegerProperty<PostLifeEventObjectBox>(_entities[23].properties[0]);
+      QueryIntegerProperty<PostLifeEventObjectBox>(_entities[22].properties[0]);
 
   /// see [PostLifeEventObjectBox.raw]
   static final raw =
-      QueryStringProperty<PostLifeEventObjectBox>(_entities[23].properties[1]);
+      QueryStringProperty<PostLifeEventObjectBox>(_entities[22].properties[1]);
 
   /// see [PostLifeEventObjectBox.profile]
   static final profile =
       QueryRelationToOne<PostLifeEventObjectBox, ProfileObjectBox>(
-          _entities[23].properties[2]);
+          _entities[22].properties[2]);
 
   /// see [PostLifeEventObjectBox.post]
   static final post = QueryRelationToOne<PostLifeEventObjectBox, PostObjectBox>(
-      _entities[23].properties[3]);
+      _entities[22].properties[3]);
 
   /// see [PostLifeEventObjectBox.title]
   static final title =
-      QueryStringProperty<PostLifeEventObjectBox>(_entities[23].properties[4]);
+      QueryStringProperty<PostLifeEventObjectBox>(_entities[22].properties[4]);
 
   /// see [PostLifeEventObjectBox.place]
   static final place =
       QueryRelationToOne<PostLifeEventObjectBox, PlaceObjectBox>(
-          _entities[23].properties[5]);
+          _entities[22].properties[5]);
 }
 
 /// [PostPollObjectBox] entity fields to define ObjectBox queries.
 class PostPollObjectBox_ {
   /// see [PostPollObjectBox.id]
   static final id =
-      QueryIntegerProperty<PostPollObjectBox>(_entities[24].properties[0]);
+      QueryIntegerProperty<PostPollObjectBox>(_entities[23].properties[0]);
 
   /// see [PostPollObjectBox.post]
   static final post = QueryRelationToOne<PostPollObjectBox, PostObjectBox>(
-      _entities[24].properties[1]);
+      _entities[23].properties[1]);
 
-  /// see [PostPollObjectBox.poll]
-  static final poll = QueryRelationToOne<PostPollObjectBox, PollObjectBox>(
-      _entities[24].properties[2]);
+  /// see [PostPollObjectBox.isUsers]
+  static final isUsers =
+      QueryBooleanProperty<PostPollObjectBox>(_entities[23].properties[2]);
+
+  /// see [PostPollObjectBox.options]
+  static final options =
+      QueryStringVectorProperty<PostPollObjectBox>(_entities[23].properties[3]);
+
+  /// see [PostPollObjectBox.timestamp]
+  static final timestamp =
+      QueryIntegerProperty<PostPollObjectBox>(_entities[23].properties[4]);
 }

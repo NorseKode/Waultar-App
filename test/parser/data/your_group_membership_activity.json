@@ -1,0 +1,35 @@
+{
+    "groups_joined_v2": [
+        {
+            "timestamp": 1617332146,
+            "data": [
+                {
+                    "name": "Group 3"
+                }
+            ],
+            "title": "Du blev medlem af Group 3."
+        },
+        {
+            "timestamp": 1617132138,
+            "data": [
+                {
+                    "name": "Group 2"
+                }
+            ],
+            "title": "Du blev medlem af Group 2."
+        },
+        {
+            "timestamp": 1597240756,
+            "data": [
+                {
+                    "name": "Group 1"
+                }
+            ],
+            "title": "Du blev medlem af Group 1."
+        },
+        {
+            "timestamp": 1597650851,
+            "title": "Du er stoppet med at være medlem af Group 4."
+        }
+    ]
+}
