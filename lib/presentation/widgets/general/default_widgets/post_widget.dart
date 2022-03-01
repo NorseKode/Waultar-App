@@ -70,8 +70,7 @@ class _PostWidgetState extends State<PostWidget> {
                             (index) => Padding(
                                   padding: const EdgeInsets.only(right: 5),
                                   child: Text("#${post.tags![index].name}",
-                                      style: TextStyle(
-                                          color: service.color, fontSize: 12)),
+                                      style: TextStyle(fontSize: 11)),
                                 ))
                         : []),
                 SizedBox(height: 10),

@@ -1,15 +1,16 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
-import 'package:waultar/presentation/widgets/dashboard/default_widget.dart';
-import 'package:waultar/presentation/widgets/dashboard/widgets.dart/service_widget.dart';
-import 'package:waultar/presentation/widgets/dashboard/widgets.dart/post_widget.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/service_widget.dart';
+import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 import 'package:waultar/startup.dart';
 
 class Dashboard extends StatefulWidget {
@@ -47,49 +48,6 @@ class _DashboardState extends State<Dashboard> {
         (index) => DefaultWidget(
             title: "Poll $index", child: Text(polls[index].toString())));
 
-    List<Widget> dashboardWidgets2 = List.generate(
-        polls.length,
-        (index) => DefaultWidget(
-            title: "Poll $index",
-            child: Container(
-                width: 300,
-                height: 300,
-                color: Colors.red,
-                child: Text(polls[index].toString()))));
-
-    List<Widget> postWidgets = List.generate(
-        polls.length,
-        (index) => PostWidget(
-                post: PostModel(
-                    tags: [
-                  TagModel(0, "Dinner Time!"),
-                  TagModel(0, "Lukin Off Arse"),
-                ],
-                    medias: [
-                  ImageModel(
-                      profile: ParseHelper.profile,
-                      raw: "",
-                      uri: Uri(path: "lib/assets/graphics/Logo.png")),
-                  ImageModel(
-                      profile: ParseHelper.profile,
-                      raw: "",
-                      uri: Uri(path: "lib/assets/graphics/data_graphic.png"))
-                ],
-                    mentions: [
-                  PersonModel(
-                      profile: ParseHelper.profile, name: "LukASS", raw: ""),
-                  PersonModel(
-                      profile: ParseHelper.profile, name: "LukasOff", raw: "")
-                ],
-                    isArchived: true,
-                    title:
-                        "Malou Landsgaard posted this on Lukas Offenbergs timeline",
-                    description:
-                        "Hi guys! I just wanna say that I had a great time today! See you next time",
-                    profile: ParseHelper.profile,
-                    raw: '',
-                    timestamp: DateTime.now())));
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -104,6 +62,7 @@ class _DashboardState extends State<Dashboard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                 SingleChildScrollView(
+                    //service widgets
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -115,26 +74,24 @@ class _DashboardState extends State<Dashboard> {
                               )),
                     )),
                 const SizedBox(height: 20),
-                Text(localizer.yourSocialDataOverview),
+                Text(localizer.yourSocialDataOverview), //dashboard widgets
                 const SizedBox(height: 20),
+                DefaultButton(onPressed: () {}),
+                DefaultButton(
+                    text: "Press me!", onPressed: () {}, color: Colors.blue),
+                DefaultButton(
+                  icon: Iconsax.add,
+                  onPressed: () {},
+                  textColor: Colors.black,
+                ),
+                DefaultButton(
+                    text: "Add", icon: Iconsax.add, onPressed: () {}, size: 15),
                 SizedBox(
                     width: MediaQuery.of(context).size.width - 290,
                     child: Wrap(
                         spacing: 20,
                         runSpacing: 20,
                         children: dashboardWidgets)),
-                const SizedBox(height: 20),
-                SizedBox(
-                    width: MediaQuery.of(context).size.width - 290,
-                    child: Wrap(
-                        spacing: 20,
-                        runSpacing: 20,
-                        children: dashboardWidgets2)),
-                const SizedBox(height: 20),
-                SizedBox(
-                    width: MediaQuery.of(context).size.width - 290,
-                    child: Wrap(
-                        spacing: 20, runSpacing: 20, children: postWidgets))
               ])),
         )
       ],
