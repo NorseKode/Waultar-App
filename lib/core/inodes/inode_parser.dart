@@ -45,18 +45,29 @@ class InodeParser {
     return jsonDecode(json);
   }
 
+  bool isNumeric(String s) => double.tryParse(s) != null;
+
+  // make special cases here for certain datapoints based on which directory they are in
+  // for instance, the filename for facebook inbox, should be replaced by the name of the parent directory
+  String cleanFileName(String filename) {
+    return filename.split("_").fold(
+        "",
+        (previousValue, element) => isNumeric(element)
+            ? previousValue + " "
+            : previousValue + element + " ");
+  }
+
   Stream<dynamic> parseFile(File file) async* {
     try {
-      // var json = await ParseHelper.getJsonStringFromFile(file);
       var fileName = path_dart.basename(file.path);
-
       if (fileName.endsWith('.json')) {
-        // ignore: avoid_print
         fileName = fileName.replaceAll(".json", "");
-        print(fileName);
       }
 
+
       // TODO : replace corrupted characters in json with correct unicode ..
+      // æ, ø, å and emojeys are corrupted
+      // this is an error from facebook - they do not send the json in correct utf8 format ..
 
       var json = await file.readAsString();
       var item = jsonDecode(json);
@@ -64,10 +75,9 @@ class InodeParser {
       // var postFilenameRegex = RegExp(r"your_posts_\d+");
       // var matchedFile = postFilenameRegex.firstMatch(fileName);
 
-      // await for (final item in ParseHelper.returnEveryJsonObject(decodedJson)) {
 
       if (item is List<dynamic>) {
-        DataPointName name = DataPointName(name: fileName);
+        DataPointName name = DataPointName(name: cleanFileName(fileName));
         for (var obj in item) {
           DataPoint dataPoint = DataPoint(values: "");
           dataPoint.dataPointName.target = name;
@@ -86,53 +96,21 @@ class InodeParser {
           // only one key, which means we found a datapoint
 
           if (amountOfKeys == 1) {
+
             // we have a datapoint and we save the key as the name for the data point
             String key = item.keys.first;
-
-            // we get the jsonobject bound to the key of the datapoint
             var jsonObject = item[key];
+            var dataMap = flatten(jsonObject);
+
+            // create the generic datapoint
+            var dataString = jsonEncode(dataMap);
+            DataPoint dataPoint = DataPoint(values: dataString);
+
+            dataPoint.valuesMap = dataMap;
 
             // we set the relation for dataPointName
             DataPointName dataPointName = DataPointName(name: key);
-
-            // create the generic datapoint
-            DataPoint dataPoint = DataPoint(values: "");
-
             dataPoint.dataPointName.target = dataPointName;
-
-            if (jsonObject is Map<String, dynamic>) {
-              var entries = jsonObject.entries;
-
-              // we are now at a attribute for the given data point
-              // we save the attributes to a Map<String, dynamic> in the data point
-              dataPoint.valuesMap = jsonObject;
-
-              for (var item in entries) {
-                // maintain a List<String> of the attribute name (it's metadata/key)
-                String key = item.key;
-                var value = item.value;
-
-                if (value is List<dynamic>) {
-                  var count = value.length;
-
-                  if (count == 0) {
-                    var map = {key: "no data"};
-                    dataPoint.valuesMap!.addAll(map);
-                  }
-
-                  if (count >= 1) {
-                    var map = {key: value};
-                    dataPoint.valuesMap!.addAll(map);
-                  }
-                }
-
-                dataPoint.values = jsonEncode(dataPoint.valuesMap);
-
-                if (item.value is DateTime) {
-                  dataPoint.timestamp = item.value;
-                }
-              }
-            }
 
             yield dataPoint;
           }
@@ -140,9 +118,15 @@ class InodeParser {
       }
       // }
     } on Exception catch (e) {
+      // ignore: avoid_print
       print(e);
       // _appLogger.logger.info(e);
     }
+  }
+
+  Map<String, dynamic> flatten(dynamic json, {String nameToFallBackOn = ""}) {
+    var result = _flattenRecurse(nameToFallBackOn, json);
+    return result;
   }
 
   dynamic _flattenRecurse(String keyState, dynamic acc) {
@@ -200,13 +184,11 @@ class InodeParser {
           // the recursive call might return a key already existing in the updated map
           // if that is the case, put the returned value with the old key
           if (updated.containsKey(flattenedInner.entries.first.key)) {
-
             if (!updated.containsKey(key)) {
               updated.addAll({key: flattenedInner.entries.first.value});
             } else {
               updated.addAll({keyState: flattenedInner.entries.first.value});
             }
-
           } else {
             updated.addAll(flattenedInner);
           }
@@ -218,59 +200,11 @@ class InodeParser {
 
     // if the acc is neither a list or map, we reached a leaf
     // e.g. we either reached null, datetime, number, string or bool
-
-    if (keyState.isEmpty) {
-      return acc;
-    }
-
-    if (acc is String && acc.isEmpty) {
-      return {keyState: "no data"};
-    }
-
-    if (acc == null) {
-      return {keyState: "no data"};
-    }
-
+    if (keyState.isEmpty) return acc;
+    if (acc is String && acc.isEmpty) return {keyState: "no data"};
+    if (acc == null) return {keyState: "no data"};
+    
     return {keyState: acc};
   }
 
-  Map<String, dynamic> flatten(dynamic json, {String nameToFallBackOn = ""}) {
-    var result = _flattenRecurse(nameToFallBackOn, json);
-    return result;
-  }
-
-  // void _generateRelations(
-  //     InodeDataPoint dataPoint, List<String> relationsToLookFor) {
-  //   final relationEntity = InodeRelationHolder();
-  //   var map = dataPoint.valuesMap;
-
-  //   if (map != null) {
-  //     var json = jsonEncode(map);
-
-  //     for (var match in relationsToLookFor) {
-  //       String? obj = key_picker.pick(json, match).asStringOrNull();
-
-  //       if (obj != null) {
-  //         _makeRelation(obj, match, relationEntity);
-  //       }
-  //     }
-  //   }
-
-  //   dataPoint.relation.target = relationEntity;
-  // }
-
-  // void _makeRelation(
-  //     String json, String relationType, InodeRelationHolder relationEntity) {
-  //   switch (relationType) {
-  //     case 'media':
-  //       String uri = key_picker.pick(json, 'uri').asStringOrThrow();
-  //       var image = InodeImage(uri: uri);
-  //       relationEntity.images.add(image);
-  //       break;
-
-  //     default:
-  //   }
-  // }
-
-  void _removeRelationsFromRaw(DataPoint dataPoint) {}
 }

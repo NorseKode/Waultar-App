@@ -43,6 +43,16 @@ main() {
       }
     });
 
+    test(" - facebook profile", () async {
+      var resultStream = _parser.parseFile(facebookProfileV2File);
+      var result = await resultStream.toList();
+
+      for (var item in result) {
+        // ignore: avoid_print
+        print(item.toString());
+      }
+    });
+
   });
 
   // group("Test parsing of profile data as inodes : ", () {
