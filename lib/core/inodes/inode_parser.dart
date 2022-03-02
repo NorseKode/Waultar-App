@@ -61,10 +61,16 @@ class InodeParserService {
         await for (final result in _parser.parseFile(file)) {
           if (result is DataPoint) {
             result.dataPointName.target!.dataCategory.target = category;
+
+            // ! don't add one at a time - read transactions are okay to do tho
+            // _dataRepo.addDataPoint(result); <- never do this when iterating !
+
+            // ! put them in chunks - write transactions becomes vastly better
             listToAdd.add(result);
           }
         }
 
+        // ! now we can initiate a single transaction rather than many
         _dataRepo.addMany(listToAdd);
       }
     }
