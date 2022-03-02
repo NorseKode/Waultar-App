@@ -1056,7 +1056,7 @@
     },
     {
       "id": "29:1651460114661321014",
-      "lastPropertyId": "2:9219059240069387298",
+      "lastPropertyId": "3:3352765581084648149",
       "name": "DataCategory",
       "properties": [
         {
@@ -1069,11 +1069,22 @@
           "id": "2:9219059240069387298",
           "name": "name",
           "type": 9,
-          "flags": 2048,
+          "flags": 2080,
           "indexId": "34:1462853987247262963"
+        },
+        {
+          "id": "3:3352765581084648149",
+          "name": "count",
+          "type": 6
         }
       ],
-      "relations": []
+      "relations": [
+        {
+          "id": "9:447566776387890902",
+          "name": "dataPointDirs",
+          "targetId": "32:6671027780344887773"
+        }
+      ]
     },
     {
       "id": "30:6990209732262435045",
@@ -1113,7 +1124,7 @@
     },
     {
       "id": "31:1621784589665593446",
-      "lastPropertyId": "3:4369108619606015200",
+      "lastPropertyId": "4:6843117650627530238",
       "name": "DataPointName",
       "properties": [
         {
@@ -1126,7 +1137,7 @@
           "id": "2:961089464343930107",
           "name": "name",
           "type": 9,
-          "flags": 2048,
+          "flags": 2080,
           "indexId": "38:6671073556678718697"
         },
         {
@@ -1136,14 +1147,54 @@
           "flags": 520,
           "indexId": "39:1015883818485813566",
           "relationTarget": "DataCategory"
+        },
+        {
+          "id": "4:6843117650627530238",
+          "name": "count",
+          "type": 6
         }
       ],
       "relations": []
+    },
+    {
+      "id": "32:6671027780344887773",
+      "lastPropertyId": "3:615747648317964421",
+      "name": "DataPointDir",
+      "properties": [
+        {
+          "id": "1:2315244068883270077",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7950104210562865632",
+          "name": "count",
+          "type": 6
+        },
+        {
+          "id": "3:615747648317964421",
+          "name": "name",
+          "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "10:7182536452401541105",
+          "name": "dataPointNames",
+          "targetId": "31:1621784589665593446"
+        },
+        {
+          "id": "11:6986559347298680792",
+          "name": "dataPointDirs",
+          "targetId": "32:6671027780344887773"
+        }
+      ]
     }
   ],
-  "lastEntityId": "31:1621784589665593446",
+  "lastEntityId": "32:6671027780344887773",
   "lastIndexId": "39:1015883818485813566",
-  "lastRelationId": "8:5633121391346660074",
+  "lastRelationId": "11:6986559347298680792",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,

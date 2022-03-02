@@ -3,55 +3,7 @@ import 'dart:convert';
 import 'package:objectbox/objectbox.dart';
 import 'package:pretty_json/pretty_json.dart';
 
-// @Entity()
-// class InodeRelationHolder {
-//   final int id;
-
-//   @Backlink('relation')
-//   final dataPoint = ToOne<DataPoint>();
-
-//   @Backlink('relations')
-//   final images = ToMany<InodeImage>();
-//   @Backlink('relations')
-//   final persons = ToMany<InodePerson>();
-
-//   InodeRelationHolder({
-//     this.id = 0,
-//   });
-// }
-
-// @Entity()
-// class InodePerson {
-//   final int id;
-//   final String name;
-
-//   @Backlink('persons')
-//   final relations = ToMany<InodeRelationHolder>();
-
-//   InodePerson({
-//     this.id = 0,
-//     required this.name,
-//   });
-// }
-
-// @Entity()
-// class InodeImage {
-//   final int id;
-
-//   @Backlink('images')
-//   final relations = ToMany<InodeRelationHolder>();
-
-//   @Unique()
-//   final String uri;
-
-//   final String? meta;
-
-//   InodeImage({
-//     this.id = 0,
-//     required this.uri,
-//     this.meta,
-//   });
-// }
+// flutter packages pub run build_runner build --delete-conflicting-outputs
 
 @Entity()
 class DataPoint {
@@ -90,7 +42,6 @@ class DataPoint {
 
     sb.write("Data :\n");
 
-    // var json = jsonDecode(values);
     String pretty = prettyJson(valuesMap);
     sb.write(pretty);
     sb.write("\n");
@@ -103,7 +54,9 @@ class DataPoint {
 @Entity()
 class DataPointName {
   int id;
+  int count;
 
+  @Unique()
   @Index()
   String name;
 
@@ -112,9 +65,27 @@ class DataPointName {
   @Backlink('dataPointName')
   final dataPoints = ToMany<DataPoint>();
 
-  DataPointName(
-    this.name, {
+  DataPointName({
     this.id = 0,
+    this.count = 0,
+    required this.name,
+  });
+}
+
+@Entity()
+class DataPointDir {
+  int id;
+  int count;
+
+  String name;
+
+  final dataPointNames = ToMany<DataPointName>();
+  final dataPointDirs = ToMany<DataPointDir>();
+
+  DataPointDir({
+    this.id = 0,
+    this.count = 0,
+    required this.name,
   });
 }
 
@@ -122,13 +93,20 @@ class DataPointName {
 class DataCategory {
   int id;
 
+  int count;
+
   @Index()
+  @Unique()
   String name;
 
   @Backlink('dataCategory')
   final dataPointNames = ToMany<DataPointName>();
 
-  // final nodes = ToMany<DataPoint>();
+  final dataPointDirs = ToMany<DataPointDir>();
 
-  DataCategory({this.id = 0, required this.name});
+  DataCategory({
+    this.id = 0,
+    this.count = 0,
+    required this.name,
+  });
 }

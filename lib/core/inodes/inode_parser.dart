@@ -20,7 +20,20 @@ class InodeParserService {
       this._parser, this._categoryRepo, this._nameRepo, this._dataRepo);
 
   Future parse(List<String> paths) async {
-    
+    /* notes on isolates and objectbox :
+        - make sure we one and ONLY one store during entire runtime, never close it!
+        - to get better write performance, make sure that put operations are done in chunks transactions 
+            - there can only be ONE write transaction at any time
+            - these run strictly and sequentially
+        - read transactions will never get blocked nor block a write transaction
+        - check : https://pub.dev/documentation/objectbox/latest/objectbox/Store-class.html
+            - use Store.runIsolated to perform the CRUD in another isolate
+            - objectbox api will take care of only handling a single store
+    */
+
+    // 1) gets a list<string> paths from the uploader
+    // 2) parse each file in an isolate
+    //    - each isolate returns a list of dataPoints
   }
 }
 
@@ -54,7 +67,7 @@ class InodeParser {
       // await for (final item in ParseHelper.returnEveryJsonObject(decodedJson)) {
 
       if (item is List<dynamic>) {
-        DataPointName name = DataPointName(fileName);
+        DataPointName name = DataPointName(name: fileName);
         for (var obj in item) {
           DataPoint dataPoint = DataPoint(values: "");
           dataPoint.dataPointName.target = name;
@@ -80,7 +93,7 @@ class InodeParser {
             var jsonObject = item[key];
 
             // we set the relation for dataPointName
-            DataPointName dataPointName = DataPointName(key);
+            DataPointName dataPointName = DataPointName(name: key);
 
             // create the generic datapoint
             DataPoint dataPoint = DataPoint(values: "");

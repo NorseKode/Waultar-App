@@ -36,7 +36,7 @@ class DataPointNameRepository {
         .findUnique();
         
     if (existing == null) {
-      return _nameBox.put(DataPointName(name));
+      return _nameBox.put(DataPointName(name: name));
     }
 
     return existing.id;
