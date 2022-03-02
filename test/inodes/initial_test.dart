@@ -14,7 +14,18 @@ main() {
 
   var eventsInvited = File(path_dart.join(
       TestHelper.pathToCurrentFile(), "data", "event_invitations.json"));
+
+  var creatorBadges = File(path_dart.join(
+      TestHelper.pathToCurrentFile(), "data", "creator_badges.json"));
+
+  var groupMembershp = File(path_dart.join(
+      TestHelper.pathToCurrentFile(), "data", "your_group_membership_activity.json"));
+
+  var eventResponses = File(path_dart.join(
+      TestHelper.pathToCurrentFile(), "data", "your_event_responses.json"));
   
+  var yourSearches = File(path_dart.join(
+      TestHelper.pathToCurrentFile(folder: 'inodes'), "data", "your_searches.json"));
 
   var facebookPosts = File(path_dart.join(
       TestHelper.pathToCurrentFile(folder: 'inodes'), "data", "your_posts_1.json"));
@@ -50,6 +61,46 @@ main() {
 
     test(" - facebook event invitations", () async {
       var resultStream = _parser.parseFile(eventsInvited);
+      var result = await resultStream.toList();
+
+      for (var item in result) {
+        // ignore: avoid_print
+        print(item.toString());
+      }
+    });
+
+    test(" - facebook groups creator badges", () async {
+      var resultStream = _parser.parseFile(creatorBadges);
+      var result = await resultStream.toList();
+
+      for (var item in result) {
+        // ignore: avoid_print
+        print(item.toString());
+      }
+    });
+
+    test(" - facebook groups membership", () async {
+      var resultStream = _parser.parseFile(groupMembershp);
+      var result = await resultStream.toList();
+
+      for (var item in result) {
+        // ignore: avoid_print
+        print(item.toString());
+      }
+    });
+
+    test(" - facebook event responses", () async {
+      var resultStream = _parser.parseFile(eventResponses);
+      var result = await resultStream.toList();
+
+      for (var item in result) {
+        // ignore: avoid_print
+        print(item.toString());
+      }
+    });
+
+    test(" - facebook search history", () async {
+      var resultStream = _parser.parseFile(yourSearches);
       var result = await resultStream.toList();
 
       for (var item in result) {

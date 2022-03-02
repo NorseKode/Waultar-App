@@ -11,4 +11,7 @@ class DataPointRepository {
   }
 
   int addDataPoint(DataPoint dataPoint) => _dataBox.put(dataPoint);
+  List<int> addMany(List<DataPoint> dataPoints) => _dataBox.putMany(dataPoints);
+  List<DataPoint> readAll() => _dataBox.getAll();
+  int count() => _dataBox.count();
 }

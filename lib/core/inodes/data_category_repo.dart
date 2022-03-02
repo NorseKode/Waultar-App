@@ -29,6 +29,8 @@ class DataCategoryRepository {
     return null;
   }
 
+  int count() => _categoryBox.count();
+
   int addCategory(String name) {
     var existing = _categoryBox
         .query(DataCategory_.name.equals(name))

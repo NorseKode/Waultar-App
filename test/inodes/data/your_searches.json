@@ -1,0 +1,40 @@
+{
+  "searches_v2": [
+    {
+      "timestamp": 1644958861,
+      "attachments": [
+        {
+          "data": [
+            {
+              "text": "\"star wars\""
+            }
+          ]
+        }
+      ],
+      "data": [
+        {
+          "text": "star wars"
+        }
+      ],
+      "title": "Du har s\u00c3\u00b8gt p\u00c3\u00a5 Facebook"
+    },
+    {
+      "timestamp": 1644958919,
+      "attachments": [
+        {
+          "data": [
+            {
+              "text": "\"star wars bog\""
+            }
+          ]
+        }
+      ],
+      "data": [
+        {
+          "text": "star wars bog"
+        }
+      ],
+      "title": "Du har s\u00c3\u00b8gt p\u00c3\u00a5 Facebook"
+    }
+  ]
+}

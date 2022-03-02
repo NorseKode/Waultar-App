@@ -41,4 +41,8 @@ class DataPointNameRepository {
 
     return existing.id;
   }
+
+  List<String> getAllNames() {
+    return _nameBox.getAll().map((e) => e.name).toList();
+  }
 }

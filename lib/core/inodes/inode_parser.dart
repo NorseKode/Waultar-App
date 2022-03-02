@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
@@ -33,6 +34,40 @@ class InodeParserService {
     // 1) gets a list<string> paths from the uploader
     // 2) parse each file in an isolate
     //    - each isolate returns a list of dataPoints
+
+    /* consider using the template method pattern
+          - divide the parsing algorithm up in steps
+          - many steps will be the same for different services
+              - facebook and instagram for instance
+          - steps in the algorithm that differ from the base (defined in the abstract class)
+            can be overidden in the concrete parser implementations
+    */
+    var category = DataCategory(name: "test");
+
+    for (var path in paths) {
+      if (Extensions.isJson(path)) {
+        var file = File(path);
+        var parentName = path_dart.basename(file.parent.path);
+
+        // get category from service based on parent directory for the file
+        // if none is found :
+        // keep looking backwards in the path until we reach root folder
+        // if still none are found, set category to "Other" (default)
+        // var category = DataCategory(name: "test");
+
+        // add the parsed inodes to a list, and when the stream is done
+        // put them in db as a large transaction to improve performance
+        var listToAdd = <DataPoint>[];
+        await for (final result in _parser.parseFile(file)) {
+          if (result is DataPoint) {
+            result.dataPointName.target!.dataCategory.target = category;
+            listToAdd.add(result);
+          }
+        }
+
+        _dataRepo.addMany(listToAdd);
+      }
+    }
   }
 }
 
@@ -86,9 +121,6 @@ class InodeParser {
 
           // only one key with no list, which means we found a datapoint
           if (amountOfKeys == 1 && jsonObject is Map<String, dynamic>) {
-            // we have a datapoint and we save the key as the name for the data point
-            // String key = item.keys.first;
-            // var jsonObject = item[key];
             var dataMap = flatten(jsonObject);
 
             // create the generic datapoint
