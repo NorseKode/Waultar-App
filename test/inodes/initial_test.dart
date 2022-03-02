@@ -12,14 +12,9 @@ main() {
   var facebookProfileV2File = File(path_dart.join(
       TestHelper.pathToCurrentFile(), "data", "v2_profile_information.json"));
 
-  var flattenTestFile = File(path_dart.join(
-      TestHelper.pathToCurrentFile(folder: 'inodes'), "data", "flatten_data.json"));
-
-  var simpleFlatten = File(path_dart.join(
-      TestHelper.pathToCurrentFile(folder: 'inodes'), "data", "one_flatten_data.json"));
-
-  var singlePostFlatten = File(path_dart.join(
-      TestHelper.pathToCurrentFile(folder: 'inodes'), "data", "single_post.json"));
+  var eventsInvited = File(path_dart.join(
+      TestHelper.pathToCurrentFile(), "data", "event_invitations.json"));
+  
 
   var facebookPosts = File(path_dart.join(
       TestHelper.pathToCurrentFile(folder: 'inodes'), "data", "your_posts_1.json"));
@@ -53,48 +48,17 @@ main() {
       }
     });
 
+    test(" - facebook event invitations", () async {
+      var resultStream = _parser.parseFile(eventsInvited);
+      var result = await resultStream.toList();
+
+      for (var item in result) {
+        // ignore: avoid_print
+        print(item.toString());
+      }
+    });
+
   });
 
-  // group("Test parsing of profile data as inodes : ", () {
-  //   test('Facebook profile via v2_profile_information.json', () async {
-  //     var resultStream = _parser.parseFile(facebookProfileV2File);
-  //     var dataPoints = await resultStream
-  //         .where((event) => event is DataPoint)
-  //         .cast<DataPoint>()
-  //         .where((datapoint) =>
-  //             datapoint.dataPointName.target!.name == 'profile_v2')
-  //         .toList();
-
-  //     for (var element in dataPoints) {
-  //       // ignore: avoid_print
-  //       print(element.toString());
-  //     }
-
-  //     expect(dataPoints.length, 1);
-  //   });
-
-  //   test('basic flatten test', () async {
-  //     var json = await _parser.getJson(facebookProfileV2File);
-  //     var result = _parser.flatten(json);
-
-  //     // ignore: avoid_print
-  //     print(prettyJson(result));
-
-  //     var jsonSimple = await _parser.getJson(simpleFlatten);
-  //     var resultSimple = _parser.flatten(jsonSimple);
-  //     // ignore: avoid_print
-  //     print(prettyJson(resultSimple));
-  //   });
-
-  //   test('post entry flatten test', () async {
-  //     var json = await _parser.getJson(singlePostFlatten);
-  //     var result = _parser.flatten(json);
-
-  //     // ignore: avoid_print
-  //     print(prettyJson(result));
-  //   });
-
-    
-
-  // });
+  
 }
