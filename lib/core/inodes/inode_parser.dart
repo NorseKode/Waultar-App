@@ -196,19 +196,41 @@ class InodeParser {
           var value = item.value;
 
           var flattenedInner = _flattenRecurse(key, value);
-          updated.addAll(flattenedInner);
+
+          // the recursive call might return a key already existing in the updated map
+          // if that is the case, put the returned value with the old key
+          if (updated.containsKey(flattenedInner.entries.first.key)) {
+
+            if (!updated.containsKey(key)) {
+              updated.addAll({key: flattenedInner.entries.first.value});
+            } else {
+              updated.addAll({keyState: flattenedInner.entries.first.value});
+            }
+
+          } else {
+            updated.addAll(flattenedInner);
+          }
         }
 
         acc = updated;
       }
     }
 
+    // if the acc is neither a list or map, we reached a leaf
+    // e.g. we either reached null, datetime, number, string or bool
+
     if (keyState.isEmpty) {
       return acc;
     }
 
-    // if the acc is neither a list or map, we reached a leaf
-    // e.g. we either reached null, datetime, number or string
+    if (acc is String && acc.isEmpty) {
+      return {keyState: "no data"};
+    }
+
+    if (acc == null) {
+      return {keyState: "no data"};
+    }
+
     return {keyState: acc};
   }
 
