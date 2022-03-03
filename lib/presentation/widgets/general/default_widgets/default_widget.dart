@@ -28,9 +28,9 @@ class _DefaultWidgetState extends State<DefaultWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(widget.title),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         border: Border(
                             top: BorderSide(
                                 color: Color(0xFF4D4F68), width: 2))),
