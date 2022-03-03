@@ -51,22 +51,22 @@ Future<void> main() async {
   });
 
   group('Test parsing of many paths with service', () {
-    test(' - inode parser', () async {
-      Stopwatch stopwatch = Stopwatch()..start();
+    // test(' - inode parser', () async {
+    //   Stopwatch stopwatch = Stopwatch()..start();
 
-      await _parser.parse(paths);
+    //   await _parser.parse(paths);
 
-      print('parsing executed in ${stopwatch.elapsed}');
+    //   print('parsing executed in ${stopwatch.elapsed}');
 
-      var count = _dataRepo.count();
-      var categoryCont = _categoryRepo.count();
+    //   var count = _dataRepo.count();
+    //   var categoryCont = _categoryRepo.count();
 
-      print("amount parsed : $count \n");
-      print("amount of categories : $categoryCont \n");
+    //   print("amount parsed : $count \n");
+    //   print("amount of categories : $categoryCont \n");
 
-      for (var name in _nameRepo.getAllNames()) {
-        print(name);
-      }
-    });
+    //   for (var name in _nameRepo.getAllNames()) {
+    //     print(name);
+    //   }
+    // });
   });
 }

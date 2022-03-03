@@ -229,14 +229,22 @@ class InodeParser {
           var value = item.value;
 
           var flattenedInner = _flattenRecurse(key, value);
+          var flattenedKey = flattenedInner.entries.first.key;
+          var flattenedValue = flattenedInner.entries.first.value;
+
+          // facebook often stores duplicate datetimes which we just discard
+          if (DateTime.tryParse(flattenedValue.toString()) != null &&
+              updated.containsValue(flattenedValue)) {
+            continue;
+          }
 
           // the recursive call might return a key already existing in the updated map
           // if that is the case, put the returned value with the old key
-          if (updated.containsKey(flattenedInner.entries.first.key)) {
+          if (updated.containsKey(flattenedKey)) {
             if (!updated.containsKey(key)) {
-              updated.addAll({key: flattenedInner.entries.first.value});
+              updated.addAll({key: flattenedValue});
             } else {
-              updated.addAll({keyState: flattenedInner.entries.first.value});
+              updated.addAll({keyState: flattenedValue});
             }
           } else {
             updated.addAll(flattenedInner);
