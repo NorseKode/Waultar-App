@@ -28,4 +28,10 @@ class CommentModel extends BaseModel {
         ? ((json[_instagramKey]).first)["value"]
         : "",
     super(0, profile, json.toString());
+
+    CommentModel.fromFacebook(Map<String, dynamic> json, ProfileModel profile)
+      : commenter = PersonModel(profile: profile, name: "name", raw: "raw"),
+        text = (((json["data"]).first)["comment"])["comment"],
+        timestamp = ModelHelper.intToTimestamp(json["timestamp"]),
+        group
 }

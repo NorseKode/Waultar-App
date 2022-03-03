@@ -150,7 +150,18 @@ class FacebookParser extends BaseParser {
                 yield postPollModel;
               }
             }
-          } else {
+          } else if (object.containsKey("group_comments_v2")) {
+            for (var comment in object["group_comments_v2"]) {
+              var commentModel = CommentModel.fromJson(comment, profile!);
+              _appLogger.logger.info("Parse Facebook Comment: ${commentModel.toString()}");
+            }
+          } else if (object.containsKey("comments_v2")) {
+            for (var comment in object["comments_v2"]) {
+              var commentModel = CommentModel.fromJson(comment, profile!);
+              _appLogger.logger.info("Parse Facebook Comment: ${commentModel.toString()}");
+            }
+          }
+          else {
             var mediaKey = object.keys
                 .firstWhere((key) => mediaKeys.contains(key), orElse: () => "");
 
