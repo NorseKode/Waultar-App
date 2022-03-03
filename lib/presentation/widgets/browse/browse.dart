@@ -9,6 +9,7 @@ import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/post_widget.dart';
+import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 import 'package:waultar/presentation/widgets/snackbar_custom.dart';
 import 'package:waultar/presentation/widgets/upload/upload_files.dart';
 import 'package:waultar/presentation/widgets/upload/uploader.dart';
@@ -36,51 +37,51 @@ class _BrowseState extends State<Browse> {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          ElevatedButton(
+          DefaultButton(
             onPressed: () {
               setState(() {
                 _models = _browseService.getProfiles();
               });
             },
-            child: Text(localizer.profile),
+            text: localizer.profile,
           ),
           const SizedBox(
             width: 20,
           ),
-          ElevatedButton(
+          DefaultButton(
             onPressed: () {
               setState(() {
                 _models = _browseService.getPosts() ?? [];
               });
             },
-            child: Text(localizer.posts),
+            text: localizer.posts,
           ),
           const SizedBox(
             width: 20,
           ),
-          ElevatedButton(
+          DefaultButton(
             onPressed: () {
               // setState(() {
               //   _models = _browseService.getGroups();
               // });
             },
-            child: Text(localizer.groups),
+            text: localizer.groups,
           ),
           const SizedBox(
             width: 20,
           ),
-          ElevatedButton(
+          DefaultButton(
             onPressed: () {
               setState(() {
                 _models = _browseService.getPostPolls();
               });
             },
-            child: Text(localizer.postsWithPolls),
+            text: localizer.postsWithPolls,
           ),
           const SizedBox(
             width: 20,
           ),
-          ElevatedButton(
+          DefaultButton(
             onPressed: () async {
               var files = await Uploader.uploadDialogue(context);
 
@@ -114,18 +115,18 @@ class _BrowseState extends State<Browse> {
                 }
               }
             },
-            child: Text(localizer.upload),
+            text: localizer.upload,
           ),
           const SizedBox(
             width: 20,
           ),
-          ElevatedButton(
+          DefaultButton(
             onPressed: () {
               setState(() {
                 _models = [];
               });
             },
-            child: Text(localizer.clear),
+            text: localizer.clear,
           ),
           const SizedBox(
             width: 20,

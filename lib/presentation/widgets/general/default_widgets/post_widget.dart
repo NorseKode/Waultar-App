@@ -2,8 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:waultar/core/models/content/post_model.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/presentation/widgets/general/service_icon.dart';
 
@@ -38,8 +36,8 @@ class _PostWidgetState extends State<PostWidget> {
                     Row(children: [
                       Text(profile.fullName),
                       if (post.isArchived != null)
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 5),
                           child: Icon(Iconsax.archive_tick, size: 14),
                         )
                     ]),
@@ -49,7 +47,7 @@ class _PostWidgetState extends State<PostWidget> {
                         Text(
                             DateFormat('dd/MM/yyyy, HH:mm')
                                 .format(post.timestamp),
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: Color(0xFFABAAB8), fontSize: 12)),
                         Padding(
                           padding: const EdgeInsets.only(left: 5),
@@ -59,10 +57,10 @@ class _PostWidgetState extends State<PostWidget> {
                     )
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(post.description ?? "No description",
-                    style: TextStyle(fontSize: 11)),
-                SizedBox(height: 10),
+                    style: const TextStyle(fontSize: 11)),
+                const SizedBox(height: 10),
                 Row(
                     children: post.tags != null
                         ? List.generate(
@@ -70,10 +68,10 @@ class _PostWidgetState extends State<PostWidget> {
                             (index) => Padding(
                                   padding: const EdgeInsets.only(right: 5),
                                   child: Text("#${post.tags![index].name}",
-                                      style: TextStyle(fontSize: 11)),
+                                      style: const TextStyle(fontSize: 11)),
                                 ))
                         : []),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Row(
                     children: post.mentions != null
                         ? List.generate(
@@ -81,12 +79,12 @@ class _PostWidgetState extends State<PostWidget> {
                             (index) => Padding(
                                   padding: const EdgeInsets.only(right: 5),
                                   child: Text("@${post.mentions![index].name}",
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                           color: Color(0xFFABAAB8),
                                           fontSize: 11)),
                                 ))
                         : []),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 if (post.medias != null)
                   CarouselSlider(
                     options: CarouselOptions(
@@ -94,15 +92,13 @@ class _PostWidgetState extends State<PostWidget> {
                       viewportFraction: 1.0,
                     ),
                     items: post.medias!
-                        .map((item) => Container(
-                              child: Center(child: Image.asset(item.uri.path)),
-                            ))
+                        .map((item) => Center(child: Image.asset(item.uri.path)))
                         .toList(),
                   ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   post.title ?? "No title",
-                  style: TextStyle(color: Color(0xFFABAAB8), fontSize: 10),
+                  style: const TextStyle(color: Color(0xFFABAAB8), fontSize: 10),
                 ),
               ],
             )));
