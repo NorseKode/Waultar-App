@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
+import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/presentation/widgets/snackbar_custom.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/startup.dart';
@@ -30,8 +31,8 @@ class _TimelineState extends State<Timeline> {
   bool _isFirstLoad = false;
   bool _isLoading = false;
   // ignore: prefer_final_fields
-  var _content = <dynamic>[];
-  final  _scrollController = ScrollController();
+  var _content = <UIModel>[];
+  final _scrollController = ScrollController();
   dynamic _selectedContent;
   var _offset = 0;
   final _limit = 20;
@@ -74,40 +75,47 @@ class _TimelineState extends State<Timeline> {
     }
   }
 
-  timelineLeftSide(DateTime time, String body, Color color, int index) {
-    return InkWell(
-      onTap: () {
-        setState(() {
-          _selectedContent = _content[index];
-        });
-      },
-      child: SizedBox(
-        height: 120,
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-              child: SizedBox(
-                width: 35,
-                child: Text("${time.year}\n${time.month}\n${time.day}"),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-              child: SizedBox(
-                width: 35,
-                height: 35,
-                child: Container(
-                  decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+  timelineLeftSide(UIModel model, int index) {
+    var time = model.getTimestamp();
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            _selectedContent = _content[index];
+          });
+        },
+        child: SizedBox(
+          height: 120,
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                child: SizedBox(
+                  width: 35,
+                  child: Text("${time.year}\n${time.month}\n${time.day}"),
                 ),
               ),
-            ),
-            Expanded(
-                child: Text(
-              body,
-              overflow: TextOverflow.fade,
-            )),
-          ],
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                child: SizedBox(
+                  width: 35,
+                  height: 35,
+                  child: Container(
+                    decoration:
+                        BoxDecoration(color: model.getAssociatedColor(), shape: BoxShape.circle),
+                  ),
+                ),
+              ),
+              Expanded(
+                  child: Text(
+                    model.getMostInformativeField(),
+                    textAlign: TextAlign.left,
+                    overflow: TextOverflow.fade,
+                  )),
+            ],
+          ),
         ),
       ),
     );
@@ -126,8 +134,7 @@ class _TimelineState extends State<Timeline> {
     return ListView.builder(
         controller: _scrollController,
         itemCount: _content.length,
-        itemBuilder: (_, index) =>
-            timelineLeftSide(_content[index].timestamp, _content[index].toString(), Colors.orange, index));
+        itemBuilder: (_, index) => timelineLeftSide(_content[index], index));
   }
 
   @override
@@ -182,7 +189,9 @@ class _TimelineState extends State<Timeline> {
           flex: 1,
           child: _selectedContent == null
               ? Container(
-                  child: _content.isEmpty ? Text(localizer.noData) : const Text("Press on some contect"),
+                  child: _content.isEmpty
+                      ? Text(localizer.noData)
+                      : const Text("Press on some contect"),
                 )
               : timelineRightSide(
                   _selectedContent.toMap(),
