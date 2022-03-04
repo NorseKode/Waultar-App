@@ -90,13 +90,13 @@ class PostRepository implements IPostRepository {
   }
 
   @override
-  List<PostModel> search(String search) {
-    var res = _postBox
-        .query(PostObjectBox_.textSearch.contains(search))
-        .build()
-        .find()
-        .map((entity) => _modelDirector.make<PostModel>(entity))
-        .toList();
-    return res;
+  List<PostModel> search(String search, int offset, int limit) {
+    var build = _postBox.query(PostObjectBox_.textSearch.contains(search)).build();
+
+    build
+      ..offset = offset
+      ..limit = limit;
+
+    return build.find().map((entity) => _modelDirector.make<PostModel>(entity)).toList();
   }
 }

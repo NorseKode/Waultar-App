@@ -92,12 +92,13 @@ class ImageRepository implements IImageRepository {
   }
 
   @override
-  List<ImageModel> search(String search) {
-    return _imageBox
-        .query(ImageObjectBox_.textSearch.contains(search))
-        .build()
-        .find()
-        .map((e) => _modelDirector.make<ImageModel>(e))
-        .toList();
+  List<ImageModel> search(String search, int offset, int limit) {
+    var build = _imageBox.query(ImageObjectBox_.textSearch.contains(search)).build();
+    
+    build
+      ..offset = offset
+      ..limit = limit;
+
+    return build.find().map((e) => _modelDirector.make<ImageModel>(e)).toList();
   }
 }

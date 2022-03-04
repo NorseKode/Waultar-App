@@ -18,7 +18,12 @@ class _SearchState extends State<Search> {
   final _postRepo = locator.get<IPostRepository>(instanceName: 'postRepo');
   final _controller = TextEditingController();
   final _textSearchService = TextSearchService();
+  final _scrollController = ScrollController();
   var _contents = <UIModel>[];
+  // ignore: prefer_final_fields, unused_field
+  var _offset = 0;
+  // ignore: prefer_final_fields, unused_field
+  var _limit = 20;
   // ignore: prefer_for_elements_to_map_fromiterable, prefer_final_fields
   var _searchCategories = Map<SearchCategories, bool>.fromIterable(
     SearchCategories.values,
@@ -26,8 +31,39 @@ class _SearchState extends State<Search> {
     value: (item) => true,
   );
 
-  _serach() {
-    _contents = _textSearchService.search(_searchCategories, _controller.text);
+  _serach(bool isAppend) {
+    setState(() {
+      isAppend
+          ? _contents +=
+              _textSearchService.search(_searchCategories, _controller.text, _limit, _offset)
+          : _contents =
+              _textSearchService.search(_searchCategories, _controller.text, _limit, _offset);
+    });
+  }
+
+  _loadNewData() {
+    _offset = 0;
+    _scrollController.position.moveTo(0);
+    _serach(false);
+  }
+
+  _onScrollEnd() {
+    if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
+      _offset += _limit;
+      _serach(true);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScrollEnd);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.removeListener(_onScrollEnd);
   }
 
   _searchCategoriesCheckBoxes() {
@@ -45,7 +81,7 @@ class _SearchState extends State<Search> {
                   setState(() {
                     _searchCategories[SearchCategories.values[index]] =
                         !_searchCategories[SearchCategories.values[index]]!;
-                    _serach();
+                    _loadNewData();
                   });
                 }
               },
@@ -66,13 +102,14 @@ class _SearchState extends State<Search> {
         onChanged: (change) {
           // call text search
           setState(() {
-            _serach();
+            _loadNewData();
           });
         },
       ),
       Expanded(
         flex: 20,
         child: ListView.builder(
+          controller: _scrollController,
           itemCount: _contents.length,
           itemBuilder: (_, index) => DefaultWidget(
             title: "post",
