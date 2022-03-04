@@ -32,8 +32,8 @@ class _DashboardState extends State<Dashboard> {
     localizer = AppLocalizations.of(context)!;
     themeProvider = Provider.of<ThemeProvider>(context);
 
-    List<Widget> serviceWidgets = List.generate(
-        services.length, (e) => ServiceWidget(service: services[e]));
+    List<Widget> serviceWidgets =
+        List.generate(services.length, (e) => ServiceWidget(service: services[e]));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,9 +45,9 @@ class _DashboardState extends State<Dashboard> {
         const SizedBox(height: 20),
         Expanded(
           child: SingleChildScrollView(
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 SingleChildScrollView(
                     //service widgets
 
@@ -64,23 +64,18 @@ class _DashboardState extends State<Dashboard> {
                 const SizedBox(height: 20),
                 Text(localizer.yourSocialDataOverview), //dashboard widgets
                 const SizedBox(height: 20),
-                DefaultButton(onPressed: () {}),
-                DefaultButton(
-                    text: "Press me! Please do",
-                    onPressed: () {},
-                    color: Colors.blue),
-                DefaultButton(
-                  icon: Iconsax.add,
-                  onPressed: () {},
-                  size: 32,
-                  textColor: Colors.black,
-                ),
-                DefaultButton(
-                    text: "Add",
-                    icon: Iconsax.woman,
-                    onPressed: () {},
-                    size: 15)
-              ])),
+                // DefaultButton(onPressed: () {}),
+                // DefaultButton(text: "Press me! Please do", onPressed: () {}, color: Colors.blue),
+                // DefaultButton(
+                //   icon: Iconsax.add,
+                //   onPressed: () {},
+                //   size: 32,
+                //   textColor: Colors.black,
+                // ),
+                // DefaultButton(text: "Add", icon: Iconsax.woman, onPressed: () {}, size: 15)
+              ],
+            ),
+          ),
         )
       ],
     );
