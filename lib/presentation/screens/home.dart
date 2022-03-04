@@ -5,6 +5,7 @@ import 'package:waultar/presentation/widgets/browse/browse.dart';
 import 'package:waultar/presentation/widgets/dashboard/dashboard.dart';
 import 'package:waultar/presentation/widgets/general/menu_panel.dart';
 import 'package:waultar/presentation/widgets/general/top_panel.dart';
+import 'package:waultar/presentation/widgets/search/search.dart';
 import 'package:waultar/presentation/widgets/timeline/timeline.dart';
 
 class HomePageView extends StatefulWidget {
@@ -19,6 +20,7 @@ class _HomePageViewState extends State<HomePageView> {
     ViewScreen.dashboard: const Dashboard(),
     ViewScreen.browse: const Browse(),
     ViewScreen.timeline: const Timeline(),
+    ViewScreen.search: const Search(),
   };
 
   var _activeScreen = ViewScreen.dashboard;

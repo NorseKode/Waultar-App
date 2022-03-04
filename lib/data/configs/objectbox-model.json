@@ -369,7 +369,7 @@
     },
     {
       "id": "11:575566687247819555",
-      "lastPropertyId": "7:1264177232458524261",
+      "lastPropertyId": "8:3903884079001583830",
       "name": "FileObjectBox",
       "properties": [
         {
@@ -409,6 +409,11 @@
         {
           "id": "7:1264177232458524261",
           "name": "thumbnail",
+          "type": 9
+        },
+        {
+          "id": "8:3903884079001583830",
+          "name": "textSearch",
           "type": 9
         }
       ],
@@ -500,7 +505,7 @@
     },
     {
       "id": "14:4917345731593542244",
-      "lastPropertyId": "8:2368861643283958423",
+      "lastPropertyId": "9:1684730760113741631",
       "name": "ImageObjectBox",
       "properties": [
         {
@@ -546,13 +551,18 @@
           "id": "8:2368861643283958423",
           "name": "raw",
           "type": 9
+        },
+        {
+          "id": "9:1684730760113741631",
+          "name": "textSearch",
+          "type": 9
         }
       ],
       "relations": []
     },
     {
       "id": "16:3083520632734441177",
-      "lastPropertyId": "7:7801353157999510033",
+      "lastPropertyId": "8:1139494787868128441",
       "name": "LinkObjectBox",
       "properties": [
         {
@@ -592,6 +602,11 @@
         {
           "id": "7:7801353157999510033",
           "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "8:1139494787868128441",
+          "name": "textSearch",
           "type": 9
         }
       ],
@@ -728,7 +743,7 @@
     },
     {
       "id": "21:1840073705676171105",
-      "lastPropertyId": "13:835770916803498873",
+      "lastPropertyId": "14:6569195031694636871",
       "name": "PostObjectBox",
       "properties": [
         {
@@ -774,6 +789,13 @@
           "id": "13:835770916803498873",
           "name": "metadata",
           "type": 9
+        },
+        {
+          "id": "14:6569195031694636871",
+          "name": "textSearch",
+          "type": 9,
+          "flags": 8,
+          "indexId": "34:2133814027961171948"
         }
       ],
       "relations": [
@@ -854,7 +876,7 @@
     },
     {
       "id": "24:1944258851869554230",
-      "lastPropertyId": "9:5541901195020504566",
+      "lastPropertyId": "10:5158595124007382016",
       "name": "VideoObjectBox",
       "properties": [
         {
@@ -904,6 +926,11 @@
         {
           "id": "9:5541901195020504566",
           "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "10:5158595124007382016",
+          "name": "textSearch",
           "type": 9
         }
       ],
@@ -1056,7 +1083,7 @@
     }
   ],
   "lastEntityId": "28:7488143885786011622",
-  "lastIndexId": "33:288077928328734405",
+  "lastIndexId": "34:2133814027961171948",
   "lastRelationId": "8:5633121391346660074",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

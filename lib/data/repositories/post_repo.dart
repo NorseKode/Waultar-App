@@ -88,4 +88,15 @@ class PostRepository implements IPostRepository {
   int removeAllPosts() {
     return _postBox.removeAll();
   }
+
+  @override
+  List<PostModel> search(String search) {
+    var res = _postBox
+        .query(PostObjectBox_.textSearch.contains(search))
+        .build()
+        .find()
+        .map((entity) => _modelDirector.make<PostModel>(entity))
+        .toList();
+    return res;
+  }
 }

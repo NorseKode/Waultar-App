@@ -14,6 +14,7 @@ class FileObjectBox {
   DateTime? timestamp;
 
   String? thumbnail;
+  late String textSearch;
 
   FileObjectBox({
     this.id = 0,
