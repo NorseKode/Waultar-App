@@ -13,6 +13,7 @@ class VideoObjectBox {
   String? description;
   String? thumbnail;
   String raw;
+  late String textSearch;
 
   VideoObjectBox({
     this.id = 0,

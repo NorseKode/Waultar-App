@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_comment_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_event_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_file_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_group_repository.dart';
@@ -17,6 +18,7 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_video_repository.
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/repositories/appsettings_repo.dart';
+import 'package:waultar/data/repositories/comment_repo.dart';
 import 'package:waultar/data/repositories/event_repo.dart';
 import 'package:waultar/data/repositories/file_repo.dart';
 import 'package:waultar/data/repositories/group_repo.dart';
@@ -119,9 +121,9 @@ Future<void> setupServices() async {
     locator.registerSingleton<IPostPollRepository>(
         PostPollRepository(_context, _objectboxDirector, _modelDirector),
         instanceName: 'postPollRepo');
-    locator.registerSingleton<IPostPollRepository>(
-        PostPollRepository(_context, _objectboxDirector, _modelDirector),
-        instanceName: 'postPollRepo');
+    locator.registerSingleton<ICommentRepository>(
+        CommentRepository(_context, _objectboxDirector, _modelDirector),
+        instanceName: 'commentRepo');
 
     // register all services and inject their dependencies
     locator.registerSingleton<IAppSettingsService>(AppSettingsService(),

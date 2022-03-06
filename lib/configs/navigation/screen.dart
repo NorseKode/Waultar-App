@@ -9,4 +9,5 @@ enum ViewScreen {
   browse,
   theme,
   timeline,
+  search,
 }

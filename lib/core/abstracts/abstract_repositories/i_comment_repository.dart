@@ -8,4 +8,5 @@ abstract class ICommentRepository {
   bool delete(int id);
   int deleteAll();
   CommentModel update(int id);
+  List<CommentModel> search(String search, int offset, int limit);
 }

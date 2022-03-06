@@ -3,8 +3,9 @@ import 'dart:ui';
 import 'package:waultar/core/models/media/media_model.dart';
 import 'package:waultar/core/models/model_helper.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
+import 'package:waultar/core/models/ui_model.dart';
 
-class ImageModel extends MediaModel {
+class ImageModel extends MediaModel implements UIModel {
   String? title;
   String? description;
 
@@ -21,8 +22,7 @@ class ImageModel extends MediaModel {
 
   ImageModel.fromJson(Map<String, dynamic> json, ProfileModel profile)
       : title = json.containsKey("title") ? json["title"] : "",
-        description =
-            json.containsKey("description") ? json["description"] : "",
+        description = json.containsKey("description") ? json["description"] : "",
         super(
           0,
           profile,
@@ -40,8 +40,7 @@ class ImageModel extends MediaModel {
 
   @override
   String getMostInformativeField() {
-    // TODO: implement getMostInformativeField
-    throw UnimplementedError();
+    return uri.path;
   }
 
   @override

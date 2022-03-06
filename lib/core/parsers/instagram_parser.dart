@@ -33,7 +33,7 @@ class InstagramParser extends BaseParser {
             yield result;
           } else if (object.containsKey("comments_media_comments")) {
             for (var comment in object["comments_media_comments"]) {
-              var commentModel = CommentModel.fromJson(comment, profile!);
+              var commentModel = CommentModel.fromInstagram(comment, profile!);
               appLogger.logger.info("Parsed Instagram Comment: ${comment.toString()}");
               yield commentModel;
             }

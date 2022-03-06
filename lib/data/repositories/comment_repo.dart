@@ -1,5 +1,6 @@
 import 'package:waultar/core/abstracts/abstract_repositories/i_comment_repository.dart';
 import 'package:waultar/core/models/content/comment_model.dart';
+import 'package:waultar/core/models/media/image_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
 import 'package:waultar/data/entities/content/comment_objectbox.dart';
@@ -58,5 +59,16 @@ class CommentRepository extends ICommentRepository {
   CommentModel update(int id) {
     // TODO: implement update
     throw UnimplementedError();
+  }
+
+  @override
+  List<CommentModel> search(String search, int offset, int limit) {
+    var build = _commentBox.query(CommentObjectBox_.textSearch.contains(search)).build();
+
+    build
+      ..offset = offset
+      ..limit = limit;
+
+    return build.find().map((entity) => _modelDirector.make<CommentModel>(entity)).toList();
   }
 }

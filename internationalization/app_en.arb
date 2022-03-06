@@ -31,6 +31,7 @@
     "postsWithPolls": "Posts with Polls",
     "timeline": "Timeline",
     "noData": "No Data",
+    "search": "Search",
     "@helloWorld": {
       "description": "The conventional newborn programmer greeting"
     },
@@ -125,6 +126,9 @@
       "description": ""
     },
     "@noData": {
+      "description": ""
+    },
+    "@search": {
       "description": ""
     }
 }

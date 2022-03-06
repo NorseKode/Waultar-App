@@ -11,7 +11,9 @@ import 'package:waultar/data/entities/media/image_objectbox.dart';
 import 'package:waultar/data/entities/media/link_objectbox.dart';
 import 'package:waultar/data/entities/media/video_objectbox.dart';
 import 'package:waultar/data/repositories/objectbox_builders/builders/group_builder.dart';
+import 'package:waultar/data/repositories/objectbox_builders/builders/index.dart';
 import 'package:waultar/data/repositories/objectbox_builders/builders/media_builders.dart';
+import 'package:waultar/data/repositories/objectbox_builders/builders/profile_builder.dart';
 
 CommentObjectBox makeCommentEntity(CommentModel model, ObjectBox context) {
   var searchBuilder = StringBuffer();
@@ -20,6 +22,10 @@ CommentObjectBox makeCommentEntity(CommentModel model, ObjectBox context) {
   searchBuilder.write(model.timestamp.toString());
   searchBuilder.write(" " + model.text);
   
+  entity.profile.target = makeProfileEntity(model.profile, context);
+  entity.commented.target = makePersonEntity(model.commented, context);
+  searchBuilder.write(model.commented.name);
+
   if (model.group != null) {
     entity.group.target = makeGroupEntity(model.group!, context);
     searchBuilder.write(" " + model.group!.name);
@@ -60,6 +66,8 @@ CommentObjectBox makeCommentEntity(CommentModel model, ObjectBox context) {
     entity.files.addAll(filesToAdd);
     entity.links.addAll(linksToAdd);
   }
+
+  entity.textSearch = searchBuilder.toString();
 
   return entity;
 }

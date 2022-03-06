@@ -36,8 +36,8 @@ class CommentModel extends BaseModel {
 
   static const _instagramKey = "string_list_data";
 
-  CommentModel.fromJson(Map<String, dynamic> json, ProfileModel profile)
-      : commented = PersonModel(profile: profile, name: "name", raw: ""),
+  CommentModel.fromInstagram(Map<String, dynamic> json, ProfileModel profile)
+      : commented = PersonModel(profile: profile, name: json["title"], raw: ""),
         timestamp = json.containsKey(_instagramKey)
             ? ModelHelper.intToTimestamp(((json[_instagramKey]).first)["timestamp"]) ??
                 DateTime.fromMicrosecondsSinceEpoch(0)
@@ -83,6 +83,11 @@ class CommentModel extends BaseModel {
       profile: profile,
       raw: '',
     );
+  }
+
+  @override
+  String toString() {
+    return "Commented: ${commented.name}, Text: $text, Timestamp: ${timestamp.toString()}, Group: ${group.toString()}";
   }
 
   @override

@@ -10,4 +10,5 @@ abstract class IPostRepository {
   int addPost(PostModel post);
   Future<int> addPostAsync(PostModel post);
   int removeAllPosts();
+  List<PostModel> search(String search, int offset, int limit);
 }

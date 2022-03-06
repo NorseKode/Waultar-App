@@ -6,6 +6,7 @@ import 'package:waultar/core/models/content/comment_model.dart';
 import 'package:waultar/core/models/media/image_model.dart';
 import 'package:waultar/core/models/media/link_model.dart';
 import 'package:waultar/core/models/media/video_model.dart';
+import 'package:waultar/core/models/model_helper.dart';
 import 'package:waultar/core/parsers/facebook_parser.dart';
 import 'package:waultar/core/parsers/instagram_parser.dart';
 
@@ -52,8 +53,10 @@ main() {
 
       expect(comment1.text, "The comment");
       expect(comment2.text, "The comment");
-      expect(comment1.timestamp, 1550618520);
-      expect(comment2.timestamp, 1550712540);
+      expect(comment1.commented.name, "username");
+      expect(comment2.commented.name, "username");
+      expect(comment1.timestamp, ModelHelper.intToTimestamp(1550618520));
+      expect(comment2.timestamp, ModelHelper.intToTimestamp(1550712540));
     });
   });
 }

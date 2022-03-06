@@ -11,7 +11,7 @@ class LinkObjectBox {
   final profile = ToOne<ProfileObjectBox>();
   String? source;
   String raw;
-
+  late String textSearch;
 
   LinkObjectBox({
     this.id = 0,
