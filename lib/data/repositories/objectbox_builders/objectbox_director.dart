@@ -3,6 +3,7 @@ import 'package:waultar/core/models/content/post_lifeevent_model.dart';
 import 'package:waultar/core/models/content/post_poll_model.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/data/configs/objectbox.dart';
+import 'package:waultar/data/repositories/objectbox_builders/builders/comment_builder.dart';
 import 'package:waultar/data/repositories/objectbox_builders/builders/group_builder.dart';
 import 'package:waultar/data/repositories/objectbox_builders/i_objectbox_director.dart';
 
@@ -73,6 +74,9 @@ class ObjectBoxDirector implements IObjectBoxDirector {
 
       case ServiceModel:
         return makeServiceEntity(model as ServiceModel, _context) as T;
+      
+      case CommentModel:
+        return makeCommentEntity(model as CommentModel, _context) as T;
 
       default:
         throw UnimplementedError("Maker for ${model.runtimeType} has not been implemented");

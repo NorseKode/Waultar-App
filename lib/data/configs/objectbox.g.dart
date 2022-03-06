@@ -9,6 +9,7 @@ import 'package:objectbox/internal.dart'; // generated code can access "internal
 import 'package:objectbox/objectbox.dart';
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
+import '../../data/entities/content/comment_objectbox.dart';
 import '../../data/entities/content/event_objectbox.dart';
 import '../../data/entities/content/group_objectbox.dart';
 import '../../data/entities/content/page_objectbox.dart';
@@ -1054,6 +1055,75 @@ final _entities = <ModelEntity>[
             flags: 0)
       ],
       relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(29, 3362831243295455906),
+      name: 'CommentObjectBox',
+      lastPropertyId: const IdUid(7, 1485538288083355167),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 5685505048486884886),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 8774972970206521051),
+            name: 'commentedId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(34, 4566682628173386362),
+            relationTarget: 'PersonObjectBox'),
+        ModelProperty(
+            id: const IdUid(3, 328545835015107140),
+            name: 'text',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 4853566785362411330),
+            name: 'timestamp',
+            type: 10,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 870806984701713291),
+            name: 'groupId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(35, 1348593098278616661),
+            relationTarget: 'GroupObjectBox'),
+        ModelProperty(
+            id: const IdUid(6, 4685165588809502892),
+            name: 'reactionId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(36, 5277028926913190197),
+            relationTarget: 'ReactionObjectBox'),
+        ModelProperty(
+            id: const IdUid(7, 1485538288083355167),
+            name: 'profileId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(37, 8073949126418207672),
+            relationTarget: 'ProfileObjectBox')
+      ],
+      relations: <ModelRelation>[
+        ModelRelation(
+            id: const IdUid(9, 8867640982871243521),
+            name: 'images',
+            targetId: const IdUid(14, 4917345731593542244)),
+        ModelRelation(
+            id: const IdUid(10, 3821406443761327604),
+            name: 'videos',
+            targetId: const IdUid(24, 1944258851869554230)),
+        ModelRelation(
+            id: const IdUid(11, 4261018299584161279),
+            name: 'files',
+            targetId: const IdUid(11, 575566687247819555)),
+        ModelRelation(
+            id: const IdUid(12, 1113970883540351929),
+            name: 'links',
+            targetId: const IdUid(16, 3083520632734441177))
+      ],
       backlinks: <ModelBacklink>[])
 ];
 
@@ -1077,9 +1147,9 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(28, 7488143885786011622),
-      lastIndexId: const IdUid(33, 288077928328734405),
-      lastRelationId: const IdUid(8, 5633121391346660074),
+      lastEntityId: const IdUid(29, 3362831243295455906),
+      lastIndexId: const IdUid(37, 8073949126418207672),
+      lastRelationId: const IdUid(12, 1113970883540351929),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [
         1837511870469432447,
@@ -2233,6 +2303,77 @@ ModelDefinition getObjectBoxModel() {
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
           object.post.attach(store);
           return object;
+        }),
+    CommentObjectBox: EntityDefinition<CommentObjectBox>(
+        model: _entities[24],
+        toOneRelations: (CommentObjectBox object) =>
+            [object.commented, object.group, object.reaction, object.profile],
+        toManyRelations: (CommentObjectBox object) => {
+              RelInfo<CommentObjectBox>.toMany(9, object.id): object.images,
+              RelInfo<CommentObjectBox>.toMany(10, object.id): object.videos,
+              RelInfo<CommentObjectBox>.toMany(11, object.id): object.files,
+              RelInfo<CommentObjectBox>.toMany(12, object.id): object.links
+            },
+        getId: (CommentObjectBox object) => object.id,
+        setId: (CommentObjectBox object, int id) {
+          object.id = id;
+        },
+        objectToFB: (CommentObjectBox object, fb.Builder fbb) {
+          final textOffset = fbb.writeString(object.text);
+          fbb.startTable(8);
+          fbb.addInt64(0, object.id);
+          fbb.addInt64(1, object.commented.targetId);
+          fbb.addOffset(2, textOffset);
+          fbb.addInt64(3, object.timestamp.millisecondsSinceEpoch);
+          fbb.addInt64(4, object.group.targetId);
+          fbb.addInt64(5, object.reaction.targetId);
+          fbb.addInt64(6, object.profile.targetId);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = CommentObjectBox(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              text:
+                  const fb.StringReader().vTableGet(buffer, rootOffset, 8, ''),
+              timestamp: DateTime.fromMillisecondsSinceEpoch(
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0)));
+          object.commented.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
+          object.commented.attach(store);
+          object.group.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
+          object.group.attach(store);
+          object.reaction.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
+          object.reaction.attach(store);
+          object.profile.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
+          object.profile.attach(store);
+          InternalToManyAccess.setRelInfo(
+              object.images,
+              store,
+              RelInfo<CommentObjectBox>.toMany(9, object.id),
+              store.box<CommentObjectBox>());
+          InternalToManyAccess.setRelInfo(
+              object.videos,
+              store,
+              RelInfo<CommentObjectBox>.toMany(10, object.id),
+              store.box<CommentObjectBox>());
+          InternalToManyAccess.setRelInfo(
+              object.files,
+              store,
+              RelInfo<CommentObjectBox>.toMany(11, object.id),
+              store.box<CommentObjectBox>());
+          InternalToManyAccess.setRelInfo(
+              object.links,
+              store,
+              RelInfo<CommentObjectBox>.toMany(12, object.id),
+              store.box<CommentObjectBox>());
+          return object;
         })
   };
 
@@ -2921,4 +3062,53 @@ class PostPollObjectBox_ {
   /// see [PostPollObjectBox.timestamp]
   static final timestamp =
       QueryIntegerProperty<PostPollObjectBox>(_entities[23].properties[4]);
+}
+
+/// [CommentObjectBox] entity fields to define ObjectBox queries.
+class CommentObjectBox_ {
+  /// see [CommentObjectBox.id]
+  static final id =
+      QueryIntegerProperty<CommentObjectBox>(_entities[24].properties[0]);
+
+  /// see [CommentObjectBox.commented]
+  static final commented =
+      QueryRelationToOne<CommentObjectBox, PersonObjectBox>(
+          _entities[24].properties[1]);
+
+  /// see [CommentObjectBox.text]
+  static final text =
+      QueryStringProperty<CommentObjectBox>(_entities[24].properties[2]);
+
+  /// see [CommentObjectBox.timestamp]
+  static final timestamp =
+      QueryIntegerProperty<CommentObjectBox>(_entities[24].properties[3]);
+
+  /// see [CommentObjectBox.group]
+  static final group = QueryRelationToOne<CommentObjectBox, GroupObjectBox>(
+      _entities[24].properties[4]);
+
+  /// see [CommentObjectBox.reaction]
+  static final reaction =
+      QueryRelationToOne<CommentObjectBox, ReactionObjectBox>(
+          _entities[24].properties[5]);
+
+  /// see [CommentObjectBox.profile]
+  static final profile = QueryRelationToOne<CommentObjectBox, ProfileObjectBox>(
+      _entities[24].properties[6]);
+
+  /// see [CommentObjectBox.images]
+  static final images = QueryRelationToMany<CommentObjectBox, ImageObjectBox>(
+      _entities[24].relations[0]);
+
+  /// see [CommentObjectBox.videos]
+  static final videos = QueryRelationToMany<CommentObjectBox, VideoObjectBox>(
+      _entities[24].relations[1]);
+
+  /// see [CommentObjectBox.files]
+  static final files = QueryRelationToMany<CommentObjectBox, FileObjectBox>(
+      _entities[24].relations[2]);
+
+  /// see [CommentObjectBox.links]
+  static final links = QueryRelationToMany<CommentObjectBox, LinkObjectBox>(
+      _entities[24].relations[3]);
 }

@@ -36,7 +36,7 @@ main() {
 
       expect(comments[0].group!.name, "REDACTED GROUP");
       expect(comments[1].text, "REDACTED COMMENT");
-      expect(comments[1].commenter.name, "REDACTED PERSON");
+      expect(comments[1].commented.name, "REDACTED PERSON");
       expect(comments[2].media!.first is ImageModel, true);
       expect(comments[3].media!.first is LinkModel, true);
       expect(comments[4].media!.first is VideoModel, true);

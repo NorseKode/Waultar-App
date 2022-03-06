@@ -1,3 +1,4 @@
+import 'package:waultar/data/entities/content/comment_objectbox.dart';
 import 'package:waultar/data/entities/content/event_objectbox.dart';
 import 'package:waultar/data/entities/content/group_objectbox.dart';
 import 'package:waultar/data/entities/content/post_event_objectbox.dart';
@@ -16,6 +17,7 @@ import 'package:waultar/data/entities/misc/place_objectbox.dart';
 import 'package:waultar/data/entities/misc/service_objectbox.dart';
 import 'package:waultar/data/entities/misc/tag_objectbox.dart';
 import 'package:waultar/data/entities/profile/profile_objectbox.dart';
+import 'package:waultar/data/repositories/model_builders/builders/commentmodel_builder.dart';
 import 'package:waultar/data/repositories/model_builders/builders/groupmodel_builder.dart';
 import 'package:waultar/data/repositories/model_builders/builders/postlifeevent_builder.dart';
 
@@ -102,6 +104,8 @@ class ModelDirector implements IModelDirector {
       case ProfileObjectBox:
         return makeProfileModel(entity as ProfileObjectBox) as T;
 
+      case CommentObjectBox:
+        return makeCommentModel(entity as CommentObjectBox) as T;
 
       default:
         throw UnimplementedError(

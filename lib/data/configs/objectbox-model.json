@@ -1053,11 +1053,88 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "29:3362831243295455906",
+      "lastPropertyId": "7:1485538288083355167",
+      "name": "CommentObjectBox",
+      "properties": [
+        {
+          "id": "1:5685505048486884886",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8774972970206521051",
+          "name": "commentedId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "34:4566682628173386362",
+          "relationTarget": "PersonObjectBox"
+        },
+        {
+          "id": "3:328545835015107140",
+          "name": "text",
+          "type": 9
+        },
+        {
+          "id": "4:4853566785362411330",
+          "name": "timestamp",
+          "type": 10
+        },
+        {
+          "id": "5:870806984701713291",
+          "name": "groupId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "35:1348593098278616661",
+          "relationTarget": "GroupObjectBox"
+        },
+        {
+          "id": "6:4685165588809502892",
+          "name": "reactionId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "36:5277028926913190197",
+          "relationTarget": "ReactionObjectBox"
+        },
+        {
+          "id": "7:1485538288083355167",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "37:8073949126418207672",
+          "relationTarget": "ProfileObjectBox"
+        }
+      ],
+      "relations": [
+        {
+          "id": "9:8867640982871243521",
+          "name": "images",
+          "targetId": "14:4917345731593542244"
+        },
+        {
+          "id": "10:3821406443761327604",
+          "name": "videos",
+          "targetId": "24:1944258851869554230"
+        },
+        {
+          "id": "11:4261018299584161279",
+          "name": "files",
+          "targetId": "11:575566687247819555"
+        },
+        {
+          "id": "12:1113970883540351929",
+          "name": "links",
+          "targetId": "16:3083520632734441177"
+        }
+      ]
     }
   ],
-  "lastEntityId": "28:7488143885786011622",
-  "lastIndexId": "33:288077928328734405",
-  "lastRelationId": "8:5633121391346660074",
+  "lastEntityId": "29:3362831243295455906",
+  "lastIndexId": "37:8073949126418207672",
+  "lastRelationId": "12:1113970883540351929",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,

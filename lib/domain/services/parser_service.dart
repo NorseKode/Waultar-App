@@ -87,6 +87,9 @@ class ParserService implements IParserService {
 
       case PostPollModel:
         return _postPollRepo.addPostPoll(model);
+      
+      case CommentModel:
+        return _postPollRepo.addPostPoll(model);
 
       default:
         return -1;

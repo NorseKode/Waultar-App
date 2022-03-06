@@ -119,6 +119,9 @@ Future<void> setupServices() async {
     locator.registerSingleton<IPostPollRepository>(
         PostPollRepository(_context, _objectboxDirector, _modelDirector),
         instanceName: 'postPollRepo');
+    locator.registerSingleton<IPostPollRepository>(
+        PostPollRepository(_context, _objectboxDirector, _modelDirector),
+        instanceName: 'postPollRepo');
 
     // register all services and inject their dependencies
     locator.registerSingleton<IAppSettingsService>(AppSettingsService(),

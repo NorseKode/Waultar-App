@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/core/models/media/media_model.dart';
 import 'package:waultar/core/models/misc/person_model.dart';
@@ -13,7 +14,7 @@ import '../base_model.dart';
 import 'group_model.dart';
 
 class CommentModel extends BaseModel {
-  late PersonModel commenter;
+  late PersonModel commented;
   late String text;
   DateTime timestamp;
   List<MediaModel>? media;
@@ -21,14 +22,22 @@ class CommentModel extends BaseModel {
   ReactionModel? reaction;
   final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
 
-  CommentModel(int id, ProfileModel profile, String raw, this.commenter, this.text, this.timestamp,
-      this.media, this.group, this.reaction)
+  CommentModel(
+      {int id = 0,
+      required ProfileModel profile,
+      required String raw,
+      required this.commented,
+      required this.text,
+      required this.timestamp,
+      this.media,
+      this.group,
+      this.reaction})
       : super(id, profile, raw);
 
   static const _instagramKey = "string_list_data";
 
   CommentModel.fromJson(Map<String, dynamic> json, ProfileModel profile)
-      : commenter = PersonModel(profile: profile, name: "name", raw: ""),
+      : commented = PersonModel(profile: profile, name: "name", raw: ""),
         timestamp = json.containsKey(_instagramKey)
             ? ModelHelper.intToTimestamp(((json[_instagramKey]).first)["timestamp"]) ??
                 DateTime.fromMicrosecondsSinceEpoch(0)
@@ -68,7 +77,7 @@ class CommentModel extends BaseModel {
 
     var exp = RegExp(r"(\w.+)((?:commented on )|(?:replied to ))(\w.+)'s");
     var match = exp.firstMatch(json["title"]);
-    commenter = PersonModel(
+    commented = PersonModel(
       id: 0,
       name: match != null ? match.group(3)! : 'name',
       profile: profile,
@@ -78,19 +87,16 @@ class CommentModel extends BaseModel {
 
   @override
   Color getAssociatedColor() {
-    // TODO: implement getAssociatedColor
-    throw UnimplementedError();
+    return Colors.indigo;
   }
 
   @override
   String getMostInformativeField() {
-    // TODO: implement getMostInformativeField
-    throw UnimplementedError();
+    return text;
   }
 
   @override
   DateTime getTimestamp() {
-    // TODO: implement getTimestamp
-    throw UnimplementedError();
+    return timestamp;
   }
 }
