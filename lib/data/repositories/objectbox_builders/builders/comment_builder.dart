@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:waultar/core/models/content/comment_model.dart';
 import 'package:waultar/core/models/media/file_model.dart';
 import 'package:waultar/core/models/media/image_model.dart';
@@ -13,10 +14,15 @@ import 'package:waultar/data/repositories/objectbox_builders/builders/group_buil
 import 'package:waultar/data/repositories/objectbox_builders/builders/media_builders.dart';
 
 CommentObjectBox makeCommentEntity(CommentModel model, ObjectBox context) {
+  var searchBuilder = StringBuffer();
   var entity = CommentObjectBox(text: model.text, timestamp: model.timestamp);
-
+  
+  searchBuilder.write(model.timestamp.toString());
+  searchBuilder.write(" " + model.text);
+  
   if (model.group != null) {
     entity.group.target = makeGroupEntity(model.group!, context);
+    searchBuilder.write(" " + model.group!.name);
   }
 
   var mediaList = model.media;

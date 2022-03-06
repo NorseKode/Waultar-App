@@ -1059,7 +1059,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(29, 3362831243295455906),
       name: 'CommentObjectBox',
-      lastPropertyId: const IdUid(7, 1485538288083355167),
+      lastPropertyId: const IdUid(8, 4190425380381101012),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -1104,7 +1104,12 @@ final _entities = <ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const IdUid(37, 8073949126418207672),
-            relationTarget: 'ProfileObjectBox')
+            relationTarget: 'ProfileObjectBox'),
+        ModelProperty(
+            id: const IdUid(8, 4190425380381101012),
+            name: 'textSearch',
+            type: 9,
+            flags: 0)
       ],
       relations: <ModelRelation>[
         ModelRelation(
@@ -2320,7 +2325,8 @@ ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (CommentObjectBox object, fb.Builder fbb) {
           final textOffset = fbb.writeString(object.text);
-          fbb.startTable(8);
+          final textSearchOffset = fbb.writeString(object.textSearch);
+          fbb.startTable(9);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.commented.targetId);
           fbb.addOffset(2, textOffset);
@@ -2328,6 +2334,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addInt64(4, object.group.targetId);
           fbb.addInt64(5, object.reaction.targetId);
           fbb.addInt64(6, object.profile.targetId);
+          fbb.addOffset(7, textSearchOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -2340,7 +2347,9 @@ ModelDefinition getObjectBoxModel() {
               text:
                   const fb.StringReader().vTableGet(buffer, rootOffset, 8, ''),
               timestamp: DateTime.fromMillisecondsSinceEpoch(
-                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0)));
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0)),
+              textSearch: const fb.StringReader()
+                  .vTableGet(buffer, rootOffset, 18, ''));
           object.commented.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
           object.commented.attach(store);
@@ -3095,6 +3104,10 @@ class CommentObjectBox_ {
   /// see [CommentObjectBox.profile]
   static final profile = QueryRelationToOne<CommentObjectBox, ProfileObjectBox>(
       _entities[24].properties[6]);
+
+  /// see [CommentObjectBox.textSearch]
+  static final textSearch =
+      QueryStringProperty<CommentObjectBox>(_entities[24].properties[7]);
 
   /// see [CommentObjectBox.images]
   static final images = QueryRelationToMany<CommentObjectBox, ImageObjectBox>(

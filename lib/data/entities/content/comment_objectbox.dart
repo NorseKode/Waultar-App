@@ -29,6 +29,7 @@ class CommentObjectBox {
   final group = ToOne<GroupObjectBox>();
   final reaction = ToOne<ReactionObjectBox>();
   final profile = ToOne<ProfileObjectBox>();
+  late String textSearch;
 
   CommentObjectBox({
     this.id = 0,

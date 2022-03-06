@@ -1056,7 +1056,7 @@
     },
     {
       "id": "29:3362831243295455906",
-      "lastPropertyId": "7:1485538288083355167",
+      "lastPropertyId": "8:4190425380381101012",
       "name": "CommentObjectBox",
       "properties": [
         {
@@ -1106,6 +1106,11 @@
           "flags": 520,
           "indexId": "37:8073949126418207672",
           "relationTarget": "ProfileObjectBox"
+        },
+        {
+          "id": "8:4190425380381101012",
+          "name": "textSearch",
+          "type": 9
         }
       ],
       "relations": [
