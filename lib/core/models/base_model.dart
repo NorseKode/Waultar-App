@@ -8,7 +8,7 @@ abstract class BaseModel implements UIModel {
 
   BaseModel(this.id, this.profile, this.raw);
 
-  // @override
+  @override
   Map<String, String> toMap() {
     return {
       "profile": profile.toString()

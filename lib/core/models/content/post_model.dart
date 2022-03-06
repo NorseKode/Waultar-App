@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/models/model_helper.dart';
-import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
 
 class PostModel extends BaseModel {

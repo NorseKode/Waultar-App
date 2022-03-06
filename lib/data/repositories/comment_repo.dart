@@ -1,6 +1,5 @@
 import 'package:waultar/core/abstracts/abstract_repositories/i_comment_repository.dart';
 import 'package:waultar/core/models/content/comment_model.dart';
-import 'package:waultar/core/models/media/image_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
 import 'package:waultar/data/entities/content/comment_objectbox.dart';

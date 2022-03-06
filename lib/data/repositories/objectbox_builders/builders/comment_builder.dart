@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:waultar/core/models/content/comment_model.dart';
 import 'package:waultar/core/models/media/file_model.dart';
 import 'package:waultar/core/models/media/image_model.dart';
@@ -12,7 +11,6 @@ import 'package:waultar/data/entities/media/link_objectbox.dart';
 import 'package:waultar/data/entities/media/video_objectbox.dart';
 import 'package:waultar/data/repositories/objectbox_builders/builders/group_builder.dart';
 import 'package:waultar/data/repositories/objectbox_builders/builders/index.dart';
-import 'package:waultar/data/repositories/objectbox_builders/builders/media_builders.dart';
 import 'package:waultar/data/repositories/objectbox_builders/builders/profile_builder.dart';
 
 CommentObjectBox makeCommentEntity(CommentModel model, ObjectBox context) {

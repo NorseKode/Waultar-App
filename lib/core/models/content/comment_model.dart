@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/core/models/media/media_model.dart';

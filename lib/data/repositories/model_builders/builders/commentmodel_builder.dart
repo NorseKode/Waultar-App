@@ -3,7 +3,6 @@ import 'package:waultar/data/entities/content/comment_objectbox.dart';
 import 'package:waultar/data/repositories/model_builders/builders/groupmodel_builder.dart';
 import 'package:waultar/data/repositories/model_builders/builders/personmodel_builder.dart';
 import 'package:waultar/data/repositories/model_builders/builders/profilemodel_builder.dart';
-import 'package:waultar/data/repositories/objectbox_builders/builders/profile_builder.dart';
 
 CommentModel makeCommentModel(CommentObjectBox entity) {
   return CommentModel(
