@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/configs/navigation/app_state.dart';
+import 'package:waultar/configs/navigation/router/app_route_path.dart';
 import 'package:waultar/configs/navigation/screen.dart';
-import 'package:waultar/presentation/presentation_helper.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MenuPanel extends StatefulWidget {
   final ViewScreen active;
-  final Function(ViewScreen screen) updateActive;
-  const MenuPanel({required this.active, required this.updateActive, Key? key}) : super(key: key);
+  const MenuPanel({required this.active, Key? key}) : super(key: key);
 
   @override
   _MenuPanelState createState() => _MenuPanelState();
@@ -130,28 +130,27 @@ class _MenuPanelState extends State<MenuPanel> {
                   logo(),
                   const Divider(height: 40, thickness: 2, color: Color(0xFF363747)),
                   menuButton(Iconsax.music_dashboard, localizer.dashboard, ViewScreen.dashboard,
-                      widget.updateActive),
+                      (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.home()); }),
                   menuButton(Iconsax.command, localizer.collections, ViewScreen.browse,
-                      widget.updateActive),
+                      (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.browse()); }),
                   menuButton(Iconsax.routing, localizer.timeline, ViewScreen.timeline,
-                      widget.updateActive),
+                      (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.timeline()); }),
                   menuButton(
-                      Iconsax.routing, localizer.search, ViewScreen.search, widget.updateActive),
+                      Iconsax.routing, localizer.search, ViewScreen.search, (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.search()); }),
                   menuButton(themeProvider.isLightTheme ? Iconsax.sun : Iconsax.moon,
                       localizer.changeTheme, ViewScreen.unknown, (_) async {
                     await themeProvider.toggleThemeData();
                   }),
                   const Divider(height: 40, thickness: 2, color: Color(0xFF363747)),
-                  menuButton(Iconsax.command, localizer.nukeDatabase, ViewScreen.unknown, (_) {
-                    PresentationHelper.nukeDatabase();
-                  }),
                 ],
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //profile(),
-                  menuButton(Iconsax.setting, localizer.settings, ViewScreen.unknown, (_) {}),
+                  menuButton(Iconsax.setting, localizer.settings, ViewScreen.unknown, (_) {
+                    context.read<AppState>().updateNavigatorState(AppRoutePath.settings());
+                  }),
                   menuButton(Iconsax.logout, localizer.logout, ViewScreen.signin, (_) {})
                 ],
               ),
