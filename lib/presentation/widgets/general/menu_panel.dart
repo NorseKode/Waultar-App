@@ -133,6 +133,8 @@ class _MenuPanelState extends State<MenuPanel> {
                       widget.updateActive),
                   menuButton(Iconsax.command, localizer.collections, ViewScreen.browse,
                       widget.updateActive),
+                  menuButton(Iconsax.routing, localizer.timeline, ViewScreen.timeline,
+                      widget.updateActive),
                   menuButton(themeProvider.isLightTheme ? Iconsax.sun : Iconsax.moon,
                       localizer.changeTheme, ViewScreen.unknown, (_) async {
                     await themeProvider.toggleThemeData();

@@ -6,4 +6,11 @@ abstract class BaseModel {
   final String raw;
 
   BaseModel(this.id, this.profile, this.raw);
+
+  // @override
+  Map<String, String> toMap() {
+    return {
+      "profile": profile.toString()
+    };
+  }
 }

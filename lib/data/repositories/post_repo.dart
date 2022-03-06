@@ -42,9 +42,16 @@ class PostRepository implements IPostRepository {
   }
 
   @override
-  PostModel? getAllPostsPagination(int offset, int limit) {
-    // TODO: implement getAllPostsPagination
-    throw UnimplementedError();
+  List<PostModel>? getAllPostsPagination(int offset, int limit) {
+    var queryBuilder = _postBox.query();
+    queryBuilder.order(PostObjectBox_.timestamp);
+    final query = queryBuilder.build();
+    query
+      ..offset = offset
+      ..limit = limit;
+
+    var result = query.find();
+    return result.map((p) => _modelDirector.make<PostModel>(p)).toList();
   }
 
   @override

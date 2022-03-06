@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/models/model_helper.dart';
+import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
 
-class PostModel extends BaseModel {
+class PostModel extends BaseModel implements UIModel {
   DateTime timestamp;
   String? description;
   String? title;
@@ -77,5 +79,57 @@ class PostModel extends BaseModel {
   @override
   String toString() {
     return "Title: $title, description: $description, timestamp: ${timestamp.toString()}";
+  }
+
+  @override
+  toMap() {
+    var returnMap = <String, String>{};
+
+    returnMap.putIfAbsent("timestamp", () => timestamp.toString());
+    if (title != null) {
+      returnMap.putIfAbsent("title", () => title!);
+    }
+    if (description != null) {
+      returnMap.putIfAbsent("description", () => description!);
+    }
+    if (medias != null) {
+      returnMap.putIfAbsent("medias", () => "");
+    }
+    if (tags != null) {
+      returnMap.putIfAbsent("tags", () => 
+        tags!.fold("", (previousValue, element) => 
+          previousValue + " " + element.name));
+    }
+    if (mentions != null) {
+      returnMap.putIfAbsent("mentions", () => 
+        mentions!.fold("", (previousValue, element) => 
+          previousValue + " " + element.name));
+    }
+    if (isArchived != null) {
+      returnMap.putIfAbsent("isArchived", () => isArchived!.toString());
+    }
+    if (metadata != null) {
+      returnMap.putIfAbsent("metadata", () => metadata!);
+    }
+    
+    returnMap.addAll(super.toMap());
+    return returnMap;
+  }
+
+  @override
+  String getMostInformativeField() {
+    return title != null && title!.isNotEmpty 
+      ? title! 
+      : description!;
+  }
+
+  @override
+  DateTime getTimestamp() {
+    return timestamp;
+  }
+
+  @override
+  Color getAssociatedColor() {
+    return Colors.orange;
   }
 }

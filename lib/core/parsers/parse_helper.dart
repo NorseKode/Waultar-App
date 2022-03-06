@@ -20,12 +20,12 @@ class ParseHelper {
       activities: [],
       createdTimestamp: DateTime.now(),
       emails: [],
-      fullName: '',
+      fullName: 'John Doe Doesen',
       raw: '',
       uri: Uri(),
       service: facebook);
   static ServiceModel facebook = ServiceModel(
-      id: 1, name: "facebook", company: "meta", image: Uri(path: ""));
+      id: 1, name: "Facebook", company: "meta", image: Uri(path: ""));
   static ServiceModel instagram = ServiceModel(
       id: 2, name: "instagram", company: "meta", image: Uri(path: ""));
 
