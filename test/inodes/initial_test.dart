@@ -6,6 +6,7 @@ import 'package:path/path.dart' as path_dart;
 import 'package:pretty_json/pretty_json.dart';
 import 'package:waultar/core/inodes/inode.dart';
 import 'package:waultar/core/inodes/inode_parser.dart';
+import 'package:waultar/core/inodes/json_helper.dart';
 import '../test_helper.dart';
 
 main() {

@@ -10,11 +10,15 @@ class DataPoint {
   int id;
   final dataPointName = ToOne<DataPointName>();
 
+  // make these seracheable or traversable  
+  late List<String> keys;
+
+  // put theses in some other collection perhaps ?
   @Index()
   String values;
 
   @Transient()
-  Map<String, dynamic>? valuesMap;
+  late Map<String, dynamic> valuesMap;
 
   @Index()
   @Property(type: PropertyType.date)
@@ -65,6 +69,10 @@ class DataPointName {
   @Backlink('dataPointName')
   final dataPoints = ToMany<DataPoint>();
 
+  // this enables us to create folders
+  // is this property is not empty, it means that, there are nested datapoints
+  final dataPointNames = ToMany<DataPointName>();
+
   DataPointName({
     this.id = 0,
     this.count = 0,
@@ -72,22 +80,22 @@ class DataPointName {
   });
 }
 
-@Entity()
-class DataPointDir {
-  int id;
-  int count;
+// @Entity()
+// class DataPointDir {
+//   int id;
+//   int count;
 
-  String name;
+//   String name;
 
-  final dataPointNames = ToMany<DataPointName>();
-  final dataPointDirs = ToMany<DataPointDir>();
+//   final dataPointNames = ToMany<DataPointName>();
+//   final dataPointDirs = ToMany<DataPointDir>();
 
-  DataPointDir({
-    this.id = 0,
-    this.count = 0,
-    required this.name,
-  });
-}
+//   DataPointDir({
+//     this.id = 0,
+//     this.count = 0,
+//     required this.name,
+//   });
+// }
 
 @Entity()
 class DataCategory {
@@ -102,7 +110,7 @@ class DataCategory {
   @Backlink('dataCategory')
   final dataPointNames = ToMany<DataPointName>();
 
-  final dataPointDirs = ToMany<DataPointDir>();
+  // final dataPointDirs = ToMany<DataPointDir>();
 
   DataCategory({
     this.id = 0,

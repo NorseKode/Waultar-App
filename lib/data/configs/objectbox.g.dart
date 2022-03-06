@@ -1079,12 +1079,7 @@ final _entities = <ModelEntity>[
             type: 6,
             flags: 0)
       ],
-      relations: <ModelRelation>[
-        ModelRelation(
-            id: const IdUid(9, 447566776387890902),
-            name: 'dataPointDirs',
-            targetId: const IdUid(32, 6671027780344887773))
-      ],
+      relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[
         ModelBacklink(
             name: 'dataPointNames',
@@ -1094,7 +1089,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(30, 6990209732262435045),
       name: 'DataPoint',
-      lastPropertyId: const IdUid(4, 3864862414710862973),
+      lastPropertyId: const IdUid(5, 7868178552619576621),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -1120,7 +1115,12 @@ final _entities = <ModelEntity>[
             name: 'timestamp',
             type: 10,
             flags: 8,
-            indexId: const IdUid(37, 2663412274713465659))
+            indexId: const IdUid(37, 2663412274713465659)),
+        ModelProperty(
+            id: const IdUid(5, 7868178552619576621),
+            name: 'keys',
+            type: 30,
+            flags: 0)
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
@@ -1154,46 +1154,18 @@ final _entities = <ModelEntity>[
             type: 6,
             flags: 0)
       ],
-      relations: <ModelRelation>[],
+      relations: <ModelRelation>[
+        ModelRelation(
+            id: const IdUid(12, 1781898180354971109),
+            name: 'dataPointNames',
+            targetId: const IdUid(31, 1621784589665593446))
+      ],
       backlinks: <ModelBacklink>[
         ModelBacklink(
             name: 'dataPoints',
             srcEntity: 'DataPoint',
             srcField: 'dataPointName')
-      ]),
-  ModelEntity(
-      id: const IdUid(32, 6671027780344887773),
-      name: 'DataPointDir',
-      lastPropertyId: const IdUid(3, 615747648317964421),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 2315244068883270077),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 7950104210562865632),
-            name: 'count',
-            type: 6,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(3, 615747648317964421),
-            name: 'name',
-            type: 9,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[
-        ModelRelation(
-            id: const IdUid(10, 7182536452401541105),
-            name: 'dataPointNames',
-            targetId: const IdUid(31, 1621784589665593446)),
-        ModelRelation(
-            id: const IdUid(11, 6986559347298680792),
-            name: 'dataPointDirs',
-            targetId: const IdUid(32, 6671027780344887773))
-      ],
-      backlinks: <ModelBacklink>[])
+      ])
 ];
 
 /// Open an ObjectBox store with the model declared in this file.
@@ -1218,13 +1190,14 @@ ModelDefinition getObjectBoxModel() {
       entities: _entities,
       lastEntityId: const IdUid(32, 6671027780344887773),
       lastIndexId: const IdUid(39, 1015883818485813566),
-      lastRelationId: const IdUid(11, 6986559347298680792),
+      lastRelationId: const IdUid(12, 1781898180354971109),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [
         1837511870469432447,
         2148786199038735847,
         4521581829489353372,
-        2652951279138236051
+        2652951279138236051,
+        6671027780344887773
       ],
       retiredIndexUids: const [
         2188429983658332891,
@@ -1260,9 +1233,12 @@ ModelDefinition getObjectBoxModel() {
         2781293098887226224,
         3972303150322710599,
         8828556671193391659,
-        4392723400432572784
+        4392723400432572784,
+        2315244068883270077,
+        7950104210562865632,
+        615747648317964421
       ],
-      retiredRelationUids: const [],
+      retiredRelationUids: const [447566776387890902],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
       version: 1);
@@ -2377,7 +2353,6 @@ ModelDefinition getObjectBoxModel() {
         model: _entities[24],
         toOneRelations: (DataCategory object) => [],
         toManyRelations: (DataCategory object) => {
-              RelInfo<DataCategory>.toMany(9, object.id): object.dataPointDirs,
               RelInfo<DataPointName>.toOneBacklink(3, object.id,
                       (DataPointName srcObject) => srcObject.dataCategory):
                   object.dataPointNames
@@ -2405,11 +2380,6 @@ ModelDefinition getObjectBoxModel() {
               name:
                   const fb.StringReader().vTableGet(buffer, rootOffset, 6, ''));
           InternalToManyAccess.setRelInfo(
-              object.dataPointDirs,
-              store,
-              RelInfo<DataCategory>.toMany(9, object.id),
-              store.box<DataCategory>());
-          InternalToManyAccess.setRelInfo(
               object.dataPointNames,
               store,
               RelInfo<DataPointName>.toOneBacklink(3, object.id,
@@ -2427,11 +2397,14 @@ ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (DataPoint object, fb.Builder fbb) {
           final valuesOffset = fbb.writeString(object.values);
-          fbb.startTable(5);
+          final keysOffset = fbb.writeList(
+              object.keys.map(fbb.writeString).toList(growable: false));
+          fbb.startTable(6);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.dataPointName.targetId);
           fbb.addOffset(2, valuesOffset);
           fbb.addInt64(3, object.timestamp?.millisecondsSinceEpoch);
+          fbb.addOffset(4, keysOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -2446,7 +2419,9 @@ ModelDefinition getObjectBoxModel() {
                   const fb.StringReader().vTableGet(buffer, rootOffset, 8, ''))
             ..timestamp = timestampValue == null
                 ? null
-                : DateTime.fromMillisecondsSinceEpoch(timestampValue);
+                : DateTime.fromMillisecondsSinceEpoch(timestampValue)
+            ..keys = const fb.ListReader<String>(fb.StringReader(), lazy: false)
+                .vTableGet(buffer, rootOffset, 12, []);
           object.dataPointName.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
           object.dataPointName.attach(store);
@@ -2456,6 +2431,8 @@ ModelDefinition getObjectBoxModel() {
         model: _entities[26],
         toOneRelations: (DataPointName object) => [object.dataCategory],
         toManyRelations: (DataPointName object) => {
+              RelInfo<DataPointName>.toMany(12, object.id):
+                  object.dataPointNames,
               RelInfo<DataPoint>.toOneBacklink(2, object.id,
                       (DataPoint srcObject) => srcObject.dataPointName):
                   object.dataPoints
@@ -2488,53 +2465,16 @@ ModelDefinition getObjectBoxModel() {
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0);
           object.dataCategory.attach(store);
           InternalToManyAccess.setRelInfo(
+              object.dataPointNames,
+              store,
+              RelInfo<DataPointName>.toMany(12, object.id),
+              store.box<DataPointName>());
+          InternalToManyAccess.setRelInfo(
               object.dataPoints,
               store,
               RelInfo<DataPoint>.toOneBacklink(2, object.id,
                   (DataPoint srcObject) => srcObject.dataPointName),
               store.box<DataPointName>());
-          return object;
-        }),
-    DataPointDir: EntityDefinition<DataPointDir>(
-        model: _entities[27],
-        toOneRelations: (DataPointDir object) => [],
-        toManyRelations: (DataPointDir object) => {
-              RelInfo<DataPointDir>.toMany(10, object.id):
-                  object.dataPointNames,
-              RelInfo<DataPointDir>.toMany(11, object.id): object.dataPointDirs
-            },
-        getId: (DataPointDir object) => object.id,
-        setId: (DataPointDir object, int id) {
-          object.id = id;
-        },
-        objectToFB: (DataPointDir object, fb.Builder fbb) {
-          final nameOffset = fbb.writeString(object.name);
-          fbb.startTable(4);
-          fbb.addInt64(0, object.id);
-          fbb.addInt64(1, object.count);
-          fbb.addOffset(2, nameOffset);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-
-          final object = DataPointDir(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              count: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0),
-              name:
-                  const fb.StringReader().vTableGet(buffer, rootOffset, 8, ''));
-          InternalToManyAccess.setRelInfo(
-              object.dataPointNames,
-              store,
-              RelInfo<DataPointDir>.toMany(10, object.id),
-              store.box<DataPointDir>());
-          InternalToManyAccess.setRelInfo(
-              object.dataPointDirs,
-              store,
-              RelInfo<DataPointDir>.toMany(11, object.id),
-              store.box<DataPointDir>());
           return object;
         })
   };
@@ -3239,10 +3179,6 @@ class DataCategory_ {
   /// see [DataCategory.count]
   static final count =
       QueryIntegerProperty<DataCategory>(_entities[24].properties[2]);
-
-  /// see [DataCategory.dataPointDirs]
-  static final dataPointDirs = QueryRelationToMany<DataCategory, DataPointDir>(
-      _entities[24].relations[0]);
 }
 
 /// [DataPoint] entity fields to define ObjectBox queries.
@@ -3262,6 +3198,10 @@ class DataPoint_ {
   /// see [DataPoint.timestamp]
   static final timestamp =
       QueryIntegerProperty<DataPoint>(_entities[25].properties[3]);
+
+  /// see [DataPoint.keys]
+  static final keys =
+      QueryStringVectorProperty<DataPoint>(_entities[25].properties[4]);
 }
 
 /// [DataPointName] entity fields to define ObjectBox queries.
@@ -3281,28 +3221,9 @@ class DataPointName_ {
   /// see [DataPointName.count]
   static final count =
       QueryIntegerProperty<DataPointName>(_entities[26].properties[3]);
-}
 
-/// [DataPointDir] entity fields to define ObjectBox queries.
-class DataPointDir_ {
-  /// see [DataPointDir.id]
-  static final id =
-      QueryIntegerProperty<DataPointDir>(_entities[27].properties[0]);
-
-  /// see [DataPointDir.count]
-  static final count =
-      QueryIntegerProperty<DataPointDir>(_entities[27].properties[1]);
-
-  /// see [DataPointDir.name]
-  static final name =
-      QueryStringProperty<DataPointDir>(_entities[27].properties[2]);
-
-  /// see [DataPointDir.dataPointNames]
+  /// see [DataPointName.dataPointNames]
   static final dataPointNames =
-      QueryRelationToMany<DataPointDir, DataPointName>(
-          _entities[27].relations[0]);
-
-  /// see [DataPointDir.dataPointDirs]
-  static final dataPointDirs = QueryRelationToMany<DataPointDir, DataPointDir>(
-      _entities[27].relations[1]);
+      QueryRelationToMany<DataPointName, DataPointName>(
+          _entities[26].relations[0]);
 }
