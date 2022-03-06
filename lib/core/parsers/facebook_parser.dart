@@ -152,13 +152,15 @@ class FacebookParser extends BaseParser {
             }
           } else if (object.containsKey("group_comments_v2")) {
             for (var comment in object["group_comments_v2"]) {
-              var commentModel = CommentModel.fromJson(comment, profile!);
+              var commentModel = CommentModel.fromFacebook(comment, profile!);
               _appLogger.logger.info("Parse Facebook Comment: ${commentModel.toString()}");
+              yield commentModel;
             }
           } else if (object.containsKey("comments_v2")) {
             for (var comment in object["comments_v2"]) {
-              var commentModel = CommentModel.fromJson(comment, profile!);
+              var commentModel = CommentModel.fromFacebook(comment, profile!);
               _appLogger.logger.info("Parse Facebook Comment: ${commentModel.toString()}");
+              yield commentModel;
             }
           }
           else {

@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as path_dart;
 import 'package:waultar/core/models/content/comment_model.dart';
+import 'package:waultar/core/models/media/image_model.dart';
+import 'package:waultar/core/models/media/link_model.dart';
+import 'package:waultar/core/models/media/video_model.dart';
 import 'package:waultar/core/parsers/facebook_parser.dart';
 import 'package:waultar/core/parsers/instagram_parser.dart';
 
@@ -12,7 +15,7 @@ main() {
   var facebookProfile = TestHelper.facebookProfile;
   var instagramProfile = TestHelper.instagramProfile;
   var facebookComments =
-      File(path_dart.join(TestHelper.pathToCurrentFile(), "data", "comments.json"));
+      File(path_dart.join(TestHelper.pathToCurrentFile(), "data", "facebook_comments.json"));
   var instagramComments =
       File(path_dart.join(TestHelper.pathToCurrentFile(), "data", "post_comments.json"));
 
@@ -22,11 +25,22 @@ main() {
   });
 
   group("Parsing of comments: ", () {
-    // test("Facebook comments: ", () {
-    //   var results = FacebookParser().parseFile(facebookComments, profile: facebookProfile);
+    test("Facebook comments: ", () async {
+      var results = await FacebookParser().parseFile(facebookComments, profile: facebookProfile).toList();
+      
+      expect(results.length, 7);
 
+      var comments = results.whereType<CommentModel>().toList();
 
-    // });
+      expect(comments.length, 5);
+
+      expect(comments[0].group!.name, "REDACTED GROUP");
+      expect(comments[1].text, "REDACTED COMMENT");
+      expect(comments[1].commenter.name, "REDACTED PERSON");
+      expect(comments[2].media!.first is ImageModel, true);
+      expect(comments[3].media!.first is LinkModel, true);
+      expect(comments[4].media!.first is VideoModel, true);
+    });
 
     test('Instagram comments: ', () async {
       var results = await InstagramParser().parseFile(instagramComments, profile: instagramProfile).toList();
