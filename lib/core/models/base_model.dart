@@ -1,6 +1,7 @@
 import 'package:waultar/core/models/profile/profile_model.dart';
+import 'package:waultar/core/models/ui_model.dart';
 
-abstract class BaseModel {  
+abstract class BaseModel implements UIModel {  
   int id = 0;
   final ProfileModel profile;
   final String raw;

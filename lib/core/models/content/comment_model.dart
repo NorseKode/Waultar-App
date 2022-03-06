@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/core/models/media/media_model.dart';
 import 'package:waultar/core/models/misc/person_model.dart';
@@ -72,5 +74,23 @@ class CommentModel extends BaseModel {
       profile: profile,
       raw: '',
     );
+  }
+
+  @override
+  Color getAssociatedColor() {
+    // TODO: implement getAssociatedColor
+    throw UnimplementedError();
+  }
+
+  @override
+  String getMostInformativeField() {
+    // TODO: implement getMostInformativeField
+    throw UnimplementedError();
+  }
+
+  @override
+  DateTime getTimestamp() {
+    // TODO: implement getTimestamp
+    throw UnimplementedError();
   }
 }

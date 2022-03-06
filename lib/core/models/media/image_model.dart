@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:waultar/core/models/media/media_model.dart';
 import 'package:waultar/core/models/model_helper.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
@@ -29,4 +31,22 @@ class ImageModel extends MediaModel {
           json.containsKey("metadata") ? json["metadata"] : "",
           ModelHelper.getTimestamp(json),
         );
+
+  @override
+  Color getAssociatedColor() {
+    // TODO: implement getAssociatedColor
+    throw UnimplementedError();
+  }
+
+  @override
+  String getMostInformativeField() {
+    // TODO: implement getMostInformativeField
+    throw UnimplementedError();
+  }
+
+  @override
+  DateTime getTimestamp() {
+    // TODO: implement getTimestamp
+    throw UnimplementedError();
+  }
 }
