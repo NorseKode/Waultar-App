@@ -12,6 +12,7 @@ class ImageObjectBox {
   String? title;
   String? description;
   String raw;
+  late String textSearch;
 
   ImageObjectBox({
     this.id = 0,

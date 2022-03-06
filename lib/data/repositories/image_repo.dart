@@ -44,8 +44,7 @@ class ImageRepository implements IImageRepository {
   @override
   List<ImageModel>? getAllImagesByProfile(ProfileModel profile) {
     var builder = _imageBox.query();
-    builder.link(
-        ImageObjectBox_.profile, ProfileObjectBox_.id.equals(profile.id));
+    builder.link(ImageObjectBox_.profile, ProfileObjectBox_.id.equals(profile.id));
     var images = builder.build().find();
 
     if (images.isEmpty) {
@@ -62,8 +61,7 @@ class ImageRepository implements IImageRepository {
   @override
   List<ImageModel>? getAllImagesByService(ServiceModel service) {
     var builder = _imageBox.query();
-    builder.link(
-        ImageObjectBox_.profile, ProfileObjectBox_.service.equals(service.id));
+    builder.link(ImageObjectBox_.profile, ProfileObjectBox_.service.equals(service.id));
     var images = builder.build().find();
 
     if (images.isEmpty) {
@@ -91,5 +89,16 @@ class ImageRepository implements IImageRepository {
   @override
   int removeAll() {
     return _imageBox.removeAll();
+  }
+
+  @override
+  List<ImageModel> search(String search, int offset, int limit) {
+    var build = _imageBox.query(ImageObjectBox_.textSearch.contains(search)).build();
+    
+    build
+      ..offset = offset
+      ..limit = limit;
+
+    return build.find().map((e) => _modelDirector.make<ImageModel>(e)).toList();
   }
 }

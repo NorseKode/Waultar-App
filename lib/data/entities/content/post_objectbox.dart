@@ -9,7 +9,6 @@ import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 
 @Entity()
 class PostObjectBox {
-  
   int id;
   String raw;
   final profile = ToOne<ProfileObjectBox>();
@@ -33,6 +32,9 @@ class PostObjectBox {
 
   // meta should be misc/other
   String? metadata;
+
+  @Index(type: IndexType.value)
+  late String textSearch;
 
   PostObjectBox({
     this.id = 0,

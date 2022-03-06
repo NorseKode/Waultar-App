@@ -1,0 +1,4 @@
+enum SearchCategories {
+  post,
+  media,
+}

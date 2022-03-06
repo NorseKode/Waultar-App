@@ -396,7 +396,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(11, 575566687247819555),
       name: 'FileObjectBox',
-      lastPropertyId: const IdUid(7, 1264177232458524261),
+      lastPropertyId: const IdUid(8, 3903884079001583830),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -434,6 +434,11 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(7, 1264177232458524261),
             name: 'thumbnail',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(8, 3903884079001583830),
+            name: 'textSearch',
             type: 9,
             flags: 0)
       ],
@@ -524,7 +529,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(14, 4917345731593542244),
       name: 'ImageObjectBox',
-      lastPropertyId: const IdUid(8, 2368861643283958423),
+      lastPropertyId: const IdUid(9, 1684730760113741631),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -568,6 +573,11 @@ final _entities = <ModelEntity>[
             id: const IdUid(8, 2368861643283958423),
             name: 'raw',
             type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(9, 1684730760113741631),
+            name: 'textSearch',
+            type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -575,7 +585,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(16, 3083520632734441177),
       name: 'LinkObjectBox',
-      lastPropertyId: const IdUid(7, 7801353157999510033),
+      lastPropertyId: const IdUid(8, 1139494787868128441),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -613,6 +623,11 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(7, 7801353157999510033),
             name: 'raw',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(8, 1139494787868128441),
+            name: 'textSearch',
             type: 9,
             flags: 0)
       ],
@@ -746,7 +761,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(21, 1840073705676171105),
       name: 'PostObjectBox',
-      lastPropertyId: const IdUid(13, 835770916803498873),
+      lastPropertyId: const IdUid(14, 6569195031694636871),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -790,7 +805,13 @@ final _entities = <ModelEntity>[
             id: const IdUid(13, 835770916803498873),
             name: 'metadata',
             type: 9,
-            flags: 0)
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(14, 6569195031694636871),
+            name: 'textSearch',
+            type: 9,
+            flags: 8,
+            indexId: const IdUid(34, 2133814027961171948))
       ],
       relations: <ModelRelation>[
         ModelRelation(
@@ -865,7 +886,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(24, 1944258851869554230),
       name: 'VideoObjectBox',
-      lastPropertyId: const IdUid(9, 5541901195020504566),
+      lastPropertyId: const IdUid(10, 5158595124007382016),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -913,6 +934,11 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(9, 5541901195020504566),
             name: 'raw',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(10, 5158595124007382016),
+            name: 'textSearch',
             type: 9,
             flags: 0)
       ],
@@ -1078,7 +1104,7 @@ ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
       lastEntityId: const IdUid(28, 7488143885786011622),
-      lastIndexId: const IdUid(33, 288077928328734405),
+      lastIndexId: const IdUid(34, 2133814027961171948),
       lastRelationId: const IdUid(8, 5633121391346660074),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [
@@ -1533,7 +1559,8 @@ ModelDefinition getObjectBoxModel() {
           final thumbnailOffset = object.thumbnail == null
               ? null
               : fbb.writeString(object.thumbnail!);
-          fbb.startTable(8);
+          final textSearchOffset = fbb.writeString(object.textSearch);
+          fbb.startTable(9);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.profile.targetId);
           fbb.addOffset(2, rawOffset);
@@ -1541,6 +1568,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(4, metadataOffset);
           fbb.addInt64(5, object.timestamp?.millisecondsSinceEpoch);
           fbb.addOffset(6, thumbnailOffset);
+          fbb.addOffset(7, textSearchOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1560,7 +1588,9 @@ ModelDefinition getObjectBoxModel() {
                   ? null
                   : DateTime.fromMillisecondsSinceEpoch(timestampValue),
               thumbnail: const fb.StringReader()
-                  .vTableGetNullable(buffer, rootOffset, 16));
+                  .vTableGetNullable(buffer, rootOffset, 16))
+            ..textSearch =
+                const fb.StringReader().vTableGet(buffer, rootOffset, 18, '');
           object.profile.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
           object.profile.attach(store);
@@ -1669,7 +1699,8 @@ ModelDefinition getObjectBoxModel() {
               ? null
               : fbb.writeString(object.description!);
           final rawOffset = fbb.writeString(object.raw);
-          fbb.startTable(9);
+          final textSearchOffset = fbb.writeString(object.textSearch);
+          fbb.startTable(10);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.profile.targetId);
           fbb.addOffset(2, uriOffset);
@@ -1678,6 +1709,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(5, titleOffset);
           fbb.addOffset(6, descriptionOffset);
           fbb.addOffset(7, rawOffset);
+          fbb.addOffset(8, textSearchOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1698,8 +1730,10 @@ ModelDefinition getObjectBoxModel() {
                   .vTableGetNullable(buffer, rootOffset, 14),
               description: const fb.StringReader()
                   .vTableGetNullable(buffer, rootOffset, 16),
-              raw: const fb.StringReader()
-                  .vTableGet(buffer, rootOffset, 18, ''));
+              raw:
+                  const fb.StringReader().vTableGet(buffer, rootOffset, 18, ''))
+            ..textSearch =
+                const fb.StringReader().vTableGet(buffer, rootOffset, 20, '');
           object.profile.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
           object.profile.attach(store);
@@ -1721,7 +1755,8 @@ ModelDefinition getObjectBoxModel() {
           final sourceOffset =
               object.source == null ? null : fbb.writeString(object.source!);
           final rawOffset = fbb.writeString(object.raw);
-          fbb.startTable(8);
+          final textSearchOffset = fbb.writeString(object.textSearch);
+          fbb.startTable(9);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, uriOffset);
           fbb.addOffset(2, metadataOffset);
@@ -1729,6 +1764,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addInt64(4, object.profile.targetId);
           fbb.addOffset(5, sourceOffset);
           fbb.addOffset(6, rawOffset);
+          fbb.addOffset(7, textSearchOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1747,8 +1783,10 @@ ModelDefinition getObjectBoxModel() {
                   : DateTime.fromMillisecondsSinceEpoch(timestampValue),
               source: const fb.StringReader()
                   .vTableGetNullable(buffer, rootOffset, 14),
-              raw: const fb.StringReader()
-                  .vTableGet(buffer, rootOffset, 16, ''));
+              raw:
+                  const fb.StringReader().vTableGet(buffer, rootOffset, 16, ''))
+            ..textSearch =
+                const fb.StringReader().vTableGet(buffer, rootOffset, 18, '');
           object.profile.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
           object.profile.attach(store);
@@ -1906,7 +1944,8 @@ ModelDefinition getObjectBoxModel() {
           final metadataOffset = object.metadata == null
               ? null
               : fbb.writeString(object.metadata!);
-          fbb.startTable(14);
+          final textSearchOffset = fbb.writeString(object.textSearch);
+          fbb.startTable(15);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, rawOffset);
           fbb.addInt64(2, object.profile.targetId);
@@ -1915,6 +1954,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(5, titleOffset);
           fbb.addBool(10, object.isArchived);
           fbb.addOffset(12, metadataOffset);
+          fbb.addOffset(13, textSearchOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1934,7 +1974,9 @@ ModelDefinition getObjectBoxModel() {
               isArchived: const fb.BoolReader()
                   .vTableGetNullable(buffer, rootOffset, 24),
               metadata: const fb.StringReader()
-                  .vTableGetNullable(buffer, rootOffset, 28));
+                  .vTableGetNullable(buffer, rootOffset, 28))
+            ..textSearch =
+                const fb.StringReader().vTableGet(buffer, rootOffset, 30, '');
           object.profile.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0);
           object.profile.attach(store);
@@ -2049,7 +2091,8 @@ ModelDefinition getObjectBoxModel() {
               ? null
               : fbb.writeString(object.thumbnail!);
           final rawOffset = fbb.writeString(object.raw);
-          fbb.startTable(10);
+          final textSearchOffset = fbb.writeString(object.textSearch);
+          fbb.startTable(11);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.profile.targetId);
           fbb.addOffset(2, uriOffset);
@@ -2059,6 +2102,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(6, descriptionOffset);
           fbb.addOffset(7, thumbnailOffset);
           fbb.addOffset(8, rawOffset);
+          fbb.addOffset(9, textSearchOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -2081,8 +2125,10 @@ ModelDefinition getObjectBoxModel() {
                   .vTableGetNullable(buffer, rootOffset, 16),
               thumbnail: const fb.StringReader()
                   .vTableGetNullable(buffer, rootOffset, 18),
-              raw: const fb.StringReader()
-                  .vTableGet(buffer, rootOffset, 20, ''));
+              raw:
+                  const fb.StringReader().vTableGet(buffer, rootOffset, 20, ''))
+            ..textSearch =
+                const fb.StringReader().vTableGet(buffer, rootOffset, 22, '');
           object.profile.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
           object.profile.attach(store);
@@ -2513,6 +2559,10 @@ class FileObjectBox_ {
   /// see [FileObjectBox.thumbnail]
   static final thumbnail =
       QueryStringProperty<FileObjectBox>(_entities[8].properties[6]);
+
+  /// see [FileObjectBox.textSearch]
+  static final textSearch =
+      QueryStringProperty<FileObjectBox>(_entities[8].properties[7]);
 }
 
 /// [FriendObjectBox] entity fields to define ObjectBox queries.
@@ -2602,6 +2652,10 @@ class ImageObjectBox_ {
   /// see [ImageObjectBox.raw]
   static final raw =
       QueryStringProperty<ImageObjectBox>(_entities[11].properties[7]);
+
+  /// see [ImageObjectBox.textSearch]
+  static final textSearch =
+      QueryStringProperty<ImageObjectBox>(_entities[11].properties[8]);
 }
 
 /// [LinkObjectBox] entity fields to define ObjectBox queries.
@@ -2633,6 +2687,10 @@ class LinkObjectBox_ {
   /// see [LinkObjectBox.raw]
   static final raw =
       QueryStringProperty<LinkObjectBox>(_entities[12].properties[6]);
+
+  /// see [LinkObjectBox.textSearch]
+  static final textSearch =
+      QueryStringProperty<LinkObjectBox>(_entities[12].properties[7]);
 }
 
 /// [PageObjectBox] entity fields to define ObjectBox queries.
@@ -2751,6 +2809,10 @@ class PostObjectBox_ {
   static final metadata =
       QueryStringProperty<PostObjectBox>(_entities[16].properties[7]);
 
+  /// see [PostObjectBox.textSearch]
+  static final textSearch =
+      QueryStringProperty<PostObjectBox>(_entities[16].properties[8]);
+
   /// see [PostObjectBox.images]
   static final images = QueryRelationToMany<PostObjectBox, ImageObjectBox>(
       _entities[16].relations[0]);
@@ -2839,6 +2901,10 @@ class VideoObjectBox_ {
   /// see [VideoObjectBox.raw]
   static final raw =
       QueryStringProperty<VideoObjectBox>(_entities[19].properties[8]);
+
+  /// see [VideoObjectBox.textSearch]
+  static final textSearch =
+      QueryStringProperty<VideoObjectBox>(_entities[19].properties[9]);
 }
 
 /// [PostEventObjectBox] entity fields to define ObjectBox queries.
