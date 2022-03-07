@@ -29,6 +29,11 @@ CommentObjectBox makeCommentEntity(CommentModel model, ObjectBox context) {
     searchBuilder.write(" " + model.group!.name);
   }
 
+  if (model.event != null) {
+    entity.event.target = makeEventEntity(model.event!, context);
+    searchBuilder.write(" " + model.event!.name);
+  }
+
   var mediaList = model.media;
   if (mediaList != null) {
     var imagesToAdd = <ImageObjectBox>[];

@@ -112,12 +112,84 @@
                     {
                         "comment": {
                             "timestamp": 1555607877,
-                            "comment": "REDACTED COMMENTKim Vinther Larsen Hva'!!! Vi er da meget bedre!!!!!",
+                            "comment": "REDACTED COMMENT",
                             "author": "REDACTED AUTHOR"
                         }
                     }
                 ],
                 "title": "PROFILE replied to REDACTED PERSON's comment."
+            }
+        ]
+    },
+    {
+        "group_comments_v2": [
+            {
+                "timestamp": 1307553063,
+                "data": [
+                    {
+                        "comment": {
+                            "timestamp": 1307553063,
+                            "comment": "REDACTED COMMENT",
+                            "author": "REDACTED PROFILE",
+                            "group": "REDACTED GROUP"
+                        }
+                    }
+                ],
+                "title": "PROFILE commented on his own post."
+            },
+            {
+                "timestamp": 1488374281,
+                "attachments": [
+                    {
+                        "data": [
+                            {
+                                "external_context": {
+                                    "url": "http://www.holbaekshinsonhapkido.dk/enrollment2.php"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "data": [
+                    {
+                        "comment": {
+                            "timestamp": 1488374281,
+                            "comment": "http://www.holbaekshinsonhapkido.dk/enrollment2.php",
+                            "author": "REDACTED PROFILE",
+                            "group": "REDACTED GROUP"
+                        }
+                    }
+                ],
+                "title": "PROFILE commented on REDACTED PERSON's post."
+            },
+            {
+                "timestamp": 1604640602,
+                "attachments": [
+                    {
+                        "data": [
+                            {
+                                "event": {
+                                    "name": "REDACTED NAME",
+                                    "start_timestamp": 1605448800,
+                                    "end_timestamp": 1605452400,
+                                    "description": "REDACTED DESCRIPTION",
+                                    "create_timestamp": 1604605248
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "data": [
+                    {
+                        "comment": {
+                            "timestamp": 1604640602,
+                            "comment": "REDACTED COMMENT",
+                            "author": "REDACTED AUTHOR",
+                            "group": "REDACTED GROUP"
+                        }
+                    }
+                ],
+                "title": "PROFILE commented on REDACTED PERSON's post."
             }
         ]
     }

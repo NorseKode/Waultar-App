@@ -45,10 +45,7 @@ class ParseHelper {
   }
   
   static MediaModel? parseMediaNoKnownKey(var jsonData, ProfileModel profile) {
-    var mediaKey = mediaKeys.firstWhere((element) => jsonData.containsKey(element), orElse: () => "",);
-    if (mediaKey == "") {
-      print("object");
-    }
+    var mediaKey = mediaKeys.firstWhere((element) => jsonData.containsKey(element), orElse: () => "",);    
     var media = jsonData[mediaKey];
     var pathKey = pathKeys.firstWhere((element) => media.containsKey(element));
     var isLink = jsonData.containsKey("url");

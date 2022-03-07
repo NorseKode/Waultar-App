@@ -1,5 +1,6 @@
 import 'package:waultar/core/models/content/comment_model.dart';
 import 'package:waultar/data/entities/content/comment_objectbox.dart';
+import 'package:waultar/data/repositories/model_builders/builders/eventmodel_builder.dart';
 import 'package:waultar/data/repositories/model_builders/builders/groupmodel_builder.dart';
 import 'package:waultar/data/repositories/model_builders/builders/personmodel_builder.dart';
 import 'package:waultar/data/repositories/model_builders/builders/profilemodel_builder.dart';
@@ -14,6 +15,8 @@ CommentModel makeCommentModel(CommentObjectBox entity) {
     group: entity.group.target != null
       ? makeGroupModel(entity.group.target!)
       : null,
-    
+    event: entity.event.target != null
+      ? makeEventModel(entity.event.target!)
+      : null,    
   );
 }

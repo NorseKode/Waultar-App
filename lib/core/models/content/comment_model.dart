@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
+import 'package:waultar/core/models/content/event_model.dart';
 import 'package:waultar/core/models/media/media_model.dart';
 import 'package:waultar/core/models/misc/person_model.dart';
-import 'package:waultar/core/models/misc/reaction_model.dart';
 import 'package:waultar/core/models/model_helper.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
@@ -17,7 +17,8 @@ class CommentModel extends BaseModel {
   DateTime timestamp;
   List<MediaModel>? media;
   GroupModel? group;
-  ReactionModel? reaction;
+  EventModel? event;
+  // ReactionModel? reaction;
   final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
 
   CommentModel(
@@ -29,7 +30,7 @@ class CommentModel extends BaseModel {
       required this.timestamp,
       this.media,
       this.group,
-      this.reaction})
+      this.event})
       : super(id, profile, raw);
 
   static const _instagramKey = "string_list_data";
@@ -66,18 +67,29 @@ class CommentModel extends BaseModel {
 
     if (json["attachments"] is List<dynamic> && json["attachments"].length == 1) {
       var attachments = (((json["attachments"]).first)["data"]).first;
-      var possibleMedia = ParseHelper.parseMediaNoKnownKey(attachments, profile);
+      if (attachments.containsKey("event")) {
+        event = EventModel.fromJson(attachments["event"], profile);
+      } else {
+        var possibleMedia = ParseHelper.parseMediaNoKnownKey(attachments, profile);
 
-      if (possibleMedia != null) {
-        media = [possibleMedia];
+        if (possibleMedia != null) {
+          media = [possibleMedia];
+        }
       }
     }
 
-    var exp = RegExp(r"(\w.+)((?:commented on )|(?:replied to ))(\w.+)'s");
-    var match = exp.firstMatch(json["title"]);
+    String personText = json["title"];
+    var exp = personText.contains(" own ") 
+      ? RegExp(r"(\w.+)((?:commented on )|(?:replied to ))(\w.+)")
+      : RegExp(r"(\w.+)((?:commented on )|(?:replied to ))(\w.+)'s");
+    var match = exp.firstMatch(personText);
     commented = PersonModel(
       id: 0,
-      name: match != null ? match.group(3)! : 'name',
+      name: match != null 
+        ? personText.contains(" own ")
+          ? match.group(1)!.trimRight()
+          : match.group(3)! 
+        : "TODO: localization", //throw Tuple2("Couldn't find a name to a comment", json.toString()),
       profile: profile,
       raw: '',
     );

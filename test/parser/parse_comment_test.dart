@@ -29,11 +29,11 @@ main() {
     test("Facebook comments: ", () async {
       var results = await FacebookParser().parseFile(facebookComments, profile: facebookProfile).toList();
       
-      expect(results.length, 7);
+      expect(results.length, 10);
 
       var comments = results.whereType<CommentModel>().toList();
 
-      expect(comments.length, 5);
+      expect(comments.length, 8);
 
       expect(comments[0].group!.name, "REDACTED GROUP");
       expect(comments[1].text, "REDACTED COMMENT");
@@ -41,6 +41,8 @@ main() {
       expect(comments[2].media!.first is ImageModel, true);
       expect(comments[3].media!.first is LinkModel, true);
       expect(comments[4].media!.first is VideoModel, true);
+      expect(comments[5].commented.name, "PROFILE");
+      expect(comments[7].event!.name, "REDACTED NAME");
     });
 
     test('Instagram comments: ', () async {
