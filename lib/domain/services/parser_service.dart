@@ -1,3 +1,4 @@
+import 'package:waultar/core/abstracts/abstract_repositories/i_comment_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_event_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_group_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_image_repository.dart';
@@ -20,6 +21,7 @@ class ParserService implements IParserService {
   final IPostPollRepository _postPollRepo =
       locator.get<IPostPollRepository>(instanceName: 'postPollRepo');
   final IImageRepository _imageRepo = locator.get<IImageRepository>(instanceName: 'imageRepo');
+  final ICommentRepository _commentRepo = locator.get<ICommentRepository>(instanceName: 'commentRepo');
 
   @override
   Future parseAll(List<String> paths, ServiceModel service) async {
@@ -84,6 +86,9 @@ class ParserService implements IParserService {
 
       case PostPollModel:
         return _postPollRepo.addPostPoll(model);
+      
+      case CommentModel:
+        return _commentRepo.add(model);
 
       case ImageModel:
         return _imageRepo.addImage(model);

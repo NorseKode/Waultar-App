@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:waultar/core/models/media/media_model.dart';
 import 'package:waultar/core/models/misc/person_model.dart';
 import 'package:waultar/core/models/misc/reaction_model.dart';
@@ -16,4 +18,22 @@ class MessageModel extends BaseModel {
   final Duration callDuration;
 
   MessageModel(int id, ProfileModel profile, String raw, this.person, this.timestamp, this.text, this.media, this.type, this.isSent, this.reaction, this.callDuration) : super(id, profile, raw);
+
+  @override
+  Color getAssociatedColor() {
+    // TODO: implement getAssociatedColor
+    throw UnimplementedError();
+  }
+
+  @override
+  String getMostInformativeField() {
+    // TODO: implement getMostInformativeField
+    throw UnimplementedError();
+  }
+
+  @override
+  DateTime getTimestamp() {
+    // TODO: implement getTimestamp
+    throw UnimplementedError();
+  }
 }
