@@ -28,9 +28,13 @@ Future<void> main() async {
   var testTag = TagObjectBox(name: "waultar");
   var testVideo =
       VideoObjectBox(uri: "uri", timestamp: DateTime.now(), raw: "raw");
+      testVideo.textSearch = "";
   var testLink = LinkObjectBox(uri: "uri", raw: "raw");
+  testLink.textSearch = "";
   var testImage = ImageObjectBox(uri: "uri", raw: "raw");
+  testImage.textSearch = "";
   var testPost = PostObjectBox(raw: "raw", timestamp: DateTime.now());
+  testPost.textSearch = "";
 
   T testRunnerPut<T>(T testEntity) {
     var box = _context.store.box<T>();
