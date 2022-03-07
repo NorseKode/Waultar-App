@@ -29,6 +29,8 @@ class DataPointNameRepository {
     return null;
   }
 
+  List<DataPointName> getAll() => _nameBox.getAll();
+
   int addDataName(String name) {
     var existing = _nameBox
         .query(DataPointName_.name.equals(name))

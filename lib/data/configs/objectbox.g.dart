@@ -1059,7 +1059,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(29, 1651460114661321014),
       name: 'DataCategory',
-      lastPropertyId: const IdUid(3, 3352765581084648149),
+      lastPropertyId: const IdUid(4, 5824432531504639482),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -1077,6 +1077,11 @@ final _entities = <ModelEntity>[
             id: const IdUid(3, 3352765581084648149),
             name: 'count',
             type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 5824432531504639482),
+            name: 'matchingFolders',
+            type: 30,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -1115,12 +1120,7 @@ final _entities = <ModelEntity>[
             name: 'timestamp',
             type: 10,
             flags: 8,
-            indexId: const IdUid(37, 2663412274713465659)),
-        ModelProperty(
-            id: const IdUid(5, 7868178552619576621),
-            name: 'keys',
-            type: 30,
-            flags: 0)
+            indexId: const IdUid(37, 2663412274713465659))
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
@@ -1139,7 +1139,7 @@ final _entities = <ModelEntity>[
             id: const IdUid(2, 961089464343930107),
             name: 'name',
             type: 9,
-            flags: 2080,
+            flags: 2048,
             indexId: const IdUid(38, 6671073556678718697)),
         ModelProperty(
             id: const IdUid(3, 4369108619606015200),
@@ -1236,7 +1236,8 @@ ModelDefinition getObjectBoxModel() {
         4392723400432572784,
         2315244068883270077,
         7950104210562865632,
-        615747648317964421
+        615747648317964421,
+        7868178552619576621
       ],
       retiredRelationUids: const [447566776387890902],
       modelVersion: 5,
@@ -2363,10 +2364,14 @@ ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (DataCategory object, fb.Builder fbb) {
           final nameOffset = fbb.writeString(object.name);
-          fbb.startTable(4);
+          final matchingFoldersOffset = fbb.writeList(object.matchingFolders
+              .map(fbb.writeString)
+              .toList(growable: false));
+          fbb.startTable(5);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, nameOffset);
           fbb.addInt64(2, object.count);
+          fbb.addOffset(3, matchingFoldersOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -2378,7 +2383,10 @@ ModelDefinition getObjectBoxModel() {
               id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
               count: const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0),
               name:
-                  const fb.StringReader().vTableGet(buffer, rootOffset, 6, ''));
+                  const fb.StringReader().vTableGet(buffer, rootOffset, 6, ''),
+              matchingFolders:
+                  const fb.ListReader<String>(fb.StringReader(), lazy: false)
+                      .vTableGet(buffer, rootOffset, 10, []));
           InternalToManyAccess.setRelInfo(
               object.dataPointNames,
               store,
@@ -2397,14 +2405,11 @@ ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (DataPoint object, fb.Builder fbb) {
           final valuesOffset = fbb.writeString(object.values);
-          final keysOffset = fbb.writeList(
-              object.keys.map(fbb.writeString).toList(growable: false));
           fbb.startTable(6);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.dataPointName.targetId);
           fbb.addOffset(2, valuesOffset);
           fbb.addInt64(3, object.timestamp?.millisecondsSinceEpoch);
-          fbb.addOffset(4, keysOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -2419,9 +2424,7 @@ ModelDefinition getObjectBoxModel() {
                   const fb.StringReader().vTableGet(buffer, rootOffset, 8, ''))
             ..timestamp = timestampValue == null
                 ? null
-                : DateTime.fromMillisecondsSinceEpoch(timestampValue)
-            ..keys = const fb.ListReader<String>(fb.StringReader(), lazy: false)
-                .vTableGet(buffer, rootOffset, 12, []);
+                : DateTime.fromMillisecondsSinceEpoch(timestampValue);
           object.dataPointName.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
           object.dataPointName.attach(store);
@@ -3179,6 +3182,10 @@ class DataCategory_ {
   /// see [DataCategory.count]
   static final count =
       QueryIntegerProperty<DataCategory>(_entities[24].properties[2]);
+
+  /// see [DataCategory.matchingFolders]
+  static final matchingFolders =
+      QueryStringVectorProperty<DataCategory>(_entities[24].properties[3]);
 }
 
 /// [DataPoint] entity fields to define ObjectBox queries.
@@ -3198,10 +3205,6 @@ class DataPoint_ {
   /// see [DataPoint.timestamp]
   static final timestamp =
       QueryIntegerProperty<DataPoint>(_entities[25].properties[3]);
-
-  /// see [DataPoint.keys]
-  static final keys =
-      QueryStringVectorProperty<DataPoint>(_entities[25].properties[4]);
 }
 
 /// [DataPointName] entity fields to define ObjectBox queries.

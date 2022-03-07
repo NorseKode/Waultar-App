@@ -15,6 +15,10 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repositor
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_video_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
+import 'package:waultar/core/inodes/data_category_repo.dart';
+import 'package:waultar/core/inodes/datapoint_name_repo.dart';
+import 'package:waultar/core/inodes/datapoint_repo.dart';
+import 'package:waultar/core/inodes/inode_parser.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/repositories/appsettings_repo.dart';
 import 'package:waultar/data/repositories/event_repo.dart';
@@ -49,7 +53,6 @@ late final String _logFolderPath;
 
 Future<void> setupServices() async {
   await initApplicationPaths().whenComplete(() async {
-
     locator.registerSingleton<String>(_waultarPath,
         instanceName: 'waultar_root_directory');
     locator.registerSingleton<String>(_dbFolderPath, instanceName: 'db_folder');
@@ -120,9 +123,22 @@ Future<void> setupServices() async {
         PostPollRepository(_context, _objectboxDirector, _modelDirector),
         instanceName: 'postPollRepo');
 
+    final _categoryRepo = DataCategoryRepository(_context);
+    final _nameRepo = DataPointNameRepository(_context);
+    final _dataRepo = DataPointRepository(_context);
+
+    locator.registerSingleton<DataCategoryRepository>(_categoryRepo,
+        instanceName: "categoryRepo");
+    locator.registerSingleton<DataPointNameRepository>(_nameRepo,
+        instanceName: "nameRepo");
+    locator.registerSingleton<DataPointRepository>(_dataRepo,
+        instanceName: "dataRepo");
+
     // register all services and inject their dependencies
     locator.registerSingleton<IAppSettingsService>(AppSettingsService(),
         instanceName: 'appSettingsService');
+    locator.registerSingleton<InodeParserService>(
+        InodeParserService(_categoryRepo, _nameRepo, _dataRepo), instanceName: "inodeParser");
   });
 }
 

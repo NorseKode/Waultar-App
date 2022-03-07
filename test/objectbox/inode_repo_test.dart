@@ -25,6 +25,8 @@ Future<void> main() async {
       .normalize('${scriptDir.path}/test/parser/data/event_invitations.json');
   var facebookPosts = dart_path
       .normalize('${scriptDir.path}/test/parser/data/your_posts_1.json');
+  var pagesFollowed = dart_path
+      .normalize('${scriptDir.path}/test/inodes/data/pages_followed.json');
 
   var largeMotherfucker = dart_path
       .normalize('${scriptDir.path}/test/parser/data/large_random_json.json');
@@ -33,7 +35,8 @@ Future<void> main() async {
   paths.add(profile);
   paths.add(eventInvitations);
   paths.add(facebookPosts);
-  paths.add(largeMotherfucker);
+  paths.add(pagesFollowed);
+  // paths.add(largeMotherfucker);
 
   tearDownAll(() async {
     _context.store.close();
@@ -47,26 +50,42 @@ Future<void> main() async {
     _categoryRepo = DataCategoryRepository(_context);
     _nameRepo = DataPointNameRepository(_context);
     _parser =
-        InodeParserService(InodeParser(), _categoryRepo, _nameRepo, _dataRepo);
+        InodeParserService(_categoryRepo, _nameRepo, _dataRepo);
   });
 
   group('Test parsing of many paths with service', () {
-    // test(' - inode parser', () async {
-    //   Stopwatch stopwatch = Stopwatch()..start();
+    test(' - inode parser', () async {
+      Stopwatch stopwatch = Stopwatch()..start();
 
-    //   await _parser.parse(paths);
+      await _parser.parse(paths);
 
-    //   print('parsing executed in ${stopwatch.elapsed}');
+      print('parsing executed in ${stopwatch.elapsed}');
 
-    //   var count = _dataRepo.count();
-    //   var categoryCont = _categoryRepo.count();
+      var count = _dataRepo.count();
+      var categoryCont = _categoryRepo.count();
+      var categories = _categoryRepo.getAllCategories();
+      for (var item in categories) {
+        print("Category name: ${item.name}");
+        print("Category count: ${item.count}");
+        print("Category related datapoint names:");
+        for (var name in item.dataPointNames) {
+          print("\t${name.name}");
+        }
+        print("\n");
+      }
 
-    //   print("amount parsed : $count \n");
-    //   print("amount of categories : $categoryCont \n");
+      print("amount parsed : $count");
+      print("amount of categories : $categoryCont \n");
 
-    //   for (var name in _nameRepo.getAllNames()) {
-    //     print(name);
-    //   }
-    // });
+      print("All parsed datapoint names :");
+      for (var name in _nameRepo.getAll()) {
+        print("\t ${name.name}");
+        print("\t ${name.count}");
+        print("\t ${name.dataCategory.target!.name}");
+        print("\n");
+      }
+
+      print("\n");
+    });
   });
 }

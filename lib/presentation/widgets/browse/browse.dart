@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
+import 'package:waultar/core/inodes/inode_parser.dart';
 import 'package:waultar/domain/services/browse_service.dart';
 import 'package:waultar/domain/services/parser_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
@@ -21,6 +22,9 @@ class Browse extends StatefulWidget {
 }
 
 class _BrowseState extends State<Browse> {
+  final _inodeParserService =
+      locator.get<InodeParserService>(instanceName: 'inodeParser');
+
   late AppLocalizations localizer;
   final _browseService = BrowseService();
   List<dynamic>? _models;
@@ -83,7 +87,8 @@ class _BrowseState extends State<Browse> {
               var files = await Uploader.uploadDialogue(context);
 
               if (files != null) {
-                SnackBarCustom.useSnackbarOfContext(context, localizer.startedLoadingOfData);
+                SnackBarCustom.useSnackbarOfContext(
+                    context, localizer.startedLoadingOfData);
                 var service = _serviceRepo.get(files.item2);
 
                 if (service != null) {
@@ -91,21 +96,30 @@ class _BrowseState extends State<Browse> {
                     isLoading = true;
                   });
                   var zipFiles = files.item1
-                      .where((element) => dart_path.extension(element) == ".zip")
+                      .where(
+                          (element) => dart_path.extension(element) == ".zip")
                       .toList();
 
                   var inputMap = {
                     'path': dart_path.normalize(zipFiles.first),
-                    'extracts_folder': locator.get<String>(instanceName: 'extracts_folder'),
+                    'extracts_folder':
+                        locator.get<String>(instanceName: 'extracts_folder'),
                     'service_name': service.name
                   };
                   var uploadedFiles = await compute(extractZip, inputMap);
-                  await ParserService()
-                      .parseAll(uploadedFiles, service)
+                  await _inodeParserService
+                      .parse(uploadedFiles)
                       .whenComplete(() => setState(() {
                             isLoading = false;
-                            SnackBarCustom.useSnackbarOfContext(context, localizer.doneLoadingData);
+                            SnackBarCustom.useSnackbarOfContext(
+                                context, localizer.doneLoadingData);
                           }));
+                  // await ParserService()
+                  //     .parseAll(uploadedFiles, service)
+                  //     .whenComplete(() => setState(() {
+                  //           isLoading = false;
+                  //           SnackBarCustom.useSnackbarOfContext(context, localizer.doneLoadingData);
+                  //         }));
                 }
               }
             },
@@ -136,44 +150,44 @@ class _BrowseState extends State<Browse> {
     themeProvider = Provider.of<ThemeProvider>(context);
 
     return isLoading
-      ? const Center(child: CircularProgressIndicator())
-      : Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Browse",
-          style: themeProvider.themeData().textTheme.headline3,
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        buttons(),
-        const SizedBox(
-          height: 20,
-        ),
-        Expanded(
-          child: SingleChildScrollView(
-            child: _models != null
-                ? SizedBox(
-                    width: MediaQuery.of(context).size.width - 290,
-                    child: Wrap(
-                      spacing: 20,
-                      runSpacing: 20,
-                      children: List.generate(
-                        _models!.length,
-                        (index) => DefaultWidget(
-                          title: "Title",
-                          child: Text(
-                            _models![index].toString(),
-                          ),
-                        ),
-                      ),
-                    ))
-                : Container(),
-          ),
-        )
-        // idgets
-      ],
-    );
+        ? const Center(child: CircularProgressIndicator())
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Browse",
+                style: themeProvider.themeData().textTheme.headline3,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              buttons(),
+              const SizedBox(
+                height: 20,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: _models != null
+                      ? SizedBox(
+                          width: MediaQuery.of(context).size.width - 290,
+                          child: Wrap(
+                            spacing: 20,
+                            runSpacing: 20,
+                            children: List.generate(
+                              _models!.length,
+                              (index) => DefaultWidget(
+                                title: "Title",
+                                child: Text(
+                                  _models![index].toString(),
+                                ),
+                              ),
+                            ),
+                          ))
+                      : Container(),
+                ),
+              )
+              // idgets
+            ],
+          );
   }
 }

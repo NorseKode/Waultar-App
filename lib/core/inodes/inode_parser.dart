@@ -11,13 +11,12 @@ import 'package:path/path.dart' as path_dart;
 import 'package:deep_pick/deep_pick.dart' as key_picker;
 
 class InodeParserService {
-  final InodeParser _parser;
+  final InodeParser _parser = InodeParser();
   final DataCategoryRepository _categoryRepo;
   final DataPointNameRepository _nameRepo;
   final DataPointRepository _dataRepo;
 
-  InodeParserService(
-      this._parser, this._categoryRepo, this._nameRepo, this._dataRepo);
+  InodeParserService(this._categoryRepo, this._nameRepo, this._dataRepo);
 
   Future parse(List<String> paths) async {
     /* notes on isolates and objectbox :
@@ -42,7 +41,7 @@ class InodeParserService {
           - steps in the algorithm that differ from the base (defined in the abstract class)
             can be overidden in the concrete parser implementations
     */
-    var category = DataCategory(name: "test");
+    // var category = DataCategory(name: "test");
 
     for (var path in paths) {
       if (Extensions.isJson(path)) {
@@ -53,7 +52,7 @@ class InodeParserService {
         // if none is found :
         // keep looking backwards in the path until we reach root folder
         // if still none are found, set category to "Other" (default)
-        // var category = DataCategory(name: "test");
+        var category = _categoryRepo.getFromFolderName(parentName);
 
         // add the parsed inodes to a list, and when the stream is done
         // put them in db as a large transaction to improve performance
@@ -64,11 +63,13 @@ class InodeParserService {
 
             // ! don't add one at a time - read transactions are okay to do tho
             // _dataRepo.addDataPoint(result); <- never do this when iterating !
-
+            result.dataPointName.target!.count += 1;
             // ! put them in chunks - write transactions becomes vastly better
             listToAdd.add(result);
           }
         }
+
+        _categoryRepo.updateCount(category, listToAdd.length);
 
         // ! now we can initiate a single transaction rather than many
         _dataRepo.addMany(listToAdd);
@@ -115,10 +116,20 @@ class InodeParser {
 
           if (amountOfKeys == 1 && jsonObject is List<dynamic>) {
             DataPointName name = DataPointName(name: _cleanName(key));
-            for (var obj in jsonObject) {
+
+            if (jsonObject.first is Map<String, dynamic>) {
+              for (var obj in jsonObject) {
+                DataPoint dataPoint = DataPoint(values: "");
+                dataPoint.dataPointName.target = name;
+                var map = flatten(obj);
+                dataPoint.valuesMap = map;
+                dataPoint.values = jsonEncode(map);
+                yield dataPoint;
+              }
+            } else {
               DataPoint dataPoint = DataPoint(values: "");
               dataPoint.dataPointName.target = name;
-              var map = flatten(obj);
+              var map = {"entries": jsonObject};
               dataPoint.valuesMap = map;
               dataPoint.values = jsonEncode(map);
               yield dataPoint;

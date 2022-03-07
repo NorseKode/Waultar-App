@@ -31,6 +31,9 @@ main() {
   var facebookPosts = File(path_dart.join(
       TestHelper.pathToCurrentFile(folder: 'inodes'), "data", "your_posts_1.json"));
 
+  var yourTopics = File(path_dart.join(
+      TestHelper.pathToCurrentFile(folder: 'inodes'), "data", "your_topics.json"));
+
   final InodeParser _parser = InodeParser();
 
   setUpAll(() {
@@ -102,6 +105,16 @@ main() {
 
     test(" - facebook search history", () async {
       var resultStream = _parser.parseFile(yourSearches);
+      var result = await resultStream.toList();
+
+      for (var item in result) {
+        // ignore: avoid_print
+        print(item.toString());
+      }
+    });
+
+    test(" - facebook your topics", () async {
+      var resultStream = _parser.parseFile(yourTopics);
       var result = await resultStream.toList();
 
       for (var item in result) {

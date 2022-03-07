@@ -11,7 +11,7 @@ class DataPoint {
   final dataPointName = ToOne<DataPointName>();
 
   // make these seracheable or traversable  
-  late List<String> keys;
+  // late List<String> keys;
 
   // put theses in some other collection perhaps ?
   @Index()
@@ -37,7 +37,7 @@ class DataPoint {
     sb.write("ID : $id \n");
 
     if (timestamp != null) {
-      sb.write("Created at : ${timestamp.toString()}\n");
+      sb.write("Timestamp : ${timestamp.toString()}\n");
     }
 
     if (dataPointName.hasValue) {
@@ -60,7 +60,6 @@ class DataPointName {
   int id;
   int count;
 
-  @Unique()
   @Index()
   String name;
 
@@ -80,28 +79,13 @@ class DataPointName {
   });
 }
 
-// @Entity()
-// class DataPointDir {
-//   int id;
-//   int count;
-
-//   String name;
-
-//   final dataPointNames = ToMany<DataPointName>();
-//   final dataPointDirs = ToMany<DataPointDir>();
-
-//   DataPointDir({
-//     this.id = 0,
-//     this.count = 0,
-//     required this.name,
-//   });
-// }
-
 @Entity()
 class DataCategory {
   int id;
 
   int count;
+
+  List<String> matchingFolders;
 
   @Index()
   @Unique()
@@ -116,5 +100,6 @@ class DataCategory {
     this.id = 0,
     this.count = 0,
     required this.name,
+    required this.matchingFolders,
   });
 }
