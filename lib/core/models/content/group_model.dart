@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:waultar/core/models/base_model.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
 
@@ -28,5 +30,23 @@ class GroupModel extends BaseModel {
   @override
   String toString() {
     return "Name: $name, isUsers: ${isUsers.toString()}, timestamp: ${timestamp.toString()}, profile: ${profile.fullName}";
+  }
+
+  @override
+  Color getAssociatedColor() {
+    // TODO: implement getAssociatedColor
+    throw UnimplementedError();
+  }
+
+  @override
+  String getMostInformativeField() {
+    // TODO: implement getMostInformativeField
+    throw UnimplementedError();
+  }
+
+  @override
+  DateTime getTimestamp() {
+    // TODO: implement getTimestamp
+    throw UnimplementedError();
   }
 }

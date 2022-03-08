@@ -5,9 +5,10 @@ abstract class IPostRepository {
   Stream<PostModel>? watchFacebookPosts();
   Stream<PostModel>? watchInstagramPosts();
   List<PostModel>? getAllPosts();
-  PostModel? getAllPostsPagination(int offset, int limit);
+  List<PostModel>? getAllPostsPagination(int offset, int limit);
   PostModel? getSinglePost(int id);
   int addPost(PostModel post);
   Future<int> addPostAsync(PostModel post);
   int removeAllPosts();
+  List<PostModel> search(String search, int offset, int limit);
 }

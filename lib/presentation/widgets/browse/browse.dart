@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/inodes/inode_parser.dart';
+import 'package:waultar/core/models/content/post_model.dart';
 import 'package:waultar/domain/services/browse_service.dart';
 import 'package:waultar/domain/services/parser_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
-import 'package:waultar/presentation/widgets/dashboard/default_widget.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/post_widget.dart';
+import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 import 'package:waultar/presentation/widgets/snackbar_custom.dart';
 import 'package:waultar/presentation/widgets/upload/upload_files.dart';
 import 'package:waultar/presentation/widgets/upload/uploader.dart';
@@ -22,6 +25,7 @@ class Browse extends StatefulWidget {
 }
 
 class _BrowseState extends State<Browse> {
+  
   final _inodeParserService =
       locator.get<InodeParserService>(instanceName: 'inodeParser');
 
@@ -38,51 +42,51 @@ class _BrowseState extends State<Browse> {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          ElevatedButton(
+          DefaultButton(
             onPressed: () {
               setState(() {
                 _models = _browseService.getProfiles();
               });
             },
-            child: Text(localizer.profile),
+            text: localizer.profile,
           ),
           const SizedBox(
             width: 20,
           ),
-          ElevatedButton(
+          DefaultButton(
             onPressed: () {
               setState(() {
                 _models = _browseService.getPosts() ?? [];
               });
             },
-            child: Text(localizer.posts),
+            text: localizer.posts,
           ),
           const SizedBox(
             width: 20,
           ),
-          ElevatedButton(
+          DefaultButton(
             onPressed: () {
               // setState(() {
               //   _models = _browseService.getGroups();
               // });
             },
-            child: Text(localizer.groups),
+            text: localizer.groups,
           ),
           const SizedBox(
             width: 20,
           ),
-          ElevatedButton(
+          DefaultButton(
             onPressed: () {
               setState(() {
                 _models = _browseService.getPostPolls();
               });
             },
-            child: Text(localizer.postsWithPolls),
+            text: localizer.postsWithPolls,
           ),
           const SizedBox(
             width: 20,
           ),
-          ElevatedButton(
+          DefaultButton(
             onPressed: () async {
               var files = await Uploader.uploadDialogue(context);
 
@@ -123,18 +127,18 @@ class _BrowseState extends State<Browse> {
                 }
               }
             },
-            child: Text(localizer.upload),
+            text: localizer.upload,
           ),
           const SizedBox(
             width: 20,
           ),
-          ElevatedButton(
+          DefaultButton(
             onPressed: () {
               setState(() {
                 _models = [];
               });
             },
-            child: Text(localizer.clear),
+            text: localizer.clear,
           ),
           const SizedBox(
             width: 20,
@@ -175,19 +179,54 @@ class _BrowseState extends State<Browse> {
                             runSpacing: 20,
                             children: List.generate(
                               _models!.length,
-                              (index) => DefaultWidget(
-                                title: "Title",
-                                child: Text(
-                                  _models![index].toString(),
-                                ),
-                              ),
+                              (index) => _models! is PostModel
+                                  ? PostWidget(post: _models![index])
+                                  : DefaultWidget(
+                                      title: "Title",
+                                      child: Text(
+                                        _models![index].toString(),
+                                      ),
+                                    ),
                             ),
                           ))
                       : Container(),
                 ),
               )
-              // idgets
             ],
           );
   }
 }
+
+//Post list example:
+    // List<Widget> postWidgets = List.generate(
+    //     polls.length,
+    //     (index) => PostWidget(
+    //             post: PostModel(
+    //                 tags: [
+    //               TagModel(0, "Dinner Time!"),
+    //               TagModel(0, "Lukin Off Arse"),
+    //             ],
+    //                 medias: [
+    //               ImageModel(
+    //                   profile: ParseHelper.profile,
+    //                   raw: "",
+    //                   uri: Uri(path: "lib/assets/graphics/Logo.png")),
+    //               ImageModel(
+    //                   profile: ParseHelper.profile,
+    //                   raw: "",
+    //                   uri: Uri(path: "lib/assets/graphics/data_graphic.png"))
+    //             ],
+    //                 mentions: [
+    //               PersonModel(
+    //                   profile: ParseHelper.profile, name: "LukASS", raw: ""),
+    //               PersonModel(
+    //                   profile: ParseHelper.profile, name: "LukasOff", raw: "")
+    //             ],
+    //                 isArchived: true,
+    //                 title:
+    //                     "Malou Landsgaard posted this on Lukas Offenbergs timeline",
+    //                 description:
+    //                     "Hi guys! I just wanna say that I had a great time today! See you next time",
+    //                 profile: ParseHelper.profile,
+    //                 raw: '',
+    //                 timestamp: DateTime.now())));

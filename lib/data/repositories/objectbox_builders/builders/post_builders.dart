@@ -22,18 +22,23 @@ import 'misc_builders.dart';
 
 PostObjectBox makePostEntity(PostModel model, ObjectBox context) {
   var entity = PostObjectBox(raw: model.raw, timestamp: model.timestamp);
+  entity.textSearch = "";
+  entity.textSearch = entity.textSearch + " " +  model.timestamp.toString();
 
   if (model.title != null) {
     entity.title = model.title;
+    entity.textSearch = entity.textSearch + " " +  model.title!;
   }
   if (model.description != null) {
     entity.description = model.description;
+    entity.textSearch = entity.textSearch + " " +  model.description!;
   }
   if (model.isArchived != null) {
     entity.isArchived = model.isArchived;
   }
   if (model.metadata != null) {
     entity.metadata = model.metadata;
+    entity.textSearch = entity.textSearch + " " +  model.metadata!;
   }
 
   // the profile HAS to be created in db before storing additional data

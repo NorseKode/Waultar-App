@@ -1,5 +1,7 @@
+import 'package:waultar/core/abstracts/abstract_repositories/i_comment_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_event_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_group_repository.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_image_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_poll_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
@@ -11,16 +13,15 @@ import 'package:waultar/core/parsers/instagram_parser.dart';
 import 'package:waultar/startup.dart';
 
 class ParserService implements IParserService {
-  final IPostRepository _postRepo =
-      locator.get<IPostRepository>(instanceName: 'postRepo');
+  final IPostRepository _postRepo = locator.get<IPostRepository>(instanceName: 'postRepo');
   final IProfileRepository _profileRepo =
       locator.get<IProfileRepository>(instanceName: 'profileRepo');
-  final IGroupRepository _groupRepo =
-      locator.get<IGroupRepository>(instanceName: 'groupRepo');
-  final IEventRepository _eventRepo =
-      locator.get<IEventRepository>(instanceName: 'eventRepo');
+  final IGroupRepository _groupRepo = locator.get<IGroupRepository>(instanceName: 'groupRepo');
+  final IEventRepository _eventRepo = locator.get<IEventRepository>(instanceName: 'eventRepo');
   final IPostPollRepository _postPollRepo =
       locator.get<IPostPollRepository>(instanceName: 'postPollRepo');
+  final IImageRepository _imageRepo = locator.get<IImageRepository>(instanceName: 'imageRepo');
+  final ICommentRepository _commentRepo = locator.get<ICommentRepository>(instanceName: 'commentRepo');
 
   @override
   Future parseAll(List<String> paths, ServiceModel service) async {
@@ -44,8 +45,8 @@ class ParserService implements IParserService {
         // profile_information.json has now been removed
         paths = groupsAndPaths.item2;
 
-        await for (final entity in FacebookParser()
-            .parseListOfPaths(paths, profile: profileModel)) {
+        await for (final entity
+            in FacebookParser().parseListOfPaths(paths, profile: profileModel)) {
           _makeEntity(entity);
         }
         break;
@@ -53,16 +54,14 @@ class ParserService implements IParserService {
       case "Instagram":
         var parser = InstagramParser();
 
-        var profileAndPaths =
-            await parser.parseProfile(paths, service: service);
+        var profileAndPaths = await parser.parseProfile(paths, service: service);
         var profile = profileAndPaths.item1;
         paths = profileAndPaths.item2;
 
         var tempId = _makeEntity(profile);
         var profileModel = _profileRepo.getProfileById(tempId);
 
-        await for (final entity
-            in parser.parseListOfPaths(paths, profile: profileModel)) {
+        await for (final entity in parser.parseListOfPaths(paths, profile: profileModel)) {
           _makeEntity(entity);
         }
         break;
@@ -87,6 +86,12 @@ class ParserService implements IParserService {
 
       case PostPollModel:
         return _postPollRepo.addPostPoll(model);
+      
+      case CommentModel:
+        return _commentRepo.add(model);
+
+      case ImageModel:
+        return _imageRepo.addImage(model);
 
       default:
         return -1;
