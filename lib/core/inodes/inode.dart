@@ -10,12 +10,14 @@ class DataPoint {
   int id;
   final dataPointName = ToOne<DataPointName>();
 
-  // make these seracheable or traversable  
+  // make these seracheable or traversable
   // late List<String> keys;
 
   // put theses in some other collection perhaps ?
   @Index()
   String values;
+
+  final children = ToMany<DataPoint>();
 
   @Transient()
   late Map<String, dynamic> valuesMap;
@@ -46,8 +48,12 @@ class DataPoint {
 
     sb.write("Data :\n");
 
-    String pretty = prettyJson(valuesMap);
-    sb.write(pretty);
+    if (values.isNotEmpty) {
+      String pretty = prettyJson(jsonDecode(values));
+      sb.write(pretty);
+    } else {
+      sb.write("No data in me - I'm merely a directory containing children");
+    }
     sb.write("\n");
 
     sb.write("--------------------------\n");

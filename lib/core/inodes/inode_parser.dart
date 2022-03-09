@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
@@ -81,6 +82,9 @@ class InodeParserService {
 class InodeParser {
   // final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
 
+  late String formerFileName;
+  late String formerFileParentName;
+
   Stream<dynamic> parseFile(File file) async* {
     try {
       var fileName = path_dart.basename(file.path);
@@ -92,9 +96,10 @@ class InodeParser {
       // æ, ø, å and emojeys are corrupted
       // this is an error from facebook - they do not send the json in correct utf8 format ..
 
-      var item = await _getJson(file);
+      var item = await getJson(file);
 
-      if (item is List<dynamic>) {
+      // section for handling list as outer type
+      if (item is List<dynamic> && item.first is Map<String, dynamic>) {
         DataPointName name = DataPointName(name: _cleanName(fileName));
         for (var obj in item) {
           DataPoint dataPoint = DataPoint(values: "");
@@ -104,8 +109,18 @@ class InodeParser {
           dataPoint.values = jsonEncode(map);
           yield dataPoint;
         }
+      } else if (item is List<dynamic> &&
+          item.first is Map<String, dynamic> == false) {
+        DataPointName name = DataPointName(name: _cleanName(fileName));
+        DataPoint dataPoint = DataPoint(values: "");
+        dataPoint.dataPointName.target = name;
+        // var map = {"entries": item};
+        // dataPoint.valuesMap = map;
+        dataPoint.values = jsonEncode(item);
+        yield dataPoint;
       }
 
+      // section for handling map as outer type
       if (item is Map<String, dynamic>) {
         // if keys has at least on item, we need to parse either one datapoint
         // or a series of data points depending on the type of the value
@@ -115,6 +130,8 @@ class InodeParser {
           var jsonObject = item[key];
 
           if (amountOfKeys == 1 && jsonObject is List<dynamic>) {
+            // handle cases like recently_viewed here
+
             DataPointName name = DataPointName(name: _cleanName(key));
 
             if (jsonObject.first is Map<String, dynamic>) {
@@ -129,28 +146,139 @@ class InodeParser {
             } else {
               DataPoint dataPoint = DataPoint(values: "");
               dataPoint.dataPointName.target = name;
-              var map = {"entries": jsonObject};
-              dataPoint.valuesMap = map;
-              dataPoint.values = jsonEncode(map);
+              // var map = {"entries": jsonObject};
+              // dataPoint.valuesMap = map;
+              dataPoint.values = jsonEncode(jsonObject);
               yield dataPoint;
             }
           }
 
-          // only one key with no list, which means we found a datapoint
           if (amountOfKeys == 1 && jsonObject is Map<String, dynamic>) {
-            var dataMap = flatten(jsonObject);
+            var entries = jsonObject.entries;
+            if (entries.length > 1) {
+              amountOfKeys = 2;
+              item = jsonObject;
+            } else {
+              var dataMap = flatten(jsonObject);
 
-            // create the generic datapoint
-            var dataString = jsonEncode(dataMap);
-            DataPoint dataPoint = DataPoint(values: dataString);
+              // create the generic datapoint
+              var dataString = jsonEncode(dataMap);
+              DataPoint dataPoint = DataPoint(values: dataString);
 
-            dataPoint.valuesMap = dataMap;
+              dataPoint.valuesMap = dataMap;
 
-            // we set the relation for dataPointName
-            DataPointName dataPointName = DataPointName(name: _cleanName(key));
-            dataPoint.dataPointName.target = dataPointName;
+              // we set the relation for dataPointName
+              DataPointName dataPointName =
+                  DataPointName(name: _cleanName(key));
+              dataPoint.dataPointName.target = dataPointName;
 
-            yield dataPoint;
+              yield dataPoint;
+            }
+          }
+
+          // if keys > 1 then get pattern from keys to determine if the keys should be spread into seperate datapoints
+          if (amountOfKeys > 1) {
+            // handle cases like messages here
+            var entries = item.entries;
+            List<Tuple3<String, String, dynamic>> keyAndType = [];
+
+            for (var entry in entries) {
+              String key = entry.key;
+              var value = entry.value;
+
+              // determine value runtimeType
+              if (value is List<dynamic>) {
+                keyAndType.add(Tuple3(key, "list_type", value));
+              } else if (value is Map<String, dynamic>) {
+                keyAndType.add(Tuple3(key, "map_type", value));
+              } else {
+                // it's either a string, num, bool or null
+                keyAndType.add(Tuple3(key, "include_in_parent", value));
+              }
+            }
+
+            var outerMap = <String, dynamic>{};
+            // var innerMap = <String, dynamic>{};
+            List<DataPoint> children = <DataPoint>[];
+
+            for (var keyType in keyAndType) {
+              
+              if (keyType.item2 == "include_in_parent") {
+                outerMap.addAll({keyType.item1: keyType.item3});
+              }
+
+              if (keyType.item2 == "map_type") {
+                outerMap.addAll({keyType.item1: keyType.item3});
+              }
+
+
+              if (keyType.item2 == "list_type") {
+                var count = keyType.item3.length;
+                if (count == 0) {
+                  outerMap.addAll({keyType.item1: "no data"});
+                }
+
+                if (count == 1) {
+                  outerMap.addAll({keyType.item1: keyType.item3});
+                }
+
+                if (count > 1) {
+                  // determine the type in the list and whether it should be split to children
+                  // or included in parent datapoint
+                  var firstEntry = keyType.item3.first;
+                  if (firstEntry is Map<String, dynamic>) {
+                    if (firstEntry.length == 1) {
+                      outerMap.addAll({keyType.item1: keyType.item3});
+                    } else {
+                      // split them out and add these nested datapoints as children
+                      DataPointName name =
+                          DataPointName(name: _cleanName(keyType.item1));
+                      for (var inner in keyType.item3) {
+                        var dataPoint = DataPoint(values: jsonEncode(inner));
+                        dataPoint.dataPointName.target = name;
+                        children.add(dataPoint);
+                      }
+                    }
+                  }
+                }
+              }
+
+            }
+
+            bool outerIsOnlyName = false;
+            if (outerMap.isEmpty) {
+              outerIsOnlyName = true;
+            }
+            if (outerMap.length == 1) {
+              if (outerMap.keys.first.trim().isEmpty) {
+                outerIsOnlyName = true;
+              }
+            } 
+
+            var parentDataPoint =
+                DataPoint(values: outerIsOnlyName ? "" : jsonEncode(flatten(outerMap)));
+
+            if (children.isNotEmpty) {
+              parentDataPoint.children.addAll(children);
+            }
+
+            var name = DataPointName(name: _cleanName(fileName));
+
+            var nameBasedOnName = outerMap["name"];
+            if (nameBasedOnName != null && nameBasedOnName is String) {
+              name.name = nameBasedOnName;
+            }
+
+            var nameBasedOnTitle = outerMap["title"];
+            if (nameBasedOnTitle != null && nameBasedOnTitle is String) {
+              name.name = nameBasedOnTitle;
+            }
+
+            parentDataPoint.dataPointName.target = name;
+            name.count += outerMap.length;
+            name.count += children.length;
+
+            yield parentDataPoint;
           }
         }
       }
@@ -162,7 +290,7 @@ class InodeParser {
     }
   }
 
-  Future<dynamic> _getJson(File file) async {
+  Future<dynamic> getJson(File file) async {
     var json = await file.readAsString();
     return jsonDecode(json);
   }

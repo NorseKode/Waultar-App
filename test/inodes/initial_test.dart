@@ -1,12 +1,8 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as path_dart;
-import 'package:pretty_json/pretty_json.dart';
-import 'package:waultar/core/inodes/inode.dart';
 import 'package:waultar/core/inodes/inode_parser.dart';
-import 'package:waultar/core/inodes/json_helper.dart';
 import '../test_helper.dart';
 
 main() {
@@ -33,6 +29,10 @@ main() {
 
   var yourTopics = File(path_dart.join(
       TestHelper.pathToCurrentFile(folder: 'inodes'), "data", "your_topics.json"));
+
+  var recentlyViewed = File(path_dart.join(
+      TestHelper.pathToCurrentFile(folder: 'inodes'), "data", "recently_viewed.json"));
+
 
   final InodeParser _parser = InodeParser();
 

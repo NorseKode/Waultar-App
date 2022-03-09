@@ -1149,7 +1149,12 @@ final _entities = <ModelEntity>[
             flags: 8,
             indexId: const IdUid(37, 2663412274713465659))
       ],
-      relations: <ModelRelation>[],
+      relations: <ModelRelation>[
+        ModelRelation(
+            id: const IdUid(17, 2352381911142985457),
+            name: 'children',
+            targetId: const IdUid(30, 6990209732262435045))
+      ],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
       id: const IdUid(31, 1621784589665593446),
@@ -1291,7 +1296,7 @@ ModelDefinition getObjectBoxModel() {
       entities: _entities,
       lastEntityId: const IdUid(33, 3572614151177614481),
       lastIndexId: const IdUid(44, 6770256086892110042),
-      lastRelationId: const IdUid(16, 2952019927642247505),
+      lastRelationId: const IdUid(17, 2352381911142985457),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [
         1837511870469432447,
@@ -2519,7 +2524,8 @@ ModelDefinition getObjectBoxModel() {
     DataPoint: EntityDefinition<DataPoint>(
         model: _entities[25],
         toOneRelations: (DataPoint object) => [object.dataPointName],
-        toManyRelations: (DataPoint object) => {},
+        toManyRelations: (DataPoint object) =>
+            {RelInfo<DataPoint>.toMany(17, object.id): object.children},
         getId: (DataPoint object) => object.id,
         setId: (DataPoint object, int id) {
           object.id = id;
@@ -2549,6 +2555,8 @@ ModelDefinition getObjectBoxModel() {
           object.dataPointName.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
           object.dataPointName.attach(store);
+          InternalToManyAccess.setRelInfo(object.children, store,
+              RelInfo<DataPoint>.toMany(17, object.id), store.box<DataPoint>());
           return object;
         }),
     DataPointName: EntityDefinition<DataPointName>(
@@ -3421,6 +3429,10 @@ class DataPoint_ {
   /// see [DataPoint.timestamp]
   static final timestamp =
       QueryIntegerProperty<DataPoint>(_entities[25].properties[3]);
+
+  /// see [DataPoint.children]
+  static final children =
+      QueryRelationToMany<DataPoint, DataPoint>(_entities[25].relations[0]);
 }
 
 /// [DataPointName] entity fields to define ObjectBox queries.
