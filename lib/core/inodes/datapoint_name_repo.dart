@@ -11,32 +11,23 @@ class DataPointNameRepository {
   }
 
   DataPointName? getByName(String name) {
-    var dataName = _nameBox
-        .query(DataPointName_.name.equals(name))
-        .build()
-        .findUnique();
+    var dataName =
+        _nameBox.query(DataPointName_.name.equals(name)).build().findUnique();
     return dataName;
   }
 
-  DataPointName? getNameById(int id) => _nameBox.get(id); 
+  DataPointName? getNameById(int id) => _nameBox.get(id);
 
-  List<DataPoint>? getDataPointsByName(DataPointName name) {
-    var entity = _nameBox.get(name.id);
-    if (entity != null) {
-      return entity.dataPoints.toList();
-    }
-
-    return null;
+  List<DataPoint> getDataPointsByName(DataPointName name) {
+    return _nameBox.get(name.id)!.dataPoints.toList();
   }
 
   List<DataPointName> getAll() => _nameBox.getAll();
 
   int addDataName(String name) {
-    var existing = _nameBox
-        .query(DataPointName_.name.equals(name))
-        .build()
-        .findUnique();
-        
+    var existing =
+        _nameBox.query(DataPointName_.name.equals(name)).build().findUnique();
+
     if (existing == null) {
       return _nameBox.put(DataPointName(name: name));
     }

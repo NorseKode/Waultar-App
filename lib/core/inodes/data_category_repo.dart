@@ -1,6 +1,7 @@
 import 'package:waultar/core/inodes/inode.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
+import 'package:path/path.dart' as path_dart;
 
 class DataCategoryRepository {
   final ObjectBox _context;
@@ -22,6 +23,10 @@ class DataCategoryRepository {
     return _categoryBox.getAll();
   }
 
+  List<DataPointName> getNamesFromCategory(DataCategory category) {
+    return _categoryBox.get(category.id)!.dataPointNames.toList();
+  }
+
   void updateCount(DataCategory category, int incrementWith) {
     var entity = _categoryBox.get(category.id)!;
     entity.count += incrementWith;
@@ -40,19 +45,41 @@ class DataCategoryRepository {
   }
 
   DataCategory getFromFolderName(String folderName) {
-    var category = _categoryBox
-        .query(DataCategory_.matchingFolders.contains(folderName))
-        .build()
-        .findFirst();
+    // get category from service based on parent directory for the file
+    // keep looking backwards in the path until we reach root folder
 
-    if (category == null) {
+    // might result in stackOverflow if root folder is not Facebook or Instagram
+    try {
+      var name = path_dart.basename(folderName);
+
+      // if still none are found, set category to "Other" (default)
+      if (name == "Facebook" || name == "Instagram") {
+        return _categoryBox
+            .query(DataCategory_.name.equals("Other"))
+            .build()
+            .findUnique()!;
+      }
+
+      var category = _categoryBox
+          .query(DataCategory_.matchingFolders.contains(name))
+          .build()
+          .findFirst();
+
+      // if none is found :
+      if (category == null) {
+        return getFromFolderName(
+            folderName.substring(0, folderName.length - name.length));
+      } else {
+        return category;
+      }
+    } on Exception catch (e) {
+      // ignore: avoid_print
+      print(e);
       return _categoryBox
           .query(DataCategory_.name.equals("Other"))
           .build()
           .findUnique()!;
     }
-
-    return category;
   }
 
   int count() => _categoryBox.count();

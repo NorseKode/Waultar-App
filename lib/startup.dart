@@ -16,6 +16,7 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repositor
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_video_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
@@ -38,6 +39,7 @@ import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/data/repositories/service_repo.dart';
 import 'package:waultar/data/repositories/video_repo.dart';
 import 'package:waultar/domain/services/appsettings_service.dart';
+import 'package:waultar/domain/services/collections_service.dart';
 import 'configs/globals/app_logger.dart';
 import 'configs/globals/os_enum.dart';
 
@@ -143,7 +145,11 @@ Future<void> setupServices() async {
     locator.registerSingleton<IAppSettingsService>(AppSettingsService(),
         instanceName: 'appSettingsService');
     locator.registerSingleton<InodeParserService>(
-        InodeParserService(_categoryRepo, _nameRepo, _dataRepo), instanceName: "inodeParser");
+        InodeParserService(_categoryRepo, _nameRepo, _dataRepo),
+        instanceName: "inodeParser");
+    locator.registerSingleton<ICollectionsService>(
+        CollectionsService(_categoryRepo, _nameRepo, _dataRepo),
+        instanceName: 'collectionsService');
   });
 }
 

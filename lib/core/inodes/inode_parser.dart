@@ -47,18 +47,14 @@ class InodeParserService {
     for (var path in paths) {
       if (Extensions.isJson(path)) {
         var file = File(path);
-        var parentName = path_dart.basename(file.parent.path);
+        // var parentName = path_dart.basename(file.parent.path);
 
-        // get category from service based on parent directory for the file
-        // if none is found :
-        // keep looking backwards in the path until we reach root folder
-        // if still none are found, set category to "Other" (default)
-        var category = _categoryRepo.getFromFolderName(parentName);
+        var category = _categoryRepo.getFromFolderName(file.path);
 
         // add the parsed inodes to a list, and when the stream is done
         // put them in db as a large transaction to improve performance
         var listToAdd = <DataPoint>[];
-        await for (final result in _parser.parseFile(file)) {
+        await for (final result in _parser.parseFile(file, category)) {
           if (result is DataPoint) {
             result.dataPointName.target!.dataCategory.target = category;
 
@@ -85,7 +81,7 @@ class InodeParser {
   late String formerFileName;
   late String formerFileParentName;
 
-  Stream<dynamic> parseFile(File file) async* {
+  Stream<dynamic> parseFile(File file, DataCategory category) async* {
     try {
       var fileName = path_dart.basename(file.path);
       if (fileName.endsWith('.json')) {
@@ -157,7 +153,7 @@ class InodeParser {
             var entries = jsonObject.entries;
             if (entries.length > 1) {
               amountOfKeys = 2;
-              item = jsonObject;
+              item = flatten(jsonObject);
             } else {
               var dataMap = flatten(jsonObject);
 
@@ -233,6 +229,7 @@ class InodeParser {
                       // split them out and add these nested datapoints as children
                       DataPointName name =
                           DataPointName(name: _cleanName(keyType.item1));
+                      name.dataCategory.target = category;
                       for (var inner in keyType.item3) {
                         var dataPoint = DataPoint(values: jsonEncode(inner));
                         dataPoint.dataPointName.target = name;
@@ -299,7 +296,6 @@ class InodeParser {
 
   // make special cases here for certain datapoints based on which directory they are in
   // for instance, the filename for facebook inbox, should be replaced by the name of the parent directory
-  // TODO : use replaceAllMapped instead
   String _cleanName(String filename) {
     String temp = filename.split("_").fold(
         "",

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as path_dart;
+import 'package:waultar/core/inodes/inode.dart';
 import 'package:waultar/core/inodes/inode_parser.dart';
 import '../test_helper.dart';
 
@@ -33,6 +34,7 @@ main() {
   var recentlyViewed = File(path_dart.join(
       TestHelper.pathToCurrentFile(folder: 'inodes'), "data", "recently_viewed.json"));
 
+  final DataCategory testCategory = DataCategory(name: 'Test', matchingFolders: []);
 
   final InodeParser _parser = InodeParser();
 
@@ -44,7 +46,7 @@ main() {
   group("Test parsing of multiple posts", () {
 
     test(" - facebook posts", () async {
-      var resultStream = _parser.parseFile(facebookPosts);
+      var resultStream = _parser.parseFile(facebookPosts, testCategory);
       var result = await resultStream.toList();
 
       for (var item in result) {
@@ -54,7 +56,7 @@ main() {
     });
 
     test(" - facebook profile", () async {
-      var resultStream = _parser.parseFile(facebookProfileV2File);
+      var resultStream = _parser.parseFile(facebookProfileV2File, testCategory);
       var result = await resultStream.toList();
 
       for (var item in result) {
@@ -64,7 +66,7 @@ main() {
     });
 
     test(" - facebook event invitations", () async {
-      var resultStream = _parser.parseFile(eventsInvited);
+      var resultStream = _parser.parseFile(eventsInvited, testCategory);
       var result = await resultStream.toList();
 
       for (var item in result) {
@@ -74,7 +76,7 @@ main() {
     });
 
     test(" - facebook groups creator badges", () async {
-      var resultStream = _parser.parseFile(creatorBadges);
+      var resultStream = _parser.parseFile(creatorBadges, testCategory);
       var result = await resultStream.toList();
 
       for (var item in result) {
@@ -84,7 +86,7 @@ main() {
     });
 
     test(" - facebook groups membership", () async {
-      var resultStream = _parser.parseFile(groupMembershp);
+      var resultStream = _parser.parseFile(groupMembershp, testCategory);
       var result = await resultStream.toList();
 
       for (var item in result) {
@@ -94,7 +96,7 @@ main() {
     });
 
     test(" - facebook event responses", () async {
-      var resultStream = _parser.parseFile(eventResponses);
+      var resultStream = _parser.parseFile(eventResponses, testCategory);
       var result = await resultStream.toList();
 
       for (var item in result) {
@@ -104,7 +106,7 @@ main() {
     });
 
     test(" - facebook search history", () async {
-      var resultStream = _parser.parseFile(yourSearches);
+      var resultStream = _parser.parseFile(yourSearches, testCategory);
       var result = await resultStream.toList();
 
       for (var item in result) {
@@ -114,7 +116,7 @@ main() {
     });
 
     test(" - facebook your topics", () async {
-      var resultStream = _parser.parseFile(yourTopics);
+      var resultStream = _parser.parseFile(yourTopics, testCategory);
       var result = await resultStream.toList();
 
       for (var item in result) {

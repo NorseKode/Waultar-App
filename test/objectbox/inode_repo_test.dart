@@ -28,8 +28,8 @@ Future<void> main() async {
       .normalize('${scriptDir.path}/test/parser/data/your_posts_1.json');
   var pagesFollowed = dart_path
       .normalize('${scriptDir.path}/test/inodes/data/pages_followed.json');
-  var eventResponses = dart_path
-      .normalize('${scriptDir.path}/test/parser/data/your_event_responses.json');
+  var eventResponses = dart_path.normalize(
+      '${scriptDir.path}/test/parser/data/your_event_responses.json');
 
   var largeMotherfucker = dart_path
       .normalize('${scriptDir.path}/test/parser/data/large_random_json.json');
@@ -46,13 +46,12 @@ Future<void> main() async {
   var yourTopics = dart_path.normalize(
       '${scriptDir.path}/test/objectbox/data/Facebook/your_topics/your_topics.json');
 
+  final DataCategory testCategory =
+      DataCategory(name: 'Test', matchingFolders: []);
 
   List<String> paths = [];
-  paths.add(profile);
-  paths.add(eventInvitations);
-  paths.add(facebookPosts);
-  paths.add(pagesFollowed);
-  // paths.add(largeMotherfucker);
+  paths.add(message);
+  paths.add(reactions);
 
   tearDownAll(() async {
     _context.store.close();
@@ -71,7 +70,7 @@ Future<void> main() async {
   group('Test parsing of actual facebook data', () {
     test(" - event responses", () async {
       var parser = InodeParser();
-      var stream = parser.parseFile(File(eventResponses));
+      var stream = parser.parseFile(File(eventResponses), testCategory);
       var result = await stream.toList();
 
       for (var item in result) {
@@ -89,7 +88,7 @@ Future<void> main() async {
 
     test(" - facebook posts", () async {
       var parser = InodeParser();
-      var stream = parser.parseFile(File(facebookPosts));
+      var stream = parser.parseFile(File(facebookPosts), testCategory);
       var result = await stream.toList();
 
       for (var item in result) {
@@ -107,7 +106,7 @@ Future<void> main() async {
 
     test(" - facebook profile", () async {
       var parser = InodeParser();
-      var stream = parser.parseFile(File(profile));
+      var stream = parser.parseFile(File(profile), testCategory);
       var result = await stream.toList();
 
       for (var item in result) {
@@ -125,7 +124,7 @@ Future<void> main() async {
 
     test(" - reactions", () async {
       var parser = InodeParser();
-      var stream = parser.parseFile(File(reactions));
+      var stream = parser.parseFile(File(reactions), testCategory);
       var result = await stream.toList();
 
       for (var item in result) {
@@ -143,7 +142,7 @@ Future<void> main() async {
 
     test(" - comments", () async {
       var parser = InodeParser();
-      var stream = parser.parseFile(File(comments));
+      var stream = parser.parseFile(File(comments), testCategory);
       var result = await stream.toList();
 
       for (var item in result) {
@@ -161,7 +160,7 @@ Future<void> main() async {
 
     test(" - your topics", () async {
       var parser = InodeParser();
-      var stream = parser.parseFile(File(yourTopics));
+      var stream = parser.parseFile(File(yourTopics), testCategory);
       var result = await stream.toList();
 
       for (var item in result) {
@@ -179,7 +178,7 @@ Future<void> main() async {
 
     test(" - messages", () async {
       var parser = InodeParser();
-      var stream = parser.parseFile(File(message));
+      var stream = parser.parseFile(File(message), testCategory);
       var result = await stream.toList();
 
       print(result.length);
@@ -199,7 +198,7 @@ Future<void> main() async {
 
     test(" - recently viewed", () async {
       var parser = InodeParser();
-      var stream = parser.parseFile(File(recentlyViewed));
+      var stream = parser.parseFile(File(recentlyViewed), testCategory);
       var result = await stream.toList();
 
       for (var item in result) {
@@ -214,7 +213,6 @@ Future<void> main() async {
         }
       }
     });
-
   });
 
   group('Test parsing of many paths with service', () {
