@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -110,8 +112,6 @@ class InodeParser {
         DataPointName name = DataPointName(name: _cleanName(fileName));
         DataPoint dataPoint = DataPoint(values: "");
         dataPoint.dataPointName.target = name;
-        // var map = {"entries": item};
-        // dataPoint.valuesMap = map;
         dataPoint.values = jsonEncode(item);
         yield dataPoint;
       }
@@ -194,11 +194,9 @@ class InodeParser {
             }
 
             var outerMap = <String, dynamic>{};
-            // var innerMap = <String, dynamic>{};
             List<DataPoint> children = <DataPoint>[];
 
             for (var keyType in keyAndType) {
-              
               if (keyType.item2 == "include_in_parent") {
                 outerMap.addAll({keyType.item1: keyType.item3});
               }
@@ -206,7 +204,6 @@ class InodeParser {
               if (keyType.item2 == "map_type") {
                 outerMap.addAll({keyType.item1: keyType.item3});
               }
-
 
               if (keyType.item2 == "list_type") {
                 var count = keyType.item3.length;
@@ -239,7 +236,6 @@ class InodeParser {
                   }
                 }
               }
-
             }
 
             bool outerIsOnlyName = false;
@@ -250,10 +246,10 @@ class InodeParser {
               if (outerMap.keys.first.trim().isEmpty) {
                 outerIsOnlyName = true;
               }
-            } 
+            }
 
-            var parentDataPoint =
-                DataPoint(values: outerIsOnlyName ? "" : jsonEncode(flatten(outerMap)));
+            var parentDataPoint = DataPoint(
+                values: outerIsOnlyName ? "" : jsonEncode(flatten(outerMap)));
 
             if (children.isNotEmpty) {
               parentDataPoint.children.addAll(children);
@@ -398,4 +394,6 @@ class InodeParser {
 
     return {keyState: acc};
   }
+
+  
 }

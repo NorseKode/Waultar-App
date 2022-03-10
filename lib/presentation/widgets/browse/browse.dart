@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
+import 'package:waultar/core/inodes/inode.dart';
 import 'package:waultar/core/inodes/inode_parser.dart';
 import 'package:waultar/core/models/content/post_model.dart';
 import 'package:waultar/domain/services/browse_service.dart';
@@ -25,125 +27,90 @@ class Browse extends StatefulWidget {
 }
 
 class _BrowseState extends State<Browse> {
-  
-  final _inodeParserService =
-      locator.get<InodeParserService>(instanceName: 'inodeParser');
-
   late AppLocalizations localizer;
   final _browseService = BrowseService();
+
   List<dynamic>? _models;
   late ThemeProvider themeProvider;
+
   final IServiceRepository _serviceRepo =
       locator.get<IServiceRepository>(instanceName: 'serviceRepo');
+
   bool isLoading = false;
 
-  buttons() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          DefaultButton(
-            onPressed: () {
-              setState(() {
-                _models = _browseService.getProfiles();
-              });
-            },
-            text: localizer.profile,
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          DefaultButton(
-            onPressed: () {
-              setState(() {
-                _models = _browseService.getPosts() ?? [];
-              });
-            },
-            text: localizer.posts,
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          DefaultButton(
-            onPressed: () {
-              // setState(() {
-              //   _models = _browseService.getGroups();
-              // });
-            },
-            text: localizer.groups,
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          DefaultButton(
-            onPressed: () {
-              setState(() {
-                _models = _browseService.getPostPolls();
-              });
-            },
-            text: localizer.postsWithPolls,
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          DefaultButton(
-            onPressed: () async {
-              var files = await Uploader.uploadDialogue(context);
+  final InodeParserService _inodeParserService =
+      locator.get<InodeParserService>(instanceName: 'inodeParser');
+  final ICollectionsService _collectionsService =
+      locator.get<ICollectionsService>(instanceName: 'collectionsService');
+  late List<DataCategory> _categories;
 
-              if (files != null) {
-                SnackBarCustom.useSnackbarOfContext(
-                    context, localizer.startedLoadingOfData);
-                var service = _serviceRepo.get(files.item2);
+  @override
+  void initState() {
+    super.initState();
+    _categories = _collectionsService.getAllCategories();
+  }
 
-                if (service != null) {
-                  setState(() {
-                    isLoading = true;
-                  });
-                  var zipFiles = files.item1
-                      .where(
-                          (element) => dart_path.extension(element) == ".zip")
-                      .toList();
+  uploadButton() {
+    return DefaultButton(
+      onPressed: () async {
+        var files = await Uploader.uploadDialogue(context);
 
-                  var inputMap = {
-                    'path': dart_path.normalize(zipFiles.first),
-                    'extracts_folder':
-                        locator.get<String>(instanceName: 'extracts_folder'),
-                    'service_name': service.name
-                  };
-                  var uploadedFiles = await compute(extractZip, inputMap);
-                  await _inodeParserService
-                      .parse(uploadedFiles)
-                      .whenComplete(() => setState(() {
-                            isLoading = false;
-                            SnackBarCustom.useSnackbarOfContext(
-                                context, localizer.doneLoadingData);
-                          }));
-                  // await ParserService()
-                  //     .parseAll(uploadedFiles, service)
-                  //     .whenComplete(() => setState(() {
-                  //           isLoading = false;
-                  //           SnackBarCustom.useSnackbarOfContext(context, localizer.doneLoadingData);
-                  //         }));
-                }
-              }
-            },
-            text: localizer.upload,
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          DefaultButton(
-            onPressed: () {
-              setState(() {
-                _models = [];
-              });
-            },
-            text: localizer.clear,
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-        ],
+        if (files != null) {
+          SnackBarCustom.useSnackbarOfContext(
+              context, localizer.startedLoadingOfData);
+          var service = _serviceRepo.get(files.item2);
+
+          if (service != null) {
+            setState(() {
+              isLoading = true;
+            });
+            var zipFiles = files.item1
+                .where((element) => dart_path.extension(element) == ".zip")
+                .toList();
+
+            var inputMap = {
+              'path': dart_path.normalize(zipFiles.first),
+              'extracts_folder':
+                  locator.get<String>(instanceName: 'extracts_folder'),
+              'service_name': service.name
+            };
+            var uploadedFiles = await compute(extractZip, inputMap);
+            await _inodeParserService
+                .parse(uploadedFiles)
+                .whenComplete(() => setState(() {
+                      isLoading = false;
+                      SnackBarCustom.useSnackbarOfContext(
+                          context, localizer.doneLoadingData);
+                    }));
+          }
+        }
+      },
+      text: localizer.upload,
+    );
+  }
+
+  categoriesColumn() {
+    return Expanded(
+      flex: 1,
+      child: ListView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: _categories.length,
+        itemBuilder: (_, index) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              InkWell(
+                onTap: () => print(_categories[index].name),
+                child: Text(_categories[index].name +
+                    "   " +
+                    _categories[index].count.toString()),
+              ),
+              const Divider(
+                thickness: 2.0,
+              )
+            ],
+          );
+        },
       ),
     );
   }
@@ -158,75 +125,26 @@ class _BrowseState extends State<Browse> {
         : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                "Browse",
-                style: themeProvider.themeData().textTheme.headline3,
+              Row(
+                children: [
+                  Text(
+                    "Browse",
+                    style: themeProvider.themeData().textTheme.headline3,
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  uploadButton()
+                ],
               ),
               const SizedBox(
                 height: 20,
               ),
-              buttons(),
               const SizedBox(
                 height: 20,
               ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: _models != null
-                      ? SizedBox(
-                          width: MediaQuery.of(context).size.width - 290,
-                          child: Wrap(
-                            spacing: 20,
-                            runSpacing: 20,
-                            children: List.generate(
-                              _models!.length,
-                              (index) => _models! is PostModel
-                                  ? PostWidget(post: _models![index])
-                                  : DefaultWidget(
-                                      title: "Title",
-                                      child: Text(
-                                        _models![index].toString(),
-                                      ),
-                                    ),
-                            ),
-                          ))
-                      : Container(),
-                ),
-              )
+              categoriesColumn()
             ],
           );
   }
 }
-
-//Post list example:
-    // List<Widget> postWidgets = List.generate(
-    //     polls.length,
-    //     (index) => PostWidget(
-    //             post: PostModel(
-    //                 tags: [
-    //               TagModel(0, "Dinner Time!"),
-    //               TagModel(0, "Lukin Off Arse"),
-    //             ],
-    //                 medias: [
-    //               ImageModel(
-    //                   profile: ParseHelper.profile,
-    //                   raw: "",
-    //                   uri: Uri(path: "lib/assets/graphics/Logo.png")),
-    //               ImageModel(
-    //                   profile: ParseHelper.profile,
-    //                   raw: "",
-    //                   uri: Uri(path: "lib/assets/graphics/data_graphic.png"))
-    //             ],
-    //                 mentions: [
-    //               PersonModel(
-    //                   profile: ParseHelper.profile, name: "LukASS", raw: ""),
-    //               PersonModel(
-    //                   profile: ParseHelper.profile, name: "LukasOff", raw: "")
-    //             ],
-    //                 isArchived: true,
-    //                 title:
-    //                     "Malou Landsgaard posted this on Lukas Offenbergs timeline",
-    //                 description:
-    //                     "Hi guys! I just wanna say that I had a great time today! See you next time",
-    //                 profile: ParseHelper.profile,
-    //                 raw: '',
-    //                 timestamp: DateTime.now())));

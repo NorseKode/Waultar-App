@@ -45,6 +45,8 @@ Future<void> main() async {
       '${scriptDir.path}/test/objectbox/data/Facebook/messages/inbox/lukasvintheroffenberglarsen_2qr6kux07q/message_1.json');
   var yourTopics = dart_path.normalize(
       '${scriptDir.path}/test/objectbox/data/Facebook/your_topics/your_topics.json');
+  var autofill_information = dart_path.normalize(
+      '${scriptDir.path}/test/objectbox/data/Facebook/messages/autofill_information.json');
 
   final DataCategory testCategory =
       DataCategory(name: 'Test', matchingFolders: []);
@@ -71,6 +73,24 @@ Future<void> main() async {
     test(" - event responses", () async {
       var parser = InodeParser();
       var stream = parser.parseFile(File(eventResponses), testCategory);
+      var result = await stream.toList();
+
+      for (var item in result) {
+        if (item is DataPoint) {
+          print(item.toString());
+          if (item.children.isNotEmpty) {
+            print("children:");
+            for (var child in item.children) {
+              print(child.toString());
+            }
+          }
+        }
+      }
+    });
+
+    test(" - facebook messages autofill_information", () async {
+      var parser = InodeParser();
+      var stream = parser.parseFile(File(autofill_information), testCategory);
       var result = await stream.toList();
 
       for (var item in result) {
