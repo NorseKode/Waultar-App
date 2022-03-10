@@ -73,23 +73,40 @@ Future<void> main() async {
     _parser = NewParser(_categoryRepo, _nameRepo, _dataRepo);
   });
 
+  printResult(List<DataPoint> result) {
+    for (var item in result) {
+        print(item.toString());
+        if (item.children.isNotEmpty) {
+          print("children:");
+          for (var child in item.children) {
+            print(child.toString());
+          }
+        }
+      }
+  }
+
   group('Test parsing of actual facebook data', () {
     test(" - facebook posts", () async {
       var result = await _parser.parseFromPath(fbPosts);
 
       expect(result.length, 14);
+      for (var dataPoint in result) {
+        expect(dataPoint.children.isEmpty, true);
+      }
       expect(result.first.dataPointName.target!.name, "your posts");
       expect(result.first.dataPointName.target!.dataCategory.target!.name, "Posts");
 
-      // for (var item in result) {
-      //   print(item.toString());
-      //   if (item.children.isNotEmpty) {
-      //     print("children:");
-      //     for (var child in item.children) {
-      //       print(child.toString());
-      //     }
-      //   }
-      // }
+    });
+
+    test(" - facebook messages autofill_information", () async {
+      var result = await _parser.parseFromPath(autofill_information);
+
+      expect(result.length, 1);
+      expect(result.first.dataPointName.target!.name, "autofill information");
+      expect(result.first.dataPointName.target!.dataCategory.target!.name, "Messaging");
+      expect(result.first.children.length, 0);
+      expect(result.first.asMap.length, 9);
+
     });
 
     test(" - facebook profile information", () async {
@@ -101,15 +118,6 @@ Future<void> main() async {
       var childrenNames = children.map((element) => element.dataPointName.target!.name).toSet();
       expect(childrenNames.length, 11);
 
-      // for (var item in result) {
-      //   print(item.toString());
-      //   if (item.children.isNotEmpty) {
-      //     print("children:");
-      //     for (var child in item.children) {
-      //       print(child.toString());
-      //     }
-      //   }
-      // }
     });
 
     test(" - facebook messages", () async {
@@ -123,15 +131,6 @@ Future<void> main() async {
       var childrenNames = children.map((element) => element.dataPointName.target!.name).toSet();
       expect(childrenNames.length, 2);
 
-      // for (var item in result) {
-      //   print(item.toString());
-      //   if (item.children.isNotEmpty) {
-      //     print("children:");
-      //     for (var child in item.children) {
-      //       print(child.toString());
-      //     }
-      //   }
-      // }
     });
   });
 }

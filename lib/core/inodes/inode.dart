@@ -31,11 +31,20 @@ class DataPoint {
     required this.values,
   });
 
+  Map<String, dynamic> get asMap {
+    var decoded = jsonDecode(values);
+    if (decoded is List<dynamic>) {
+      return {'values':decoded};
+    } else {
+      return decoded;
+    }
+  }
+
   @override
   String toString() {
     var sb = StringBuffer();
     sb.write("\n");
-    sb.write("-------------${runtimeType.toString()}-------------\n");
+    sb.write("############# DataPoint #############\n");
     sb.write("ID : $id \n");
 
     if (timestamp != null) {
@@ -56,7 +65,7 @@ class DataPoint {
     }
     sb.write("\n");
 
-    sb.write("--------------------------\n");
+    sb.write("#####################################\n");
     return sb.toString();
   }
 }

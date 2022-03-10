@@ -92,11 +92,12 @@ class NewParser {
 
             // case like profile_information
             if (innerValue is Map<String, dynamic>) {
-              int innerCount = innerValue.length;
-              var newName = DataPointName(name: _cleanName(outerKey));
-              var flattenedInner = flatten(innerValue);
+              // int innerCount = innerValue.length;
+              // var newName = DataPointName(name: _cleanName(outerKey));
+              // var flattenedInner = flatten(innerValue);
+
               yield* parseJson(
-                  innerValue, category, _cleanName(outerKey), parent);
+                  flatten(innerValue), category, _cleanName(outerKey), parent);
 
               // this is where a recursive call should be made
             }
@@ -130,7 +131,7 @@ class NewParser {
 
             for (var keyType in keyAndType) {
               if (keyType.item2 == "include_in_parent") {
-                outerMap.addAll({keyType.item1: keyType.item3});
+                outerMap.addAll({_cleanName(keyType.item1): keyType.item3});
               }
 
               if (keyType.item2 == "map_type") {
