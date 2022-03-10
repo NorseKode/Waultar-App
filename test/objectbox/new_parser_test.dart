@@ -115,19 +115,23 @@ Future<void> main() async {
     test(" - facebook messages", () async {
       var result = await _parser.parseFromPath(message);
 
-      // expect(result.length, 14);
-      // expect(result.first.dataPointName.target!.name, "your posts");
-      // expect(result.first.dataPointName.target!.dataCategory.target!.name, "Posts");
+      expect(result.length, 1);
+      expect(result.first.dataPointName.target!.name, "Lukas Vinther Offenberg Larsen");
+      expect(result.first.dataPointName.target!.dataCategory.target!.name, "Messaging");
+      var children = result.first.children;
+      expect(children.length, 9);
+      var childrenNames = children.map((element) => element.dataPointName.target!.name).toSet();
+      expect(childrenNames.length, 2);
 
-      for (var item in result) {
-        print(item.toString());
-        if (item.children.isNotEmpty) {
-          print("children:");
-          for (var child in item.children) {
-            print(child.toString());
-          }
-        }
-      }
+      // for (var item in result) {
+      //   print(item.toString());
+      //   if (item.children.isNotEmpty) {
+      //     print("children:");
+      //     for (var child in item.children) {
+      //       print(child.toString());
+      //     }
+      //   }
+      // }
     });
   });
 }

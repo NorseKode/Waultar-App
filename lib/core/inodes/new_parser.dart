@@ -148,13 +148,10 @@ class NewParser {
 
               if (keyType.item2 == "list_type") {
                 var count = keyType.item3.length;
+
                 if (count == 0) {
                   outerMap.addAll({_cleanName(keyType.item1): "no data"});
                 }
-
-                // if (count == 1) {
-                //   outerMap.addAll({_cleanName(keyType.item1): keyType.item3});
-                // }
 
                 if (count >= 1) {
                   // determine the type in the list and whether it should be split to children
@@ -193,6 +190,7 @@ class NewParser {
             }
 
             var name = DataPointName(name: _cleanName(dataPointName));
+            name.dataCategory.target = category;
 
             var nameBasedOnName = outerMap["name"];
             if (nameBasedOnName != null && nameBasedOnName is String) {
