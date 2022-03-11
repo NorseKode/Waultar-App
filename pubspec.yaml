@@ -65,7 +65,7 @@ dependencies:
   path: ^1.8.0
 
   # used for zip extraction
-  archive: ^3.2.1
+  archive: ^3.1.6
   iconsax: ^0.0.8
   carousel_slider: ^4.0.0
   tflite: ^1.1.2
@@ -74,6 +74,8 @@ dependencies:
 
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  integration_test: 
     sdk: flutter
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -88,6 +90,8 @@ dev_dependencies:
   objectbox_generator: any
 
   # drift_dev: ^1.0.2
+dependency_overrides: 
+  archive: ">=3.2.1"
 
 
 # For information on the generic Dart part of this file, see the
