@@ -32,6 +32,7 @@
     "timeline": "Timeline",
     "noData": "No Data",
     "search": "Search",
+    "downloadXData": "Download {0} Data",
     "@helloWorld": {
       "description": "The conventional newborn programmer greeting"
     },
@@ -129,6 +130,9 @@
       "description": ""
     },
     "@search": {
+      "description": ""
+    },
+    "@downloadXData": {
       "description": ""
     }
 }
