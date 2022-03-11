@@ -152,6 +152,7 @@ Future<void> main() async {
             'Reactions');
       }
       expect(result.first.dataPointName.target!.count, 17);
+      printResult(result);
     });
 
     test(" - facebook gaming", () async {
