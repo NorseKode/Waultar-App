@@ -1,0 +1,88 @@
+{
+    "instant_games_played_v2": [
+      {
+        "name": "Quiz Planet",
+        "added_timestamp": 1587572979,
+        "user_app_scoped_id": 3534557563281569,
+        "category": "inactive"
+      },
+      {
+        "name": "8 Ball Pool",
+        "added_timestamp": 1520620923,
+        "user_app_scoped_id": 1428592033887215,
+        "category": "inactive"
+      },
+      {
+        "name": "Solitaire",
+        "added_timestamp": 1519993553,
+        "user_app_scoped_id": 1406071949405271,
+        "category": "inactive"
+      },
+      {
+        "name": "Golden Boot",
+        "added_timestamp": 1519993508,
+        "user_app_scoped_id": 1388989597869351,
+        "category": "inactive"
+      },
+      {
+        "name": "Basketball FRVR",
+        "added_timestamp": 1505415376,
+        "user_app_scoped_id": 1323857887707283,
+        "category": "inactive"
+      },
+      {
+        "name": "Hex FRVR - Drag the Hexa Block",
+        "added_timestamp": 1497897894,
+        "user_app_scoped_id": 1249714765110344,
+        "category": "inactive"
+      },
+      {
+        "name": "Solitaire Live",
+        "added_timestamp": 1492517479,
+        "user_app_scoped_id": 1674508139231871,
+        "category": "inactive"
+      },
+      {
+        "name": "Jelly Crush",
+        "added_timestamp": 1491076872,
+        "user_app_scoped_id": 1386851024704744,
+        "category": "inactive"
+      },
+      {
+        "name": "EverWing",
+        "added_timestamp": 1490862081,
+        "user_app_scoped_id": 1054737231304106,
+        "category": "inactive"
+      },
+      {
+        "name": "Super Dash",
+        "added_timestamp": 1488538764,
+        "user_app_scoped_id": 1318083671613818,
+        "category": "inactive"
+      },
+      {
+        "name": "Daily Sudoku",
+        "added_timestamp": 1486063260,
+        "user_app_scoped_id": 1132960320146433,
+        "category": "inactive"
+      },
+      {
+        "name": "Mahjong Trails Blitz",
+        "added_timestamp": 1485165810,
+        "user_app_scoped_id": 1400450500005933,
+        "category": "inactive"
+      },
+      {
+        "name": "Jewel Academy",
+        "added_timestamp": 1485020728,
+        "user_app_scoped_id": 1361986007173908,
+        "category": "inactive"
+      },
+      {
+        "name": "2020 Connect",
+        "added_timestamp": 1483483290,
+        "user_app_scoped_id": 1175820662467041,
+        "category": "inactive"
+      }
+    ]
+  }

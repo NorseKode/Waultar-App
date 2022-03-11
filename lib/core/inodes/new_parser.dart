@@ -66,7 +66,8 @@ class NewParser {
         }
 
         // handle list of maps
-        // fb posts for instance
+        // fb posts for instance, comments, reactions etc. 
+        // but also recently viewed in recursive call
         if (json.first is Map<String, dynamic>) {
           for (var map in json) {
             var dataPoint = DataPoint(values: jsonEncode(flatten(map)));
@@ -88,7 +89,10 @@ class NewParser {
             String outerKey = json.entries.first.key;
 
             // case like recently viewed
-            if (innerValue is List<dynamic>) {}
+            if (innerValue is List<dynamic>) {
+              // lets handle comments and reactions first
+              yield* parseJson(innerValue, category, _cleanName(outerKey), parent);
+            }
 
             // case like profile_information
             if (innerValue is Map<String, dynamic>) {
@@ -121,7 +125,7 @@ class NewParser {
               } else if (value is Map<String, dynamic>) {
                 keyAndType.add(Tuple3(key, "map_type", value));
               } else {
-                // it's either a string, num, bool or null
+                // it's either a string, num, bool or null -> scalar value
                 keyAndType.add(Tuple3(key, "include_in_parent", value));
               }
             }

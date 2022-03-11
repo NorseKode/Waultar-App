@@ -7,7 +7,6 @@ import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
 import 'package:waultar/core/inodes/inode.dart';
-import 'package:waultar/core/inodes/inode_parser.dart';
 import 'package:path/path.dart' as dart_path;
 import 'package:waultar/core/inodes/new_parser.dart';
 
@@ -21,21 +20,12 @@ Future<void> main() async {
   late final NewParser _parser;
 
   final scriptDir = File(Platform.script.toFilePath()).parent;
-  var profile = dart_path.normalize(
-      '${scriptDir.path}/test/parser/data/v2_profile_information.json');
-  var eventInvitations = dart_path
-      .normalize('${scriptDir.path}/test/parser/data/event_invitations.json');
-  var facebookPosts = dart_path
-      .normalize('${scriptDir.path}/test/parser/data/your_posts_1.json');
-  var pagesFollowed = dart_path
-      .normalize('${scriptDir.path}/test/inodes/data/pages_followed.json');
-  var eventResponses = dart_path.normalize(
-      '${scriptDir.path}/test/parser/data/your_event_responses.json');
 
   var largeMotherfucker = dart_path
       .normalize('${scriptDir.path}/test/parser/data/large_random_json.json');
 
-  // facebook dump imitator:
+
+  // facebook dump mock data:
   var recentlyViewed = dart_path.normalize(
       '${scriptDir.path}/test/objectbox/data/Facebook/your_interactions_on_facebook/recently_viewed.json');
   var reactions = dart_path.normalize(
@@ -54,10 +44,8 @@ Future<void> main() async {
       '${scriptDir.path}/test/objectbox/data/Facebook/profile_information/profile_information.json');
   var profileInformationV2 = dart_path.normalize(
       '${scriptDir.path}/test/objectbox/data/Facebook/profile_information/v2_profile_information.json');
-
-  List<String> paths = [];
-  paths.add(message);
-  paths.add(reactions);
+  var instantGames = dart_path.normalize(
+      '${scriptDir.path}/test/objectbox/data/Facebook/facebook_gaming/instant_games.json');
 
   tearDownAll(() async {
     _context.store.close();
@@ -75,14 +63,14 @@ Future<void> main() async {
 
   printResult(List<DataPoint> result) {
     for (var item in result) {
-        print(item.toString());
-        if (item.children.isNotEmpty) {
-          print("children:");
-          for (var child in item.children) {
-            print(child.toString());
-          }
+      print(item.toString());
+      if (item.children.isNotEmpty) {
+        print("children:");
+        for (var child in item.children) {
+          print(child.toString());
         }
       }
+    }
   }
 
   group('Test parsing of actual facebook data', () {
@@ -94,8 +82,8 @@ Future<void> main() async {
         expect(dataPoint.children.isEmpty, true);
       }
       expect(result.first.dataPointName.target!.name, "your posts");
-      expect(result.first.dataPointName.target!.dataCategory.target!.name, "Posts");
-
+      expect(result.first.dataPointName.target!.dataCategory.target!.name,
+          "Posts");
     });
 
     test(" - facebook messages autofill_information", () async {
@@ -103,10 +91,10 @@ Future<void> main() async {
 
       expect(result.length, 1);
       expect(result.first.dataPointName.target!.name, "autofill information");
-      expect(result.first.dataPointName.target!.dataCategory.target!.name, "Messaging");
+      expect(result.first.dataPointName.target!.dataCategory.target!.name,
+          "Messaging");
       expect(result.first.children.length, 0);
       expect(result.first.asMap.length, 9);
-
     });
 
     test(" - facebook profile information", () async {
@@ -115,21 +103,67 @@ Future<void> main() async {
       expect(result.length, 1);
       var children = result.first.children;
       expect(children.length, 13);
-      var childrenNames = children.map((element) => element.dataPointName.target!.name).toSet();
+      var childrenNames =
+          children.map((element) => element.dataPointName.target!.name).toSet();
       expect(childrenNames.length, 11);
-
     });
 
     test(" - facebook messages", () async {
       var result = await _parser.parseFromPath(message);
 
       expect(result.length, 1);
-      expect(result.first.dataPointName.target!.name, "Lukas Vinther Offenberg Larsen");
-      expect(result.first.dataPointName.target!.dataCategory.target!.name, "Messaging");
+      expect(result.first.dataPointName.target!.name,
+          "Lukas Vinther Offenberg Larsen");
+      expect(result.first.dataPointName.target!.dataCategory.target!.name,
+          "Messaging");
       var children = result.first.children;
       expect(children.length, 9);
-      var childrenNames = children.map((element) => element.dataPointName.target!.name).toSet();
+      var childrenNames =
+          children.map((element) => element.dataPointName.target!.name).toSet();
       expect(childrenNames.length, 2);
+    });
+
+    // this badboy has a lot of nested datapoints, that should not be included in a parent ..
+    test(" - recently_viewed stupid bitch", () async {
+      var result = await _parser.parseFromPath(recentlyViewed);
+
+      printResult(result);
+    });
+
+    test(" - facebook comments", () async {
+      var result = await _parser.parseFromPath(comments);
+      expect(result.length, 6);
+      for (var dataPoint in result) {
+        expect(dataPoint.children.isEmpty, true);
+        expect(dataPoint.dataPointName.target!.name, 'comments');
+        expect(dataPoint.dataPointName.target!.dataCategory.target!.name,
+            'Reactions');
+      }
+      expect(result.first.dataPointName.target!.count, 6);
+    });
+
+    test(" - facebook reactions", () async {
+      var result = await _parser.parseFromPath(reactions);
+      expect(result.length, 17);
+      for (var dataPoint in result) {
+        expect(dataPoint.children.isEmpty, true);
+        expect(dataPoint.dataPointName.target!.name, 'reactions');
+        expect(dataPoint.dataPointName.target!.dataCategory.target!.name,
+            'Reactions');
+      }
+      expect(result.first.dataPointName.target!.count, 17);
+    });
+
+    test(" - facebook gaming", () async {
+      var result = await _parser.parseFromPath(instantGames);
+      expect(result.length, 14);
+      for (var dataPoint in result) {
+        expect(dataPoint.children.isEmpty, true);
+        expect(dataPoint.dataPointName.target!.name, 'instant games played');
+        expect(dataPoint.dataPointName.target!.dataCategory.target!.name,
+            'Gaming');
+      }
+      expect(result.first.dataPointName.target!.count, 14);
 
     });
   });
