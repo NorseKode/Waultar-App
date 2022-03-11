@@ -7,8 +7,11 @@
 #include "generated_plugin_registrant.h"
 
 #include <objectbox_flutter_libs/objectbox_flutter_libs_plugin.h>
+#include <tflite_flutter_helper/tflite_flutter_helper_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
   ObjectboxFlutterLibsPluginRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("ObjectboxFlutterLibsPlugin"));
+  TfliteFlutterHelperPluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("TfliteFlutterHelperPlugin"));
 }

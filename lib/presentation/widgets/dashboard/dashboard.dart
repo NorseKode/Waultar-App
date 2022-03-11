@@ -2,10 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:image/image.dart' as img;
+import 'package:path/path.dart' as path_dart;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
+import 'package:waultar/core/ai/image_classifier.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
-import 'package:waultar/presentation/widgets/dashboard/classifier.dart';
+import 'package:waultar/core/ai/classifier.dart';
 
 import 'package:waultar/presentation/widgets/general/default_widgets/service_widget.dart';
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
@@ -65,10 +68,19 @@ class _DashboardState extends State<Dashboard> {
                 Text(localizer.yourSocialDataOverview), //dashboard widgets
                 const SizedBox(height: 20),
                 DefaultButton(onPressed: () async {
-                  var cls = Classifier();
+                  var cls = ClassifierFloat();
                   await cls.loadModel();
-                  await cls.loadDictionary();
-                  print(cls.classify("This is the shit"));
+                  await cls.loadLabels();
+                  var image = img.decodeImage(File(
+                    path_dart.normalize(
+                      path_dart.join(path_dart.dirname(Platform.script.path), "lib", "assets",
+                          "graphics", "family dinner.jpg"),
+                    ).substring(1),
+                  ).readAsBytesSync());
+
+                  for (var pre in cls.predict(image!)) {
+                    print(pre);
+                  }
                 }),
                 // DefaultButton(text: "Press me! Please do", onPressed: () {}, color: Colors.blue),
                 // DefaultButton(
