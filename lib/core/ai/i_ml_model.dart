@@ -1,3 +1,3 @@
 abstract class IMLModel {
-  Future<void> init();
+  void dispose();
 }

@@ -1,164 +1,156 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:image/image.dart';
+import 'package:path/path.dart' as path_dart;
 import 'package:collection/collection.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 import 'package:flutter/services.dart';
-
-// Import tflite_flutter
 import 'package:tflite_flutter/tflite_flutter.dart';
+import 'package:waultar/core/ai/i_ml_model.dart';
 
-class ImageClassifierTemp {
-  late Interpreter interpreter;
-  late InterpreterOptions _interpreterOptions;
-
+class ImageClassifier extends IMLModel {
+  late Interpreter _interpreter;
+  InterpreterOptions? interpreterOptions;
+  String? modelPath;
+  String? labelsPath;
+  late List<String> _labels;
+  int? labelsLength;
+  NormalizeOp? preProcessNormalizeOp = NormalizeOp(127.5, 127.5);
+  NormalizeOp? postProcessNormalizeOp = NormalizeOp(0, 1);
   late List<int> _inputShape;
   late List<int> _outputShape;
-
   late TensorImage _inputImage;
   late TensorBuffer _outputBuffer;
-
   late TfLiteType _inputType;
   late TfLiteType _outputType;
-
-  final String _labelsFileName = 'assets/labels.txt';
-
-  final int _labelsLength = 1001;
-
   late var _probabilityProcessor;
 
-  late List<String> labels;
-
-  String? modelName;
-
-  NormalizeOp? preProcessNormalizeOp;
-  NormalizeOp? postProcessNormalizeOp;
-
-  ImageClassifierTemp({int? numThreads}) {
-    _interpreterOptions = InterpreterOptions();
-
-    if (numThreads != null) {
-      _interpreterOptions.threads = numThreads;
-    }
-
-    // loadModel();
-    // loadLabels();
+  @override
+  dispose() {
+    _interpreter.close();
   }
 
-  Future<void> loadModel() async {
-    try {
-      interpreter =
-          await Interpreter.fromAsset(modelName!, options: _interpreterOptions);
-      print('Interpreter Created Successfully');
+  ImageClassifier({this.interpreterOptions, this.modelPath, this.labelsPath, this.labelsLength, this.preProcessNormalizeOp, this.postProcessNormalizeOp}) {
+    interpreterOptions ??= InterpreterOptions();
 
-      _inputShape = interpreter.getInputTensor(0).shape;
-      _outputShape = interpreter.getOutputTensor(0).shape;
-      _inputType = interpreter.getInputTensor(0).type;
-      _outputType = interpreter.getOutputTensor(0).type;
+    var _pathToLib = path_dart
+        .normalize(
+          path_dart.join(
+            path_dart.dirname(Platform.script.path),
+            "lib",
+            "assets",
+            "ai_models",
+          ),
+        )
+        .substring(1);
 
-      _outputBuffer = TensorBuffer.createFixedSize(_outputShape, _outputType);
-      _probabilityProcessor =
-          TensorProcessorBuilder().add(postProcessNormalizeOp!).build();
-    } catch (e) {
-      print('Unable to create interpreter, Caught Exception: ${e.toString()}');
-    }
+    modelPath = path_dart.join(_pathToLib, "mobilenet_v1_1.0_224.tflite");
+    labelsPath = path_dart.join(_pathToLib, "labels.txt");
+    labelsLength = 1001;
+
+    _loadModel();
+    _loadLabels();
   }
 
-  Future<void> loadLabels() async {
-    labels = await FileUtil.loadLabels(_labelsFileName);
-    if (labels.length == _labelsLength) {
-      print('Labels loaded successfully');
-    } else {
-      print('Unable to load labels');
+  void _loadModel() {
+    _interpreter = Interpreter.fromFile(File(modelPath!), options: interpreterOptions!);
+
+    _inputShape = _interpreter.getInputTensor(0).shape;
+    _outputShape = _interpreter.getOutputTensor(0).shape;
+    _inputType = _interpreter.getInputTensor(0).type;
+    _outputType = _interpreter.getOutputTensor(0).type;
+
+    _outputBuffer = TensorBuffer.createFixedSize(_outputShape, _outputType);
+    _probabilityProcessor = TensorProcessorBuilder().add(postProcessNormalizeOp!).build();
+  }
+
+  void _loadLabels() {
+    _labels = FileUtil.loadLabelsFromFile(File(labelsPath!));
+
+    if (_labels.length != labelsLength) {
+      throw "Labels load error, different from expected amount";
     }
   }
 
   TensorImage _preProcess() {
     int cropSize = min(_inputImage.height, _inputImage.width);
+
     return ImageProcessorBuilder()
         .add(ResizeWithCropOrPadOp(cropSize, cropSize))
-        .add(ResizeOp(
-            _inputShape[1], _inputShape[2], ResizeMethod.NEAREST_NEIGHBOUR))
+        .add(ResizeOp(_inputShape[1], _inputShape[2], ResizeMethod.NEAREST_NEIGHBOUR))
         .add(preProcessNormalizeOp!)
         .build()
         .process(_inputImage);
   }
 
-  List<Category> predict(Image image) {
+  List<Category> predict(Image image, int amountOfTopCategories) {
     final pres = DateTime.now().millisecondsSinceEpoch;
     _inputImage = TensorImage(_inputType);
     _inputImage.loadImage(image);
     _inputImage = _preProcess();
     final pre = DateTime.now().millisecondsSinceEpoch - pres;
 
-    print('Time to load image: $pre ms');
-
     final runs = DateTime.now().millisecondsSinceEpoch;
-    interpreter.run(_inputImage.buffer, _outputBuffer.getBuffer());
+    _interpreter.run(_inputImage.buffer, _outputBuffer.getBuffer());
     final run = DateTime.now().millisecondsSinceEpoch - runs;
 
-    print('Time to run inference: $run ms');
-
-    Map<String, double> labeledProb = TensorLabel.fromList(
-            labels, _probabilityProcessor.process(_outputBuffer))
-        .getMapWithFloatValue();
-    final pred = getTopProbability(labeledProb);
+    Map<String, double> labeledProb =
+        TensorLabel.fromList(_labels, _probabilityProcessor.process(_outputBuffer))
+            .getMapWithFloatValue();
+    final pred = _getProbability(labeledProb);
 
     var categories = <Category>[];
-    
-    for (var i = 0; i < 5; i++) {
+
+    for (var i = 0; i < amountOfTopCategories; i++) {
       categories.add(Category(pred.toList()[i].key, pred.toList()[i].value));
     }
-
 
     return categories;
   }
 
-  void close() {
-    interpreter.close();
+  PriorityQueue<MapEntry<String, double>> _getProbability(Map<String, double> labeledProb) {
+    var pq = PriorityQueue<MapEntry<String, double>>(_compare);
+    pq.addAll(labeledProb.entries);
+
+    return pq;
+  }
+
+  int _compare(MapEntry<String, double> e1, MapEntry<String, double> e2) {
+    if (e1.value > e2.value) {
+      return -1;
+    } else if (e1.value == e2.value) {
+      return 0;
+    } else {
+      return 1;
+    }
   }
 }
 
-PriorityQueue<MapEntry<String, double>> getTopProbability(Map<String, double> labeledProb) {
-  var pq = PriorityQueue<MapEntry<String, double>>(compare);
-  pq.addAll(labeledProb.entries);
 
-  return pq;
-}
+// class ClassifierQuant extends ImageClassifierTemp {
+//   ClassifierQuant({int numThreads: 1}) : super(numThreads: numThreads);
 
-int compare(MapEntry<String, double> e1, MapEntry<String, double> e2) {
-  if (e1.value > e2.value) {
-    return -1;
-  } else if (e1.value == e2.value) {
-    return 0;
-  } else {
-    return 1;
-  }
-}
+//   @override
+//   String get modelName => 'mobilenet_v1_1.0_224_quant.tflite';
 
-class ClassifierQuant extends ImageClassifierTemp {
-  ClassifierQuant({int numThreads: 1}) : super(numThreads: numThreads);
+//   @override
+//   NormalizeOp get preProcessNormalizeOp => NormalizeOp(0, 1);
 
-  @override
-  String get modelName => 'mobilenet_v1_1.0_224_quant.tflite';
+//   @override
+//   NormalizeOp get postProcessNormalizeOp => NormalizeOp(0, 255);
+// }
 
-  @override
-  NormalizeOp get preProcessNormalizeOp => NormalizeOp(0, 1);
+// class ClassifierFloat extends ImageClassifierTemp {
+//   ClassifierFloat({int? numThreads}) : super(numThreads: numThreads);
 
-  @override
-  NormalizeOp get postProcessNormalizeOp => NormalizeOp(0, 255);
-}
+//   @override
+//   String get modelName => 'mobilenet_v1_1.0_224.tflite';
 
-class ClassifierFloat extends ImageClassifierTemp {
-  ClassifierFloat({int? numThreads}) : super(numThreads: numThreads);
+//   @override
+//   NormalizeOp get preProcessNormalizeOp => NormalizeOp(127.5, 127.5);
 
-  @override
-  String get modelName => 'mobilenet_v1_1.0_224.tflite';
-
-  @override
-  NormalizeOp get preProcessNormalizeOp => NormalizeOp(127.5, 127.5);
-
-  @override
-  NormalizeOp get postProcessNormalizeOp => NormalizeOp(0, 1);
-}
+//   @override
+//   NormalizeOp get postProcessNormalizeOp => NormalizeOp(0, 1);
+// }

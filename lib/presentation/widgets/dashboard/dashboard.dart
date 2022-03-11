@@ -67,10 +67,8 @@ class _DashboardState extends State<Dashboard> {
                 const SizedBox(height: 20),
                 Text(localizer.yourSocialDataOverview), //dashboard widgets
                 const SizedBox(height: 20),
-                DefaultButton(onPressed: () async {
-                  var cls = ClassifierFloat();
-                  await cls.loadModel();
-                  await cls.loadLabels();
+                DefaultButton(onPressed: () {
+                  var cls = ImageClassifier();
                   var image = img.decodeImage(File(
                     path_dart.normalize(
                       path_dart.join(path_dart.dirname(Platform.script.path), "lib", "assets",
@@ -78,9 +76,11 @@ class _DashboardState extends State<Dashboard> {
                     ).substring(1),
                   ).readAsBytesSync());
 
-                  for (var pre in cls.predict(image!)) {
+                  for (var pre in cls.predict(image!, 5)) {
                     print(pre);
                   }
+
+                  cls.dispose();
                 }),
                 // DefaultButton(text: "Press me! Please do", onPressed: () {}, color: Colors.blue),
                 // DefaultButton(
