@@ -5,8 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
+import 'package:waultar/presentation/widgets/dashboard/classifier.dart';
 
 import 'package:waultar/presentation/widgets/general/default_widgets/service_widget.dart';
+import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 
 import 'package:waultar/startup.dart';
 
@@ -62,7 +64,12 @@ class _DashboardState extends State<Dashboard> {
                 const SizedBox(height: 20),
                 Text(localizer.yourSocialDataOverview), //dashboard widgets
                 const SizedBox(height: 20),
-                // DefaultButton(onPressed: () {}),
+                DefaultButton(onPressed: () async {
+                  var cls = Classifier();
+                  await cls.loadModel();
+                  await cls.loadDictionary();
+                  print(cls.classify("This is the shit"));
+                }),
                 // DefaultButton(text: "Press me! Please do", onPressed: () {}, color: Colors.blue),
                 // DefaultButton(
                 //   icon: Iconsax.add,

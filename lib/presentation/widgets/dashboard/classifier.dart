@@ -22,17 +22,17 @@ class Classifier {
 
   Classifier() {
     // Load model when the classifier is initialized.
-    _loadModel();
-    _loadDictionary();
+    // loadModel();
+    // loadDictionary();
   }
 
-  void _loadModel() async {
+  loadModel() async {
     // Creating the interpreter using Interpreter.fromAsset
     _interpreter = await Interpreter.fromAsset(_modelFile);
     print('Interpreter loaded successfully');
   }
 
-  void _loadDictionary() async {
+  loadDictionary() async {
     final vocab = await rootBundle.loadString('assets/$_vocabFile');
     var dict = <String, int>{};
     final vocabList = vocab.split('\n');
