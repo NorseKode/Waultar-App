@@ -35,8 +35,19 @@ class _TimelineWidgetState extends State<TimelineWidget> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Container(
-                            color:
-                                categoryLists[index].first.getAssociatedColor(),
+                            decoration: index == 0
+                                ? BoxDecoration(
+                                    color: categoryLists[index]
+                                        .first
+                                        .getAssociatedColor(),
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(2),
+                                        topRight: Radius.circular(2)))
+                                : BoxDecoration(
+                                    color: categoryLists[index]
+                                        .first
+                                        .getAssociatedColor(),
+                                  ),
                           ),
                         ))),
               )),
@@ -52,16 +63,19 @@ class _TimelineWidgetState extends State<TimelineWidget> {
     return (listLengths.reduce(max) / 10).ceil() * 10;
   }
 
-  Widget _grid() {
+  Widget _grid(int rows) {
     return Container(
-      decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+      //decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
       child: Column(
         children: List.generate(
-            5,
+            rows + 1,
             (index) => Expanded(
                   child: Container(
-                    decoration:
-                        BoxDecoration(border: Border.all(color: Colors.grey)),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                width: 1,
+                                color: Colors.grey.withOpacity(0.3)))),
                   ),
                 )),
       ),
@@ -84,22 +98,21 @@ class _TimelineWidgetState extends State<TimelineWidget> {
     );
   }
 
-  Widget _leftbar() {
-    int rows = 4;
+  Widget _leftbar(int rows) {
     return Container(
       child: Column(
         children: [
           Expanded(flex: 1, child: Container()),
           Expanded(
-              flex: 8,
+              flex: rows * 2,
               child: Column(
                 children: List.from((List.generate(
-                    4,
+                    rows,
                     (index) => Expanded(
                             child: Center(
                           child: Container(
                             child: Text(
-                                "${((_maxListLength() / 5) * (index + 1)).round()}"),
+                                "${((_maxListLength() / (rows + 1)) * (index + 1)).round()}"),
                           ),
                         )))).reversed),
               )),
@@ -115,7 +128,7 @@ class _TimelineWidgetState extends State<TimelineWidget> {
     widget.categoryListsSorted.forEach((k, v) => timeAxis.add(Expanded(
           child: Center(child: Text(k)),
         )));
-
+    int rows = 4;
     return Padding(
       padding: const EdgeInsets.only(right: 20.0, bottom: 20),
       child: Column(
@@ -127,12 +140,12 @@ class _TimelineWidgetState extends State<TimelineWidget> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(width: 40, child: _leftbar()),
+                SizedBox(width: 40, child: _leftbar(rows)),
                 Expanded(
                     child: Stack(
                   alignment: Alignment.bottomLeft,
                   children: [
-                    _grid(),
+                    _grid(rows),
                     //_box(),
                     _blocks()
                   ],
