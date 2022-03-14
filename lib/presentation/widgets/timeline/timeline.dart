@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/presentation/widgets/timeline/datapointlist_widget.dart';
 import 'package:waultar/presentation/widgets/timeline/timeline_widget.dart';
 import 'package:waultar/presentation/widgets/timeline/test.dart' as test;
@@ -20,14 +21,19 @@ class _TimelineState extends State<Timeline> {
           child: Column(
             children: [
               Expanded(
-                  flex: 3,
+                  flex: 4,
                   child: TimelineWidget(
                     categoryListsSorted: test.list,
                   )),
-              Expanded(flex: 2, child: DatapointListWidget())
+              SizedBox(height: 20),
+              Expanded(
+                  flex: 2,
+                  child: DatapointListWidget(
+                      datapoints: test.list.values.first.first))
             ],
           ),
         ),
+        SizedBox(width: 20),
         Expanded(
           flex: 1,
           child: Column(

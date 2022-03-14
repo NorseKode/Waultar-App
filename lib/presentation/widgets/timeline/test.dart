@@ -23,6 +23,7 @@ Map<String, List<List<UIModel>>> list = {
     List.generate(
         10,
         (index) => PostModel(
+            title: "Post: $index",
             profile: ParseHelper.profile,
             raw: "",
             timestamp: DateTime.now())), //Post
@@ -35,6 +36,7 @@ Map<String, List<List<UIModel>>> list = {
     List.generate(
         7,
         (index) => PostModel(
+            title: "Post: $index",
             profile: ParseHelper.profile,
             raw: "",
             timestamp: DateTime.now())), //Post
@@ -47,6 +49,7 @@ Map<String, List<List<UIModel>>> list = {
     List.generate(
         12,
         (index) => PostModel(
+            title: "Post: $index",
             profile: ParseHelper.profile,
             raw: "",
             timestamp: DateTime.now())), //Post
@@ -59,6 +62,7 @@ Map<String, List<List<UIModel>>> list = {
     List.generate(
         1,
         (index) => PostModel(
+            title: "Post: $index",
             profile: ParseHelper.profile,
             raw: "",
             timestamp: DateTime.now())), //Post
@@ -71,6 +75,7 @@ Map<String, List<List<UIModel>>> list = {
     List.generate(
         10,
         (index) => PostModel(
+            title: "Post: $index",
             profile: ParseHelper.profile,
             raw: "",
             timestamp: DateTime.now())), //Post
@@ -83,6 +88,7 @@ Map<String, List<List<UIModel>>> list = {
     List.generate(
         48,
         (index) => PostModel(
+            title: "Post: $index",
             profile: ParseHelper.profile,
             raw: "",
             timestamp: DateTime.now())), //Post
@@ -95,6 +101,7 @@ Map<String, List<List<UIModel>>> list = {
     List.generate(
         1,
         (index) => PostModel(
+            title: "Post: $index",
             profile: ParseHelper.profile,
             raw: "",
             timestamp: DateTime.now())), //Post

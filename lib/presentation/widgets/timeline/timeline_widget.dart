@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:waultar/core/models/ui_model.dart';
+import 'package:waultar/presentation/providers/theme_provider.dart';
 
 class TimelineWidget extends StatefulWidget {
   //Time, Category, Models
@@ -13,6 +15,8 @@ class TimelineWidget extends StatefulWidget {
 }
 
 class _TimelineWidgetState extends State<TimelineWidget> {
+  late ThemeProvider themeProvider;
+
   Widget _timelineBlock(
       String time, List<List<UIModel>> categoryLists, int mostTotal) {
     int totalPointsInBlock = 0;
@@ -124,41 +128,54 @@ class _TimelineWidgetState extends State<TimelineWidget> {
 
   @override
   Widget build(BuildContext context) {
+    themeProvider = Provider.of<ThemeProvider>(context);
     List<Widget> timeAxis = [];
     widget.categoryListsSorted.forEach((k, v) => timeAxis.add(Expanded(
           child: Center(child: Text(k)),
         )));
     int rows = 4;
-    return Padding(
-      padding: const EdgeInsets.only(right: 20.0, bottom: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: const Color(0xFF272837)),
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                SizedBox(width: 40, child: _leftbar(rows)),
-                Expanded(
-                    child: Stack(
-                  alignment: Alignment.bottomLeft,
-                  children: [
-                    _grid(rows),
-                    //_box(),
-                    _blocks()
-                  ],
-                )),
+                Text(
+                  "Timeline",
+                  style: themeProvider.themeData().textTheme.headline3,
+                ),
               ],
             ),
-          ),
-          SizedBox(
-            height: 40,
-            child: Row(
+            SizedBox(height: 10),
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(width: 20, child: _leftbar(rows)),
+                  Expanded(
+                      child: Stack(
+                    alignment: Alignment.bottomLeft,
+                    children: [
+                      _grid(rows),
+                      //_box(),
+                      _blocks()
+                    ],
+                  )),
+                ],
+              ),
+            ),
+            SizedBox(height: 10),
+            Row(
               children: [
                 const SizedBox(
-                  width: 40,
+                  width: 20,
                 ),
                 const SizedBox(
                   width: 10,
@@ -170,52 +187,47 @@ class _TimelineWidgetState extends State<TimelineWidget> {
                     ),
                   ),
                 ),
-                const SizedBox(
-                  width: 10,
-                ),
               ],
             ),
-          )
-        ],
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                    child: Row(children: [
+                  SizedBox(
+                      height: 10,
+                      width: 10,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.orange,
+                            borderRadius: BorderRadius.circular(2)),
+                      )),
+                  SizedBox(width: 10),
+                  Text("Posts: "),
+                  Text("${widget.categoryListsSorted.values.first.length}")
+                ])),
+                Container(
+                    child: Row(children: [
+                  SizedBox(
+                    height: 10,
+                    width: 10,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.pink,
+                          borderRadius: BorderRadius.circular(2)),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Text("Images: "),
+                  Text(
+                      "${widget.categoryListsSorted.values.elementAt(1).length}")
+                ]))
+              ],
+            ),
+          ],
+        ),
       ),
     );
-
-    // List<Widget> pointAxis = List.generate(
-    //     5,
-    //     (index) => Expanded(
-    //         flex: max,
-    //         child: Container(
-    //           color: Colors.amber,
-    //         )));
-
-    // return Row(
-    //   children: [
-    //     Expanded(
-    //       child: Column(
-    //         children: [
-    //           Expanded(
-    //             child: Row(
-    //               children: [
-    //                 SizedBox(width: 50, child: Column(children: pointAxis)),
-    //                 SizedBox(width: 5),
-    //                 Expanded(
-    //                   child: Row(children: blocks),
-    //                 ),
-    //               ],
-    //             ),
-    //           ),
-    //           Padding(
-    //             padding: const EdgeInsets.symmetric(vertical: 5.0),
-    //             child: SizedBox(
-    //               height: 20,
-    //               child: Row(children: timeAxis),
-    //             ),
-    //           )
-    //         ],
-    //       ),
-    //     ),
-    //     SizedBox(width: 5),
-    //   ],
-    // );
   }
 }
