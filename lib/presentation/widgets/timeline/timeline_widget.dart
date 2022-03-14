@@ -145,11 +145,12 @@ class _TimelineWidgetState extends State<TimelineWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Timeline",
-                  style: themeProvider.themeData().textTheme.headline3,
+                  "Overview of datapoints",
                 ),
+                Text("datepicker")
               ],
             ),
             SizedBox(height: 10),
