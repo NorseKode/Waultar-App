@@ -192,7 +192,7 @@ class _TimelineWidgetState extends State<TimelineWidget> {
             ),
             SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
                     child: Row(children: [
@@ -208,6 +208,7 @@ class _TimelineWidgetState extends State<TimelineWidget> {
                   Text("Posts: "),
                   Text("${widget.categoryListsSorted.values.first.length}")
                 ])),
+                SizedBox(width: 20),
                 Container(
                     child: Row(children: [
                   SizedBox(
