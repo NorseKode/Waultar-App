@@ -33,6 +33,7 @@ import '../../data/entities/misc/service_objectbox.dart';
 import '../../data/entities/misc/tag_objectbox.dart';
 import '../../data/entities/profile/friend_objectbox.dart';
 import '../../data/entities/profile/profile_objectbox.dart';
+import '../../data/entities/timebuckets/buckets.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
@@ -1080,6 +1081,131 @@ final _entities = <ModelEntity>[
             flags: 0)
       ],
       relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(29, 3446780698651112543),
+      name: 'DayBucket',
+      lastPropertyId: const IdUid(5, 5606345825161787867),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 3686560150761131392),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 7722676044050485918),
+            name: 'day',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 7584161473539212546),
+            name: 'total',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 8234904100805014933),
+            name: 'stringMap',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 5606345825161787867),
+            name: 'monthId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(35, 2852543145865253936),
+            relationTarget: 'MonthBucket')
+      ],
+      relations: <ModelRelation>[
+        ModelRelation(
+            id: const IdUid(9, 5680585535044829826),
+            name: 'posts',
+            targetId: const IdUid(21, 1840073705676171105)),
+        ModelRelation(
+            id: const IdUid(10, 6457495384842391424),
+            name: 'groups',
+            targetId: const IdUid(13, 3273540391756503100)),
+        ModelRelation(
+            id: const IdUid(11, 8925570885392435580),
+            name: 'events',
+            targetId: const IdUid(4, 2566925674358462543))
+      ],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(30, 6183866679417108720),
+      name: 'MonthBucket',
+      lastPropertyId: const IdUid(5, 4243771848952670798),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 8810785485939745589),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 6759552074709977827),
+            name: 'month',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 6148421852974783014),
+            name: 'total',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 7717306700512645222),
+            name: 'stringMap',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 4243771848952670798),
+            name: 'yearId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(36, 1199862117597757061),
+            relationTarget: 'YearBucket')
+      ],
+      relations: <ModelRelation>[
+        ModelRelation(
+            id: const IdUid(12, 7169029654328387881),
+            name: 'days',
+            targetId: const IdUid(29, 3446780698651112543))
+      ],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(31, 4731397368511060037),
+      name: 'YearBucket',
+      lastPropertyId: const IdUid(4, 7158770863649414918),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 709186369074998240),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 2084327418927314867),
+            name: 'year',
+            type: 6,
+            flags: 40,
+            indexId: const IdUid(37, 2998000964583651478)),
+        ModelProperty(
+            id: const IdUid(3, 2104791458556417713),
+            name: 'total',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 7158770863649414918),
+            name: 'stringMap',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[
+        ModelRelation(
+            id: const IdUid(13, 3178510705038381435),
+            name: 'months',
+            targetId: const IdUid(30, 6183866679417108720))
+      ],
       backlinks: <ModelBacklink>[])
 ];
 
@@ -1103,9 +1229,9 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(28, 7488143885786011622),
-      lastIndexId: const IdUid(34, 2133814027961171948),
-      lastRelationId: const IdUid(8, 5633121391346660074),
+      lastEntityId: const IdUid(31, 4731397368511060037),
+      lastIndexId: const IdUid(37, 2998000964583651478),
+      lastRelationId: const IdUid(13, 3178510705038381435),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [
         1837511870469432447,
@@ -2279,6 +2405,126 @@ ModelDefinition getObjectBoxModel() {
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
           object.post.attach(store);
           return object;
+        }),
+    DayBucket: EntityDefinition<DayBucket>(
+        model: _entities[24],
+        toOneRelations: (DayBucket object) => [object.month],
+        toManyRelations: (DayBucket object) => {
+              RelInfo<DayBucket>.toMany(9, object.id): object.posts,
+              RelInfo<DayBucket>.toMany(10, object.id): object.groups,
+              RelInfo<DayBucket>.toMany(11, object.id): object.events
+            },
+        getId: (DayBucket object) => object.id,
+        setId: (DayBucket object, int id) {
+          object.id = id;
+        },
+        objectToFB: (DayBucket object, fb.Builder fbb) {
+          final stringMapOffset = fbb.writeString(object.stringMap);
+          fbb.startTable(6);
+          fbb.addInt64(0, object.id);
+          fbb.addInt64(1, object.day);
+          fbb.addInt64(2, object.total);
+          fbb.addOffset(3, stringMapOffset);
+          fbb.addInt64(4, object.month.targetId);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = DayBucket(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              total: const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0),
+              day: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0),
+              stringMap: const fb.StringReader()
+                  .vTableGet(buffer, rootOffset, 10, ''));
+          object.month.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
+          object.month.attach(store);
+          InternalToManyAccess.setRelInfo(object.posts, store,
+              RelInfo<DayBucket>.toMany(9, object.id), store.box<DayBucket>());
+          InternalToManyAccess.setRelInfo(object.groups, store,
+              RelInfo<DayBucket>.toMany(10, object.id), store.box<DayBucket>());
+          InternalToManyAccess.setRelInfo(object.events, store,
+              RelInfo<DayBucket>.toMany(11, object.id), store.box<DayBucket>());
+          return object;
+        }),
+    MonthBucket: EntityDefinition<MonthBucket>(
+        model: _entities[25],
+        toOneRelations: (MonthBucket object) => [object.year],
+        toManyRelations: (MonthBucket object) =>
+            {RelInfo<MonthBucket>.toMany(12, object.id): object.days},
+        getId: (MonthBucket object) => object.id,
+        setId: (MonthBucket object, int id) {
+          object.id = id;
+        },
+        objectToFB: (MonthBucket object, fb.Builder fbb) {
+          final stringMapOffset = fbb.writeString(object.stringMap);
+          fbb.startTable(6);
+          fbb.addInt64(0, object.id);
+          fbb.addInt64(1, object.month);
+          fbb.addInt64(2, object.total);
+          fbb.addOffset(3, stringMapOffset);
+          fbb.addInt64(4, object.year.targetId);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = MonthBucket(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              total: const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0),
+              month: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0),
+              stringMap: const fb.StringReader()
+                  .vTableGet(buffer, rootOffset, 10, ''));
+          object.year.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
+          object.year.attach(store);
+          InternalToManyAccess.setRelInfo(
+              object.days,
+              store,
+              RelInfo<MonthBucket>.toMany(12, object.id),
+              store.box<MonthBucket>());
+          return object;
+        }),
+    YearBucket: EntityDefinition<YearBucket>(
+        model: _entities[26],
+        toOneRelations: (YearBucket object) => [],
+        toManyRelations: (YearBucket object) =>
+            {RelInfo<YearBucket>.toMany(13, object.id): object.months},
+        getId: (YearBucket object) => object.id,
+        setId: (YearBucket object, int id) {
+          object.id = id;
+        },
+        objectToFB: (YearBucket object, fb.Builder fbb) {
+          final stringMapOffset = fbb.writeString(object.stringMap);
+          fbb.startTable(5);
+          fbb.addInt64(0, object.id);
+          fbb.addInt64(1, object.year);
+          fbb.addInt64(2, object.total);
+          fbb.addOffset(3, stringMapOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = YearBucket(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              total: const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0),
+              year: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0),
+              stringMap: const fb.StringReader()
+                  .vTableGet(buffer, rootOffset, 10, ''));
+          InternalToManyAccess.setRelInfo(
+              object.months,
+              store,
+              RelInfo<YearBucket>.toMany(13, object.id),
+              store.box<YearBucket>());
+          return object;
         })
   };
 
@@ -2987,4 +3233,89 @@ class PostPollObjectBox_ {
   /// see [PostPollObjectBox.timestamp]
   static final timestamp =
       QueryIntegerProperty<PostPollObjectBox>(_entities[23].properties[4]);
+}
+
+/// [DayBucket] entity fields to define ObjectBox queries.
+class DayBucket_ {
+  /// see [DayBucket.id]
+  static final id =
+      QueryIntegerProperty<DayBucket>(_entities[24].properties[0]);
+
+  /// see [DayBucket.day]
+  static final day =
+      QueryIntegerProperty<DayBucket>(_entities[24].properties[1]);
+
+  /// see [DayBucket.total]
+  static final total =
+      QueryIntegerProperty<DayBucket>(_entities[24].properties[2]);
+
+  /// see [DayBucket.stringMap]
+  static final stringMap =
+      QueryStringProperty<DayBucket>(_entities[24].properties[3]);
+
+  /// see [DayBucket.month]
+  static final month =
+      QueryRelationToOne<DayBucket, MonthBucket>(_entities[24].properties[4]);
+
+  /// see [DayBucket.posts]
+  static final posts =
+      QueryRelationToMany<DayBucket, PostObjectBox>(_entities[24].relations[0]);
+
+  /// see [DayBucket.groups]
+  static final groups = QueryRelationToMany<DayBucket, GroupObjectBox>(
+      _entities[24].relations[1]);
+
+  /// see [DayBucket.events]
+  static final events = QueryRelationToMany<DayBucket, EventObjectBox>(
+      _entities[24].relations[2]);
+}
+
+/// [MonthBucket] entity fields to define ObjectBox queries.
+class MonthBucket_ {
+  /// see [MonthBucket.id]
+  static final id =
+      QueryIntegerProperty<MonthBucket>(_entities[25].properties[0]);
+
+  /// see [MonthBucket.month]
+  static final month =
+      QueryIntegerProperty<MonthBucket>(_entities[25].properties[1]);
+
+  /// see [MonthBucket.total]
+  static final total =
+      QueryIntegerProperty<MonthBucket>(_entities[25].properties[2]);
+
+  /// see [MonthBucket.stringMap]
+  static final stringMap =
+      QueryStringProperty<MonthBucket>(_entities[25].properties[3]);
+
+  /// see [MonthBucket.year]
+  static final year =
+      QueryRelationToOne<MonthBucket, YearBucket>(_entities[25].properties[4]);
+
+  /// see [MonthBucket.days]
+  static final days =
+      QueryRelationToMany<MonthBucket, DayBucket>(_entities[25].relations[0]);
+}
+
+/// [YearBucket] entity fields to define ObjectBox queries.
+class YearBucket_ {
+  /// see [YearBucket.id]
+  static final id =
+      QueryIntegerProperty<YearBucket>(_entities[26].properties[0]);
+
+  /// see [YearBucket.year]
+  static final year =
+      QueryIntegerProperty<YearBucket>(_entities[26].properties[1]);
+
+  /// see [YearBucket.total]
+  static final total =
+      QueryIntegerProperty<YearBucket>(_entities[26].properties[2]);
+
+  /// see [YearBucket.stringMap]
+  static final stringMap =
+      QueryStringProperty<YearBucket>(_entities[26].properties[3]);
+
+  /// see [YearBucket.months]
+  static final months =
+      QueryRelationToMany<YearBucket, MonthBucket>(_entities[26].relations[0]);
 }

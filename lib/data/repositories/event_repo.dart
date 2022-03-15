@@ -1,4 +1,3 @@
-
 import 'package:waultar/core/abstracts/abstract_repositories/i_event_repository.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/data/configs/objectbox.dart';
@@ -39,7 +38,9 @@ class EventRepository implements IEventRepository {
   List<EventModel>? getAllEvents() {
     var eventEntities = _eventBox.getAll();
     if (eventEntities.isNotEmpty) {
-      return eventEntities.map((e) => _modelDirector.make<EventModel>(e)).toList();
+      return eventEntities
+          .map((e) => _modelDirector.make<EventModel>(e))
+          .toList();
     } else {
       return null;
     }
@@ -48,5 +49,10 @@ class EventRepository implements IEventRepository {
   @override
   int removeAllEvents() {
     return _eventBox.removeAll();
+  }
+
+  @override
+  List<EventObjectBox> getAllEventsAsEntity() {
+    return _eventBox.getAll();
   }
 }

@@ -1080,11 +1080,144 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "29:3446780698651112543",
+      "lastPropertyId": "5:5606345825161787867",
+      "name": "DayBucket",
+      "properties": [
+        {
+          "id": "1:3686560150761131392",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7722676044050485918",
+          "name": "day",
+          "type": 6
+        },
+        {
+          "id": "3:7584161473539212546",
+          "name": "total",
+          "type": 6
+        },
+        {
+          "id": "4:8234904100805014933",
+          "name": "stringMap",
+          "type": 9
+        },
+        {
+          "id": "5:5606345825161787867",
+          "name": "monthId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "35:2852543145865253936",
+          "relationTarget": "MonthBucket"
+        }
+      ],
+      "relations": [
+        {
+          "id": "9:5680585535044829826",
+          "name": "posts",
+          "targetId": "21:1840073705676171105"
+        },
+        {
+          "id": "10:6457495384842391424",
+          "name": "groups",
+          "targetId": "13:3273540391756503100"
+        },
+        {
+          "id": "11:8925570885392435580",
+          "name": "events",
+          "targetId": "4:2566925674358462543"
+        }
+      ]
+    },
+    {
+      "id": "30:6183866679417108720",
+      "lastPropertyId": "5:4243771848952670798",
+      "name": "MonthBucket",
+      "properties": [
+        {
+          "id": "1:8810785485939745589",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6759552074709977827",
+          "name": "month",
+          "type": 6
+        },
+        {
+          "id": "3:6148421852974783014",
+          "name": "total",
+          "type": 6
+        },
+        {
+          "id": "4:7717306700512645222",
+          "name": "stringMap",
+          "type": 9
+        },
+        {
+          "id": "5:4243771848952670798",
+          "name": "yearId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "36:1199862117597757061",
+          "relationTarget": "YearBucket"
+        }
+      ],
+      "relations": [
+        {
+          "id": "12:7169029654328387881",
+          "name": "days",
+          "targetId": "29:3446780698651112543"
+        }
+      ]
+    },
+    {
+      "id": "31:4731397368511060037",
+      "lastPropertyId": "4:7158770863649414918",
+      "name": "YearBucket",
+      "properties": [
+        {
+          "id": "1:709186369074998240",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2084327418927314867",
+          "name": "year",
+          "type": 6,
+          "flags": 40,
+          "indexId": "37:2998000964583651478"
+        },
+        {
+          "id": "3:2104791458556417713",
+          "name": "total",
+          "type": 6
+        },
+        {
+          "id": "4:7158770863649414918",
+          "name": "stringMap",
+          "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "13:3178510705038381435",
+          "name": "months",
+          "targetId": "30:6183866679417108720"
+        }
+      ]
     }
   ],
-  "lastEntityId": "28:7488143885786011622",
-  "lastIndexId": "34:2133814027961171948",
-  "lastRelationId": "8:5633121391346660074",
+  "lastEntityId": "31:4731397368511060037",
+  "lastIndexId": "37:2998000964583651478",
+  "lastRelationId": "13:3178510705038381435",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,

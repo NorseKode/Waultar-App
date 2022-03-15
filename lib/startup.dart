@@ -13,8 +13,10 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_post_poll_reposit
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_timebuckets_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_video_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/repositories/appsettings_repo.dart';
 import 'package:waultar/data/repositories/event_repo.dart';
@@ -30,8 +32,10 @@ import 'package:waultar/data/repositories/post_poll_repo.dart';
 import 'package:waultar/data/repositories/post_repo.dart';
 import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/data/repositories/service_repo.dart';
+import 'package:waultar/data/repositories/timebuckets_repo.dart';
 import 'package:waultar/data/repositories/video_repo.dart';
 import 'package:waultar/domain/services/appsettings_service.dart';
+import 'package:waultar/domain/services/timeline_service.dart';
 import 'configs/globals/app_logger.dart';
 import 'configs/globals/os_enum.dart';
 
@@ -49,7 +53,6 @@ late final String _logFolderPath;
 
 Future<void> setupServices() async {
   await initApplicationPaths().whenComplete(() async {
-
     locator.registerSingleton<String>(_waultarPath,
         instanceName: 'waultar_root_directory');
     locator.registerSingleton<String>(_dbFolderPath, instanceName: 'db_folder');
@@ -119,10 +122,18 @@ Future<void> setupServices() async {
     locator.registerSingleton<IPostPollRepository>(
         PostPollRepository(_context, _objectboxDirector, _modelDirector),
         instanceName: 'postPollRepo');
+    locator.registerSingleton<ITimeBucketsRepository>(
+        TimeBucketsRepository(_context),
+        instanceName: 'timeRepo');
 
     // register all services and inject their dependencies
     locator.registerSingleton<IAppSettingsService>(AppSettingsService(),
         instanceName: 'appSettingsService');
+
+    locator.registerSingleton<ITimelineService>(
+        TimeLineService(
+            locator.get<ITimeBucketsRepository>(instanceName: 'timeRepo')),
+        instanceName: 'timeService');
   });
 }
 
