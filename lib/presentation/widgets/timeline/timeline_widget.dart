@@ -21,7 +21,7 @@ class TimelineWidget extends StatefulWidget {
 class _TimelineWidgetState extends State<TimelineWidget> {
   late ThemeProvider themeProvider;
   late int maxDatapointCount;
-  int rowCount = 6;
+  late int rowCount;
 
   Widget _yAxis(int max, int rowCount) {
     return Container(
@@ -173,14 +173,20 @@ class _TimelineWidgetState extends State<TimelineWidget> {
 
     //List<TimeModel> blocks = timelineService.getAllYears();
     List<TimeModel> blocks = List.generate(
-        12,
+        5,
         (index) =>
             YearModel(index, 2000 + index, (index + 1 * 2) + (index + 1 * 3), [
               Tuple3(index + 1 * 2, "Post:$index", Colors.pink),
-              Tuple3(index + 1 * 3, "Image:$index", Colors.blue)
+              Tuple3(index + 1 * 3, "Image:$index", Colors.amber)
             ]));
 
+    if (blocks.isEmpty) return Container();
     maxDatapointCount = _maxListLength(blocks);
+    rowCount = 4;
+    // rowCount =
+    //     (((int.parse((maxDatapointCount.toString()).substring(0, 1))) * 5) / 2)
+    //         .ceil();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
