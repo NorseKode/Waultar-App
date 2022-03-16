@@ -84,6 +84,8 @@ Future<void> main() async {
       expect(result.first.dataPointName.target!.name, "your posts");
       expect(result.first.dataPointName.target!.dataCategory.target!.name,
           "Posts");
+
+      printResult(result);
     });
 
     test(" - facebook messages autofill_information", () async {
@@ -95,6 +97,7 @@ Future<void> main() async {
           "Messaging");
       expect(result.first.children.length, 0);
       expect(result.first.asMap.length, 9);
+
     });
 
     test(" - facebook profile information", () async {
@@ -106,6 +109,8 @@ Future<void> main() async {
       var childrenNames =
           children.map((element) => element.dataPointName.target!.name).toSet();
       expect(childrenNames.length, 11);
+
+      printResult(result);
     });
 
     test(" - facebook messages", () async {
@@ -121,6 +126,8 @@ Future<void> main() async {
       var childrenNames =
           children.map((element) => element.dataPointName.target!.name).toSet();
       expect(childrenNames.length, 2);
+      
+      printResult(result);
     });
 
     // this badboy has a lot of nested datapoints, that should not be included in a parent ..
