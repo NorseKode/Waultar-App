@@ -106,6 +106,25 @@ class TreeParser {
 
           parent.dataPoints.add(directDataPoint);
         }
+
+        if (decision == Decision.linkAsNewName) {
+          // check for name or title keys to use as name for new subtree
+          // typechecking just for safety .. 
+          // when decision is linkAsNewName for a list element
+          // the list element is with high certainty as map
+          if (item is Map<String, dynamic>) {
+            var nameBasedOnTitle = item['title'];
+            if (nameBasedOnTitle != null && nameBasedOnTitle is String) {
+              parent.children.add(parseName(item, category, nameBasedOnTitle, null));
+            }
+            var nameBasedOnName = item['name'];
+            if (nameBasedOnName != null && nameBasedOnName is String) {
+              parent.children.add(parseName(item, category, nameBasedOnName, null));
+            } else {
+              parent.children.add(parseName(item, category, initialName, null));
+            }
+          }
+        }
       }
     }
 
