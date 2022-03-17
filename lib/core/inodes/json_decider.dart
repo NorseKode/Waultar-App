@@ -25,74 +25,30 @@ enum InternalValueDecision { scalar, map, list }
 class JsonExpert {
   static Function eq = const ListEquality().equals;
 
-  // static Decision processList(List<dynamic> jsonList) {
-  //   if (jsonList.first is Map<String, dynamic>) {
-  //     return Decision.linkAsDataPoint;
-  //   }
-  //   return Decision.embedAsDataPoint;
-  // }
 
   static Decision processListElement(dynamic element) {
     if (element is Map<String, dynamic>) {
-      // this is where we determine if the element has listed datapoints:
-      var patternList = <InternalValueDecision>[];
-      var nestedPatternList = <InternalValueDecision>[];
-      for (var entry in element.entries) {
-        if (entry.value is List<dynamic> && entry.value.isNotEmpty) {
-          patternList.add(InternalValueDecision.list);
-
-          var nested = entry.value.first;
-          if (nested is Map<String, dynamic>) {
-            for (var nestedEntry in nested.entries) {
-              if (nestedEntry.value is List<dynamic>) {
-                nestedPatternList.add(InternalValueDecision.list);
-              }
-              else if (nestedEntry.value is Map<String, dynamic>) {
-                nestedPatternList.add(InternalValueDecision.map);
-              } else {
-                nestedPatternList.add(InternalValueDecision.scalar);
-              }
-            }
-          }
-        }
-        else if (entry.value is Map<String, dynamic>) {
-          patternList.add(InternalValueDecision.map);
-        } else {
-          patternList.add(InternalValueDecision.scalar);
-        }
-      }
-      var samePattern = eq(patternList, nestedPatternList);
-      if (samePattern) {
+     
+      // TODO - do this smarter
+      // how to check for nested datapoint ?
+      // the only cases where we should return linkAsNewName is 
+      // when we encounter something like recently_viewed, but at the same time
+      // exclude stuff like your_posts which has similiar pattern
+      if (element.containsKey('children') || element.containsKey('entries')) {
         return Decision.linkAsNewName;
       }
       
-
       // defaul if no nested datapoints were found:
       return Decision.linkAsDataPoint;
-    } else {
-      return Decision.embedAsDataPoint;
     }
+
+    if (element is List<dynamic>) {
+      return Decision.linkAsNewName;
+    } 
+    
+    return Decision.embedAsDataPoint;
+    
   }
-
-  // static Decision processMap(Map<String, dynamic> jsonMap) {
-  //   var count = jsonMap.length;
-  //   if (count == 1) {
-  //     var inferredDecision = _inferInner(jsonMap.entries.first.value);
-  //     switch (inferredDecision) {
-  //       // a scalar value should just be embedded as datapoint in the current name
-  //       case InternalValueDecision.scalar:
-  //         return Decision.embedAsDataPoint;
-
-  //       // otherwise, we make a new name and attach that
-  //       // name as child node to current parent name node
-  //       case InternalValueDecision.map:
-  //       case InternalValueDecision.list:
-  //         return Decision.linkAsNewName;
-  //     }
-  //   }
-
-  //   return Decision.linkAsNewName;
-  // }
 
   static Decision process(dynamic json) {
     // handle maps, and decide the inner value
