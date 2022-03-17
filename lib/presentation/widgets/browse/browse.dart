@@ -38,8 +38,8 @@ class _BrowseState extends State<Browse> {
 
   bool isLoading = false;
 
-  final InodeParserService _inodeParserService =
-      locator.get<InodeParserService>(instanceName: 'inodeParser');
+  // final InodeParserService _inodeParserService =
+  //     locator.get<InodeParserService>(instanceName: 'inodeParser');
   final ICollectionsService _collectionsService =
       locator.get<ICollectionsService>(instanceName: 'collectionsService');
   late List<DataCategory> _categories;
@@ -75,13 +75,13 @@ class _BrowseState extends State<Browse> {
               'service_name': service.name
             };
             var uploadedFiles = await compute(extractZip, inputMap);
-            await _inodeParserService
-                .parse(uploadedFiles)
-                .whenComplete(() => setState(() {
-                      isLoading = false;
-                      SnackBarCustom.useSnackbarOfContext(
-                          context, localizer.doneLoadingData);
-                    }));
+            // await _inodeParserService
+            //     .parse(uploadedFiles)
+            //     .whenComplete(() => setState(() {
+            //           isLoading = false;
+            //           SnackBarCustom.useSnackbarOfContext(
+            //               context, localizer.doneLoadingData);
+            //         }));
           }
         }
       },

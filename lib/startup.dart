@@ -144,9 +144,6 @@ Future<void> setupServices() async {
     // register all services and inject their dependencies
     locator.registerSingleton<IAppSettingsService>(AppSettingsService(),
         instanceName: 'appSettingsService');
-    locator.registerSingleton<InodeParserService>(
-        InodeParserService(_categoryRepo, _nameRepo, _dataRepo),
-        instanceName: "inodeParser");
     locator.registerSingleton<ICollectionsService>(
         CollectionsService(_categoryRepo, _nameRepo, _dataRepo),
         instanceName: 'collectionsService');
