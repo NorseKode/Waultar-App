@@ -2,19 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:image/image.dart' as img;
-import 'package:path/path.dart' as path_dart;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
-import 'package:waultar/core/ai/image_classifier.dart';
-import 'package:waultar/core/ai/image_classifier_efficientnet.dart';
-import 'package:waultar/core/ai/image_classifier_mobilenetv3.dart';
-import 'package:waultar/core/ai/image_classifier_quant.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
-import 'package:waultar/core/ai/classifier.dart';
 
 import 'package:waultar/presentation/widgets/general/default_widgets/service_widget.dart';
-import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 
 import 'package:waultar/startup.dart';
 
@@ -69,22 +61,6 @@ class _DashboardState extends State<Dashboard> {
                     )),
                 const SizedBox(height: 20),
                 Text(localizer.yourSocialDataOverview), //dashboard widgets
-                const SizedBox(height: 20),
-                DefaultButton(onPressed: () {
-                  var cls = ImageClassifierEfficientNet();
-                  var imagePath = path_dart
-                      .normalize(
-                        path_dart.join(path_dart.dirname(Platform.script.path), "lib", "assets",
-                            "graphics", "family dinner.jpg"),
-                      )
-                      .substring(1);
-
-                  for (var pre in cls.predict(imagePath, 5)) {
-                    print(pre);
-                  }
-
-                  cls.dispose();
-                }),
                 // DefaultButton(text: "Press me! Please do", onPressed: () {}, color: Colors.blue),
                 // DefaultButton(
                 //   icon: Iconsax.add,

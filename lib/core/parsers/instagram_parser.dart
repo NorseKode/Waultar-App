@@ -6,7 +6,6 @@ import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/abstracts/abstract_parsers/base_parser.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
-import 'package:waultar/core/ai/image_classifier.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/models/model_helper.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
@@ -16,9 +15,9 @@ import 'package:waultar/startup.dart';
 class InstagramParser extends BaseParser {
   final appLogger = locator.get<AppLogger>(instanceName: 'logger');
   static const _profileFiles = ["personal_information", "signup_information"];
-  final _imageClassifier = locator.get<ImageClassifier>(instanceName: 'imageClassifier');
+  // final _imageClassifier = locator.get<ImageClassifier>(instanceName: 'imageClassifier');
   final _profileRepo = locator.get<IProfileRepository>(instanceName: 'profileRepo');
-  
+
   @override
   Stream<dynamic> parseFile(File file, {ProfileModel? profile}) async* {
     try {
@@ -40,8 +39,7 @@ class InstagramParser extends BaseParser {
               appLogger.logger.info("Parsed Instagram Comment: ${comment.toString()}");
               yield commentModel;
             }
-          }
-          else {
+          } else {
             // appLogger.logger.info("unknown data: ${object.toString()}");
           }
 
@@ -85,8 +83,9 @@ class InstagramParser extends BaseParser {
   }
 
   @override
-  Future<Tuple2<ProfileModel, List<String>>> parseProfile(List<String> paths, {ServiceModel? service}) async {
-    _imageClassifier.init();
+  Future<Tuple2<ProfileModel, List<String>>> parseProfile(List<String> paths,
+      {ServiceModel? service}) async {
+    // _imageClassifier.init();
 
     var profileMain = paths.firstWhere((element) => element.contains(_profileFiles[0]));
     paths.remove(profileMain);
@@ -94,32 +93,10 @@ class InstagramParser extends BaseParser {
     ProfileModel profile =
         await parseFile(File(profileMain)).where((event) => event is ProfileModel).first;
 
-    if (service != null) {
-      profile.service = service;
-    }
-
-    var profileCreationDate = paths.firstWhere((element) => element.contains(_profileFiles[1]));
-    paths.remove(profileCreationDate);
-
-    await parseFileLookForKey(File(profileCreationDate), "Time")
-        .first
-        .then((value) => profile.createdTimestamp =
-            ModelHelper.getTimestamp(value) ??
-                DateTime.fromMicrosecondsSinceEpoch(0));
-
-    _imageClassifier.dispose();
-
-    return Tuple2(profile, paths);
-  }
-
-  @override
-  Stream parseListOfPaths(List<String> paths, ProfileModel profile) async* {
-    _imageClassifier.init();
-
     if (paths.length > 1) {
       var basePathToFiles = StringBuffer();
-      var path1  = paths.first;
-      var path2  = paths.last;
+      var path1 = paths.first;
+      var path2 = paths.last;
 
       for (var i = 0; i < path1.length; i++) {
         if (path1[i] == path2[i]) {
@@ -130,9 +107,27 @@ class InstagramParser extends BaseParser {
       }
 
       profile.basePathToFiles = basePathToFiles.toString();
-
-      _profileRepo.updateSingle(profile);
     }
+
+    if (service != null) {
+      profile.service = service;
+    }
+
+    var profileCreationDate = paths.firstWhere((element) => element.contains(_profileFiles[1]));
+    paths.remove(profileCreationDate);
+
+    await parseFileLookForKey(File(profileCreationDate), "Time").first.then((value) =>
+        profile.createdTimestamp =
+            ModelHelper.getTimestamp(value) ?? DateTime.fromMicrosecondsSinceEpoch(0));
+
+    // _imageClassifier.dispose();
+
+    return Tuple2(profile, paths);
+  }
+
+  @override
+  Stream parseListOfPaths(List<String> paths, ProfileModel profile) async* {
+    // await _imageClassifier.init();
 
     for (var path in paths) {
       if (Extensions.isJson(path)) {
@@ -143,7 +138,7 @@ class InstagramParser extends BaseParser {
       }
     }
 
-    _imageClassifier.dispose();
+    // _imageClassifier.dispose();
   }
 
   @override
@@ -160,9 +155,8 @@ class InstagramParser extends BaseParser {
   }
 
   @override
-  Future<Tuple2<List<GroupModel>, List<String>>> parseGroupNames(List<String> paths, ProfileModel profile) {
+  Future<Tuple2<List<GroupModel>, List<String>>> parseGroupNames(
+      List<String> paths, ProfileModel profile) {
     throw UnimplementedError();
   }
-
-  
 }

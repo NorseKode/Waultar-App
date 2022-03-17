@@ -1,9 +1,7 @@
 import 'package:tuple/tuple.dart';
-import 'package:path/path.dart' as path_dart;
 import 'package:waultar/core/ai/image_classifier.dart';
 import 'package:waultar/core/models/base_model.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
-import 'package:waultar/startup.dart';
 
 abstract class MediaModel extends BaseModel {
   late Uri uri;
@@ -21,10 +19,10 @@ abstract class MediaModel extends BaseModel {
     this.mediaTags,
   }) : super(id, profile, raw);
 
-  void tagMedia({int? amountOfTags}) {    
-    mediaTags = locator
-        .get<ImageClassifier>(instanceName: 'imageClassifier')
-        .predict(Uri.decodeFull(uri.path), amountOfTags ?? 5);
+  void tagMedia(ImageClassifier classifier, {int? amountOfTags}) {
+    if (uri.path.isNotEmpty) {
+      mediaTags = classifier.predict(Uri.decodeFull(uri.path), amountOfTags ?? 5);
+    }
   }
 
   @override

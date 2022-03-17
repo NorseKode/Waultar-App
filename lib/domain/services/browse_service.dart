@@ -1,4 +1,3 @@
-import 'package:waultar/core/abstracts/abstract_repositories/i_image_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_poll_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
@@ -19,8 +18,8 @@ class BrowseService extends IBrowseService {
   //     locator.get<IPostRepository>(instanceName: 'postRepo');
   final IPostPollRepository _postPollRepo =
       locator.get<IPostPollRepository>(instanceName: 'postPollRepo');
-  final IImageRepository _imageRepo =
-      locator.get<IImageRepository>(instanceName: 'imageRepo');
+  // final IImageRepository _imageRepo =
+  //     locator.get<IImageRepository>(instanceName: 'imageRepo');
 
   @override
   List<PostModel>? getPosts() {
@@ -43,15 +42,4 @@ class BrowseService extends IBrowseService {
   List<PostPollModel> getPostPolls() {
     return _postPollRepo.getAllPostPolls();
   }
-
-  @override
-  void printImageTags() {
-    var images = _imageRepo.getAllImages();
-
-    for (var image in images!) {
-      print(image.mediaTags);
-    }
-  }
-
-  
 }

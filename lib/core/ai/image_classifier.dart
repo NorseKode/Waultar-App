@@ -2,13 +2,11 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:image/image.dart' as img;
-import 'package:path/path.dart' as path_dart;
 import 'package:collection/collection.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
-import 'package:flutter/services.dart';
-import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:tuple/tuple.dart';
+import 'package:waultar/configs/exceptions/ai_exception.dart';
 import 'package:waultar/core/ai/i_ml_model.dart';
 
 class ImageClassifier extends IMLModel {
@@ -26,7 +24,7 @@ class ImageClassifier extends IMLModel {
   late TensorBuffer _outputBuffer;
   late TfLiteType _inputType;
   late TfLiteType _outputType;
-  late var _probabilityProcessor;
+  late SequentialProcessor _probabilityProcessor;
 
   @override
   dispose() {
@@ -56,8 +54,8 @@ class ImageClassifier extends IMLModel {
     init();
   }
 
-  void _loadModel() {
-    _interpreter = Interpreter.fromFile(File(modelPath), options: interpreterOptions!);
+  void _loadModel() async {
+    _interpreter = Interpreter.fromFile(File(modelPath), options: interpreterOptions);
 
     _inputShape = _interpreter.getInputTensor(0).shape;
     _outputShape = _interpreter.getOutputTensor(0).shape;
@@ -89,17 +87,20 @@ class ImageClassifier extends IMLModel {
 
   List<Tuple2<String, double>> predict(String imagePath, int amountOfTopCategories) {
     // TODO-Lukas_ exceptions
-    var image = img.decodeImage(File(imagePath).readAsBytesSync())!;
+    var image = img.decodeImage(File(imagePath).readAsBytesSync());
+    if (image == null) {
+      throw AIException("Couldn't locate image from path: $imagePath", this, image);
+    }
 
-    final pres = DateTime.now().millisecondsSinceEpoch;
+    // final pres = DateTime.now().millisecondsSinceEpoch;
     _inputImage = TensorImage(_inputType);
     _inputImage.loadImage(image);
     _inputImage = _preProcess();
-    final pre = DateTime.now().millisecondsSinceEpoch - pres;
+    // final pre = DateTime.now().millisecondsSinceEpoch - pres;
 
-    final runs = DateTime.now().millisecondsSinceEpoch;
+    // final runs = DateTime.now().millisecondsSinceEpoch;
     _interpreter.run(_inputImage.buffer, _outputBuffer.getBuffer());
-    final run = DateTime.now().millisecondsSinceEpoch - runs;
+    // final run = DateTime.now().millisecondsSinceEpoch - runs;
 
     Map<String, double> labeledProb =
         TensorLabel.fromList(_labels, _probabilityProcessor.process(_outputBuffer))

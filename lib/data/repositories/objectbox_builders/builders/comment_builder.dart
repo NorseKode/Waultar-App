@@ -13,7 +13,6 @@ import 'package:waultar/data/entities/media/video_objectbox.dart';
 import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 import 'package:waultar/data/repositories/objectbox_builders/builders/group_builder.dart';
 import 'package:waultar/data/repositories/objectbox_builders/builders/index.dart';
-import 'package:waultar/data/repositories/objectbox_builders/builders/profile_builder.dart';
 
 CommentObjectBox makeCommentEntity(CommentModel model, ObjectBox context) {
   var searchBuilder = StringBuffer();

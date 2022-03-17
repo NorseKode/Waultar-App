@@ -8,4 +8,5 @@ abstract class IImageRepository {
   List<ImageModel>? getAllImagesByProfile(ProfileModel profile);
   int removeAll();
   List<ImageModel> search(String search, int offset, int limit);
+  int updateSingle(ImageModel model);
 }

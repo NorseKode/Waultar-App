@@ -102,4 +102,18 @@ class ImageRepository implements IImageRepository {
 
     return build.find().map((e) => _modelDirector.make<ImageModel>(e)).toList();
   }
+
+  @override
+  int updateSingle(ImageModel model) {
+    var entity = _imageBox.get(model.id);
+
+    if (entity == null) {
+      throw ObjectBoxException("Tried to update a profile that doesn't exists: ${model.toString()}");
+    } else {
+      var updatedEntity = _entityDirector.make<ImageObjectBox>(model);
+      updatedEntity.id = entity.id;
+
+      return _imageBox.put(updatedEntity);
+    }
+  }
 }

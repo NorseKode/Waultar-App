@@ -1,6 +1,5 @@
-import 'dart:io';
 
-import 'package:waultar/configs/exceptions/parse_exception.dart';
+import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_comment_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_event_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_group_repository.dart';
@@ -8,8 +7,8 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_image_repository.
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_poll_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
+import 'package:waultar/core/ai/image_classifier.dart';
 import 'package:waultar/core/models/content/post_poll_model.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/parsers/facebook_parser.dart';
@@ -17,7 +16,7 @@ import 'package:waultar/core/parsers/instagram_parser.dart';
 import 'package:waultar/startup.dart';
 
 class ParserService implements IParserService {
-  final _serviceRepo = locator.get<IServiceRepository>(instanceName: 'serviceRepo');
+  // final _serviceRepo = locator.get<IServiceRepository>(instanceName: 'serviceRepo');
   final IPostRepository _postRepo = locator.get<IPostRepository>(instanceName: 'postRepo');
   final IProfileRepository _profileRepo =
       locator.get<IProfileRepository>(instanceName: 'profileRepo');
@@ -26,19 +25,14 @@ class ParserService implements IParserService {
   final IPostPollRepository _postPollRepo =
       locator.get<IPostPollRepository>(instanceName: 'postPollRepo');
   final IImageRepository _imageRepo = locator.get<IImageRepository>(instanceName: 'imageRepo');
-  final ICommentRepository _commentRepo = locator.get<ICommentRepository>(instanceName: 'commentRepo');
+  final ICommentRepository _commentRepo =
+      locator.get<ICommentRepository>(instanceName: 'commentRepo');
+  final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
 
   @override
-  Future parseAll(Map<String, String> inputMap) async {
-    if (inputMap["paths"] == null || inputMap["service_name"] == null) {
-      throw ParseException("Bad input to parser service", File(''), null);
-    }
-
-    var serviceName = inputMap["service_name"]!;
-    var paths = inputMap["paths"]!.split(",");
-    var service = _serviceRepo.get(serviceName);
-
-    switch (serviceName) {
+  Future parseAll(List<String> paths, ServiceModel service) async {
+    _appLogger.logger.info("Started parsing of files started");
+    switch (service.name) {
       case "Facebook":
         var parser = FacebookParser();
 
@@ -58,8 +52,7 @@ class ParserService implements IParserService {
         // profile_information.json has now been removed
         paths = groupsAndPaths.item2;
 
-        await for (final entity
-            in FacebookParser().parseListOfPaths(paths, profileModel)) {
+        await for (final entity in FacebookParser().parseListOfPaths(paths, profileModel)) {
           _makeEntity(entity);
         }
         break;
@@ -76,6 +69,22 @@ class ParserService implements IParserService {
 
         await for (final entity in parser.parseListOfPaths(paths, profileModel)) {
           _makeEntity(entity);
+        }
+        
+        _appLogger.logger.info("Finished parsing of files started");
+
+        // tag all images
+        var images = _imageRepo.getAllImages();
+
+        if (images != null) {
+          _appLogger.logger.info("Started tagging of images");
+          var classifier = locator.get<ImageClassifier>(instanceName: 'imageClassifier');
+
+          for (var image in _imageRepo.getAllImages()!) {
+            image.tagMedia(classifier);
+            _imageRepo.updateSingle(image);
+          }
+          _appLogger.logger.info("Finished tagging of images");
         }
         break;
 
@@ -99,7 +108,7 @@ class ParserService implements IParserService {
 
       case PostPollModel:
         return _postPollRepo.addPostPoll(model);
-      
+
       case CommentModel:
         return _commentRepo.add(model);
 

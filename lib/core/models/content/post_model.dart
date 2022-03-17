@@ -68,8 +68,6 @@ class PostModel extends BaseModel {
       }
     }
 
-    print(mediaJson);
-
     medias = mediaJson.map((element) => ParseHelper.parseMedia(element, "media", profile)!).toList();
     description = json["title"] ?? "";
     title = data != null ? data["post"] : "";
@@ -99,9 +97,9 @@ class PostModel extends BaseModel {
       var temp = ParseHelper.parseMedia(element, "uri", profile);
 
       if (temp != null) {
-        if (temp is ImageModel) {
-          temp.tagMedia();
-        }
+        // if (temp is ImageModel) {
+        //   temp.tagMedia();
+        // }
 
         medias!.add(temp);
       }

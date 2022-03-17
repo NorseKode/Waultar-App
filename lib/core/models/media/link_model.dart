@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:tuple/tuple.dart';
 import 'package:waultar/core/models/media/media_model.dart';
 import 'package:waultar/core/models/model_helper.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';

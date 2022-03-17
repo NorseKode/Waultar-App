@@ -14,48 +14,45 @@ ImageObjectBox makeImageEntity(ImageModel model, ObjectBox context) {
       .build()
       .findFirst();
 
-  if (entity == null) {
-    entity = ImageObjectBox(
+  entity ??= ImageObjectBox(
       uri: model.uri.path,
       raw: model.raw,
     );
-    entity.textSearch = model.uri.path + " ";
+    
+  entity.textSearch = model.uri.path + " ";
 
-    if (model.mediaTags != null && model.mediaTags!.isNotEmpty) {
-      entity.mediaTags = model.mediaTags!.map((e) {
-        entity!.textSearch += " " + e.item1;
+  if (model.mediaTags != null && model.mediaTags!.isNotEmpty) {
+    entity.mediaTags = model.mediaTags!.map((e) {
+      entity!.textSearch += " " + e.item1;
 
-        return "(${e.item1},${e.item2})";
-      }).toList();
-    }
-
-    entity.title = model.title;
-    entity.description = model.description;
-    entity.textSearch += model.title ?? " ";
-    entity.textSearch += " ";
-    entity.textSearch += model.description ?? " ";
-
-    // the profile HAS to be created in db before storing additional data
-    if (model.profile.id == 0) {
-      throw ObjectBoxException("Profile Id is 0 - profile must be stored before calling me");
-    } else {
-      var profileEntity = context.store.box<ProfileObjectBox>().get(model.profile.id);
-      entity.profile.target = profileEntity;
-    }
-
-    if (model.metadata != null) {
-      entity.metadata = model.metadata;
-      entity.textSearch += " " + model.metadata!;
-    }
-    if (model.timestamp != null) {
-      entity.timestamp = model.timestamp;
-      entity.textSearch += " " + model.timestamp!.toString();
-    }
-
-    return entity;
-  } else {
-    return entity;
+      return "(${e.item1},${e.item2})";
+    }).toList();
   }
+
+  entity.title = model.title;
+  entity.description = model.description;
+  entity.textSearch += model.title ?? " ";
+  entity.textSearch += " ";
+  entity.textSearch += model.description ?? " ";
+
+  // the profile HAS to be created in db before storing additional data
+  if (model.profile.id == 0) {
+    throw ObjectBoxException("Profile Id is 0 - profile must be stored before calling me");
+  } else {
+    var profileEntity = context.store.box<ProfileObjectBox>().get(model.profile.id);
+    entity.profile.target = profileEntity;
+  }
+
+  if (model.metadata != null) {
+    entity.metadata = model.metadata;
+    entity.textSearch += " " + model.metadata!;
+  }
+  if (model.timestamp != null) {
+    entity.timestamp = model.timestamp;
+    entity.textSearch += " " + model.timestamp!.toString();
+  }
+
+  return entity;
 }
 
 VideoObjectBox makeVideoEntity(VideoModel model, ObjectBox context) {

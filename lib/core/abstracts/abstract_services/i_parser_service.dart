@@ -6,5 +6,5 @@ abstract class IParserService {
   // save parsed objects --> repositories
   //
   // on error throw exception
-  void parseAll(Map<String, String> inputMap);
+  void parseAll(List<String> paths, ServiceModel service);
 }
