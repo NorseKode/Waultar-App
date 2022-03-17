@@ -166,15 +166,20 @@ Future<void> main() async {
       
     });
 
-    // this badboy has a lot of nested datapoints, that should not be included in a parent ..
-    test(" - recently_viewed stupid bitch", () async {
-      var result = await _parser.parsePath(recentlyViewed);
-      printResultName(result);
-      var videos = result.children.first;
-      print(videos.name);
-      var tidsforbrug = videos.children.first;
-      printResultName(tidsforbrug);
-    });
+    // test(" - recently_viewed stupid bitch", () async {
+    //   var result = await _parser.parsePath(recentlyViewed);
+    //   printResultName(result);
+      
+    //   var dataPoints = _dataRepo.readAll();
+    //   for (var item in dataPoints) {
+    //     print(item.toString());
+    //   }
+
+    //   var names = _nameRepo.getAllNames();
+    //   for (var name in names) {
+    //     print(name);
+    //   }
+    // });
 
     test(" - facebook comments", () async {
       var result = await _parser.parsePath(comments);

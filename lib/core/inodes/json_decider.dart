@@ -25,10 +25,8 @@ enum InternalValueDecision { scalar, map, list }
 class JsonExpert {
   static Function eq = const ListEquality().equals;
 
-
   static Decision processListElement(dynamic element) {
     if (element is Map<String, dynamic>) {
-     
       // TODO - do this smarter
       // how to check for nested datapoint ?
       // the only cases where we should return linkAsNewName is 
@@ -37,17 +35,13 @@ class JsonExpert {
       if (element.containsKey('children') || element.containsKey('entries')) {
         return Decision.linkAsNewName;
       }
-      
       // defaul if no nested datapoints were found:
       return Decision.linkAsDataPoint;
     }
-
     if (element is List<dynamic>) {
       return Decision.linkAsNewName;
     } 
-    
     return Decision.embedAsDataPoint;
-    
   }
 
   static Decision process(dynamic json) {
@@ -83,16 +77,13 @@ class JsonExpert {
       if (json.isEmpty) {
         return Decision.embedAsDataPoint;
       }
-
       if (json.first is List<dynamic>) {
         return Decision.linkAsNewName;
       }
       if (json.first is Map<String, dynamic>) {
         return Decision.linkAsNewName;
       }
-
       return Decision.embedAsDataPoint;
-      //
     }
 
     // if none of the above, it's a scalar value which the parser should just embed

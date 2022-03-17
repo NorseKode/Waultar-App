@@ -31,7 +31,9 @@ class TreeParser {
       var dirtyInitialName = path_dart.basename(path);
       var cleanInitialName = dirtyInitialName.replaceAll(".json", "");
 
-      return parseName(json, category, cleanInitialName, null);
+      var name = parseName(json, category, cleanInitialName, null);
+      _nameRepo.addSingle(name);
+      return name;
     } else {
       throw Exception("File extension not supported");
     }

@@ -16,6 +16,7 @@ class DataPointNameRepository {
     return dataName;
   }
 
+  int addSingle(DataPointName name) => _nameBox.put(name);
   List<int> addMany(List<DataPointName> names) => _nameBox.putMany(names);
 
   DataPointName? getNameById(int id) => _nameBox.get(id);
