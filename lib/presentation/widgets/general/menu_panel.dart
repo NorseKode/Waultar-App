@@ -133,6 +133,8 @@ class _MenuPanelState extends State<MenuPanel> {
                       (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.home()); }),
                   menuButton(Iconsax.command, localizer.collections, ViewScreen.browse,
                       (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.browse()); }),
+                  menuButton(Iconsax.command, localizer.gallery, ViewScreen.gallery,
+                      (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.gallery()); }),
                   menuButton(Iconsax.routing, localizer.timeline, ViewScreen.timeline,
                       (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.timeline()); }),
                   menuButton(

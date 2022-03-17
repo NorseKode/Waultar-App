@@ -23,7 +23,9 @@ ImageModel makeImageModel(ImageObjectBox entity) {
   );
 
   if (entity.mediaTags != null) {
-    entity.mediaTags!.map((e) {
+    model.mediaTags = entity.mediaTags!.map((e) {
+      e = e.replaceAll("(", "");
+      e = e.replaceAll(")", "");
       var temp = e.split(",");
 
       return Tuple2(temp[0], double.parse(temp[1]));

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:tuple/tuple.dart';
 import 'package:path/path.dart' as path_dart;
 import 'package:waultar/core/ai/image_classifier.dart';
@@ -21,20 +19,7 @@ abstract class MediaModel extends BaseModel {
     this.metadata,
     this.timestamp, {
     this.mediaTags,
-  }) : super(id, profile, raw) {
-    if (profile.basePathToFiles != null) {
-    uri = Uri(
-      path: path_dart.normalize(
-        path_dart.join(
-          profile.basePathToFiles!,
-          uri.path,
-        ),
-      ),
-    );
-    } else {
-      throw "Profile's base path to files is null";
-    }
-  }
+  }) : super(id, profile, raw);
 
   void tagMedia({int? amountOfTags}) {    
     mediaTags = locator

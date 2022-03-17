@@ -84,8 +84,7 @@ class _BrowseState extends State<Browse> {
               var files = await Uploader.uploadDialogue(context);
 
               if (files != null) {
-                SnackBarCustom.useSnackbarOfContext(
-                    context, localizer.startedLoadingOfData);
+                SnackBarCustom.useSnackbarOfContext(context, localizer.startedLoadingOfData);
                 var service = _serviceRepo.get(files.item2);
 
                 if (service != null) {
@@ -93,22 +92,26 @@ class _BrowseState extends State<Browse> {
                     isLoading = true;
                   });
                   var zipFiles = files.item1
-                      .where(
-                          (element) => dart_path.extension(element) == ".zip")
+                      .where((element) => dart_path.extension(element) == ".zip")
                       .toList();
 
-                  var inputMap = {
+                  var extractZipinputMap = {
                     'path': dart_path.normalize(zipFiles.first),
                     'extracts_folder': locator.get<String>(instanceName: 'extracts_folder'),
                     'service_name': service.name
                   };
-                  var uploadedFiles = await compute(extractZip, inputMap);
-                  await ParserService()
-                      .parseAll(uploadedFiles, service)
+                  var uploadedFiles = await compute(extractZip, extractZipinputMap);
+
+                  var parserServiceInputMap = {
+                    "paths": uploadedFiles.fold<String>("",
+                        (previousValue, element) => previousValue = previousValue + "$element,"),
+                    "service_name": service.name,
+                  };
+
+                  await compute(ParserService().parseAll, parserServiceInputMap)
                       .whenComplete(() => setState(() {
                             isLoading = false;
-                            SnackBarCustom.useSnackbarOfContext(
-                                context, localizer.doneLoadingData);
+                            SnackBarCustom.useSnackbarOfContext(context, localizer.doneLoadingData);
                           }));
                 }
               }

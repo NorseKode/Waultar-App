@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:waultar/configs/exceptions/parse_exception.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_comment_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_event_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_group_repository.dart';
@@ -5,6 +8,7 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_image_repository.
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_poll_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
 import 'package:waultar/core/models/content/post_poll_model.dart';
 import 'package:waultar/core/models/index.dart';
@@ -13,6 +17,7 @@ import 'package:waultar/core/parsers/instagram_parser.dart';
 import 'package:waultar/startup.dart';
 
 class ParserService implements IParserService {
+  final _serviceRepo = locator.get<IServiceRepository>(instanceName: 'serviceRepo');
   final IPostRepository _postRepo = locator.get<IPostRepository>(instanceName: 'postRepo');
   final IProfileRepository _profileRepo =
       locator.get<IProfileRepository>(instanceName: 'profileRepo');
@@ -24,12 +29,20 @@ class ParserService implements IParserService {
   final ICommentRepository _commentRepo = locator.get<ICommentRepository>(instanceName: 'commentRepo');
 
   @override
-  Future parseAll(List<String> paths, ServiceModel service) async {
-    switch (service.name) {
+  Future parseAll(Map<String, String> inputMap) async {
+    if (inputMap["paths"] == null || inputMap["service_name"] == null) {
+      throw ParseException("Bad input to parser service", File(''), null);
+    }
+
+    var serviceName = inputMap["service_name"]!;
+    var paths = inputMap["paths"]!.split(",");
+    var service = _serviceRepo.get(serviceName);
+
+    switch (serviceName) {
       case "Facebook":
         var parser = FacebookParser();
 
-        var profileAndPaths = await parser.parseProfile(paths);
+        var profileAndPaths = await parser.parseProfile(paths, service: service);
         var profile = profileAndPaths.item1;
         paths = profileAndPaths.item2;
 

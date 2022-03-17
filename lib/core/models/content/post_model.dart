@@ -99,14 +99,12 @@ class PostModel extends BaseModel {
       var temp = ParseHelper.parseMedia(element, "uri", profile);
 
       if (temp != null) {
+        if (temp is ImageModel) {
+          temp.tagMedia();
+        }
+
         medias!.add(temp);
       }
-     }
-
-     for (var media in medias!) {
-       if (media is ImageModel) {
-        media.tagMedia();
-       }
      }
   }
 

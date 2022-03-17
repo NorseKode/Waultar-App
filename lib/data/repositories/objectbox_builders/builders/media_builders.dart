@@ -22,7 +22,7 @@ ImageObjectBox makeImageEntity(ImageModel model, ObjectBox context) {
     entity.textSearch = model.uri.path + " ";
 
     if (model.mediaTags != null && model.mediaTags!.isNotEmpty) {
-      model.mediaTags!.map((e) {
+      entity.mediaTags = model.mediaTags!.map((e) {
         entity!.textSearch += " " + e.item1;
 
         return "(${e.item1},${e.item2})";

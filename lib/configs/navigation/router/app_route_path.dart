@@ -14,6 +14,7 @@ class AppRoutePath extends RoutePath {
   AppRoutePath.browse()      : viewScreen = ViewScreen.browse;
   AppRoutePath.timeline()    : viewScreen = ViewScreen.timeline;
   AppRoutePath.search()      : viewScreen = ViewScreen.search;
+  AppRoutePath.gallery()     : viewScreen = ViewScreen.gallery;
   AppRoutePath.unknown()     : viewScreen = ViewScreen.unknown;
 
   bool get isHomePage => viewScreen == ViewScreen.home;

@@ -1,12 +1,11 @@
 import 'dart:ui';
 
+import 'package:path/path.dart' as path_dart;
 import 'package:tuple/tuple.dart';
-import 'package:waultar/core/ai/image_classifier.dart';
 import 'package:waultar/core/models/media/media_model.dart';
 import 'package:waultar/core/models/model_helper.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
 import 'package:waultar/core/models/ui_model.dart';
-import 'package:waultar/startup.dart';
 
 class ImageModel extends MediaModel implements UIModel {
   String? title;
@@ -31,7 +30,9 @@ class ImageModel extends MediaModel implements UIModel {
           0,
           profile,
           "", // TODO : parse raw
-          json.containsKey("uri") ? Uri(path: json["uri"]) : Uri(),
+          json.containsKey("uri") 
+            ? Uri(path: path_dart.normalize(path_dart.join(profile.basePathToFiles!, json["uri"].toString()))) 
+            : Uri(),
           json.containsKey("metadata") ? json["metadata"] : "",
           ModelHelper.getTimestamp(json),
         );
