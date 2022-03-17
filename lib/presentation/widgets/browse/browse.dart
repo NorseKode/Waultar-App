@@ -83,6 +83,7 @@ class _BrowseState extends State<Browse> {
             await parser
                 .parseManyPaths(uploadedFiles)
                 .whenComplete(() => setState(() {
+                      _categories = _collectionsService.getAllCategories();
                       isLoading = false;
                       SnackBarCustom.useSnackbarOfContext(
                           context, localizer.doneLoadingData);

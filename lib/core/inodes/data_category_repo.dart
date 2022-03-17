@@ -25,6 +25,18 @@ class DataCategoryRepository {
     return _categoryBox.getAll();
   }
 
+  void updateCounts() {
+    var categories = _categoryBox.getAll();
+    var totalDataPoints = _context.store.box<DataPoint>().count();
+    print(totalDataPoints);
+    for (var category in categories) {
+      var builder = _context.store.box<DataPoint>().query();
+      builder.link(DataPoint_.category, DataCategory_.id.equals(category.id));
+      category.count = builder.build().count();
+    }
+    _categoryBox.putMany(categories);
+  }
+
   List<DataPointName> getNamesFromCategory(DataCategory category) {
     return _categoryBox.get(category.id)!.dataPointNames.toList();
   }

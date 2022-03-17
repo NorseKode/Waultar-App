@@ -27,8 +27,8 @@ class TreeParser {
       if (Extensions.isJson(path)) {
         await parsePath(path);
       }
-      
     }
+    _categoryRepo.updateCounts();
   }
 
   Future<DataPointName> parsePath(String path) async {
@@ -170,7 +170,7 @@ class TreeParser {
       parent.dataPoints.add(directDataPoint);
     }
 
-    parent.dataCategory.target = category;
+    // parent.dataCategory.target = category;
     parent.count = parent.children.length + parent.dataPoints.length;
     return parent;
   }
