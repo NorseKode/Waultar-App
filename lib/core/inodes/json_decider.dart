@@ -65,7 +65,6 @@ class JsonExpert {
   }
 
   static Decision process(dynamic json) {
-    
     // handle maps, and decide the inner value
     if (json is Map<String, dynamic>) {
       var count = json.length;

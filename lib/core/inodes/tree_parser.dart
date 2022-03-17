@@ -57,7 +57,7 @@ class TreeParser {
       // we iterate over all the key-value pairs in the map ..
       for (var entry in cleanedMap.entries) {
         // and let the json expert decide what to do with each key-value pair
-        final decision = JsonExpert.process(entry.value);
+        final decision = JsonExpert.process({entry.key:entry.value});
 
         // if the key-value pair is {string:scalar} - the decider saw, that the value was a scalar
         if (decision == Decision.embedAsDataPoint) {
@@ -241,7 +241,9 @@ class TreeParser {
               updated.addAll({keyState: flattenedValue});
             }
           } else {
-            updated.addAll(flattenedInner);
+
+            // TODO - change key to flattenedKey if the results are too unprecise
+            updated.addAll({flattenedKey:flattenedValue});
           }
         }
 

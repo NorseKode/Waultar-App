@@ -22,8 +22,6 @@ Future<void> main() async {
 
   final scriptDir = File(Platform.script.toFilePath()).parent;
 
-  var largeMotherfucker = dart_path
-      .normalize('${scriptDir.path}/test/parser/data/large_random_json.json');
 
   // facebook dump mock data:
   var recentlyViewed = dart_path.normalize(
@@ -36,16 +34,16 @@ Future<void> main() async {
       '${scriptDir.path}/test/objectbox/data/Facebook/messages/inbox/lukasvintheroffenberglarsen_2qr6kux07q/message_1.json');
   var yourTopics = dart_path.normalize(
       '${scriptDir.path}/test/objectbox/data/Facebook/your_topics/your_topics.json');
-  var autofill_information = dart_path.normalize(
+  var autofillInformation = dart_path.normalize(
       '${scriptDir.path}/test/objectbox/data/Facebook/messages/autofill_information.json');
   var fbPosts = dart_path.normalize(
       '${scriptDir.path}/test/objectbox/data/Facebook/posts/your_posts_1.json');
-  var profileInformation = dart_path.normalize(
-      '${scriptDir.path}/test/objectbox/data/Facebook/profile_information/profile_information.json');
   var profileInformationV2 = dart_path.normalize(
       '${scriptDir.path}/test/objectbox/data/Facebook/profile_information/v2_profile_information.json');
   var instantGames = dart_path.normalize(
       '${scriptDir.path}/test/objectbox/data/Facebook/facebook_gaming/instant_games.json');
+  var yourFacebookActivityHistory = dart_path.normalize(
+      '${scriptDir.path}/test/objectbox/data/Facebook/security_and_login_information/your_facebook_activity_history.json');
 
   tearDownAll(() async {
     _context.store.close();
@@ -89,43 +87,87 @@ Future<void> main() async {
   }
 
   group('Test parsing of actual facebook data', () {
-    // ? looks good
     test(" - facebook posts", () async {
       var result = await _parser.parsePath(fbPosts);
-
-      printResultName(result);
+      expect(result.name, 'your posts');
+      expect(result.count, 14);
+      expect(result.children.length, 0);
+      expect(result.dataPoints.length, 14);
+      expect(result.dataCategory.hasValue, true);
+      expect(result.dataCategory.target!.name, 'Posts');
     });
 
-    // ? looks good
-    test(" - facebook messages autofill_information", () async {
-      var result = await _parser.parsePath(autofill_information);
+    test(' - facebook activity history in security and login information', () async {
+      var result = await _parser.parsePath(yourFacebookActivityHistory);
+      // printResultName(result);
+      // for (var child in result.children) {
+      //   printResultName(child);
+      // }
 
-      printResultName(result);
+      expect(result.name, 'last activity time');
+      expect(result.dataPoints.length, 0);
+      expect(result.children.length, 3);
+      expect(result.count, 3);
+      expect(result.dataCategory.hasValue, true);
+      expect(result.dataCategory.target!.name, 'Logged Data');
     });
 
-    // ? looks good
+    test(" - facebook messages autofillInformation", () async {
+      var result = await _parser.parsePath(autofillInformation);
+      expect(result.name, 'autofill information');
+      expect(result.dataPoints.length, 1);
+      expect(result.children.length, 0);
+      expect(result.dataCategory.hasValue, true);
+      expect(result.dataCategory.target!.name, 'Messaging');
+
+      var dataMap = result.dataPoints.first.asMap;
+      expect(dataMap.length, 9);
+    });
+
     test(" - facebook profile information", () async {
       var result = await _parser.parsePath(profileInformationV2);
+      expect(result.name, 'profile');
+      expect(result.count, 12);
+      expect(result.dataPoints.length, 1);
+      expect(result.children.length, 11);
+      expect(result.dataCategory.hasValue, true);
+      expect(result.dataCategory.target!.name, 'Profile');
 
-      // expect(result.length, 1);
-      printResultName(result);
+      var names = result.children.map((element) => element.name).toList();
+      expect(names.contains('name'), true);
+      expect(names.contains('emails'), true);
+      expect(names.contains('birthday'), true);
+      expect(names.contains('gender'), true);
+      expect(names.contains('current city'), true);
+      expect(names.contains('previous names'), true);
+      expect(names.contains('other names'), true);
+      expect(names.contains('previous relationships'), true);
+      expect(names.contains('family members'), true);
+      expect(names.contains('education experiences'), true);
+      expect(names.contains('phone numbers'), true);
 
-      for (var child in result.children) {
-        printResultName(child);
-      }
+      var educationExpCount = result.children.firstWhere((element) => element.name == 'education experiences').count;
+      expect(educationExpCount, 2); 
     });
 
-    // ? looks good
     test(" - facebook messages", () async {
       var result = await _parser.parsePath(message);
+      expect(result.name, 'Lukas Vinther Offenberg Larsen');
+      expect(result.count, 3);
+      expect(result.dataCategory.hasValue, true);
+      expect(result.dataCategory.target!.name, 'Messaging');
+      expect(result.dataPoints.length, 1);
+      expect(result.children.length, 2);
+      expect(result.children.first.count, 2);
+      expect(result.children.first.name, 'participants');
+      expect(result.children.last.count, 7);
+      expect(result.children.last.name, 'messages');
 
-      // var names = _nameRepo.getAllNames();
-      printResultName(result);
-      for (var child in result.children) {
-        for (var point in child.dataPoints) {
-          print(point.toString());
-        }
-      }
+      var dataMap = result.dataPoints.first.asMap;
+      expect(dataMap.length, 5);
+      expect(dataMap.containsKey('magic words'), true);
+      expect(dataMap.containsValue('no data'), true);
+      
     });
 
     // this badboy has a lot of nested datapoints, that should not be included in a parent ..
@@ -135,7 +177,6 @@ Future<void> main() async {
       printResultName(result);
     });
 
-    // ? looks good
     test(" - facebook comments", () async {
       var result = await _parser.parsePath(comments);
       expect(result.name, 'comments');
@@ -146,7 +187,6 @@ Future<void> main() async {
       expect(result.dataPoints.length, 6);
     });
 
-    // ? looks good
     test(" - facebook reactions", () async {
       var result = await _parser.parsePath(reactions);
       expect(result.count, 17);
@@ -156,7 +196,6 @@ Future<void> main() async {
       expect(result.dataCategory.target!.name, 'Reactions');
     });
 
-    // ? looks good
     test(" - facebook gaming", () async {
       var result = await _parser.parsePath(instantGames);
       expect(result.count, 14);
@@ -175,7 +214,6 @@ Future<void> main() async {
       expect(result.dataPoints.length, 1);
       expect(result.dataCategory.hasValue, true);
       expect(result.dataCategory.target!.name, 'Advertisement');
-      printResultName(result);
     });
   });
 }
