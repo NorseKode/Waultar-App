@@ -38,6 +38,7 @@ class ImageRepository implements IImageRepository {
       var model = _modelDirector.make<ImageModel>(image);
       imageModels.add(model);
     }
+    
     return imageModels;
   }
 

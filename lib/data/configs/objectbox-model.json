@@ -1,0 +1,1183 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:7987718259831269321",
+      "lastPropertyId": "3:7535744931807831743",
+      "name": "ActivityObjectBox",
+      "properties": [
+        {
+          "id": "1:6954253194722456865",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7168805123685119378",
+          "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "3:7535744931807831743",
+          "name": "timestamp",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:9178149509157569960",
+      "lastPropertyId": "2:279370844013267974",
+      "name": "AppSettingsObjectBox",
+      "properties": [
+        {
+          "id": "1:4955633288996612886",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:279370844013267974",
+          "name": "darkmode",
+          "type": 1
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:6915507867412597863",
+      "lastPropertyId": "6:9000265003613715953",
+      "name": "ChangeObjectBox",
+      "properties": [
+        {
+          "id": "1:3240228696658288729",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3117152869000844304",
+          "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "3:3244854510269335432",
+          "name": "valueName",
+          "type": 9
+        },
+        {
+          "id": "4:2356083659596612054",
+          "name": "previousValue",
+          "type": 9
+        },
+        {
+          "id": "5:8096331500472585543",
+          "name": "newValue",
+          "type": 9
+        },
+        {
+          "id": "6:9000265003613715953",
+          "name": "timestamp",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:1749356893035462076",
+      "lastPropertyId": "8:8794316746495980242",
+      "name": "CommentObjectBox",
+      "properties": [
+        {
+          "id": "1:4468087124358642498",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6519693596049877629",
+          "name": "commentedId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "1:6757144027212803363",
+          "relationTarget": "PersonObjectBox"
+        },
+        {
+          "id": "3:3813472787123832802",
+          "name": "text",
+          "type": 9
+        },
+        {
+          "id": "4:7281305294731625136",
+          "name": "timestamp",
+          "type": 10
+        },
+        {
+          "id": "5:7649351297931472579",
+          "name": "groupId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "2:6246130553774896555",
+          "relationTarget": "GroupObjectBox"
+        },
+        {
+          "id": "6:5343210903512263715",
+          "name": "eventId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "3:8291218655096798979",
+          "relationTarget": "EventObjectBox"
+        },
+        {
+          "id": "7:4806233717274162492",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "4:2082420470733961897",
+          "relationTarget": "ProfileObjectBox"
+        },
+        {
+          "id": "8:8794316746495980242",
+          "name": "textSearch",
+          "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "1:7242652100994490610",
+          "name": "images",
+          "targetId": "11:3462602783690263513"
+        },
+        {
+          "id": "2:8913347831839426630",
+          "name": "videos",
+          "targetId": "25:7408058470126909588"
+        },
+        {
+          "id": "3:8397292395526630791",
+          "name": "files",
+          "targetId": "8:8173497920353175041"
+        },
+        {
+          "id": "4:8111121176962234336",
+          "name": "links",
+          "targetId": "12:6975332165253677798"
+        }
+      ]
+    },
+    {
+      "id": "5:687073592057344239",
+      "lastPropertyId": "3:1293054845995099506",
+      "name": "CoordinateObjectBox",
+      "properties": [
+        {
+          "id": "1:7656606549177244918",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5482820100607072721",
+          "name": "longitude",
+          "type": 8
+        },
+        {
+          "id": "3:1293054845995099506",
+          "name": "latitude",
+          "type": 8
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "6:8198342247179194842",
+      "lastPropertyId": "4:2578512777646122939",
+      "name": "EmailObjectBox",
+      "properties": [
+        {
+          "id": "1:6422365408263916410",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7331832822639100396",
+          "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "3:2220887667881617997",
+          "name": "email",
+          "type": 9,
+          "flags": 2080,
+          "indexId": "5:5405154203551521791"
+        },
+        {
+          "id": "4:2578512777646122939",
+          "name": "isCurrent",
+          "type": 1
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "7:3793371515896001320",
+      "lastPropertyId": "11:3688599980466320231",
+      "name": "EventObjectBox",
+      "properties": [
+        {
+          "id": "1:3460755059034069709",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3086526809818522038",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "6:4720706250046039502",
+          "relationTarget": "ProfileObjectBox"
+        },
+        {
+          "id": "3:8915856711227523940",
+          "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "4:804143404073790477",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "5:2454023141463946254",
+          "name": "startTimestamp",
+          "type": 10
+        },
+        {
+          "id": "6:2701416046147077785",
+          "name": "endTimestamp",
+          "type": 10
+        },
+        {
+          "id": "7:2581330471509595635",
+          "name": "createdTimestamp",
+          "type": 10
+        },
+        {
+          "id": "8:7459103100483673300",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "9:8123256532166549954",
+          "name": "isUsers",
+          "type": 1
+        },
+        {
+          "id": "10:3032212372807168431",
+          "name": "placeId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "7:6543167520976905029",
+          "relationTarget": "PlaceObjectBox"
+        },
+        {
+          "id": "11:3688599980466320231",
+          "name": "dbEventResponse",
+          "type": 6
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "8:8173497920353175041",
+      "lastPropertyId": "8:5673559283625398038",
+      "name": "FileObjectBox",
+      "properties": [
+        {
+          "id": "1:7960116512538251187",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5812001724840842601",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "8:2856429039708222094",
+          "relationTarget": "ProfileObjectBox"
+        },
+        {
+          "id": "3:5436597367419708006",
+          "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "4:5526353111568093092",
+          "name": "uri",
+          "type": 9
+        },
+        {
+          "id": "5:1317119727272606355",
+          "name": "metadata",
+          "type": 9
+        },
+        {
+          "id": "6:8163104901900804846",
+          "name": "timestamp",
+          "type": 10
+        },
+        {
+          "id": "7:5420202377399411791",
+          "name": "thumbnail",
+          "type": 9
+        },
+        {
+          "id": "8:5673559283625398038",
+          "name": "textSearch",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "9:5580104559374617914",
+      "lastPropertyId": "5:1874956295492235875",
+      "name": "FriendObjectBox",
+      "properties": [
+        {
+          "id": "1:9162261063121478112",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8639623028541221165",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "9:5157395356363308071",
+          "relationTarget": "ProfileObjectBox"
+        },
+        {
+          "id": "3:7310057183381403203",
+          "name": "timestamp",
+          "type": 10
+        },
+        {
+          "id": "4:2835631866524801532",
+          "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "5:1874956295492235875",
+          "name": "dbFriendType",
+          "type": 6
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "10:2773810857800214800",
+      "lastPropertyId": "7:2241564316338948120",
+      "name": "GroupObjectBox",
+      "properties": [
+        {
+          "id": "1:2674866871199164970",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5045391912915123893",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "10:545680223523895993",
+          "relationTarget": "ProfileObjectBox"
+        },
+        {
+          "id": "3:3792143838984384621",
+          "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "4:1449452967868974173",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "5:8057637449433534121",
+          "name": "isUsers",
+          "type": 1
+        },
+        {
+          "id": "6:5441487774319922347",
+          "name": "badge",
+          "type": 9
+        },
+        {
+          "id": "7:2241564316338948120",
+          "name": "timestamp",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "11:3462602783690263513",
+      "lastPropertyId": "10:3129072682373590297",
+      "name": "ImageObjectBox",
+      "properties": [
+        {
+          "id": "1:4719487492548689691",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8147797870186825824",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "11:2559058921628034846",
+          "relationTarget": "ProfileObjectBox"
+        },
+        {
+          "id": "3:463728724737006082",
+          "name": "uri",
+          "type": 9
+        },
+        {
+          "id": "4:6679419970514910635",
+          "name": "metadata",
+          "type": 9
+        },
+        {
+          "id": "5:7334763099207422638",
+          "name": "timestamp",
+          "type": 10
+        },
+        {
+          "id": "6:7607455122003847081",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "7:3329373143130361432",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "8:6743536654104558653",
+          "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "9:4572742775709453964",
+          "name": "textSearch",
+          "type": 9
+        },
+        {
+          "id": "10:3129072682373590297",
+          "name": "mediaTags",
+          "type": 30
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "12:6975332165253677798",
+      "lastPropertyId": "8:2073170275133281303",
+      "name": "LinkObjectBox",
+      "properties": [
+        {
+          "id": "1:4181890453694410012",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2264696216801899060",
+          "name": "uri",
+          "type": 9
+        },
+        {
+          "id": "3:6845076210527364352",
+          "name": "metadata",
+          "type": 9
+        },
+        {
+          "id": "4:2573227082928959636",
+          "name": "timestamp",
+          "type": 10
+        },
+        {
+          "id": "5:5181759394381227737",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "12:2150346483669860810",
+          "relationTarget": "ProfileObjectBox"
+        },
+        {
+          "id": "6:3334786479888778892",
+          "name": "source",
+          "type": 9
+        },
+        {
+          "id": "7:5475831842157379132",
+          "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "8:2073170275133281303",
+          "name": "textSearch",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "13:2828137811506220708",
+      "lastPropertyId": "6:1995908543082217111",
+      "name": "PageObjectBox",
+      "properties": [
+        {
+          "id": "1:2997619549884531110",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3045639437798267375",
+          "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "3:3685112029199642351",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "13:4045844689837857632",
+          "relationTarget": "ProfileObjectBox"
+        },
+        {
+          "id": "4:7905755987026337527",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "5:6975032783249688724",
+          "name": "isUsers",
+          "type": 1
+        },
+        {
+          "id": "6:1995908543082217111",
+          "name": "uri",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "14:2264568377503461341",
+      "lastPropertyId": "5:921791311745859561",
+      "name": "PersonObjectBox",
+      "properties": [
+        {
+          "id": "1:8071635189356111057",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2416359282537423358",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "14:2331851559980043447",
+          "relationTarget": "ProfileObjectBox"
+        },
+        {
+          "id": "3:8716184634740937109",
+          "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "4:1078679554481515366",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "5:921791311745859561",
+          "name": "uri",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "15:718749666875458185",
+      "lastPropertyId": "7:3939153519093837126",
+      "name": "PlaceObjectBox",
+      "properties": [
+        {
+          "id": "1:7493219763141992856",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5891532683026152519",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "15:3485882708650912993",
+          "relationTarget": "ProfileObjectBox"
+        },
+        {
+          "id": "3:721779429255297982",
+          "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "4:7309264304556284170",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "5:6763698026127276353",
+          "name": "address",
+          "type": 9
+        },
+        {
+          "id": "6:2546805443731105041",
+          "name": "coordinateId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "16:2157237320885756881",
+          "relationTarget": "CoordinateObjectBox"
+        },
+        {
+          "id": "7:3939153519093837126",
+          "name": "uri",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "16:1157414822259754465",
+      "lastPropertyId": "3:8873723486176707249",
+      "name": "PostEventObjectBox",
+      "properties": [
+        {
+          "id": "1:6637217832992701852",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4385534999567010754",
+          "name": "postId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "17:2364098166143584773",
+          "relationTarget": "PostObjectBox"
+        },
+        {
+          "id": "3:8873723486176707249",
+          "name": "eventId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "18:8376869380334597358",
+          "relationTarget": "EventObjectBox"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "17:5431765467367987284",
+      "lastPropertyId": "3:8132688459474845873",
+      "name": "PostGroupObjectBox",
+      "properties": [
+        {
+          "id": "1:5415504271198537950",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4216351964868611417",
+          "name": "postId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "19:5200136758913859935",
+          "relationTarget": "PostObjectBox"
+        },
+        {
+          "id": "3:8132688459474845873",
+          "name": "groupId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "20:9107172830009642403",
+          "relationTarget": "GroupObjectBox"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "18:6846298331590584258",
+      "lastPropertyId": "6:975056696259718562",
+      "name": "PostLifeEventObjectBox",
+      "properties": [
+        {
+          "id": "1:80202707462971681",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8916844236900343061",
+          "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "3:7628231518812502705",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "21:7868124048655565902",
+          "relationTarget": "ProfileObjectBox"
+        },
+        {
+          "id": "4:8562541373624708428",
+          "name": "postId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "22:1631422496194227497",
+          "relationTarget": "PostObjectBox"
+        },
+        {
+          "id": "5:2929621704121131595",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "6:975056696259718562",
+          "name": "placeId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "23:7668662529778857021",
+          "relationTarget": "PlaceObjectBox"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "19:253225733701430663",
+      "lastPropertyId": "9:8154083604014753204",
+      "name": "PostObjectBox",
+      "properties": [
+        {
+          "id": "1:3742297921672035687",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3263977566491303566",
+          "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "3:4223401039630389463",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "24:2530187833926149292",
+          "relationTarget": "ProfileObjectBox"
+        },
+        {
+          "id": "4:5736812174223375141",
+          "name": "timestamp",
+          "type": 10
+        },
+        {
+          "id": "5:448159303766328086",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "6:7037465848491883218",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "7:2254170978570072004",
+          "name": "isArchived",
+          "type": 1
+        },
+        {
+          "id": "8:584411252658574428",
+          "name": "metadata",
+          "type": 9
+        },
+        {
+          "id": "9:8154083604014753204",
+          "name": "textSearch",
+          "type": 9,
+          "flags": 8,
+          "indexId": "25:7685984662990093093"
+        }
+      ],
+      "relations": [
+        {
+          "id": "5:8412033132906947800",
+          "name": "images",
+          "targetId": "11:3462602783690263513"
+        },
+        {
+          "id": "6:7452073978163766009",
+          "name": "videos",
+          "targetId": "25:7408058470126909588"
+        },
+        {
+          "id": "7:5178294760390645203",
+          "name": "files",
+          "targetId": "8:8173497920353175041"
+        },
+        {
+          "id": "8:9207771987147579651",
+          "name": "links",
+          "targetId": "12:6975332165253677798"
+        },
+        {
+          "id": "9:8944199469469945290",
+          "name": "mentions",
+          "targetId": "14:2264568377503461341"
+        },
+        {
+          "id": "10:6856736871309955747",
+          "name": "tags",
+          "targetId": "24:1482417685535382480"
+        }
+      ]
+    },
+    {
+      "id": "20:5766489530958534253",
+      "lastPropertyId": "5:6068926609091471884",
+      "name": "PostPollObjectBox",
+      "properties": [
+        {
+          "id": "1:4538675653405572800",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1174932226829839666",
+          "name": "postId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "26:621230879052348323",
+          "relationTarget": "PostObjectBox"
+        },
+        {
+          "id": "3:4922250996407146466",
+          "name": "isUsers",
+          "type": 1
+        },
+        {
+          "id": "4:7317276985370736133",
+          "name": "options",
+          "type": 30
+        },
+        {
+          "id": "5:6068926609091471884",
+          "name": "timestamp",
+          "type": 10
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "21:2719773299154251420",
+      "lastPropertyId": "20:5719844439614963761",
+      "name": "ProfileObjectBox",
+      "properties": [
+        {
+          "id": "1:4721237653663622080",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8636866593099693997",
+          "name": "serviceId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "27:2020354686833207715",
+          "relationTarget": "ServiceObjectBox"
+        },
+        {
+          "id": "3:4561217392805225427",
+          "name": "uri",
+          "type": 9
+        },
+        {
+          "id": "4:4913268947593449394",
+          "name": "username",
+          "type": 9
+        },
+        {
+          "id": "5:5188440823088994403",
+          "name": "fullName",
+          "type": 9
+        },
+        {
+          "id": "6:6587531932021427043",
+          "name": "profilePictureId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "28:6745479245413271676",
+          "relationTarget": "ImageObjectBox"
+        },
+        {
+          "id": "7:7993301299325890195",
+          "name": "gender",
+          "type": 9
+        },
+        {
+          "id": "8:5485910254282440353",
+          "name": "bio",
+          "type": 9
+        },
+        {
+          "id": "9:1185670993542360770",
+          "name": "currentCity",
+          "type": 9
+        },
+        {
+          "id": "10:4234267055390889993",
+          "name": "phoneNumbers",
+          "type": 30
+        },
+        {
+          "id": "11:3333252618884638191",
+          "name": "isPhoneConfirmed",
+          "type": 1
+        },
+        {
+          "id": "12:2552850425833882658",
+          "name": "createdTimestamp",
+          "type": 10
+        },
+        {
+          "id": "13:7311611313422970715",
+          "name": "isPrivate",
+          "type": 1
+        },
+        {
+          "id": "14:8586675154506273290",
+          "name": "websites",
+          "type": 30
+        },
+        {
+          "id": "15:5220083155905647339",
+          "name": "dateOfBirth",
+          "type": 10
+        },
+        {
+          "id": "16:3730785825173981307",
+          "name": "bloodInfo",
+          "type": 9
+        },
+        {
+          "id": "17:6189605601391234243",
+          "name": "friendPeerGroup",
+          "type": 9
+        },
+        {
+          "id": "18:5808905778209258845",
+          "name": "eligibility",
+          "type": 9
+        },
+        {
+          "id": "19:1040860888491240925",
+          "name": "metadata",
+          "type": 30
+        },
+        {
+          "id": "20:5719844439614963761",
+          "name": "raw",
+          "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "11:7076015648304798093",
+          "name": "emails",
+          "targetId": "6:8198342247179194842"
+        },
+        {
+          "id": "12:5244936132733230998",
+          "name": "changes",
+          "targetId": "3:6915507867412597863"
+        }
+      ]
+    },
+    {
+      "id": "22:2546962677408640988",
+      "lastPropertyId": "3:6320707774909246900",
+      "name": "ReactionObjectBox",
+      "properties": [
+        {
+          "id": "1:7130383929530009859",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5831640352015901514",
+          "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "3:6320707774909246900",
+          "name": "reaction",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "23:7124386460235375466",
+      "lastPropertyId": "4:563711128336151043",
+      "name": "ServiceObjectBox",
+      "properties": [
+        {
+          "id": "1:2509045733123929078",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7785709731655406302",
+          "name": "name",
+          "type": 9,
+          "flags": 2080,
+          "indexId": "29:5916203990088092476"
+        },
+        {
+          "id": "3:2938539919225233033",
+          "name": "company",
+          "type": 9
+        },
+        {
+          "id": "4:563711128336151043",
+          "name": "image",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "24:1482417685535382480",
+      "lastPropertyId": "2:3799565004835443371",
+      "name": "TagObjectBox",
+      "properties": [
+        {
+          "id": "1:6206313191465800241",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3799565004835443371",
+          "name": "name",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "25:7408058470126909588",
+      "lastPropertyId": "10:5415092912359071762",
+      "name": "VideoObjectBox",
+      "properties": [
+        {
+          "id": "1:4135958966933650099",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2896934335424131818",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "30:7270470472313041107",
+          "relationTarget": "ProfileObjectBox"
+        },
+        {
+          "id": "3:3090825824697701700",
+          "name": "uri",
+          "type": 9
+        },
+        {
+          "id": "4:4165924132399136445",
+          "name": "metadata",
+          "type": 9
+        },
+        {
+          "id": "5:5801620780092611237",
+          "name": "timestamp",
+          "type": 10
+        },
+        {
+          "id": "6:1052895336369484835",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "7:4452892139675764614",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "8:5572174684576340468",
+          "name": "thumbnail",
+          "type": 9
+        },
+        {
+          "id": "9:3146541384375439339",
+          "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "10:5415092912359071762",
+          "name": "textSearch",
+          "type": 9
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "25:7408058470126909588",
+  "lastIndexId": "30:7270470472313041107",
+  "lastRelationId": "12:5244936132733230998",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

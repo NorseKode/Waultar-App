@@ -51,4 +51,11 @@ class ProfileRepository implements IProfileRepository {
   int removeAllProfiles() {
     return _profileBox.removeAll();
   }
+
+  @override
+  int updateSingle(ProfileModel profile) {
+    var updatedEntity = _entityDirector.make<ProfileObjectBox>(profile);
+
+    return _profileBox.put(updatedEntity);
+  }
 }

@@ -1,3 +1,4 @@
 abstract class IMLModel {
-  void dispose();
+  bool init();
+  bool dispose();
 }

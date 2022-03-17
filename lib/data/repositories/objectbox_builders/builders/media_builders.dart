@@ -15,8 +15,19 @@ ImageObjectBox makeImageEntity(ImageModel model, ObjectBox context) {
       .findFirst();
 
   if (entity == null) {
-    entity = ImageObjectBox(uri: model.uri.path, raw: model.raw);
+    entity = ImageObjectBox(
+      uri: model.uri.path,
+      raw: model.raw,
+    );
     entity.textSearch = model.uri.path + " ";
+
+    if (model.mediaTags != null && model.mediaTags!.isNotEmpty) {
+      model.mediaTags!.map((e) {
+        entity!.textSearch += " " + e.item1;
+
+        return "(${e.item1},${e.item2})";
+      }).toList();
+    }
 
     entity.title = model.title;
     entity.description = model.description;

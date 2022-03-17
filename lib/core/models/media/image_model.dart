@@ -1,9 +1,12 @@
 import 'dart:ui';
 
+import 'package:tuple/tuple.dart';
+import 'package:waultar/core/ai/image_classifier.dart';
 import 'package:waultar/core/models/media/media_model.dart';
 import 'package:waultar/core/models/model_helper.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
 import 'package:waultar/core/models/ui_model.dart';
+import 'package:waultar/startup.dart';
 
 class ImageModel extends MediaModel implements UIModel {
   String? title;
@@ -18,9 +21,10 @@ class ImageModel extends MediaModel implements UIModel {
     DateTime? timestamp,
     this.title,
     this.description,
+    List<Tuple2<String, double>>? mediaTags,
   }) : super(id, profile, raw, uri, metadata, timestamp);
 
-  ImageModel.fromJson(Map<String, dynamic> json, ProfileModel profile)
+  ImageModel.fromJson(Map<String, dynamic> json, ProfileModel profile, {List<String>? mediaTags})
       : title = json.containsKey("title") ? json["title"] : "",
         description = json.containsKey("description") ? json["description"] : "",
         super(

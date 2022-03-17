@@ -46,7 +46,7 @@ class ParserService implements IParserService {
         paths = groupsAndPaths.item2;
 
         await for (final entity
-            in FacebookParser().parseListOfPaths(paths, profile: profileModel)) {
+            in FacebookParser().parseListOfPaths(paths, profileModel)) {
           _makeEntity(entity);
         }
         break;
@@ -61,7 +61,7 @@ class ParserService implements IParserService {
         var tempId = _makeEntity(profile);
         var profileModel = _profileRepo.getProfileById(tempId);
 
-        await for (final entity in parser.parseListOfPaths(paths, profile: profileModel)) {
+        await for (final entity in parser.parseListOfPaths(paths, profileModel)) {
           _makeEntity(entity);
         }
         break;

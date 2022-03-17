@@ -8,4 +8,5 @@ abstract class IBrowseService {
   List<PostModel>? getPosts();
   List<GroupModel> getGroups();
   List<PostPollModel> getPostPolls();
+  void printImageTags();
 }

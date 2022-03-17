@@ -263,11 +263,11 @@ class FacebookParser extends BaseParser {
   }
 
   @override
-  Stream parseListOfPaths(List<String> paths, {ProfileModel? profile}) async* {
+  Stream parseListOfPaths(List<String> paths, ProfileModel profile) async* {
     for (var path in paths) {
       if (Extensions.isJson(path)) {
         var file = File(path);
-        await for (final result in parseFile(file, profile: profile ?? ParseHelper.profile)) {
+        await for (final result in parseFile(file, profile: profile)) {
           yield result;
         }
       }

@@ -5,4 +5,5 @@ abstract class IProfileRepository {
   ProfileModel getProfileById(int id);
   List<ProfileModel> getAllProfiles();
   int removeAllProfiles();
+  int updateSingle(ProfileModel profile);
 }

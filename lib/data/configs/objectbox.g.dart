@@ -39,23 +39,23 @@ export 'package:objectbox/objectbox.dart'; // so that callers only have to impor
 
 final _entities = <ModelEntity>[
   ModelEntity(
-      id: const IdUid(1, 6320010516564046686),
+      id: const IdUid(1, 7987718259831269321),
       name: 'ActivityObjectBox',
-      lastPropertyId: const IdUid(3, 1434844301128226361),
+      lastPropertyId: const IdUid(3, 7535744931807831743),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 8175850818586218025),
+            id: const IdUid(1, 6954253194722456865),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 4287319479351473783),
+            id: const IdUid(2, 7168805123685119378),
             name: 'raw',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(3, 1434844301128226361),
+            id: const IdUid(3, 7535744931807831743),
             name: 'timestamp',
             type: 10,
             flags: 0)
@@ -63,18 +63,18 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(2, 6659570341474316386),
+      id: const IdUid(2, 9178149509157569960),
       name: 'AppSettingsObjectBox',
-      lastPropertyId: const IdUid(2, 2159592148714205258),
+      lastPropertyId: const IdUid(2, 279370844013267974),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 2614733372355763508),
+            id: const IdUid(1, 4955633288996612886),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 2159592148714205258),
+            id: const IdUid(2, 279370844013267974),
             name: 'darkmode',
             type: 1,
             flags: 0)
@@ -82,38 +82,38 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(3, 2174122917122888277),
+      id: const IdUid(3, 6915507867412597863),
       name: 'ChangeObjectBox',
-      lastPropertyId: const IdUid(6, 8855628137258507785),
+      lastPropertyId: const IdUid(6, 9000265003613715953),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 6416778946775179822),
+            id: const IdUid(1, 3240228696658288729),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 3836733263773164342),
+            id: const IdUid(2, 3117152869000844304),
             name: 'raw',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(3, 9210542149019033038),
+            id: const IdUid(3, 3244854510269335432),
             name: 'valueName',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 704787242610861899),
+            id: const IdUid(4, 2356083659596612054),
             name: 'previousValue',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 7307314982646440458),
+            id: const IdUid(5, 8096331500472585543),
             name: 'newValue',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(6, 8855628137258507785),
+            id: const IdUid(6, 9000265003613715953),
             name: 'timestamp',
             type: 10,
             flags: 0)
@@ -121,97 +121,97 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(4, 9183634050572594283),
+      id: const IdUid(4, 1749356893035462076),
       name: 'CommentObjectBox',
-      lastPropertyId: const IdUid(8, 2485763592886423922),
+      lastPropertyId: const IdUid(8, 8794316746495980242),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 8792103658493814083),
+            id: const IdUid(1, 4468087124358642498),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 3902235974843933914),
+            id: const IdUid(2, 6519693596049877629),
             name: 'commentedId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(1, 7443679797311657030),
+            indexId: const IdUid(1, 6757144027212803363),
             relationTarget: 'PersonObjectBox'),
         ModelProperty(
-            id: const IdUid(3, 4264242540538430738),
+            id: const IdUid(3, 3813472787123832802),
             name: 'text',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 8608469124258299322),
+            id: const IdUid(4, 7281305294731625136),
             name: 'timestamp',
             type: 10,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 5770434628132068851),
+            id: const IdUid(5, 7649351297931472579),
             name: 'groupId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(2, 1195558262975247448),
+            indexId: const IdUid(2, 6246130553774896555),
             relationTarget: 'GroupObjectBox'),
         ModelProperty(
-            id: const IdUid(6, 2832245316903006404),
+            id: const IdUid(6, 5343210903512263715),
             name: 'eventId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(3, 6407118215638220510),
+            indexId: const IdUid(3, 8291218655096798979),
             relationTarget: 'EventObjectBox'),
         ModelProperty(
-            id: const IdUid(7, 3303239192249908129),
+            id: const IdUid(7, 4806233717274162492),
             name: 'profileId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(4, 6661998424645030321),
+            indexId: const IdUid(4, 2082420470733961897),
             relationTarget: 'ProfileObjectBox'),
         ModelProperty(
-            id: const IdUid(8, 2485763592886423922),
+            id: const IdUid(8, 8794316746495980242),
             name: 'textSearch',
             type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[
         ModelRelation(
-            id: const IdUid(1, 4527251195682861115),
+            id: const IdUid(1, 7242652100994490610),
             name: 'images',
-            targetId: const IdUid(11, 4298818586146128224)),
+            targetId: const IdUid(11, 3462602783690263513)),
         ModelRelation(
-            id: const IdUid(2, 3317869555433551333),
+            id: const IdUid(2, 8913347831839426630),
             name: 'videos',
-            targetId: const IdUid(25, 6805183743956321438)),
+            targetId: const IdUid(25, 7408058470126909588)),
         ModelRelation(
-            id: const IdUid(3, 208076493498633931),
+            id: const IdUid(3, 8397292395526630791),
             name: 'files',
-            targetId: const IdUid(8, 5919219045316050294)),
+            targetId: const IdUid(8, 8173497920353175041)),
         ModelRelation(
-            id: const IdUid(4, 2225562351549322488),
+            id: const IdUid(4, 8111121176962234336),
             name: 'links',
-            targetId: const IdUid(12, 7547031683071396359))
+            targetId: const IdUid(12, 6975332165253677798))
       ],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(5, 4467476086720038356),
+      id: const IdUid(5, 687073592057344239),
       name: 'CoordinateObjectBox',
-      lastPropertyId: const IdUid(3, 3778364151142755774),
+      lastPropertyId: const IdUid(3, 1293054845995099506),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 6991548213506707441),
+            id: const IdUid(1, 7656606549177244918),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 6954054668257792370),
+            id: const IdUid(2, 5482820100607072721),
             name: 'longitude',
             type: 8,
             flags: 0),
         ModelProperty(
-            id: const IdUid(3, 3778364151142755774),
+            id: const IdUid(3, 1293054845995099506),
             name: 'latitude',
             type: 8,
             flags: 0)
@@ -219,29 +219,29 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(6, 319606739914836784),
+      id: const IdUid(6, 8198342247179194842),
       name: 'EmailObjectBox',
-      lastPropertyId: const IdUid(4, 2056770796197245662),
+      lastPropertyId: const IdUid(4, 2578512777646122939),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 4856770180013023791),
+            id: const IdUid(1, 6422365408263916410),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 1261325107941448740),
+            id: const IdUid(2, 7331832822639100396),
             name: 'raw',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(3, 7033468785615674690),
+            id: const IdUid(3, 2220887667881617997),
             name: 'email',
             type: 9,
             flags: 2080,
-            indexId: const IdUid(5, 6243537885252615092)),
+            indexId: const IdUid(5, 5405154203551521791)),
         ModelProperty(
-            id: const IdUid(4, 2056770796197245662),
+            id: const IdUid(4, 2578512777646122939),
             name: 'isCurrent',
             type: 1,
             flags: 0)
@@ -249,67 +249,67 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(7, 8751875067463222904),
+      id: const IdUid(7, 3793371515896001320),
       name: 'EventObjectBox',
-      lastPropertyId: const IdUid(11, 3708499460144925425),
+      lastPropertyId: const IdUid(11, 3688599980466320231),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 6065656885112322011),
+            id: const IdUid(1, 3460755059034069709),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 6229482868250224471),
+            id: const IdUid(2, 3086526809818522038),
             name: 'profileId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(6, 3486798958170272425),
+            indexId: const IdUid(6, 4720706250046039502),
             relationTarget: 'ProfileObjectBox'),
         ModelProperty(
-            id: const IdUid(3, 8019962476812612850),
+            id: const IdUid(3, 8915856711227523940),
             name: 'raw',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 1990863372688269483),
+            id: const IdUid(4, 804143404073790477),
             name: 'name',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 8811375022493693807),
+            id: const IdUid(5, 2454023141463946254),
             name: 'startTimestamp',
             type: 10,
             flags: 0),
         ModelProperty(
-            id: const IdUid(6, 7448067010465701614),
+            id: const IdUid(6, 2701416046147077785),
             name: 'endTimestamp',
             type: 10,
             flags: 0),
         ModelProperty(
-            id: const IdUid(7, 7986732550075152934),
+            id: const IdUid(7, 2581330471509595635),
             name: 'createdTimestamp',
             type: 10,
             flags: 0),
         ModelProperty(
-            id: const IdUid(8, 3494252452611618263),
+            id: const IdUid(8, 7459103100483673300),
             name: 'description',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(9, 5567983088633679729),
+            id: const IdUid(9, 8123256532166549954),
             name: 'isUsers',
             type: 1,
             flags: 0),
         ModelProperty(
-            id: const IdUid(10, 3245273952390439574),
+            id: const IdUid(10, 3032212372807168431),
             name: 'placeId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(7, 8350351279497206262),
+            indexId: const IdUid(7, 6543167520976905029),
             relationTarget: 'PlaceObjectBox'),
         ModelProperty(
-            id: const IdUid(11, 3708499460144925425),
+            id: const IdUid(11, 3688599980466320231),
             name: 'dbEventResponse',
             type: 6,
             flags: 0)
@@ -317,50 +317,50 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(8, 5919219045316050294),
+      id: const IdUid(8, 8173497920353175041),
       name: 'FileObjectBox',
-      lastPropertyId: const IdUid(8, 5905727533747452187),
+      lastPropertyId: const IdUid(8, 5673559283625398038),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 8884431157225116135),
+            id: const IdUid(1, 7960116512538251187),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 3956130716931443151),
+            id: const IdUid(2, 5812001724840842601),
             name: 'profileId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(8, 119206524496736396),
+            indexId: const IdUid(8, 2856429039708222094),
             relationTarget: 'ProfileObjectBox'),
         ModelProperty(
-            id: const IdUid(3, 7464801133590871469),
+            id: const IdUid(3, 5436597367419708006),
             name: 'raw',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 1302004762117806961),
+            id: const IdUid(4, 5526353111568093092),
             name: 'uri',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 3063329795183740956),
+            id: const IdUid(5, 1317119727272606355),
             name: 'metadata',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(6, 6881188821970782251),
+            id: const IdUid(6, 8163104901900804846),
             name: 'timestamp',
             type: 10,
             flags: 0),
         ModelProperty(
-            id: const IdUid(7, 7082225389807782789),
+            id: const IdUid(7, 5420202377399411791),
             name: 'thumbnail',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(8, 5905727533747452187),
+            id: const IdUid(8, 5673559283625398038),
             name: 'textSearch',
             type: 9,
             flags: 0)
@@ -368,35 +368,35 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(9, 6222482339361772842),
+      id: const IdUid(9, 5580104559374617914),
       name: 'FriendObjectBox',
-      lastPropertyId: const IdUid(5, 5959889375314331343),
+      lastPropertyId: const IdUid(5, 1874956295492235875),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 1695815030958583267),
+            id: const IdUid(1, 9162261063121478112),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 4643279850489206151),
+            id: const IdUid(2, 8639623028541221165),
             name: 'profileId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(9, 8391412773960709422),
+            indexId: const IdUid(9, 5157395356363308071),
             relationTarget: 'ProfileObjectBox'),
         ModelProperty(
-            id: const IdUid(3, 6464767881235522998),
+            id: const IdUid(3, 7310057183381403203),
             name: 'timestamp',
             type: 10,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 7840554560880716524),
+            id: const IdUid(4, 2835631866524801532),
             name: 'raw',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 5959889375314331343),
+            id: const IdUid(5, 1874956295492235875),
             name: 'dbFriendType',
             type: 6,
             flags: 0)
@@ -404,45 +404,45 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(10, 7202434810791359787),
+      id: const IdUid(10, 2773810857800214800),
       name: 'GroupObjectBox',
-      lastPropertyId: const IdUid(7, 7766342099048281291),
+      lastPropertyId: const IdUid(7, 2241564316338948120),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 4312499475177748802),
+            id: const IdUid(1, 2674866871199164970),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 7664672237025872167),
+            id: const IdUid(2, 5045391912915123893),
             name: 'profileId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(10, 3045419332548376771),
+            indexId: const IdUid(10, 545680223523895993),
             relationTarget: 'ProfileObjectBox'),
         ModelProperty(
-            id: const IdUid(3, 2300195130168523021),
+            id: const IdUid(3, 3792143838984384621),
             name: 'raw',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 257525825888293202),
+            id: const IdUid(4, 1449452967868974173),
             name: 'name',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 7254016353513878517),
+            id: const IdUid(5, 8057637449433534121),
             name: 'isUsers',
             type: 1,
             flags: 0),
         ModelProperty(
-            id: const IdUid(6, 474257545703275571),
+            id: const IdUid(6, 5441487774319922347),
             name: 'badge',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(7, 7766342099048281291),
+            id: const IdUid(7, 2241564316338948120),
             name: 'timestamp',
             type: 10,
             flags: 0)
@@ -450,106 +450,111 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(11, 4298818586146128224),
+      id: const IdUid(11, 3462602783690263513),
       name: 'ImageObjectBox',
-      lastPropertyId: const IdUid(9, 5900283136126317819),
+      lastPropertyId: const IdUid(10, 3129072682373590297),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 5794154794747275235),
+            id: const IdUid(1, 4719487492548689691),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 8676824664014155681),
+            id: const IdUid(2, 8147797870186825824),
             name: 'profileId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(11, 4773717874178171194),
+            indexId: const IdUid(11, 2559058921628034846),
             relationTarget: 'ProfileObjectBox'),
         ModelProperty(
-            id: const IdUid(3, 8323729350284277667),
+            id: const IdUid(3, 463728724737006082),
             name: 'uri',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 3848460513539099458),
+            id: const IdUid(4, 6679419970514910635),
             name: 'metadata',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 506462884568958819),
+            id: const IdUid(5, 7334763099207422638),
             name: 'timestamp',
             type: 10,
             flags: 0),
         ModelProperty(
-            id: const IdUid(6, 6451019219280214654),
+            id: const IdUid(6, 7607455122003847081),
             name: 'title',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(7, 4499266923975227800),
+            id: const IdUid(7, 3329373143130361432),
             name: 'description',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(8, 5055710554229930065),
+            id: const IdUid(8, 6743536654104558653),
             name: 'raw',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(9, 5900283136126317819),
+            id: const IdUid(9, 4572742775709453964),
             name: 'textSearch',
             type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(10, 3129072682373590297),
+            name: 'mediaTags',
+            type: 30,
             flags: 0)
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(12, 7547031683071396359),
+      id: const IdUid(12, 6975332165253677798),
       name: 'LinkObjectBox',
-      lastPropertyId: const IdUid(8, 2569003681126726532),
+      lastPropertyId: const IdUid(8, 2073170275133281303),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 3883997728797237169),
+            id: const IdUid(1, 4181890453694410012),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 629082136959631236),
+            id: const IdUid(2, 2264696216801899060),
             name: 'uri',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(3, 6984121592439948453),
+            id: const IdUid(3, 6845076210527364352),
             name: 'metadata',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 2888412554230369669),
+            id: const IdUid(4, 2573227082928959636),
             name: 'timestamp',
             type: 10,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 5819535253808133133),
+            id: const IdUid(5, 5181759394381227737),
             name: 'profileId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(12, 199894910040174409),
+            indexId: const IdUid(12, 2150346483669860810),
             relationTarget: 'ProfileObjectBox'),
         ModelProperty(
-            id: const IdUid(6, 5029317628155403384),
+            id: const IdUid(6, 3334786479888778892),
             name: 'source',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(7, 3743968777429901366),
+            id: const IdUid(7, 5475831842157379132),
             name: 'raw',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(8, 2569003681126726532),
+            id: const IdUid(8, 2073170275133281303),
             name: 'textSearch',
             type: 9,
             flags: 0)
@@ -557,40 +562,40 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(13, 7877760914290489091),
+      id: const IdUid(13, 2828137811506220708),
       name: 'PageObjectBox',
-      lastPropertyId: const IdUid(6, 4913633011906232525),
+      lastPropertyId: const IdUid(6, 1995908543082217111),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 3149534922863920929),
+            id: const IdUid(1, 2997619549884531110),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 4313153356268252939),
+            id: const IdUid(2, 3045639437798267375),
             name: 'raw',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(3, 3402829073932663731),
+            id: const IdUid(3, 3685112029199642351),
             name: 'profileId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(13, 8931538976511543062),
+            indexId: const IdUid(13, 4045844689837857632),
             relationTarget: 'ProfileObjectBox'),
         ModelProperty(
-            id: const IdUid(4, 286376187750777565),
+            id: const IdUid(4, 7905755987026337527),
             name: 'name',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 1385711000670083035),
+            id: const IdUid(5, 6975032783249688724),
             name: 'isUsers',
             type: 1,
             flags: 0),
         ModelProperty(
-            id: const IdUid(6, 4913633011906232525),
+            id: const IdUid(6, 1995908543082217111),
             name: 'uri',
             type: 9,
             flags: 0)
@@ -598,35 +603,35 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(14, 8099953473750368557),
+      id: const IdUid(14, 2264568377503461341),
       name: 'PersonObjectBox',
-      lastPropertyId: const IdUid(5, 5440866230150092792),
+      lastPropertyId: const IdUid(5, 921791311745859561),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 8280918160523685026),
+            id: const IdUid(1, 8071635189356111057),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 959852205179609794),
+            id: const IdUid(2, 2416359282537423358),
             name: 'profileId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(14, 8934263541820140547),
+            indexId: const IdUid(14, 2331851559980043447),
             relationTarget: 'ProfileObjectBox'),
         ModelProperty(
-            id: const IdUid(3, 6438747665941421307),
+            id: const IdUid(3, 8716184634740937109),
             name: 'raw',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 3884988737453005345),
+            id: const IdUid(4, 1078679554481515366),
             name: 'name',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 5440866230150092792),
+            id: const IdUid(5, 921791311745859561),
             name: 'uri',
             type: 9,
             flags: 0)
@@ -634,47 +639,47 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(15, 668765633174947641),
+      id: const IdUid(15, 718749666875458185),
       name: 'PlaceObjectBox',
-      lastPropertyId: const IdUid(7, 8377790884695851450),
+      lastPropertyId: const IdUid(7, 3939153519093837126),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 3484210122435389541),
+            id: const IdUid(1, 7493219763141992856),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 8659873021521114680),
+            id: const IdUid(2, 5891532683026152519),
             name: 'profileId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(15, 4943000551642697161),
+            indexId: const IdUid(15, 3485882708650912993),
             relationTarget: 'ProfileObjectBox'),
         ModelProperty(
-            id: const IdUid(3, 2670623824987879754),
+            id: const IdUid(3, 721779429255297982),
             name: 'raw',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 8674321809929621929),
+            id: const IdUid(4, 7309264304556284170),
             name: 'name',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 4066231440443934821),
+            id: const IdUid(5, 6763698026127276353),
             name: 'address',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(6, 6078578951295703604),
+            id: const IdUid(6, 2546805443731105041),
             name: 'coordinateId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(16, 7134585388609081550),
+            indexId: const IdUid(16, 2157237320885756881),
             relationTarget: 'CoordinateObjectBox'),
         ModelProperty(
-            id: const IdUid(7, 8377790884695851450),
+            id: const IdUid(7, 3939153519093837126),
             name: 'uri',
             type: 9,
             flags: 0)
@@ -682,218 +687,218 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(16, 8392512854894918719),
+      id: const IdUid(16, 1157414822259754465),
       name: 'PostEventObjectBox',
-      lastPropertyId: const IdUid(3, 2426762179008732325),
+      lastPropertyId: const IdUid(3, 8873723486176707249),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 9048295842947522408),
+            id: const IdUid(1, 6637217832992701852),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 8761521116818908631),
+            id: const IdUid(2, 4385534999567010754),
             name: 'postId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(17, 5433610366096522404),
+            indexId: const IdUid(17, 2364098166143584773),
             relationTarget: 'PostObjectBox'),
         ModelProperty(
-            id: const IdUid(3, 2426762179008732325),
+            id: const IdUid(3, 8873723486176707249),
             name: 'eventId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(18, 7526324826684031487),
+            indexId: const IdUid(18, 8376869380334597358),
             relationTarget: 'EventObjectBox')
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(17, 4184910391050655093),
+      id: const IdUid(17, 5431765467367987284),
       name: 'PostGroupObjectBox',
-      lastPropertyId: const IdUid(3, 8456756660838402357),
+      lastPropertyId: const IdUid(3, 8132688459474845873),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 2723066198430396248),
+            id: const IdUid(1, 5415504271198537950),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 1300839883110381599),
+            id: const IdUid(2, 4216351964868611417),
             name: 'postId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(19, 3788032105170523621),
+            indexId: const IdUid(19, 5200136758913859935),
             relationTarget: 'PostObjectBox'),
         ModelProperty(
-            id: const IdUid(3, 8456756660838402357),
+            id: const IdUid(3, 8132688459474845873),
             name: 'groupId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(20, 8010828117767802008),
+            indexId: const IdUid(20, 9107172830009642403),
             relationTarget: 'GroupObjectBox')
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(18, 2968434231632986624),
+      id: const IdUid(18, 6846298331590584258),
       name: 'PostLifeEventObjectBox',
-      lastPropertyId: const IdUid(6, 6508731461809915403),
+      lastPropertyId: const IdUid(6, 975056696259718562),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 5894167748768559336),
+            id: const IdUid(1, 80202707462971681),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 996915452654181854),
+            id: const IdUid(2, 8916844236900343061),
             name: 'raw',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(3, 3101399054194947696),
+            id: const IdUid(3, 7628231518812502705),
             name: 'profileId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(21, 2098203232871558357),
+            indexId: const IdUid(21, 7868124048655565902),
             relationTarget: 'ProfileObjectBox'),
         ModelProperty(
-            id: const IdUid(4, 2454007267945436333),
+            id: const IdUid(4, 8562541373624708428),
             name: 'postId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(22, 2337671095498933086),
+            indexId: const IdUid(22, 1631422496194227497),
             relationTarget: 'PostObjectBox'),
         ModelProperty(
-            id: const IdUid(5, 5443058618601972880),
+            id: const IdUid(5, 2929621704121131595),
             name: 'title',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(6, 6508731461809915403),
+            id: const IdUid(6, 975056696259718562),
             name: 'placeId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(23, 426841210727436771),
+            indexId: const IdUid(23, 7668662529778857021),
             relationTarget: 'PlaceObjectBox')
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(19, 6283438340632596360),
+      id: const IdUid(19, 253225733701430663),
       name: 'PostObjectBox',
-      lastPropertyId: const IdUid(9, 4393173483694057796),
+      lastPropertyId: const IdUid(9, 8154083604014753204),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 6211923021557388950),
+            id: const IdUid(1, 3742297921672035687),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 5373641024082030914),
+            id: const IdUid(2, 3263977566491303566),
             name: 'raw',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(3, 6795408434939474718),
+            id: const IdUid(3, 4223401039630389463),
             name: 'profileId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(24, 3953847000034533352),
+            indexId: const IdUid(24, 2530187833926149292),
             relationTarget: 'ProfileObjectBox'),
         ModelProperty(
-            id: const IdUid(4, 8300067177766505201),
+            id: const IdUid(4, 5736812174223375141),
             name: 'timestamp',
             type: 10,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 7171360783973750454),
+            id: const IdUid(5, 448159303766328086),
             name: 'description',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(6, 2218115703676213127),
+            id: const IdUid(6, 7037465848491883218),
             name: 'title',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(7, 2896891831093083894),
+            id: const IdUid(7, 2254170978570072004),
             name: 'isArchived',
             type: 1,
             flags: 0),
         ModelProperty(
-            id: const IdUid(8, 2225504037676593061),
+            id: const IdUid(8, 584411252658574428),
             name: 'metadata',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(9, 4393173483694057796),
+            id: const IdUid(9, 8154083604014753204),
             name: 'textSearch',
             type: 9,
             flags: 8,
-            indexId: const IdUid(25, 13293386567865698))
+            indexId: const IdUid(25, 7685984662990093093))
       ],
       relations: <ModelRelation>[
         ModelRelation(
-            id: const IdUid(5, 1121082307220834915),
+            id: const IdUid(5, 8412033132906947800),
             name: 'images',
-            targetId: const IdUid(11, 4298818586146128224)),
+            targetId: const IdUid(11, 3462602783690263513)),
         ModelRelation(
-            id: const IdUid(6, 4035789265577771722),
+            id: const IdUid(6, 7452073978163766009),
             name: 'videos',
-            targetId: const IdUid(25, 6805183743956321438)),
+            targetId: const IdUid(25, 7408058470126909588)),
         ModelRelation(
-            id: const IdUid(7, 4033472049128936366),
+            id: const IdUid(7, 5178294760390645203),
             name: 'files',
-            targetId: const IdUid(8, 5919219045316050294)),
+            targetId: const IdUid(8, 8173497920353175041)),
         ModelRelation(
-            id: const IdUid(8, 1977150923049495364),
+            id: const IdUid(8, 9207771987147579651),
             name: 'links',
-            targetId: const IdUid(12, 7547031683071396359)),
+            targetId: const IdUid(12, 6975332165253677798)),
         ModelRelation(
-            id: const IdUid(9, 321169709016569414),
+            id: const IdUid(9, 8944199469469945290),
             name: 'mentions',
-            targetId: const IdUid(14, 8099953473750368557)),
+            targetId: const IdUid(14, 2264568377503461341)),
         ModelRelation(
-            id: const IdUid(10, 1361899932552637622),
+            id: const IdUid(10, 6856736871309955747),
             name: 'tags',
-            targetId: const IdUid(24, 6785652819118177844))
+            targetId: const IdUid(24, 1482417685535382480))
       ],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(20, 798387531550878151),
+      id: const IdUid(20, 5766489530958534253),
       name: 'PostPollObjectBox',
-      lastPropertyId: const IdUid(5, 2358864640104217767),
+      lastPropertyId: const IdUid(5, 6068926609091471884),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 6336430983662489371),
+            id: const IdUid(1, 4538675653405572800),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 1579412461123693877),
+            id: const IdUid(2, 1174932226829839666),
             name: 'postId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(26, 2030684835035452330),
+            indexId: const IdUid(26, 621230879052348323),
             relationTarget: 'PostObjectBox'),
         ModelProperty(
-            id: const IdUid(3, 5550230330444514526),
+            id: const IdUid(3, 4922250996407146466),
             name: 'isUsers',
             type: 1,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 5138369902441538041),
+            id: const IdUid(4, 7317276985370736133),
             name: 'options',
             type: 30,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 2358864640104217767),
+            id: const IdUid(5, 6068926609091471884),
             name: 'timestamp',
             type: 10,
             flags: 0)
@@ -901,145 +906,145 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(21, 8210231553704597440),
+      id: const IdUid(21, 2719773299154251420),
       name: 'ProfileObjectBox',
-      lastPropertyId: const IdUid(20, 3843814872670073159),
+      lastPropertyId: const IdUid(20, 5719844439614963761),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 6646242169553309620),
+            id: const IdUid(1, 4721237653663622080),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 5424475924084293176),
+            id: const IdUid(2, 8636866593099693997),
             name: 'serviceId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(27, 3082669591752577885),
+            indexId: const IdUid(27, 2020354686833207715),
             relationTarget: 'ServiceObjectBox'),
         ModelProperty(
-            id: const IdUid(3, 2422409792117459396),
+            id: const IdUid(3, 4561217392805225427),
             name: 'uri',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 3258332734287844997),
+            id: const IdUid(4, 4913268947593449394),
             name: 'username',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 6699821400873150508),
+            id: const IdUid(5, 5188440823088994403),
             name: 'fullName',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(6, 5807844545506643530),
+            id: const IdUid(6, 6587531932021427043),
             name: 'profilePictureId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(28, 2587439638390092887),
+            indexId: const IdUid(28, 6745479245413271676),
             relationTarget: 'ImageObjectBox'),
         ModelProperty(
-            id: const IdUid(7, 8353480182715332224),
+            id: const IdUid(7, 7993301299325890195),
             name: 'gender',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(8, 1803955960036877618),
+            id: const IdUid(8, 5485910254282440353),
             name: 'bio',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(9, 125429765077081317),
+            id: const IdUid(9, 1185670993542360770),
             name: 'currentCity',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(10, 1137367563163656779),
+            id: const IdUid(10, 4234267055390889993),
             name: 'phoneNumbers',
             type: 30,
             flags: 0),
         ModelProperty(
-            id: const IdUid(11, 529599822836824544),
+            id: const IdUid(11, 3333252618884638191),
             name: 'isPhoneConfirmed',
             type: 1,
             flags: 0),
         ModelProperty(
-            id: const IdUid(12, 2484771790479508089),
+            id: const IdUid(12, 2552850425833882658),
             name: 'createdTimestamp',
             type: 10,
             flags: 0),
         ModelProperty(
-            id: const IdUid(13, 2117738450782170142),
+            id: const IdUid(13, 7311611313422970715),
             name: 'isPrivate',
             type: 1,
             flags: 0),
         ModelProperty(
-            id: const IdUid(14, 1410435996019720192),
+            id: const IdUid(14, 8586675154506273290),
             name: 'websites',
             type: 30,
             flags: 0),
         ModelProperty(
-            id: const IdUid(15, 8674446644698343868),
+            id: const IdUid(15, 5220083155905647339),
             name: 'dateOfBirth',
             type: 10,
             flags: 0),
         ModelProperty(
-            id: const IdUid(16, 5983628706804434039),
+            id: const IdUid(16, 3730785825173981307),
             name: 'bloodInfo',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(17, 5032550850142424584),
+            id: const IdUid(17, 6189605601391234243),
             name: 'friendPeerGroup',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(18, 7557793875539004936),
+            id: const IdUid(18, 5808905778209258845),
             name: 'eligibility',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(19, 7456723110854361477),
+            id: const IdUid(19, 1040860888491240925),
             name: 'metadata',
             type: 30,
             flags: 0),
         ModelProperty(
-            id: const IdUid(20, 3843814872670073159),
+            id: const IdUid(20, 5719844439614963761),
             name: 'raw',
             type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[
         ModelRelation(
-            id: const IdUid(11, 7081787390081066710),
+            id: const IdUid(11, 7076015648304798093),
             name: 'emails',
-            targetId: const IdUid(6, 319606739914836784)),
+            targetId: const IdUid(6, 8198342247179194842)),
         ModelRelation(
-            id: const IdUid(12, 3281015366659328923),
+            id: const IdUid(12, 5244936132733230998),
             name: 'changes',
-            targetId: const IdUid(3, 2174122917122888277))
+            targetId: const IdUid(3, 6915507867412597863))
       ],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(22, 5974359450139995097),
+      id: const IdUid(22, 2546962677408640988),
       name: 'ReactionObjectBox',
-      lastPropertyId: const IdUid(3, 8378547768885014179),
+      lastPropertyId: const IdUid(3, 6320707774909246900),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 1673355473317399981),
+            id: const IdUid(1, 7130383929530009859),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 3913836520491581007),
+            id: const IdUid(2, 5831640352015901514),
             name: 'raw',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(3, 8378547768885014179),
+            id: const IdUid(3, 6320707774909246900),
             name: 'reaction',
             type: 9,
             flags: 0)
@@ -1047,29 +1052,29 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(23, 3340460891980796443),
+      id: const IdUid(23, 7124386460235375466),
       name: 'ServiceObjectBox',
-      lastPropertyId: const IdUid(4, 4001577449772811517),
+      lastPropertyId: const IdUid(4, 563711128336151043),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 1480360118210362274),
+            id: const IdUid(1, 2509045733123929078),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 6327545856821811781),
+            id: const IdUid(2, 7785709731655406302),
             name: 'name',
             type: 9,
             flags: 2080,
-            indexId: const IdUid(29, 7132283015800413430)),
+            indexId: const IdUid(29, 5916203990088092476)),
         ModelProperty(
-            id: const IdUid(3, 1908719711393457224),
+            id: const IdUid(3, 2938539919225233033),
             name: 'company',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 4001577449772811517),
+            id: const IdUid(4, 563711128336151043),
             name: 'image',
             type: 9,
             flags: 0)
@@ -1077,18 +1082,18 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(24, 6785652819118177844),
+      id: const IdUid(24, 1482417685535382480),
       name: 'TagObjectBox',
-      lastPropertyId: const IdUid(2, 8007376296193353817),
+      lastPropertyId: const IdUid(2, 3799565004835443371),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 5214195833193601203),
+            id: const IdUid(1, 6206313191465800241),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 8007376296193353817),
+            id: const IdUid(2, 3799565004835443371),
             name: 'name',
             type: 9,
             flags: 0)
@@ -1096,60 +1101,60 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(25, 6805183743956321438),
+      id: const IdUid(25, 7408058470126909588),
       name: 'VideoObjectBox',
-      lastPropertyId: const IdUid(10, 469444760533244216),
+      lastPropertyId: const IdUid(10, 5415092912359071762),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
-            id: const IdUid(1, 4805517065765488498),
+            id: const IdUid(1, 4135958966933650099),
             name: 'id',
             type: 6,
             flags: 1),
         ModelProperty(
-            id: const IdUid(2, 5261236225186544019),
+            id: const IdUid(2, 2896934335424131818),
             name: 'profileId',
             type: 11,
             flags: 520,
-            indexId: const IdUid(30, 1096427168233224905),
+            indexId: const IdUid(30, 7270470472313041107),
             relationTarget: 'ProfileObjectBox'),
         ModelProperty(
-            id: const IdUid(3, 708229159491323653),
+            id: const IdUid(3, 3090825824697701700),
             name: 'uri',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(4, 4290173483206708982),
+            id: const IdUid(4, 4165924132399136445),
             name: 'metadata',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 3014716095843342829),
+            id: const IdUid(5, 5801620780092611237),
             name: 'timestamp',
             type: 10,
             flags: 0),
         ModelProperty(
-            id: const IdUid(6, 3324675497476290697),
+            id: const IdUid(6, 1052895336369484835),
             name: 'title',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(7, 8821941597438254301),
+            id: const IdUid(7, 4452892139675764614),
             name: 'description',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(8, 8094545579196470039),
+            id: const IdUid(8, 5572174684576340468),
             name: 'thumbnail',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(9, 7059100322503833195),
+            id: const IdUid(9, 3146541384375439339),
             name: 'raw',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(10, 469444760533244216),
+            id: const IdUid(10, 5415092912359071762),
             name: 'textSearch',
             type: 9,
             flags: 0)
@@ -1178,9 +1183,9 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(25, 6805183743956321438),
-      lastIndexId: const IdUid(30, 1096427168233224905),
-      lastRelationId: const IdUid(12, 3281015366659328923),
+      lastEntityId: const IdUid(25, 7408058470126909588),
+      lastIndexId: const IdUid(30, 7270470472313041107),
+      lastRelationId: const IdUid(12, 5244936132733230998),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [],
@@ -1649,7 +1654,12 @@ ModelDefinition getObjectBoxModel() {
               : fbb.writeString(object.description!);
           final rawOffset = fbb.writeString(object.raw);
           final textSearchOffset = fbb.writeString(object.textSearch);
-          fbb.startTable(10);
+          final mediaTagsOffset = object.mediaTags == null
+              ? null
+              : fbb.writeList(object.mediaTags!
+                  .map(fbb.writeString)
+                  .toList(growable: false));
+          fbb.startTable(11);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.profile.targetId);
           fbb.addOffset(2, uriOffset);
@@ -1659,6 +1669,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(6, descriptionOffset);
           fbb.addOffset(7, rawOffset);
           fbb.addOffset(8, textSearchOffset);
+          fbb.addOffset(9, mediaTagsOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1680,7 +1691,10 @@ ModelDefinition getObjectBoxModel() {
               description: const fb.StringReader()
                   .vTableGetNullable(buffer, rootOffset, 16),
               raw:
-                  const fb.StringReader().vTableGet(buffer, rootOffset, 18, ''))
+                  const fb.StringReader().vTableGet(buffer, rootOffset, 18, ''),
+              mediaTags:
+                  const fb.ListReader<String>(fb.StringReader(), lazy: false)
+                      .vTableGetNullable(buffer, rootOffset, 22))
             ..textSearch =
                 const fb.StringReader().vTableGet(buffer, rootOffset, 20, '');
           object.profile.targetId =
@@ -2708,6 +2722,10 @@ class ImageObjectBox_ {
   /// see [ImageObjectBox.textSearch]
   static final textSearch =
       QueryStringProperty<ImageObjectBox>(_entities[10].properties[8]);
+
+  /// see [ImageObjectBox.mediaTags]
+  static final mediaTags =
+      QueryStringVectorProperty<ImageObjectBox>(_entities[10].properties[9]);
 }
 
 /// [LinkObjectBox] entity fields to define ObjectBox queries.

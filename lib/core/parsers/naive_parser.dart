@@ -144,7 +144,7 @@ class NaiveParser extends BaseParser {
   }
 
   @override
-  Stream parseListOfPaths(List<String> paths, {ProfileModel? profile}) {
+  Stream parseListOfPaths(List<String> paths, ProfileModel profile) {
     // TODO: implement parseListOfPaths
     throw UnimplementedError();
   }

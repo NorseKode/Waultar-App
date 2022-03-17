@@ -119,6 +119,7 @@ flutter:
   
   assets:
     - lib/assets/graphics/
+    - lib/assets/ai_models/
     - blobs/
     - assets/
 

@@ -1,3 +1,4 @@
+import 'package:tuple/tuple.dart';
 import 'package:waultar/core/models/media/file_model.dart';
 import 'package:waultar/core/models/media/image_model.dart';
 import 'package:waultar/core/models/media/link_model.dart';
@@ -21,6 +22,13 @@ ImageModel makeImageModel(ImageObjectBox entity) {
     uri: uri,
   );
 
+  if (entity.mediaTags != null) {
+    entity.mediaTags!.map((e) {
+      var temp = e.split(",");
+
+      return Tuple2(temp[0], double.parse(temp[1]));
+    }).toList();
+  }
   if (entity.title != null) model.title = entity.title;
   if (entity.description != null) model.description = entity.description;
   if (entity.metadata != null) model.metadata = entity.metadata;

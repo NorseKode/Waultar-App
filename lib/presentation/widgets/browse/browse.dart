@@ -61,11 +61,9 @@ class _BrowseState extends State<Browse> {
           ),
           DefaultButton(
             onPressed: () {
-              // setState(() {
-              //   _models = _browseService.getGroups();
-              // });
+              _browseService.printImageTags();
             },
-            text: localizer.groups,
+            text: "temp images",
           ),
           const SizedBox(
             width: 20,

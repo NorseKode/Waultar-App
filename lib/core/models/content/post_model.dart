@@ -68,11 +68,46 @@ class PostModel extends BaseModel {
       }
     }
 
-    medias = mediaJson.map((element) => ParseHelper.parseMedia(element, "media")!).toList();
+    print(mediaJson);
+
+    medias = mediaJson.map((element) => ParseHelper.parseMedia(element, "media", profile)!).toList();
     description = json["title"] ?? "";
     title = data != null ? data["post"] : "";
     // event = eventJson != null ? EventModel.fromJson(eventJson, profile) : null;
     timestamp = ModelHelper.getTimestamp(json)!;
+  }
+
+  PostModel.fromInstagram(Map<String, dynamic> json, ProfileModel profile)
+      : timestamp = ModelHelper.getTimestamp(json) ?? DateTime.fromMicrosecondsSinceEpoch(0),
+        super(0, profile, json.toString()) {
+    var mediaJson = <dynamic>[];
+
+    if (json.keys.length == 1 && json.containsKey("media")) {
+      var temp = json["media"].first;
+      description = temp["title"];
+    } else {
+      description = json["title"];
+    }
+
+    for (var item in json["media"]) {
+      mediaJson.add(item);
+    }
+
+    medias = <MediaModel>[];
+
+    for (var element in mediaJson) { 
+      var temp = ParseHelper.parseMedia(element, "uri", profile);
+
+      if (temp != null) {
+        medias!.add(temp);
+      }
+     }
+
+     for (var media in medias!) {
+       if (media is ImageModel) {
+        media.tagMedia();
+       }
+     }
   }
 
   @override

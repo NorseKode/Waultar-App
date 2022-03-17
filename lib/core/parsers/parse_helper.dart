@@ -29,7 +29,7 @@ class ParseHelper {
   static ServiceModel instagram = ServiceModel(
       id: 2, name: "instagram", company: "meta", image: Uri(path: ""));
 
-  static MediaModel? parseMedia(var jsonData, String mediaKey) {
+  static MediaModel? parseMedia(var jsonData, String mediaKey, ProfileModel profile) {
     switch (Extensions.getFileType(jsonData[mediaKey])) {
       case FileType.image:
         return ImageModel.fromJson(jsonData, profile);
@@ -43,7 +43,7 @@ class ParseHelper {
         return null;
     }
   }
-  
+    
   static MediaModel? parseMediaNoKnownKey(var jsonData, ProfileModel profile) {
     var mediaKey = mediaKeys.firstWhere((element) => jsonData.containsKey(element), orElse: () => "",);    
     var media = jsonData[mediaKey];

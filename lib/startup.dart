@@ -16,6 +16,8 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repositor
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_video_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
+import 'package:waultar/core/ai/image_classifier.dart';
+import 'package:waultar/core/ai/image_classifier_efficientnet.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/repositories/appsettings_repo.dart';
 import 'package:waultar/data/repositories/comment_repo.dart';
@@ -51,14 +53,10 @@ late final String _logFolderPath;
 
 Future<void> setupServices() async {
   await initApplicationPaths().whenComplete(() async {
-
-    locator.registerSingleton<String>(_waultarPath,
-        instanceName: 'waultar_root_directory');
+    locator.registerSingleton<String>(_waultarPath, instanceName: 'waultar_root_directory');
     locator.registerSingleton<String>(_dbFolderPath, instanceName: 'db_folder');
-    locator.registerSingleton<String>(_extractsFolderPath,
-        instanceName: 'extracts_folder');
-    locator.registerSingleton<String>(_logFolderPath,
-        instanceName: 'log_folder');
+    locator.registerSingleton<String>(_extractsFolderPath, instanceName: 'extracts_folder');
+    locator.registerSingleton<String>(_logFolderPath, instanceName: 'log_folder');
 
     os = detectPlatform();
     locator.registerSingleton<OS>(os, instanceName: 'platform');
@@ -82,14 +80,12 @@ Future<void> setupServices() async {
     // model director is the opposite of ObjectBoxDirector
     // this director maps from entity to model
     _modelDirector = ModelDirector();
-    locator.registerSingleton<IModelDirector>(_modelDirector,
-        instanceName: 'model_director');
+    locator.registerSingleton<IModelDirector>(_modelDirector, instanceName: 'model_director');
 
     // register all abstract repositories with their concrete implementations
     // each repo gets injected the context (to access the relevant store)
     // and the objectboxDirector to map from models to entities
-    locator.registerSingleton<IAppSettingsRepository>(
-        AppSettingsRepository(_context),
+    locator.registerSingleton<IAppSettingsRepository>(AppSettingsRepository(_context),
         instanceName: 'appSettingsRepo');
     locator.registerSingleton<IPostRepository>(
         PostRepository(_context, _objectboxDirector, _modelDirector),
@@ -128,6 +124,12 @@ Future<void> setupServices() async {
     // register all services and inject their dependencies
     locator.registerSingleton<IAppSettingsService>(AppSettingsService(),
         instanceName: 'appSettingsService');
+
+    // AI Models
+    locator.registerSingleton<ImageClassifier>(
+      ImageClassifierEfficientNet(),
+      instanceName: 'imageClassifier',
+    );
   });
 }
 

@@ -5,6 +5,8 @@ import 'package:waultar/configs/exceptions/parse_exception.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/abstracts/abstract_parsers/base_parser.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
+import 'package:waultar/core/ai/image_classifier.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/models/model_helper.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
@@ -14,7 +16,8 @@ import 'package:waultar/startup.dart';
 class InstagramParser extends BaseParser {
   final appLogger = locator.get<AppLogger>(instanceName: 'logger');
   static const _profileFiles = ["personal_information", "signup_information"];
-
+  final _imageClassifier = locator.get<ImageClassifier>(instanceName: 'imageClassifier');
+  final _profileRepo = locator.get<IProfileRepository>(instanceName: 'profileRepo');
   
   @override
   Stream<dynamic> parseFile(File file, {ProfileModel? profile}) async* {
@@ -28,7 +31,7 @@ class InstagramParser extends BaseParser {
             appLogger.logger.info("Parsed Instagram Profile: ${result.toString()}");
             yield result;
           } else if (object.containsKey("media")) {
-            var result = PostModel.fromJson(object, profile ?? ParseHelper.profile);
+            var result = PostModel.fromInstagram(object, profile ?? ParseHelper.profile);
             appLogger.logger.info("Parsed Instagram Post: ${result.toString()}");
             yield result;
           } else if (object.containsKey("comments_media_comments")) {
@@ -83,6 +86,8 @@ class InstagramParser extends BaseParser {
 
   @override
   Future<Tuple2<ProfileModel, List<String>>> parseProfile(List<String> paths, {ServiceModel? service}) async {
+    _imageClassifier.init();
+
     var profileMain = paths.firstWhere((element) => element.contains(_profileFiles[0]));
     paths.remove(profileMain);
 
@@ -102,19 +107,43 @@ class InstagramParser extends BaseParser {
             ModelHelper.getTimestamp(value) ??
                 DateTime.fromMicrosecondsSinceEpoch(0));
 
+    _imageClassifier.dispose();
+
     return Tuple2(profile, paths);
   }
 
   @override
-  Stream parseListOfPaths(List<String> paths, {ProfileModel? profile}) async* {
+  Stream parseListOfPaths(List<String> paths, ProfileModel profile) async* {
+    _imageClassifier.init();
+
+    if (paths.length > 1) {
+      var basePathToFiles = StringBuffer();
+      var path1  = paths.first;
+      var path2  = paths.last;
+
+      for (var i = 0; i < path1.length; i++) {
+        if (path1[i] == path2[i]) {
+          basePathToFiles.write(path1[i]);
+        } else {
+          break;
+        }
+      }
+
+      profile.basePathToFiles = basePathToFiles.toString();
+
+      _profileRepo.updateSingle(profile);
+    }
+
     for (var path in paths) {
       if (Extensions.isJson(path)) {
         var file = File(path);
-        await for (final result in parseFile(file, profile: profile ?? ParseHelper.profile)) {
+        await for (final result in parseFile(file, profile: profile)) {
           yield result;
         }
       }
     }
+
+    _imageClassifier.dispose();
   }
 
   @override
