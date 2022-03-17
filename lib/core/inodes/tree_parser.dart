@@ -22,6 +22,14 @@ class TreeParser {
   late String formerFileName;
   late String formerFileParentName;
 
+  Future<void> parseManyPaths(List<String> paths) async {
+    for (var path in paths) {
+      if (Extensions.isJson(path)) {
+        await parsePath(path);
+      }
+      
+    }
+  }
 
   Future<DataPointName> parsePath(String path) async {
     if (Extensions.isJson(path)) {
@@ -32,7 +40,8 @@ class TreeParser {
       var cleanInitialName = dirtyInitialName.replaceAll(".json", "");
 
       var name = parseName(json, category, cleanInitialName, null);
-      _nameRepo.addSingle(name);
+      category.dataPointNames.add(name);
+      _categoryRepo.updateCategory(category);
       return name;
     } else {
       throw Exception("File extension not supported");

@@ -21,6 +21,7 @@ import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
 import 'package:waultar/core/inodes/inode_parser.dart';
+import 'package:waultar/core/inodes/tree_parser.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/repositories/appsettings_repo.dart';
 import 'package:waultar/data/repositories/comment_repo.dart';
@@ -147,6 +148,9 @@ Future<void> setupServices() async {
     locator.registerSingleton<ICollectionsService>(
         CollectionsService(_categoryRepo, _nameRepo, _dataRepo),
         instanceName: 'collectionsService');
+    locator.registerSingleton<TreeParser>(
+        TreeParser(_categoryRepo, _nameRepo, _dataRepo),
+        instanceName: 'parser');
   });
 }
 

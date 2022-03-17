@@ -5,6 +5,7 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_service_repositor
 import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
 import 'package:waultar/core/inodes/inode.dart';
 import 'package:waultar/core/inodes/inode_parser.dart';
+import 'package:waultar/core/inodes/tree_parser.dart';
 import 'package:waultar/core/models/content/post_model.dart';
 import 'package:waultar/domain/services/browse_service.dart';
 import 'package:waultar/domain/services/parser_service.dart';
@@ -33,6 +34,8 @@ class _BrowseState extends State<Browse> {
   List<dynamic>? _models;
   late ThemeProvider themeProvider;
 
+  final TreeParser parser = locator.get<TreeParser>(instanceName: 'parser');
+
   final IServiceRepository _serviceRepo =
       locator.get<IServiceRepository>(instanceName: 'serviceRepo');
 
@@ -43,11 +46,13 @@ class _BrowseState extends State<Browse> {
   final ICollectionsService _collectionsService =
       locator.get<ICollectionsService>(instanceName: 'collectionsService');
   late List<DataCategory> _categories;
+  late List<DataPointName> _names;
 
   @override
   void initState() {
     super.initState();
     _categories = _collectionsService.getAllCategories();
+    _names = _collectionsService.getAllNamesFromCategory(_categories.first);
   }
 
   uploadButton() {
@@ -75,13 +80,13 @@ class _BrowseState extends State<Browse> {
               'service_name': service.name
             };
             var uploadedFiles = await compute(extractZip, inputMap);
-            // await _inodeParserService
-            //     .parse(uploadedFiles)
-            //     .whenComplete(() => setState(() {
-            //           isLoading = false;
-            //           SnackBarCustom.useSnackbarOfContext(
-            //               context, localizer.doneLoadingData);
-            //         }));
+            await parser
+                .parseManyPaths(uploadedFiles)
+                .whenComplete(() => setState(() {
+                      isLoading = false;
+                      SnackBarCustom.useSnackbarOfContext(
+                          context, localizer.doneLoadingData);
+                    }));
           }
         }
       },
@@ -90,28 +95,58 @@ class _BrowseState extends State<Browse> {
   }
 
   categoriesColumn() {
-    return Expanded(
-      flex: 1,
-      child: ListView.builder(
-        scrollDirection: Axis.vertical,
-        itemCount: _categories.length,
-        itemBuilder: (_, index) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              InkWell(
-                onTap: () => print(_categories[index].name),
-                child: Text(_categories[index].name +
-                    "   " +
-                    _categories[index].count.toString()),
-              ),
-              const Divider(
-                thickness: 2.0,
-              )
-            ],
-          );
-        },
-      ),
+    return ListView.builder(
+      // shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+      itemCount: _categories.length,
+      itemBuilder: (_, index) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap: () {
+                print(_categories[index].name);
+                setState(() {
+                  _names = _collectionsService
+                      .getAllNamesFromCategory(_categories[index]);
+                });
+              },
+              child: Text(_categories[index].name +
+                  "   " +
+                  _categories[index].count.toString()),
+            ),
+            const Divider(
+              thickness: 2.0,
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  namesColumn() {
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      // shrinkWrap: true,
+      itemCount: _names.length,
+      itemBuilder: (_, index) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap: () {
+                print(_names[index].name);
+              },
+              child: Text(_names[index].name +
+                  "   " +
+                  _names[index].count.toString()),
+            ),
+            const Divider(
+              thickness: 2.0,
+            )
+          ],
+        );
+      },
     );
   }
 
@@ -140,10 +175,19 @@ class _BrowseState extends State<Browse> {
               const SizedBox(
                 height: 20,
               ),
-              const SizedBox(
-                height: 20,
+              Flexible(
+                child: GridView.count(
+                  physics: const NeverScrollableScrollPhysics(),
+                  childAspectRatio: 0.7,
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  // shrinkWrap: true,
+                  children: [
+                    categoriesColumn(),
+                    namesColumn(),
+                  ],
+                ),
               ),
-              categoriesColumn()
             ],
           );
   }

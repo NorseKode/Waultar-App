@@ -11,6 +11,8 @@ class DataCategoryRepository {
     _categoryBox = _context.store.box<DataCategory>();
   }
 
+  int updateCategory(DataCategory category) => _categoryBox.put(category);
+
   DataCategory? getCategoryByName(String name) {
     var category = _categoryBox
         .query(DataCategory_.name.equals(name))
