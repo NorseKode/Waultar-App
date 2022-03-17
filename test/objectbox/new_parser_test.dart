@@ -99,10 +99,6 @@ Future<void> main() async {
 
     test(' - facebook activity history in security and login information', () async {
       var result = await _parser.parsePath(yourFacebookActivityHistory);
-      // printResultName(result);
-      // for (var child in result.children) {
-      //   printResultName(child);
-      // }
 
       expect(result.name, 'last activity time');
       expect(result.dataPoints.length, 0);
