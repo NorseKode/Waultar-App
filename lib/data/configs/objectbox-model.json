@@ -908,7 +908,7 @@
     },
     {
       "id": "21:2719773299154251420",
-      "lastPropertyId": "20:5719844439614963761",
+      "lastPropertyId": "21:8725191033130267934",
       "name": "ProfileObjectBox",
       "properties": [
         {
@@ -1016,6 +1016,11 @@
         {
           "id": "20:5719844439614963761",
           "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "21:8725191033130267934",
+          "name": "basePathToFiles",
           "type": 9
         }
       ],

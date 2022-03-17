@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   objectbox_flutter_libs
+  tflite_flutter_helper
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

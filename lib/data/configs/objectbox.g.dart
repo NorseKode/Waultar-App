@@ -908,7 +908,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(21, 2719773299154251420),
       name: 'ProfileObjectBox',
-      lastPropertyId: const IdUid(20, 5719844439614963761),
+      lastPropertyId: const IdUid(21, 8725191033130267934),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -1013,6 +1013,11 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(20, 5719844439614963761),
             name: 'raw',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(21, 8725191033130267934),
+            name: 'basePathToFiles',
             type: 9,
             flags: 0)
       ],
@@ -2171,7 +2176,10 @@ ModelDefinition getObjectBoxModel() {
                   .map(fbb.writeString)
                   .toList(growable: false));
           final rawOffset = fbb.writeString(object.raw);
-          fbb.startTable(21);
+          final basePathToFilesOffset = object.basePathToFiles == null
+              ? null
+              : fbb.writeString(object.basePathToFiles!);
+          fbb.startTable(22);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.service.targetId);
           fbb.addOffset(2, uriOffset);
@@ -2192,6 +2200,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(17, eligibilityOffset);
           fbb.addOffset(18, metadataOffset);
           fbb.addOffset(19, rawOffset);
+          fbb.addOffset(20, basePathToFilesOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -2229,6 +2238,7 @@ ModelDefinition getObjectBoxModel() {
               friendPeerGroup: const fb.StringReader().vTableGetNullable(buffer, rootOffset, 36),
               eligibility: const fb.StringReader().vTableGetNullable(buffer, rootOffset, 38),
               metadata: const fb.ListReader<String>(fb.StringReader(), lazy: false).vTableGetNullable(buffer, rootOffset, 40),
+              basePathToFiles: const fb.StringReader().vTableGetNullable(buffer, rootOffset, 44),
               raw: const fb.StringReader().vTableGet(buffer, rootOffset, 42, ''));
           object.service.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
@@ -3072,6 +3082,10 @@ class ProfileObjectBox_ {
   /// see [ProfileObjectBox.raw]
   static final raw =
       QueryStringProperty<ProfileObjectBox>(_entities[20].properties[19]);
+
+  /// see [ProfileObjectBox.basePathToFiles]
+  static final basePathToFiles =
+      QueryStringProperty<ProfileObjectBox>(_entities[20].properties[20]);
 
   /// see [ProfileObjectBox.emails]
   static final emails = QueryRelationToMany<ProfileObjectBox, EmailObjectBox>(

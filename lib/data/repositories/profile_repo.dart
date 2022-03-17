@@ -54,8 +54,15 @@ class ProfileRepository implements IProfileRepository {
 
   @override
   int updateSingle(ProfileModel profile) {
-    var updatedEntity = _entityDirector.make<ProfileObjectBox>(profile);
+    var entity = _profileBox.get(profile.id);
 
-    return _profileBox.put(updatedEntity);
+    if (entity == null) {
+      throw ObjectBoxException("Tried to update a profile that doesn't exists: ${profile.toString()}");
+    } else {
+      var updatedEntity = _entityDirector.make<ProfileObjectBox>(profile);
+      updatedEntity.id = entity.id;
+
+      return _profileBox.put(updatedEntity);
+    }
   }
 }
