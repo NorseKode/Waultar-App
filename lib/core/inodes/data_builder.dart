@@ -42,6 +42,7 @@ class DataBuilder {
     
     should we scout for timestamps here as well or later in the pipeline ?
     */ 
+    _scout();
 
     return dataPoint;
   }
