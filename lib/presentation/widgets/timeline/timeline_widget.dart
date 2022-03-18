@@ -26,39 +26,29 @@ class _TimelineWidgetState extends State<TimelineWidget> {
   String dropdownValue = '2000';
 
   Widget _yAxis(int max, int rowCount) {
-    return Container(
-      child: Column(
-        children: [
-          Expanded(
-              child: Column(
-            children: [
-              Expanded(
-                  child: Column(
-                      children: List.generate(
-                          rowCount + 1,
-                          (index) => Expanded(
-                                child: Container(
-                                    decoration: BoxDecoration(
-                                        border: Border(
-                                      bottom: BorderSide(
-                                          color: Colors.grey.withOpacity(0.3)),
-                                    )),
-                                    alignment: Alignment.bottomCenter,
-                                    child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          // Text(NumberFormat.compact().format(
-                                          //     ((max / rowCount) *
-                                          //         (index + 1)))),
-                                          Text(NumberFormat.compact().format(
-                                              ((max / rowCount) * (index)))),
-                                        ])),
-                              )).reversed.toList())),
-            ],
-          )),
-        ],
-      ),
+    return Column(
+      children: [
+        Expanded(
+            child: Column(
+                children: List.generate(
+                    rowCount + 1,
+                    (index) => Expanded(
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  border: Border(
+                                bottom: BorderSide(
+                                    color: Colors.grey.withOpacity(0.3)),
+                              )),
+                              alignment: Alignment.bottomCenter,
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(NumberFormat.compact()
+                                        .format(((max / rowCount) * (index)))),
+                                  ])),
+                        )).reversed.toList())),
+      ],
     );
   }
 
@@ -168,7 +158,7 @@ class _TimelineWidgetState extends State<TimelineWidget> {
     List<TimeModel> blocks = widget.blocks;
     if (blocks.isEmpty) return Container();
     maxDatapointCount = _maxListLength(blocks);
-    rowCount = 4;
+    rowCount = 5;
     // rowCount =
     //     (((int.parse((maxDatapointCount.toString()).substring(0, 1))) * 5) / 2)
     //         .ceil();
