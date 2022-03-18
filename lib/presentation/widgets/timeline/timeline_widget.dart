@@ -115,7 +115,8 @@ class _TimelineWidgetState extends State<TimelineWidget> {
                 (index) => Expanded(
                       flex: model.entries[index].item1,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        padding: const EdgeInsets.only(
+                            left: 10.0, right: 10, top: 3),
                         child: Container(
                           color: model.entries[index].item3,
                         ),

@@ -87,7 +87,7 @@ class _DataPointWidgetState extends State<DataPointWidget> {
                 SizedBox(width: 20),
                 Expanded(
                   child: Text(
-                      DateFormat('dd. MMMM y Hm')
+                      DateFormat('dd. MMMM y H:m')
                           .format(widget.dpList[index].getTimestamp()),
                       style:
                           TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),

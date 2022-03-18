@@ -44,7 +44,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                       child: Checkbox(
                         splashRadius: 0,
                         checkColor: Colors.white,
-                        fillColor: MaterialStateProperty.all(Color(0xFF5D97FF)),
+                        fillColor: MaterialStateProperty.all(Color(0xFF19A8F5)),
                         value: values[key],
                         onChanged: (bool? value) {
                           setState(() {
