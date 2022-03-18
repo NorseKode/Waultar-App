@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/models/misc/service_model.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
 
@@ -41,6 +42,32 @@ class ParseHelper {
       default:
         return null;
     }
+  }
+  
+  static MediaModel? parseMediaNoKnownKey(var jsonData, ProfileModel profile) {
+    var mediaKey = mediaKeys.firstWhere((element) => jsonData.containsKey(element), orElse: () => "",);    
+    var media = jsonData[mediaKey];
+    var pathKey = pathKeys.firstWhere((element) => media.containsKey(element));
+    var isLink = jsonData.containsKey("url");
+
+
+    if (isLink) {
+      return LinkModel.fromJson(jsonData, profile);
+    } else {
+      switch (Extensions.getFileType(media[pathKey])) {
+        case FileType.image:
+          return ImageModel.fromJson(jsonData, profile);
+        case FileType.video:
+          return VideoModel.fromJson(jsonData, profile);
+        case FileType.file:
+          return FileModel.fromJson(jsonData, profile);
+        case FileType.link:
+          return LinkModel.fromJson(jsonData, profile);
+        default:
+          return null;
+      }
+    }
+
   }
 
   static Stream<dynamic> returnEveryJsonObject(var jsonData) async* {

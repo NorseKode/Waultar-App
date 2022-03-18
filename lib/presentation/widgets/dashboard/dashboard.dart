@@ -3,10 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 
 import 'package:waultar/presentation/widgets/general/default_widgets/service_widget.dart';
+import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 
 import 'package:waultar/startup.dart';
 
@@ -64,6 +67,7 @@ class _DashboardState extends State<Dashboard> {
                   localizer.yourSocialDataOverview,
                   style: themeProvider.themeData().textTheme.headline4,
                 ), //dashboard widgets
+
                 const SizedBox(height: 20),
                 // DefaultButton(onPressed: () {}),
                 // DefaultButton(text: "Press me! Please do", onPressed: () {}, color: Colors.blue),

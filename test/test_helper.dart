@@ -15,6 +15,14 @@ class TestHelper {
       raw: '',
       uri: Uri(),
       service: facebook);
+  static ProfileModel instagramProfile = ProfileModel(
+      activities: [],
+      createdTimestamp: DateTime.now(),
+      emails: [],
+      fullName: '',
+      raw: '',
+      uri: Uri(),
+      service: instagram);
   static ServiceModel facebook =
       ServiceModel(id: 1, name: "facebook", company: "meta", image: Uri(path: ""));
   static ServiceModel instagram =

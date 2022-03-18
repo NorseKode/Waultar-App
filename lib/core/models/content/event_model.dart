@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:waultar/core/models/base_model.dart';
 import 'package:waultar/core/models/misc/place_model.dart';
 import 'package:waultar/core/models/model_helper.dart';
@@ -41,6 +43,24 @@ class EventModel extends BaseModel {
             ? PlaceModel.fromJson(json['place'], profile)
             : null, 
         super(0, profile, json.toString());
+
+  @override
+  Color getAssociatedColor() {
+    // TODO: implement getAssociatedColor
+    throw UnimplementedError();
+  }
+
+  @override
+  String getMostInformativeField() {
+    // TODO: implement getMostInformativeField
+    throw UnimplementedError();
+  }
+
+  @override
+  DateTime getTimestamp() {
+    // TODO: implement getTimestamp
+    throw UnimplementedError();
+  }
 }
 
 enum EventResponse { unknown, interested, joined, declined }

@@ -1,4 +1,5 @@
 import 'package:waultar/configs/globals/app_logger.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_comment_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_file_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_image_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_link_repository.dart';
@@ -58,6 +59,8 @@ class PresentationHelper {
         (locator.get<ILinkRepository>(instanceName: 'linkRepo').removeAll()).toString());
     _appLogger.logger.info("PostPolls deleted: " +
         (locator.get<IPostPollRepository>(instanceName: 'postPollRepo').removeAll()).toString());
+    _appLogger.logger.info("Comments deleted: " +
+        (locator.get<ICommentRepository>(instanceName: 'commentRepo').deleteAll()).toString());
 
     _appLogger.logger.info("Nuke database => removed all elements");
   }
