@@ -62,17 +62,6 @@ class _BrowseState extends State<Browse> {
           ),
           DefaultButton(
             onPressed: () {
-              // setState(() {
-              //   _models = _browseService.getGroups();
-              // });
-            },
-            text: localizer.groups,
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          DefaultButton(
-            onPressed: () {
               setState(() {
                 _models = _browseService.getPostPolls();
               });
@@ -100,13 +89,14 @@ class _BrowseState extends State<Browse> {
                           (element) => dart_path.extension(element) == ".zip")
                       .toList();
 
-                  var inputMap = {
+                  var extractZipinputMap = {
                     'path': dart_path.normalize(zipFiles.first),
                     'extracts_folder':
                         locator.get<String>(instanceName: 'extracts_folder'),
                     'service_name': service.name
                   };
-                  var uploadedFiles = await compute(extractZip, inputMap);
+                  var uploadedFiles = await compute(extractZip, extractZipinputMap);
+                  
                   await ParserService()
                       .parseAll(uploadedFiles, service)
                       .whenComplete(() => setState(() {

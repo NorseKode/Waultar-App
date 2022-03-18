@@ -140,28 +140,15 @@ class _MenuPanelState extends State<MenuPanel> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   logo(),
-                  const Divider(
-                      height: 40, thickness: 2, color: Color(0xFF2D325A)),
-                  menuButton(Iconsax.music_dashboard, localizer.dashboard,
-                      ViewScreen.dashboard, (_) {
-                    context
-                        .read<AppState>()
-                        .updateNavigatorState(AppRoutePath.home());
-                  }),
-                  menuButton(
-                      Iconsax.command, localizer.collections, ViewScreen.browse,
-                      (_) {
-                    context
-                        .read<AppState>()
-                        .updateNavigatorState(AppRoutePath.browse());
-                  }),
-                  menuButton(
-                      Iconsax.routing, localizer.timeline, ViewScreen.timeline,
-                      (_) {
-                    context
-                        .read<AppState>()
-                        .updateNavigatorState(AppRoutePath.timeline());
-                  }),
+                  const Divider(height: 40, thickness: 2, color: Color(0xFF363747)),
+                  menuButton(Iconsax.music_dashboard, localizer.dashboard, ViewScreen.dashboard,
+                      (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.home()); }),
+                  menuButton(Iconsax.command, localizer.collections, ViewScreen.browse,
+                      (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.browse()); }),
+                  menuButton(Iconsax.command, localizer.gallery, ViewScreen.gallery,
+                      (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.gallery()); }),
+                  menuButton(Iconsax.routing, localizer.timeline, ViewScreen.timeline,
+                      (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.timeline()); }),
                   menuButton(
                       Iconsax.routing, localizer.search, ViewScreen.search,
                       (_) {
@@ -169,6 +156,8 @@ class _MenuPanelState extends State<MenuPanel> {
                         .read<AppState>()
                         .updateNavigatorState(AppRoutePath.search());
                   }),
+                  const Divider(
+                      height: 40, thickness: 2, color: Color(0xFF2D325A)),
                   menuButton(
                       themeProvider.isLightTheme ? Iconsax.sun : Iconsax.moon,
                       localizer.changeTheme,

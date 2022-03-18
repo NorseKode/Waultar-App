@@ -11,4 +11,5 @@ enum ViewScreen {
   timeline,
   search,
   settings,
+  gallery,
 }

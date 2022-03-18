@@ -21,6 +21,7 @@ ProfileObjectBox makeProfileEntity(ProfileModel model, ObjectBox context) {
     friendPeerGroup: model.friendPeerGroup,
     eligibility: model.eligibility,
     metadata: model.metadata,
+    basePathToFiles: model.basePathToFiles,
     raw: model.raw,
   );
 

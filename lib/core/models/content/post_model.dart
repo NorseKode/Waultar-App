@@ -80,6 +80,37 @@ class PostModel extends BaseModel {
     timestamp = ModelHelper.getTimestamp(json)!;
   }
 
+  PostModel.fromInstagram(Map<String, dynamic> json, ProfileModel profile)
+      : timestamp = ModelHelper.getTimestamp(json) ?? DateTime.fromMicrosecondsSinceEpoch(0),
+        super(0, profile, json.toString()) {
+    var mediaJson = <dynamic>[];
+
+    if (json.keys.length == 1 && json.containsKey("media")) {
+      var temp = json["media"].first;
+      description = temp["title"];
+    } else {
+      description = json["title"];
+    }
+
+    for (var item in json["media"]) {
+      mediaJson.add(item);
+    }
+
+    medias = <MediaModel>[];
+
+    for (var element in mediaJson) { 
+      var temp = ParseHelper.parseMedia(element, "uri", profile);
+
+      if (temp != null) {
+        // if (temp is ImageModel) {
+        //   temp.tagMedia();
+        // }
+
+        medias!.add(temp);
+      }
+     }
+  }
+
   @override
   String toString() {
     return "Title: $title, description: $description, timestamp: ${timestamp.toString()}";

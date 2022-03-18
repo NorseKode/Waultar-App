@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/configs/navigation/screen.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
 import 'package:waultar/presentation/presentation_helper.dart';
 import 'package:waultar/presentation/screens/shared/waultar_desktop_main.dart';
 import 'package:waultar/presentation/widgets/general/menu_panel.dart';
 import 'package:waultar/presentation/widgets/general/top_panel.dart';
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:waultar/startup.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({Key? key}) : super(key: key);
@@ -17,6 +21,7 @@ class SettingsView extends StatefulWidget {
 class _SettingsViewState extends State<SettingsView> {
   late AppLocalizations localizer;
   final _activeScreen = ViewScreen.settings;
+  final _appSettings = locator.get<IAppSettingsService>(instanceName: 'appSettingsService');
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +32,27 @@ class _SettingsViewState extends State<SettingsView> {
       MenuPanel(active: _activeScreen),
       const TopPanel(),
       Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            child: DefaultButton(
-              text: localizer.nukeDatabase,
-              onPressed: () { PresentationHelper.nukeDatabase(); },
-            ),
+          DefaultButton(
+            text: localizer.nukeDatabase,
+            onPressed: () {
+              PresentationHelper.nukeDatabase();
+            },
+          ),
+          const Divider(),
+          Row(
+            children: [
+              Text("Enable performance mode"),
+              Switch(
+                value: ISPERFORMANCETRACKING,
+                onChanged: (value) async {
+                  await _appSettings.toggleIsPerformanceTracking(value);
+
+                  setState(() {});
+                },
+              ),
+            ],
           ),
         ],
       ),

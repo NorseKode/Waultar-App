@@ -31,7 +31,7 @@ abstract class BaseParser {
   /// Parses a list of [paths] and returns the models that is found
   ///
   /// Throws an [ParseException] if something unexpected in encountered
-  Stream<dynamic> parseListOfPaths(List<String> paths, {ProfileModel profile});
+  Stream<dynamic> parseListOfPaths(List<String> paths, ProfileModel profile);
 
   /// Parses all files in [directory]
   ///

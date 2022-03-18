@@ -227,6 +227,22 @@ class FacebookParser extends BaseParser {
       profile.service = service;
     }
 
+     if (paths.length > 1) {
+      var basePathToFiles = StringBuffer();
+      var path1 = paths.first;
+      var path2 = paths.last;
+
+      for (var i = 0; i < path1.length; i++) {
+        if (path1[i] == path2[i]) {
+          basePathToFiles.write(path1[i]);
+        } else {
+          break;
+        }
+      }
+
+      profile.basePathToFiles = basePathToFiles.toString();
+    }
+
     return Tuple2(profile, paths);
   }
 
@@ -263,11 +279,11 @@ class FacebookParser extends BaseParser {
   }
 
   @override
-  Stream parseListOfPaths(List<String> paths, {ProfileModel? profile}) async* {
+  Stream parseListOfPaths(List<String> paths, ProfileModel profile) async* {
     for (var path in paths) {
       if (Extensions.isJson(path)) {
         var file = File(path);
-        await for (final result in parseFile(file, profile: profile ?? ParseHelper.profile)) {
+        await for (final result in parseFile(file, profile: profile)) {
           yield result;
         }
       }

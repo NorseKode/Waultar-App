@@ -1,3 +1,4 @@
+import 'package:objectbox/objectbox.dart';
 import 'package:waultar/core/models/content/comment_model.dart';
 import 'package:waultar/core/models/media/file_model.dart';
 import 'package:waultar/core/models/media/image_model.dart';
@@ -9,18 +10,24 @@ import 'package:waultar/data/entities/media/file_objectbox.dart';
 import 'package:waultar/data/entities/media/image_objectbox.dart';
 import 'package:waultar/data/entities/media/link_objectbox.dart';
 import 'package:waultar/data/entities/media/video_objectbox.dart';
+import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 import 'package:waultar/data/repositories/objectbox_builders/builders/group_builder.dart';
 import 'package:waultar/data/repositories/objectbox_builders/builders/index.dart';
-import 'package:waultar/data/repositories/objectbox_builders/builders/profile_builder.dart';
 
 CommentObjectBox makeCommentEntity(CommentModel model, ObjectBox context) {
   var searchBuilder = StringBuffer();
   var entity = CommentObjectBox(text: model.text, timestamp: model.timestamp);
-  
+
   searchBuilder.write(model.timestamp.toString());
   searchBuilder.write(" " + model.text);
-  
-  entity.profile.target = makeProfileEntity(model.profile, context);
+
+  if (model.profile.id == 0) {
+    throw ObjectBoxException("Profile Id is 0 - profile must be stored before calling me");
+  } else {
+    var profileEntity = context.store.box<ProfileObjectBox>().get(model.profile.id);
+    entity.profile.target = profileEntity;
+  }
+
   entity.commented.target = makePersonEntity(model.commented, context);
   searchBuilder.write(model.commented.name);
 

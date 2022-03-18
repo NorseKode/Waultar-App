@@ -35,6 +35,7 @@ ProfileModel makeProfileModel(ProfileObjectBox entity) {
       eligibility: entity.eligibility,
       metadata: entity.metadata,
       activities: [], // TODO : activities not modelled in db yet
+      basePathToFiles: entity.basePathToFiles,
       raw: entity.raw);
 
   if (entity.changes.isNotEmpty) {

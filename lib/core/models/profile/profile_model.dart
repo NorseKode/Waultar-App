@@ -29,6 +29,7 @@ class ProfileModel {
   List<ActivityModel> activities;
   String? eligibility;
   List<String>? metadata;
+  String? basePathToFiles;
   String raw;
 
   ProfileModel({
@@ -55,6 +56,7 @@ class ProfileModel {
     required this.activities,
     this.eligibility,
     this.metadata,
+    this.basePathToFiles,
     required this.raw,
   });
 
@@ -208,6 +210,6 @@ class ProfileModel {
 
   @override
   String toString() {
-    return "username: $username, fullname: $fullName";
+    return "username: $username, fullname: $fullName, base path to files: $basePathToFiles";
   }
 }
