@@ -16,8 +16,9 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repositor
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_video_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/ai/image_classifier.dart';
-import 'package:waultar/core/ai/image_classifier_efficientnet.dart';
+import 'package:waultar/core/ai/image_classifier_mobilenetv3.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/repositories/appsettings_repo.dart';
 import 'package:waultar/data/repositories/comment_repo.dart';
@@ -36,6 +37,7 @@ import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/data/repositories/service_repo.dart';
 import 'package:waultar/data/repositories/video_repo.dart';
 import 'package:waultar/domain/services/appsettings_service.dart';
+import 'package:waultar/domain/services/ml_service.dart';
 import 'configs/globals/app_logger.dart';
 import 'configs/globals/os_enum.dart';
 
@@ -121,15 +123,16 @@ Future<void> setupServices() async {
         CommentRepository(_context, _objectboxDirector, _modelDirector),
         instanceName: 'commentRepo');
 
+    // AI Models
+    locator.registerSingleton<ImageClassifier>(
+      ImageClassifierMobileNetV3(),
+      instanceName: 'imageClassifier',
+    );
+
     // register all services and inject their dependencies
     locator.registerSingleton<IAppSettingsService>(AppSettingsService(),
         instanceName: 'appSettingsService');
-
-    // AI Models
-    locator.registerSingleton<ImageClassifier>(
-      ImageClassifierEfficientNet(),
-      instanceName: 'imageClassifier',
-    );
+    locator.registerSingleton<IMLService>(MLService(), instanceName: 'mlService');
   });
 }
 

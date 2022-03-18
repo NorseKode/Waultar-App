@@ -1,4 +1,3 @@
-
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_comment_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_event_repository.dart';
@@ -7,8 +6,8 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_image_repository.
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_poll_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
-import 'package:waultar/core/ai/image_classifier.dart';
 import 'package:waultar/core/models/content/post_poll_model.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/parsers/facebook_parser.dart';
@@ -70,22 +69,12 @@ class ParserService implements IParserService {
         await for (final entity in parser.parseListOfPaths(paths, profileModel)) {
           _makeEntity(entity);
         }
-        
+
         _appLogger.logger.info("Finished parsing of files started");
 
         // tag all images
-        var images = _imageRepo.getAllImages();
+        locator.get<IMLService>(instanceName: 'mlService').classifyImagesFromDB();
 
-        if (images != null) {
-          _appLogger.logger.info("Started tagging of images");
-          var classifier = locator.get<ImageClassifier>(instanceName: 'imageClassifier');
-
-          for (var image in _imageRepo.getAllImages()!) {
-            image.tagMedia(classifier);
-            _imageRepo.updateSingle(image);
-          }
-          _appLogger.logger.info("Finished tagging of images");
-        }
         break;
 
       default:

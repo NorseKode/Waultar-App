@@ -1,3 +1,4 @@
+import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
 import 'package:waultar/core/models/misc/appsettings_model.dart';
@@ -15,6 +16,14 @@ class AppSettingsService implements IAppSettingsService {
 
   @override
   Future toogleDarkMode(bool darkMode) async {
-    await _repo.updateSettings(AppSettingsModel(1, darkMode));
+    await _repo.updateSettings(AppSettingsModel(
+      1,
+      darkMode,
+    ));
+  }
+
+  @override
+  Future<void> toggleIsPerformanceTracking(bool value) async {
+    ISPERFORMANCETRACKING = value;
   }
 }

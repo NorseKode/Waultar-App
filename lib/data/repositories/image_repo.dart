@@ -38,7 +38,7 @@ class ImageRepository implements IImageRepository {
       var model = _modelDirector.make<ImageModel>(image);
       imageModels.add(model);
     }
-    
+
     return imageModels;
   }
 
@@ -95,7 +95,7 @@ class ImageRepository implements IImageRepository {
   @override
   List<ImageModel> search(String search, int offset, int limit) {
     var build = _imageBox.query(ImageObjectBox_.textSearch.contains(search)).build();
-    
+
     build
       ..offset = offset
       ..limit = limit;
@@ -108,12 +108,29 @@ class ImageRepository implements IImageRepository {
     var entity = _imageBox.get(model.id);
 
     if (entity == null) {
-      throw ObjectBoxException("Tried to update a profile that doesn't exists: ${model.toString()}");
+      throw ObjectBoxException(
+          "Tried to update a profile that doesn't exists: ${model.toString()}");
     } else {
       var updatedEntity = _entityDirector.make<ImageObjectBox>(model);
       updatedEntity.id = entity.id;
 
       return _imageBox.put(updatedEntity);
     }
+  }
+
+  @override
+  List<ImageModel> getPagination(int offset, int limit) {
+    var build = _imageBox.query().build();
+
+    build
+      ..offset = offset
+      ..limit = limit;
+
+    return build.find().map((e) => _modelDirector.make<ImageModel>(e)).toList();
+  }
+
+  @override
+  void updateMany(List<ImageModel> images) {
+    _imageBox.putMany(images.map((e) => _entityDirector.make<ImageObjectBox>(e)).toList());
   }
 }

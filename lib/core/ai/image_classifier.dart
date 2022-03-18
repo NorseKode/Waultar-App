@@ -7,7 +7,11 @@ import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/exceptions/ai_exception.dart';
+import 'package:waultar/configs/globals/app_logger.dart';
+import 'package:waultar/configs/globals/globals.dart';
+import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/core/ai/i_ml_model.dart';
+import 'package:waultar/startup.dart';
 
 class ImageClassifier extends IMLModel {
   late Interpreter _interpreter;
@@ -25,6 +29,10 @@ class ImageClassifier extends IMLModel {
   late TfLiteType _inputType;
   late TfLiteType _outputType;
   late SequentialProcessor _probabilityProcessor;
+  final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
+
+  late List<List<int>> _outputShapes;
+  late List<TfLiteType> _outputTypes;
 
   @override
   dispose() {
@@ -57,6 +65,14 @@ class ImageClassifier extends IMLModel {
   void _loadModel() async {
     _interpreter = Interpreter.fromFile(File(modelPath), options: interpreterOptions);
 
+    var outputTensors = _interpreter.getOutputTensors();
+    _outputShapes = [];
+    _outputTypes = [];
+    outputTensors.forEach((tensor) {
+      _outputShapes.add(tensor.shape);
+      _outputTypes.add(tensor.type);
+    });
+
     _inputShape = _interpreter.getInputTensor(0).shape;
     _outputShape = _interpreter.getOutputTensor(0).shape;
     _inputType = _interpreter.getInputTensor(0).type;
@@ -86,7 +102,8 @@ class ImageClassifier extends IMLModel {
   }
 
   List<Tuple2<String, double>> predict(String imagePath, int amountOfTopCategories) {
-    // TODO-Lukas_ exceptions
+    var startTime = DateTime.now();
+
     var image = img.decodeImage(File(imagePath).readAsBytesSync());
     if (image == null) {
       throw AIException("Couldn't locate image from path: $imagePath", this, image);
@@ -111,6 +128,11 @@ class ImageClassifier extends IMLModel {
 
     for (var i = 0; i < amountOfTopCategories; i++) {
       results.add(Tuple2(pred[i].key, pred[i].value));
+    }
+
+    if (ISPERFORMANCETRACKING) {
+      PerformanceHelper.logRunTime(
+          startTime, DateTime.now(), _appLogger, "Classifying of image with path $imagePath");
     }
 
     return results;
