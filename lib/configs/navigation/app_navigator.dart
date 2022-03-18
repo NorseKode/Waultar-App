@@ -5,6 +5,7 @@ import 'package:waultar/configs/navigation/screen.dart';
 import 'package:waultar/presentation/screens/authentication/signin.dart';
 import 'package:waultar/presentation/screens/browse_view.dart';
 import 'package:waultar/presentation/screens/dashboard_view.dart';
+import 'package:waultar/presentation/screens/gallery_view.dart';
 import 'package:waultar/presentation/screens/search_view.dart';
 import 'package:waultar/presentation/screens/settings_view.dart';
 import 'package:waultar/presentation/screens/timeline_view.dart';
@@ -51,6 +52,11 @@ Navigator getAppNavigator(
         const MaterialPage(
           key: ValueKey("Timeline"),
           child: TimelineView(),
+        ),
+      if (routePath.viewScreen == ViewScreen.gallery)
+        const MaterialPage(
+          key: ValueKey("Gallery"),
+          child: GalleryView(),
         ),
       // if (routePath.viewScreen == ViewScreen.uploader)
       //   const MaterialPage(

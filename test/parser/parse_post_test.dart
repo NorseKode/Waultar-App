@@ -23,17 +23,12 @@ main() {
     group("Instagram", () {
       test("Parse all post", () async {
         var parser = InstagramParser();
-        var res = await parser.parseFile(instagramPost).toList();
-        var postCount = 0;
+        var res = await parser.parseFile(instagramPost).toList() as List<PostModel>;
 
-        for (var post in res) {
-          if (post is PostModel) {
-            postCount++;
-          }
-        }
-        expect(postCount, 5);
+        expect(res.length, 5);
       });
     });
+    
     group("Facebook", () {
       group("General", () {
         test("Parse all post", () async {

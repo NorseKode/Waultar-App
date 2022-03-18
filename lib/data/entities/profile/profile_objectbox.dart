@@ -30,6 +30,7 @@ class ProfileObjectBox {
   // final activities = ToMany<ActivityModel>();
   String? eligibility;
   List<String>? metadata;
+  String? basePathToFiles;
   String raw;
 
   ProfileObjectBox({
@@ -50,6 +51,7 @@ class ProfileObjectBox {
     this.friendPeerGroup,
     this.eligibility,
     this.metadata,
+    this.basePathToFiles,
     required this.raw,
   });
 }

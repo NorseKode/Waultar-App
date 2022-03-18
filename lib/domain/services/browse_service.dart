@@ -18,6 +18,8 @@ class BrowseService extends IBrowseService {
   //     locator.get<IPostRepository>(instanceName: 'postRepo');
   final IPostPollRepository _postPollRepo =
       locator.get<IPostPollRepository>(instanceName: 'postPollRepo');
+  // final IImageRepository _imageRepo =
+  //     locator.get<IImageRepository>(instanceName: 'imageRepo');
 
   @override
   List<PostModel>? getPosts() {

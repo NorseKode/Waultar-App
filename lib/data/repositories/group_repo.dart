@@ -40,13 +40,11 @@ class GroupRepository implements IGroupRepository {
     if (entity != null) {
       entity.isUsers = group.isUsers;
       entity.badge = group.badge;
-      
+
       return _groupBox.put(entity);
     } else {
       return -1;
     }
-
-
   }
 
   @override
@@ -87,4 +85,9 @@ class GroupRepository implements IGroupRepository {
 
   @override
   int removeAllGroups() => _groupBox.removeAll();
+
+  @override
+  List<GroupObjectBox> getAllGroupsAsEntity() {
+    return _groupBox.getAll();
+  }
 }

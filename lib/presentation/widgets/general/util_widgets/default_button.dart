@@ -32,7 +32,7 @@ class _DefaultButtonState extends State<DefaultButton> {
 
     return Container(
       decoration: BoxDecoration(
-          color: widget.color ?? const Color(0xFF806DFF),
+          color: widget.color ?? const Color(0xFF5D97FF),
           borderRadius: widget.icon != null && widget.text == null
               ? BorderRadius.circular(100)
               : BorderRadius.circular(5)),
@@ -62,27 +62,6 @@ class _DefaultButtonState extends State<DefaultButton> {
               ? Text("Button", style: textStyle)
               : Container()
         ]),
-        // Row(
-        //   children: [
-        //     widget.icon != null
-        //         ? Icon(widget.icon!,
-        //             color: widget.textColor ?? Colors.white,
-        //             size: widget.size != null ? widget.size! + 2 : 13)
-        //         : Container(),
-        //     widget.icon != null && widget.text != null
-        //         ? const SizedBox(width: 5)
-        //         : Container(),
-        //     widget.text != null
-        //         ? Text(
-        //             widget.text!,
-        //             style: textStyle,
-        //           )
-        //         : Container(),
-        //     widget.text == null && widget.icon == null
-        //         ? Text("Button", style: textStyle)
-        //         : Container()
-        //   ],
-        // ),
       ),
     );
   }

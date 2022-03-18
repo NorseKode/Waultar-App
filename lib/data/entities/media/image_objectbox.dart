@@ -13,6 +13,7 @@ class ImageObjectBox {
   String? description;
   String raw;
   late String textSearch;
+  List<String>? mediaTags;
 
   ImageObjectBox({
     this.id = 0,
@@ -22,5 +23,6 @@ class ImageObjectBox {
     this.title,
     this.description,
     required this.raw,
+    this.mediaTags,
   });
 }

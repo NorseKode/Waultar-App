@@ -4,11 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
-import 'package:waultar/core/inodes/inode_parser.dart';
 import 'package:waultar/core/inodes/tree_parser.dart';
-import 'package:waultar/core/models/content/post_model.dart';
 import 'package:waultar/domain/services/browse_service.dart';
-import 'package:waultar/domain/services/parser_service.dart';
+import 'package:waultar/domain/services/time_buckets_creator.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -138,9 +136,8 @@ class _BrowseState extends State<Browse> {
               onTap: () {
                 print(_names[index].name);
               },
-              child: Text(_names[index].name +
-                  "   " +
-                  _names[index].count.toString()),
+              child: Text(
+                  _names[index].name + "   " + _names[index].count.toString()),
             ),
             const Divider(
               thickness: 2.0,

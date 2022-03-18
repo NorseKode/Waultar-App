@@ -8,21 +8,25 @@ import 'package:waultar/startup.dart';
 
 class TestHelper {
   static ProfileModel facebookProfile = ProfileModel(
-      activities: [],
-      createdTimestamp: DateTime.now(),
-      emails: [],
-      fullName: '',
-      raw: '',
-      uri: Uri(),
-      service: facebook);
+    activities: [],
+    createdTimestamp: DateTime.now(),
+    emails: [],
+    fullName: '',
+    raw: '',
+    uri: Uri(),
+    service: facebook,
+    basePathToFiles: "",
+  );
   static ProfileModel instagramProfile = ProfileModel(
-      activities: [],
-      createdTimestamp: DateTime.now(),
-      emails: [],
-      fullName: '',
-      raw: '',
-      uri: Uri(),
-      service: instagram);
+    activities: [],
+    createdTimestamp: DateTime.now(),
+    emails: [],
+    fullName: '',
+    raw: '',
+    uri: Uri(),
+    basePathToFiles: "",
+    service: instagram,
+  );
   static ServiceModel facebook =
       ServiceModel(id: 1, name: "facebook", company: "meta", image: Uri(path: ""));
   static ServiceModel instagram =
