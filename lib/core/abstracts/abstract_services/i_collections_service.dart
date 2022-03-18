@@ -1,4 +1,4 @@
-import 'package:waultar/core/inodes/inode.dart';
+import 'package:waultar/core/inodes/tree_nodes.dart';
 
 abstract class ICollectionsService {
   List<DataCategory> getAllCategories();

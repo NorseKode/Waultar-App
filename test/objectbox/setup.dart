@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:waultar/core/inodes/inode.dart';
+import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
 

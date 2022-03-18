@@ -2,6 +2,10 @@ import 'dart:convert';
 
 import 'package:objectbox/objectbox.dart';
 import 'package:pretty_json/pretty_json.dart';
+import 'package:waultar/data/entities/media/file_objectbox.dart';
+import 'package:waultar/data/entities/media/image_objectbox.dart';
+import 'package:waultar/data/entities/media/video_objectbox.dart';
+import 'package:waultar/data/entities/misc/service_objectbox.dart';
 
 // flutter packages pub run build_runner build --delete-conflicting-outputs
 
@@ -13,11 +17,18 @@ class DataPoint {
 
   final category = ToOne<DataCategory>();
 
+  final images = ToOne<ImageObjectBox>();
+  final videos = ToOne<VideoObjectBox>();
+  final files = ToOne<FileObjectBox>();
+  final service = ToOne<ServiceObjectBox>();
+
+  // perhaps make it a list ?
+  // a datapoint can contain several searchable strings, and if we put all usergenerated 
+  // strings are in this list we can do NLP on each list element
+  // this way we ensure the NLP is done on correct sets of the strings, and not the entire concatenated string
+  // timecomplexity will not be worsen - spacecomplexity will as the index for a list will be larger
   @Index()
   late String searchString;
-
-  // make these seracheable or traversable
-  // late List<String> keys;
 
   late String values;
 

@@ -9,7 +9,7 @@ import 'package:objectbox/internal.dart'; // generated code can access "internal
 import 'package:objectbox/objectbox.dart';
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
-import '../../core/inodes/inode.dart';
+import '../../core/inodes/tree_nodes.dart';
 import '../../data/entities/content/comment_objectbox.dart';
 import '../../data/entities/content/event_objectbox.dart';
 import '../../data/entities/content/group_objectbox.dart';
@@ -1121,7 +1121,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(30, 6990209732262435045),
       name: 'DataPoint',
-      lastPropertyId: const IdUid(8, 6780027119006543838),
+      lastPropertyId: const IdUid(12, 1150070046232614050),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -1158,7 +1158,35 @@ final _entities = <ModelEntity>[
             name: 'searchString',
             type: 9,
             flags: 2048,
-            indexId: const IdUid(46, 5734168061016550835))
+            indexId: const IdUid(46, 5734168061016550835)),
+        ModelProperty(
+            id: const IdUid(9, 788627015376731500),
+            name: 'imagesId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(48, 7518219197086944874),
+            relationTarget: 'ImageObjectBox'),
+        ModelProperty(
+            id: const IdUid(10, 663728033321463960),
+            name: 'videosId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(49, 8509852924874867363),
+            relationTarget: 'VideoObjectBox'),
+        ModelProperty(
+            id: const IdUid(11, 1913370356896662352),
+            name: 'filesId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(50, 941039533211521110),
+            relationTarget: 'FileObjectBox'),
+        ModelProperty(
+            id: const IdUid(12, 1150070046232614050),
+            name: 'serviceId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(51, 5018598841117025267),
+            relationTarget: 'ServiceObjectBox')
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
@@ -1308,7 +1336,7 @@ ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
       lastEntityId: const IdUid(33, 3572614151177614481),
-      lastIndexId: const IdUid(47, 4230548650055881754),
+      lastIndexId: const IdUid(51, 5018598841117025267),
       lastRelationId: const IdUid(18, 7703883652731218395),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [
@@ -2543,8 +2571,14 @@ ModelDefinition getObjectBoxModel() {
         }),
     DataPoint: EntityDefinition<DataPoint>(
         model: _entities[25],
-        toOneRelations: (DataPoint object) =>
-            [object.dataPointName, object.category],
+        toOneRelations: (DataPoint object) => [
+              object.dataPointName,
+              object.category,
+              object.images,
+              object.videos,
+              object.files,
+              object.service
+            ],
         toManyRelations: (DataPoint object) => {},
         getId: (DataPoint object) => object.id,
         setId: (DataPoint object, int id) {
@@ -2554,13 +2588,17 @@ ModelDefinition getObjectBoxModel() {
           final valuesOffset = fbb.writeString(object.values);
           final stringNameOffset = fbb.writeString(object.stringName);
           final searchStringOffset = fbb.writeString(object.searchString);
-          fbb.startTable(9);
+          fbb.startTable(13);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.dataPointName.targetId);
           fbb.addOffset(2, valuesOffset);
           fbb.addOffset(5, stringNameOffset);
           fbb.addInt64(6, object.category.targetId);
           fbb.addOffset(7, searchStringOffset);
+          fbb.addInt64(8, object.images.targetId);
+          fbb.addInt64(9, object.videos.targetId);
+          fbb.addInt64(10, object.files.targetId);
+          fbb.addInt64(11, object.service.targetId);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -2582,6 +2620,18 @@ ModelDefinition getObjectBoxModel() {
           object.category.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
           object.category.attach(store);
+          object.images.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 20, 0);
+          object.images.attach(store);
+          object.videos.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 22, 0);
+          object.videos.attach(store);
+          object.files.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 24, 0);
+          object.files.attach(store);
+          object.service.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0);
+          object.service.attach(store);
           return object;
         }),
     DataPointName: EntityDefinition<DataPointName>(
@@ -3466,6 +3516,22 @@ class DataPoint_ {
   /// see [DataPoint.searchString]
   static final searchString =
       QueryStringProperty<DataPoint>(_entities[25].properties[5]);
+
+  /// see [DataPoint.images]
+  static final images = QueryRelationToOne<DataPoint, ImageObjectBox>(
+      _entities[25].properties[6]);
+
+  /// see [DataPoint.videos]
+  static final videos = QueryRelationToOne<DataPoint, VideoObjectBox>(
+      _entities[25].properties[7]);
+
+  /// see [DataPoint.files]
+  static final files =
+      QueryRelationToOne<DataPoint, FileObjectBox>(_entities[25].properties[8]);
+
+  /// see [DataPoint.service]
+  static final service = QueryRelationToOne<DataPoint, ServiceObjectBox>(
+      _entities[25].properties[9]);
 }
 
 /// [DataPointName] entity fields to define ObjectBox queries.

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
-import 'package:waultar/core/inodes/inode.dart';
+import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/core/inodes/inode_parser.dart';
 import 'package:waultar/core/inodes/tree_parser.dart';
 import 'package:waultar/core/models/content/post_model.dart';

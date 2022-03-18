@@ -2,7 +2,7 @@ import 'package:waultar/core/abstracts/abstract_services/i_collections_service.d
 import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
-import 'package:waultar/core/inodes/inode.dart';
+import 'package:waultar/core/inodes/tree_nodes.dart';
 
 class CollectionsService implements ICollectionsService {
 

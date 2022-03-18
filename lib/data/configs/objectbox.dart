@@ -1,4 +1,4 @@
-import 'package:waultar/core/inodes/inode.dart';
+import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/data/entities/misc/service_objectbox.dart';
 import 'package:path/path.dart' as dart_path;
 

@@ -6,9 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
-import 'package:waultar/core/inodes/inode.dart';
+import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:path/path.dart' as dart_path;
-import 'package:waultar/core/inodes/new_parser.dart';
 import 'package:waultar/core/inodes/tree_parser.dart';
 
 import 'setup.dart';

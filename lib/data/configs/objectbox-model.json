@@ -1114,7 +1114,7 @@
     },
     {
       "id": "30:6990209732262435045",
-      "lastPropertyId": "8:6780027119006543838",
+      "lastPropertyId": "12:1150070046232614050",
       "name": "DataPoint",
       "properties": [
         {
@@ -1155,6 +1155,38 @@
           "type": 9,
           "flags": 2048,
           "indexId": "46:5734168061016550835"
+        },
+        {
+          "id": "9:788627015376731500",
+          "name": "imagesId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "48:7518219197086944874",
+          "relationTarget": "ImageObjectBox"
+        },
+        {
+          "id": "10:663728033321463960",
+          "name": "videosId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "49:8509852924874867363",
+          "relationTarget": "VideoObjectBox"
+        },
+        {
+          "id": "11:1913370356896662352",
+          "name": "filesId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "50:941039533211521110",
+          "relationTarget": "FileObjectBox"
+        },
+        {
+          "id": "12:1150070046232614050",
+          "name": "serviceId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "51:5018598841117025267",
+          "relationTarget": "ServiceObjectBox"
         }
       ],
       "relations": []
@@ -1291,7 +1323,7 @@
     }
   ],
   "lastEntityId": "33:3572614151177614481",
-  "lastIndexId": "47:4230548650055881754",
+  "lastIndexId": "51:5018598841117025267",
   "lastRelationId": "18:7703883652731218395",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
