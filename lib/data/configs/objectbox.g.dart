@@ -1160,27 +1160,6 @@ final _entities = <ModelEntity>[
             flags: 2048,
             indexId: const IdUid(46, 5734168061016550835)),
         ModelProperty(
-            id: const IdUid(9, 788627015376731500),
-            name: 'imagesId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(48, 7518219197086944874),
-            relationTarget: 'ImageObjectBox'),
-        ModelProperty(
-            id: const IdUid(10, 663728033321463960),
-            name: 'videosId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(49, 8509852924874867363),
-            relationTarget: 'VideoObjectBox'),
-        ModelProperty(
-            id: const IdUid(11, 1913370356896662352),
-            name: 'filesId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(50, 941039533211521110),
-            relationTarget: 'FileObjectBox'),
-        ModelProperty(
             id: const IdUid(12, 1150070046232614050),
             name: 'serviceId',
             type: 11,
@@ -1188,7 +1167,20 @@ final _entities = <ModelEntity>[
             indexId: const IdUid(51, 5018598841117025267),
             relationTarget: 'ServiceObjectBox')
       ],
-      relations: <ModelRelation>[],
+      relations: <ModelRelation>[
+        ModelRelation(
+            id: const IdUid(19, 7934563985375700622),
+            name: 'images',
+            targetId: const IdUid(14, 4917345731593542244)),
+        ModelRelation(
+            id: const IdUid(20, 7023659832413495045),
+            name: 'videos',
+            targetId: const IdUid(24, 1944258851869554230)),
+        ModelRelation(
+            id: const IdUid(21, 1969253553037570077),
+            name: 'files',
+            targetId: const IdUid(11, 575566687247819555))
+      ],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
       id: const IdUid(31, 1621784589665593446),
@@ -1337,7 +1329,7 @@ ModelDefinition getObjectBoxModel() {
       entities: _entities,
       lastEntityId: const IdUid(33, 3572614151177614481),
       lastIndexId: const IdUid(51, 5018598841117025267),
-      lastRelationId: const IdUid(18, 7703883652731218395),
+      lastRelationId: const IdUid(21, 1969253553037570077),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [
         1837511870469432447,
@@ -1353,7 +1345,10 @@ ModelDefinition getObjectBoxModel() {
         5171466753838581702,
         2488340538773290869,
         2246540717593798294,
-        2663412274713465659
+        2663412274713465659,
+        7518219197086944874,
+        8509852924874867363,
+        941039533211521110
       ],
       retiredPropertyUids: const [
         219800542496953078,
@@ -1387,7 +1382,10 @@ ModelDefinition getObjectBoxModel() {
         7950104210562865632,
         615747648317964421,
         7868178552619576621,
-        3864862414710862973
+        3864862414710862973,
+        788627015376731500,
+        663728033321463960,
+        1913370356896662352
       ],
       retiredRelationUids: const [
         447566776387890902,
@@ -2571,15 +2569,13 @@ ModelDefinition getObjectBoxModel() {
         }),
     DataPoint: EntityDefinition<DataPoint>(
         model: _entities[25],
-        toOneRelations: (DataPoint object) => [
-              object.dataPointName,
-              object.category,
-              object.images,
-              object.videos,
-              object.files,
-              object.service
-            ],
-        toManyRelations: (DataPoint object) => {},
+        toOneRelations: (DataPoint object) =>
+            [object.dataPointName, object.category, object.service],
+        toManyRelations: (DataPoint object) => {
+              RelInfo<DataPoint>.toMany(19, object.id): object.images,
+              RelInfo<DataPoint>.toMany(20, object.id): object.videos,
+              RelInfo<DataPoint>.toMany(21, object.id): object.files
+            },
         getId: (DataPoint object) => object.id,
         setId: (DataPoint object, int id) {
           object.id = id;
@@ -2595,9 +2591,6 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(5, stringNameOffset);
           fbb.addInt64(6, object.category.targetId);
           fbb.addOffset(7, searchStringOffset);
-          fbb.addInt64(8, object.images.targetId);
-          fbb.addInt64(9, object.videos.targetId);
-          fbb.addInt64(10, object.files.targetId);
           fbb.addInt64(11, object.service.targetId);
           fbb.finish(fbb.endTable());
           return object.id;
@@ -2620,18 +2613,15 @@ ModelDefinition getObjectBoxModel() {
           object.category.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
           object.category.attach(store);
-          object.images.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 20, 0);
-          object.images.attach(store);
-          object.videos.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 22, 0);
-          object.videos.attach(store);
-          object.files.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 24, 0);
-          object.files.attach(store);
           object.service.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0);
           object.service.attach(store);
+          InternalToManyAccess.setRelInfo(object.images, store,
+              RelInfo<DataPoint>.toMany(19, object.id), store.box<DataPoint>());
+          InternalToManyAccess.setRelInfo(object.videos, store,
+              RelInfo<DataPoint>.toMany(20, object.id), store.box<DataPoint>());
+          InternalToManyAccess.setRelInfo(object.files, store,
+              RelInfo<DataPoint>.toMany(21, object.id), store.box<DataPoint>());
           return object;
         }),
     DataPointName: EntityDefinition<DataPointName>(
@@ -3517,21 +3507,21 @@ class DataPoint_ {
   static final searchString =
       QueryStringProperty<DataPoint>(_entities[25].properties[5]);
 
-  /// see [DataPoint.images]
-  static final images = QueryRelationToOne<DataPoint, ImageObjectBox>(
+  /// see [DataPoint.service]
+  static final service = QueryRelationToOne<DataPoint, ServiceObjectBox>(
       _entities[25].properties[6]);
 
+  /// see [DataPoint.images]
+  static final images = QueryRelationToMany<DataPoint, ImageObjectBox>(
+      _entities[25].relations[0]);
+
   /// see [DataPoint.videos]
-  static final videos = QueryRelationToOne<DataPoint, VideoObjectBox>(
-      _entities[25].properties[7]);
+  static final videos = QueryRelationToMany<DataPoint, VideoObjectBox>(
+      _entities[25].relations[1]);
 
   /// see [DataPoint.files]
   static final files =
-      QueryRelationToOne<DataPoint, FileObjectBox>(_entities[25].properties[8]);
-
-  /// see [DataPoint.service]
-  static final service = QueryRelationToOne<DataPoint, ServiceObjectBox>(
-      _entities[25].properties[9]);
+      QueryRelationToMany<DataPoint, FileObjectBox>(_entities[25].relations[2]);
 }
 
 /// [DataPointName] entity fields to define ObjectBox queries.

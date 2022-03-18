@@ -17,9 +17,9 @@ class DataPoint {
 
   final category = ToOne<DataCategory>();
 
-  final images = ToOne<ImageObjectBox>();
-  final videos = ToOne<VideoObjectBox>();
-  final files = ToOne<FileObjectBox>();
+  final images = ToMany<ImageObjectBox>();
+  final videos = ToMany<VideoObjectBox>();
+  final files = ToMany<FileObjectBox>();
   final service = ToOne<ServiceObjectBox>();
 
   // perhaps make it a list ?
