@@ -127,6 +127,9 @@ Future<void> setupServices() async {
     locator.registerSingleton<ITimeBucketsRepository>(
         TimeBucketsRepository(_context),
         instanceName: 'timeRepo');
+    locator.registerSingleton<ICommentRepository>(
+        CommentRepository(_context, _objectboxDirector, _modelDirector),
+        instanceName: 'commentRepo');
 
     // AI Models
     locator.registerSingleton<ImageClassifier>(
