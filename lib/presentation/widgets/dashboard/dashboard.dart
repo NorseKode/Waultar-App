@@ -30,8 +30,8 @@ class _DashboardState extends State<Dashboard> {
     localizer = AppLocalizations.of(context)!;
     themeProvider = Provider.of<ThemeProvider>(context);
 
-    List<Widget> serviceWidgets =
-        List.generate(services.length, (e) => ServiceWidget(service: services[e]));
+    List<Widget> serviceWidgets = List.generate(
+        services.length, (e) => ServiceWidget(service: services[e]));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +60,10 @@ class _DashboardState extends State<Dashboard> {
                               )),
                     )),
                 const SizedBox(height: 20),
-                Text(localizer.yourSocialDataOverview), //dashboard widgets
+                Text(
+                  localizer.yourSocialDataOverview,
+                  style: themeProvider.themeData().textTheme.headline4,
+                ), //dashboard widgets
                 const SizedBox(height: 20),
                 // DefaultButton(onPressed: () {}),
                 // DefaultButton(text: "Press me! Please do", onPressed: () {}, color: Colors.blue),

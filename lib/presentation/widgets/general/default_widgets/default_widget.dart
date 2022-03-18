@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:waultar/presentation/providers/theme_provider.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_widget_box.dart';
 
 class DefaultWidget extends StatefulWidget {
   final String title;
@@ -16,29 +19,26 @@ class DefaultWidget extends StatefulWidget {
 }
 
 class _DefaultWidgetState extends State<DefaultWidget> {
+  late ThemeProvider themeProvider;
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: const Color(0xFF272837)),
-        child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(widget.title),
-                const SizedBox(height: 10),
-                Container(
-                    decoration: const BoxDecoration(
-                        border: Border(
-                            top: BorderSide(
-                                color: Color(0xFF4D4F68), width: 2))),
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 10),
-                      child: widget.child,
-                    )),
-              ],
-            )));
+    themeProvider = Provider.of<ThemeProvider>(context);
+    return DefaultWidgetBox(
+        child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(widget.title,
+            style: themeProvider.themeData().textTheme.headline1),
+        const SizedBox(height: 10),
+        Container(
+            decoration: const BoxDecoration(
+                border: Border(
+                    top: BorderSide(color: Color(0xFF4D4F68), width: 2))),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: widget.child,
+            )),
+      ],
+    ));
   }
 }

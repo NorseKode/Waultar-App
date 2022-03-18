@@ -2,7 +2,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:waultar/core/models/index.dart';
+import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/service_icon.dart';
 
 class PostWidget extends StatefulWidget {
@@ -14,17 +16,19 @@ class PostWidget extends StatefulWidget {
 }
 
 class _PostWidgetState extends State<PostWidget> {
+  late ThemeProvider themeProvider;
   @override
   Widget build(BuildContext context) {
     PostModel post = widget.post;
     ProfileModel profile = post.profile;
     ServiceModel service = profile.service;
+    themeProvider = Provider.of<ThemeProvider>(context);
 
     return Container(
         width: 400,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: const Color(0xFF272837)),
+            color: themeProvider.themeData().primaryColor),
         child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -92,13 +96,15 @@ class _PostWidgetState extends State<PostWidget> {
                       viewportFraction: 1.0,
                     ),
                     items: post.medias!
-                        .map((item) => Center(child: Image.asset(item.uri.path)))
+                        .map(
+                            (item) => Center(child: Image.asset(item.uri.path)))
                         .toList(),
                   ),
                 const SizedBox(height: 10),
                 Text(
                   post.title ?? "No title",
-                  style: const TextStyle(color: Color(0xFFABAAB8), fontSize: 10),
+                  style:
+                      const TextStyle(color: Color(0xFFABAAB8), fontSize: 10),
                 ),
               ],
             )));
