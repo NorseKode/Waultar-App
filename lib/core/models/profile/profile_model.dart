@@ -71,14 +71,15 @@ class ProfileModel {
         gender = (json["gender"])["gender_option"],
         // TODO
         bio = json["bio"],
-        currentCity = json.containsKey("current_city") 
-          ? (json["current_city"])["name"]
-          : null,
+        currentCity = json.containsKey("current_city")
+            ? (json["current_city"])["name"]
+            : null,
         phoneNumbers = <String>[],
         // TODO
         isPhoneConfirmed = false,
-        createdTimestamp = ModelHelper.intToTimestamp(json["registration_timestamp"]) ??
-            DateTime.fromMicrosecondsSinceEpoch(0),
+        createdTimestamp =
+            ModelHelper.intToTimestamp(json["registration_timestamp"]) ??
+                DateTime.fromMicrosecondsSinceEpoch(0),
         // TODO
         isPrivate = false,
         // TODO
@@ -97,23 +98,27 @@ class ProfileModel {
         raw = json.toString() {
     if (json.containsKey("birthday")) {
       var birthdayObject = json["birthday"];
-      dateOfBirth =
-          DateTime.utc(birthdayObject["year"], birthdayObject["month"], birthdayObject["day"]);
+      dateOfBirth = DateTime.utc(birthdayObject["year"],
+          birthdayObject["month"], birthdayObject["day"]);
     }
 
     if (json.containsKey("family_members")) {
-      metadata!.addAll(json["family_members"].map<String>((element) => element.toString()));
+      metadata!.addAll(
+          json["family_members"].map<String>((element) => element.toString()));
     }
     if (json.containsKey("previous_relationships")) {
-      metadata!.addAll(json["previous_relationships"].map<String>((element) => element.toString()));
+      metadata!.addAll(json["previous_relationships"]
+          .map<String>((element) => element.toString()));
     }
     if (json.containsKey("pages")) {
-      metadata!.addAll(json["pages"].map<String>((element) => element.toString()));
+      metadata!
+          .addAll(json["pages"].map<String>((element) => element.toString()));
     }
 
     if (json.containsKey("other_names")) {
-      otherNames =
-          (json["other_names"]).map<String>((element) => element["name"].toString()).toList();
+      otherNames = (json["other_names"])
+          .map<String>((element) => element["name"].toString())
+          .toList();
     }
     if (json.containsKey("phone_numbers")) {
       phoneNumbers = (json["phone_numbers"])
@@ -122,7 +127,8 @@ class ProfileModel {
     }
 
     // TODO
-    service = ServiceModel(id: 0, name: 'name', company: 'company', image: Uri(path: 'image'));
+    service = ServiceModel(
+        id: 0, name: 'name', company: 'company', image: Uri(path: 'image'));
   }
 
   static dynamic _tempData;
@@ -149,20 +155,11 @@ class ProfileModel {
         // TODO
         bio = instagramDataValuesHelper(json, "Bio"),
         currentCity = instagramDataValuesHelper(json, "City Name"),
-        phoneNumbers = <String>[instagramDataValuesHelper(json, "Phone Number")],
-        isPhoneConfirmed =
-            instagramDataValuesHelper(json, "Phone Confirmed").toLowerCase() == "true"
-                ? true
-                : instagramDataValuesHelper(json, "Phone Confirmed").toLowerCase() == "false"
-                    ? false
-                    : null,
+        phoneNumbers = <String>[
+          instagramDataValuesHelper(json, "Phone Number") ?? ""
+        ],
         createdTimestamp = DateTime.fromMicrosecondsSinceEpoch(0),
-        isPrivate = instagramDataValuesHelper(json, "Private Account").toLowerCase() == "true"
-            ? true
-            : instagramDataValuesHelper(json, "Private Account").toLowerCase() == "false"
-                ? false
-                : null,
-        websites = [instagramDataValuesHelper(json, "Website")],
+        websites = [instagramDataValuesHelper(json, "Website") ?? ""],
         bloodInfo = null,
         friendPeerGroup = null,
         // TODO
@@ -183,12 +180,23 @@ class ProfileModel {
     if (jsonMapData.containsKey("Date of birth")) {
       var value = (jsonMapData["Date of birth"])["value"].toString();
       var birthdayObject = value.split("-");
-      dateOfBirth = DateTime.utc(
-          int.parse(birthdayObject[0]), int.parse(birthdayObject[1]), int.parse(birthdayObject[2]));
+      dateOfBirth = DateTime.utc(int.parse(birthdayObject[0]),
+          int.parse(birthdayObject[1]), int.parse(birthdayObject[2]));
     }
 
     if (jsonMapData.containsKey("Phone Confirmation Method")) {
       metadata!.add(jsonMapData["Phone Confirmation Method"].toString());
+    }
+
+    var isPhoneConfirmedData =
+        instagramDataValuesHelper(json, "Phone Confirmed");
+    if (isPhoneConfirmedData != null) {
+      isPhoneConfirmed = isPhoneConfirmedData.toLowerCase() == "true";
+    }
+
+    var isPrivateData = instagramDataValuesHelper(json, "Private Account");
+    if (isPrivateData != null) {
+      isPhoneConfirmed = isPrivateData.toLowerCase() == "true";
     }
 
     // if (json.containsKey("media_map_data")) {
@@ -196,7 +204,8 @@ class ProfileModel {
     // }
 
     // TODO
-    service = ServiceModel(id: 0, name: 'name', company: 'company', image: Uri(path: 'image'));
+    service = ServiceModel(
+        id: 0, name: 'name', company: 'company', image: Uri(path: 'image'));
   }
 
   @override

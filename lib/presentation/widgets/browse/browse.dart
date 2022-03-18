@@ -5,6 +5,7 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_service_repositor
 import 'package:waultar/core/models/content/post_model.dart';
 import 'package:waultar/domain/services/browse_service.dart';
 import 'package:waultar/domain/services/parser_service.dart';
+import 'package:waultar/domain/services/time_buckets_creator.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -90,7 +91,8 @@ class _BrowseState extends State<Browse> {
 
                   var extractZipinputMap = {
                     'path': dart_path.normalize(zipFiles.first),
-                    'extracts_folder': locator.get<String>(instanceName: 'extracts_folder'),
+                    'extracts_folder':
+                        locator.get<String>(instanceName: 'extracts_folder'),
                     'service_name': service.name
                   };
                   var uploadedFiles = await compute(extractZip, extractZipinputMap);
@@ -99,6 +101,7 @@ class _BrowseState extends State<Browse> {
                       .parseAll(uploadedFiles, service)
                       .whenComplete(() => setState(() {
                             isLoading = false;
+                            TimeBucketsCreator().createTimeBuckets();
                             SnackBarCustom.useSnackbarOfContext(
                                 context, localizer.doneLoadingData);
                           }));

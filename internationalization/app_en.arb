@@ -33,6 +33,7 @@
     "noData": "No Data",
     "search": "Search",
     "gallery": "Gallery",
+    "downloadXData": "Download {0} Data",
     "@helloWorld": {
       "description": "The conventional newborn programmer greeting"
     },
@@ -133,6 +134,9 @@
       "description": ""
     },
     "@gallery": {
+      "description": ""
+    },
+    "@downloadXData": {
       "description": ""
     }
 }

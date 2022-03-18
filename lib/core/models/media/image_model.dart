@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:path/path.dart' as path_dart;
 import 'package:tuple/tuple.dart';
+import 'package:flutter/material.dart';
 import 'package:waultar/core/models/media/media_model.dart';
 import 'package:waultar/core/models/model_helper.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
@@ -25,7 +26,8 @@ class ImageModel extends MediaModel implements UIModel {
 
   ImageModel.fromJson(Map<String, dynamic> json, ProfileModel profile, {List<String>? mediaTags})
       : title = json.containsKey("title") ? json["title"] : "",
-        description = json.containsKey("description") ? json["description"] : "",
+        description =
+            json.containsKey("description") ? json["description"] : "",
         super(
           0,
           profile,
@@ -39,8 +41,7 @@ class ImageModel extends MediaModel implements UIModel {
 
   @override
   Color getAssociatedColor() {
-    // TODO: implement getAssociatedColor
-    throw UnimplementedError();
+    return Colors.pink;
   }
 
   @override
