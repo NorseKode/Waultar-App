@@ -35,7 +35,10 @@ class PostRepository implements IPostRepository {
   List<PostModel>? getAllPosts() {
     var postEntities = _postBox.getAll();
     if (postEntities.isNotEmpty) {
-      return _postBox.getAll().map((e) => _modelDirector.make<PostModel>(e)).toList();
+      return _postBox
+          .getAll()
+          .map((e) => _modelDirector.make<PostModel>(e))
+          .toList();
     } else {
       return null;
     }
@@ -91,12 +94,21 @@ class PostRepository implements IPostRepository {
 
   @override
   List<PostModel> search(String search, int offset, int limit) {
-    var build = _postBox.query(PostObjectBox_.textSearch.contains(search)).build();
+    var build =
+        _postBox.query(PostObjectBox_.textSearch.contains(search)).build();
 
     build
       ..offset = offset
       ..limit = limit;
 
-    return build.find().map((entity) => _modelDirector.make<PostModel>(entity)).toList();
+    return build
+        .find()
+        .map((entity) => _modelDirector.make<PostModel>(entity))
+        .toList();
+  }
+
+  @override
+  List<PostObjectBox> getAllPostsAsEntity() {
+    return _postBox.getAll();
   }
 }

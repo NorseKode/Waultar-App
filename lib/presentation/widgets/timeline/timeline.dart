@@ -1,202 +1,98 @@
-import 'package:flutter/material.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
-import 'package:waultar/core/models/ui_model.dart';
-import 'package:waultar/presentation/widgets/snackbar_custom.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:waultar/startup.dart';
+import 'dart:math';
 
-settingsBar() {
-  return const Text("settings");
-  // return CheckboxListTile(
-  //     title: Text("Category"), // get from repo
-  //     controlAffinity: ListTileControlAffinity.platform,
-  //     activeColor: category.color,
-  //     value: _checked,
-  //     onChanged: (bool value) {
-  //       setState(() {
-  //         _checked = value;
-  //       });
-  //     });
-}
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
+import 'package:waultar/core/models/content/post_model.dart';
+import 'package:waultar/core/models/timeline/time_models.dart';
+import 'package:waultar/core/models/ui_model.dart';
+import 'package:waultar/core/parsers/parse_helper.dart';
+import 'package:waultar/presentation/providers/theme_provider.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_widget_box.dart';
+import 'package:waultar/presentation/widgets/timeline/datapoint_widget.dart';
+import 'package:waultar/presentation/widgets/timeline/filter_widget.dart';
+import 'package:waultar/presentation/widgets/timeline/timeline_widget.dart';
+import 'package:waultar/startup.dart';
 
 class Timeline extends StatefulWidget {
   const Timeline({Key? key}) : super(key: key);
 
   @override
-  _TimelineState createState() => _TimelineState();
+  State<Timeline> createState() => _TimelineState();
 }
 
 class _TimelineState extends State<Timeline> {
-  late AppLocalizations localizer;
-  bool _isFirstLoad = false;
-  bool _isLoading = false;
-  // ignore: prefer_final_fields
-  var _content = <UIModel>[];
-  final _scrollController = ScrollController();
-  dynamic _selectedContent;
-  var _offset = 0;
-  final _limit = 20;
-  final IPostRepository _postRepo = locator.get<IPostRepository>(instanceName: "postRepo");
+  late ThemeProvider themeProvider;
 
-  _firstLoad() {
-    setState(() {
-      _isFirstLoad = true;
-    });
+  var _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  Random _rnd = Random();
 
-    _loadData();
-
-    setState(() {
-      _isFirstLoad = false;
-    });
-  }
-
-  _loadData() {
-    var newData = _postRepo.getAllPostsPagination(_offset, _limit);
-
-    if (newData != null) {
-      _content.addAll(newData);
-      _offset += _limit;
-    } else {
-      SnackBarCustom.useSnackbarOfContext(context, localizer.noData);
-    }
-  }
-
-  _onPageEnd() {
-    if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
-      setState(() {
-        _isLoading = true;
-      });
-
-      _loadData();
-
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
-  timelineLeftSide(UIModel model, int index) {
-    var time = model.getTimestamp();
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-      child: InkWell(
-        onTap: () {
-          setState(() {
-            _selectedContent = _content[index];
-          });
-        },
-        child: SizedBox(
-          height: 120,
-          child: Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                child: SizedBox(
-                  width: 35,
-                  child: Text("${time.year}\n${time.month}\n${time.day}"),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                child: SizedBox(
-                  width: 35,
-                  height: 35,
-                  child: Container(
-                    decoration:
-                        BoxDecoration(color: model.getAssociatedColor(), shape: BoxShape.circle),
-                  ),
-                ),
-              ),
-              Expanded(
-                  child: Text(
-                    model.getMostInformativeField(),
-                    textAlign: TextAlign.left,
-                    overflow: TextOverflow.fade,
-                  )),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  timelineRightSide(Map<String, dynamic> inputMap) {
-    var keys = inputMap.keys.toList();
-
-    return ListView.builder(
-      itemCount: keys.length,
-      itemBuilder: (_, index) => Text("${keys[index]}: ${inputMap[keys[index]]}"),
-    );
-  }
-
-  _contentList() {
-    return ListView.builder(
-        controller: _scrollController,
-        itemCount: _content.length,
-        itemBuilder: (_, index) => timelineLeftSide(_content[index], index));
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _firstLoad();
-    _scrollController.addListener(_onPageEnd);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _scrollController.removeListener(_onPageEnd);
-  }
+  String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
+      length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
   @override
   Widget build(BuildContext context) {
-    localizer = AppLocalizations.of(context)!;
+    themeProvider = Provider.of<ThemeProvider>(context);
 
-    return Row(
+    ITimelineService timelineService =
+        locator.get<ITimelineService>(instanceName: 'timeService');
+
+    //List<TimeModel> blocks = timelineService.getAllYears();
+
+    List<TimeModel> blocks = List.generate(
+        4,
+        (index) => YearModel(index, 2000 + index,
+                ((index + 1) * 1405) + ((index + 1) * 3342), [
+              Tuple3((index + 1) * 2405, "Post:$index", Color(0xFF19A8F5)),
+              Tuple3((index + 1) * 1442, "Image:$index", Color(0xFFF06D85))
+            ]));
+    blocks.addAll(List.generate(
+        6,
+        (index) => YearModel(index, 2000 + index,
+                ((index + 1) * 1405) + ((index + 1) * 3342), [
+              Tuple3((index + 1) * 2405, "Post:$index", Color(0xFF19A8F5)),
+              Tuple3((index + 1) * 1442, "Image:$index", Color(0xFFF06D85))
+            ])).reversed);
+    blocks.addAll(List.generate(
+        2,
+        (index) => YearModel(index, 2000 + index,
+                ((index + 1) * 1405) + ((index + 1) * 3342), [
+              Tuple3((index + 1) * 2405, "Post:$index", Color(0xFF19A8F5)),
+              Tuple3((index + 1) * 1442, "Image:$index", Color(0xFFF06D85))
+            ])));
+
+    List<UIModel> dpList = List.generate(
+      10,
+      (index) => PostModel(
+          title: getRandomString(100),
+          profile: ParseHelper.profile,
+          raw: "",
+          timestamp: DateTime.now()),
+    );
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          flex: 1,
-          child: _isFirstLoad || _isLoading
-              ? const CircularProgressIndicator()
-              : Column(
-                  children: [
-                    Expanded(flex: 1, child: settingsBar()),
-                    Expanded(
-                      flex: 8,
-                      child: _content.isEmpty
-                          ? Text(localizer.noData)
-                          : Stack(
-                              children: [
-                                const SizedBox(
-                                  width: 125,
-                                  child: VerticalDivider(
-                                    thickness: 5,
-                                  ),
-                                ),
-                                _contentList(),
-                              ],
-                            ),
-                    ),
-                  ],
-                ),
+        Text(
+          "Timeline",
+          style: themeProvider.themeData().textTheme.headline3,
         ),
-        const VerticalDivider(
-          thickness: 5,
-        ),
+        SizedBox(height: 20),
         Expanded(
-          flex: 1,
-          child: _selectedContent == null
-              ? Container(
-                  child: _content.isEmpty
-                      ? Text(localizer.noData)
-                      : const Text("Press on some contect"),
-                )
-              : timelineRightSide(
-                  _selectedContent.toMap(),
-                ),
-        )
+          flex: 3,
+          child: Row(
+            children: [
+              Expanded(
+                  flex: 4,
+                  child:
+                      DefaultWidgetBox(child: TimelineWidget(blocks: blocks))),
+              SizedBox(width: 20),
+              Expanded(flex: 2, child: FilterWidget(blocks: blocks))
+            ],
+          ),
+        ),
+        SizedBox(height: 20),
+        Expanded(flex: 2, child: DataPointWidget(dpList: dpList))
       ],
     );
   }

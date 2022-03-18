@@ -33,8 +33,8 @@ class _DashboardState extends State<Dashboard> {
     localizer = AppLocalizations.of(context)!;
     themeProvider = Provider.of<ThemeProvider>(context);
 
-    List<Widget> serviceWidgets =
-        List.generate(services.length, (e) => ServiceWidget(service: services[e]));
+    List<Widget> serviceWidgets = List.generate(
+        services.length, (e) => ServiceWidget(service: services[e]));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,28 +63,11 @@ class _DashboardState extends State<Dashboard> {
                               )),
                     )),
                 const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      child: DefaultButton(
-                          text: localizer.downloadXData.replaceFirst("{0}", "Facebook"),
-                          onPressed: () async {
-                            await launch(FACEBOOKDOWNLOADDATAURL);
-                          }),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                      child: DefaultButton(
-                          text: localizer.downloadXData.replaceFirst("{0}", "Instagram"),
-                          onPressed: () async {
-                            await launch(INSTAGRAMDOWNLOADDATAURL);
-                          }),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Text(localizer.yourSocialDataOverview), //dashboard widgets
+                Text(
+                  localizer.yourSocialDataOverview,
+                  style: themeProvider.themeData().textTheme.headline4,
+                ), //dashboard widgets
+
                 const SizedBox(height: 20),
                 // DefaultButton(onPressed: () {}),
                 // DefaultButton(text: "Press me! Please do", onPressed: () {}, color: Colors.blue),

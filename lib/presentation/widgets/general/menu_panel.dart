@@ -39,7 +39,8 @@ class _MenuPanelState extends State<MenuPanel> {
               children: [
                 Text(
                   localizer.waultarBoard,
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.w400),
                 ),
                 const SizedBox(height: 3),
                 Row(
@@ -47,16 +48,22 @@ class _MenuPanelState extends State<MenuPanel> {
                     Text(
                       localizer.lastUpload + ":",
                       style: const TextStyle(
-                          color: Color(0xFFABAAB8), fontSize: 10, fontWeight: FontWeight.w200),
+                          color: Color(0xFFABAAB8),
+                          fontSize: 10,
+                          fontWeight: FontWeight.w200),
                     ),
                     const SizedBox(width: 5),
                     Container(
-                      decoration: BoxDecoration(
-                          color: const Color(0xFF4FB376), borderRadius: BorderRadius.circular(100)),
+                      // decoration: BoxDecoration(
+                      //     color: const Color(0xFF4FB376),
+                      //     borderRadius: BorderRadius.circular(100)),
                       child: const Padding(
-                        padding: EdgeInsets.fromLTRB(8, 2, 8, 2),
+                        padding: EdgeInsets.fromLTRB(2, 2, 8, 2),
                         child: Text("Feb 2. 2022",
-                            style: TextStyle(fontSize: 9, fontWeight: FontWeight.w200)),
+                            style: TextStyle(
+                                color: const Color(0xFF4FB376),
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600)),
                       ),
                     )
                   ],
@@ -77,10 +84,13 @@ class _MenuPanelState extends State<MenuPanel> {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: TextButton(
         style: ButtonStyle(
-          shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))),
-          backgroundColor: MaterialStateProperty.all(
-              widget.active == screen ? const Color(0xFF2F2F4A) : Colors.black.withOpacity(0.0)),
+          overlayColor: MaterialStateProperty.all(
+              (themeProvider.themeData().primaryColor).withOpacity(0.5)),
+          shape: MaterialStateProperty.all(RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0))),
+          backgroundColor: MaterialStateProperty.all(widget.active == screen
+              ? (themeProvider.themeData().primaryColor)
+              : Colors.black.withOpacity(0.0)),
         ),
         onPressed: () async {
           onPressed(screen);
@@ -92,7 +102,9 @@ class _MenuPanelState extends State<MenuPanel> {
             children: [
               Icon(
                 icon,
-                color: widget.active == screen ? Colors.white : const Color(0xFFABAAB8),
+                color: widget.active == screen
+                    ? Colors.white
+                    : Color(0xFF7A80A9), //const Color(0xFFABAAB8),
                 size: 12,
               ),
               const SizedBox(width: 12),
@@ -100,7 +112,9 @@ class _MenuPanelState extends State<MenuPanel> {
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 12,
-                      color: widget.active == screen ? Colors.white : const Color(0xFFABAAB8)))
+                      color: widget.active == screen
+                          ? Colors.white
+                          : Color(0xFF7A80A9))) //const Color(0xFFABAAB8)))
             ],
           ),
         ),
@@ -116,9 +130,7 @@ class _MenuPanelState extends State<MenuPanel> {
     return Container(
         width: menuWidth,
         height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-            color: Color(0xFF272837),
-            borderRadius: BorderRadius.only(topRight: Radius.circular(10))),
+        color: Color(0xFF202442),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -128,30 +140,58 @@ class _MenuPanelState extends State<MenuPanel> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   logo(),
-                  const Divider(height: 40, thickness: 2, color: Color(0xFF363747)),
-                  menuButton(Iconsax.music_dashboard, localizer.dashboard, ViewScreen.dashboard,
-                      (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.home()); }),
-                  menuButton(Iconsax.command, localizer.collections, ViewScreen.browse,
-                      (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.browse()); }),
-                  menuButton(Iconsax.routing, localizer.timeline, ViewScreen.timeline,
-                      (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.timeline()); }),
+                  const Divider(
+                      height: 40, thickness: 2, color: Color(0xFF2D325A)),
+                  menuButton(Iconsax.music_dashboard, localizer.dashboard,
+                      ViewScreen.dashboard, (_) {
+                    context
+                        .read<AppState>()
+                        .updateNavigatorState(AppRoutePath.home());
+                  }),
                   menuButton(
-                      Iconsax.routing, localizer.search, ViewScreen.search, (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.search()); }),
-                  menuButton(themeProvider.isLightTheme ? Iconsax.sun : Iconsax.moon,
-                      localizer.changeTheme, ViewScreen.unknown, (_) async {
+                      Iconsax.command, localizer.collections, ViewScreen.browse,
+                      (_) {
+                    context
+                        .read<AppState>()
+                        .updateNavigatorState(AppRoutePath.browse());
+                  }),
+                  menuButton(
+                      Iconsax.routing, localizer.timeline, ViewScreen.timeline,
+                      (_) {
+                    context
+                        .read<AppState>()
+                        .updateNavigatorState(AppRoutePath.timeline());
+                  }),
+                  menuButton(
+                      Iconsax.routing, localizer.search, ViewScreen.search,
+                      (_) {
+                    context
+                        .read<AppState>()
+                        .updateNavigatorState(AppRoutePath.search());
+                  }),
+                  menuButton(
+                      themeProvider.isLightTheme ? Iconsax.sun : Iconsax.moon,
+                      localizer.changeTheme,
+                      ViewScreen.unknown, (_) async {
                     await themeProvider.toggleThemeData();
                   }),
-                  const Divider(height: 40, thickness: 2, color: Color(0xFF363747)),
+                  const Divider(
+                      height: 40, thickness: 2, color: Color(0xFF2D325A)),
                 ],
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //profile(),
-                  menuButton(Iconsax.setting, localizer.settings, ViewScreen.unknown, (_) {
-                    context.read<AppState>().updateNavigatorState(AppRoutePath.settings());
+                  menuButton(
+                      Iconsax.setting, localizer.settings, ViewScreen.unknown,
+                      (_) {
+                    context
+                        .read<AppState>()
+                        .updateNavigatorState(AppRoutePath.settings());
                   }),
-                  menuButton(Iconsax.logout, localizer.logout, ViewScreen.signin, (_) {})
+                  menuButton(Iconsax.logout, localizer.logout,
+                      ViewScreen.signin, (_) {})
                 ],
               ),
             ],
