@@ -2,12 +2,9 @@ import 'dart:convert';
 
 import 'package:objectbox/objectbox.dart';
 import 'package:pretty_json/pretty_json.dart';
-import 'package:waultar/data/entities/media/file_objectbox.dart';
-import 'package:waultar/data/entities/media/image_objectbox.dart';
-import 'package:waultar/data/entities/media/video_objectbox.dart';
-import 'package:waultar/data/entities/misc/service_objectbox.dart';
+import 'package:waultar/core/inodes/media_documents.dart';
+import 'package:waultar/core/inodes/service_document.dart';
 
-// flutter packages pub run build_runner build --delete-conflicting-outputs
 
 @Entity()
 class DataPoint {
@@ -17,10 +14,11 @@ class DataPoint {
 
   final category = ToOne<DataCategory>();
 
-  final images = ToMany<ImageObjectBox>();
-  final videos = ToMany<VideoObjectBox>();
-  final files = ToMany<FileObjectBox>();
-  final service = ToOne<ServiceObjectBox>();
+  final images = ToMany<ImageDocument>();
+  final videos = ToMany<VideoDocument>();
+  final files = ToMany<FileDocument>();
+  final links = ToMany<LinkDocument>();
+  final service = ToOne<ServiceDocument>();
 
   // perhaps make it a list ?
   // a datapoint can contain several searchable strings, and if we put all usergenerated 

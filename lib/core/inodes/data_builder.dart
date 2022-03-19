@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:waultar/configs/globals/media_extensions.dart';
+import 'package:waultar/core/inodes/media_documents.dart';
+import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/data/entities/media/file_objectbox.dart';
 import 'package:waultar/data/entities/media/image_objectbox.dart';
@@ -27,7 +29,7 @@ class DataBuilder {
     dataPoint.category.target = category;
   }
 
-  void setService(ServiceObjectBox service) {
+  void setService(ServiceDocument service) {
     dataPoint.service.target = service;
   }
 
@@ -58,9 +60,10 @@ class DataBuilder {
 
     // use the sb and append serachable strings in value
     var sb = StringBuffer();
-    var imagesFound = <ImageObjectBox>[];
-    var videosFound = <VideoObjectBox>[];
-    var filesFound = <FileObjectBox>[];
+    var imagesFound = <ImageDocument>[];
+    var videosFound = <VideoDocument>[];
+    var filesFound = <FileDocument>[];
+    var linksFound = <LinkDocument>[];
     // let's just use a nested funtion to recursively find our targets in the jsonMap
     recurse(dynamic json) {
       if (json is Map<String, dynamic>) {
@@ -81,5 +84,7 @@ class DataBuilder {
     dataPoint.images.addAll(imagesFound);
     dataPoint.videos.addAll(videosFound);
     dataPoint.files.addAll(filesFound);
+    dataPoint.links.addAll(linksFound);
+    
   }
 }

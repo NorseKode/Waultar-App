@@ -13,6 +13,8 @@ import 'package:objectbox/internal.dart'; // generated code can access "internal
 import 'package:objectbox/objectbox.dart';
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
+import '../../core/inodes/media_documents.dart';
+import '../../core/inodes/service_document.dart';
 import '../../core/inodes/tree_nodes.dart';
 import '../../data/entities/content/comment_objectbox.dart';
 import '../../data/entities/content/event_objectbox.dart';
@@ -295,7 +297,7 @@ final _entities = <ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const IdUid(8, 7955869088216379633),
-            relationTarget: 'ServiceObjectBox'),
+            relationTarget: 'ServiceDocument'),
         ModelProperty(
             id: const IdUid(6, 7380539589883038904),
             name: 'searchString',
@@ -312,15 +314,19 @@ final _entities = <ModelEntity>[
         ModelRelation(
             id: const IdUid(5, 1767516331485594052),
             name: 'images',
-            targetId: const IdUid(15, 4594153462237313951)),
+            targetId: const IdUid(33, 3199854896470237352)),
         ModelRelation(
             id: const IdUid(6, 4419558145873108374),
             name: 'videos',
-            targetId: const IdUid(30, 2700976137735647892)),
+            targetId: const IdUid(36, 3177292059338449348)),
         ModelRelation(
             id: const IdUid(7, 6434723904107441105),
             name: 'files',
-            targetId: const IdUid(12, 4679681511518207465))
+            targetId: const IdUid(32, 6733607803340350093)),
+        ModelRelation(
+            id: const IdUid(22, 3122676908211013825),
+            name: 'links',
+            targetId: const IdUid(34, 6580086254301391016))
       ],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
@@ -1444,6 +1450,228 @@ final _entities = <ModelEntity>[
             name: 'months',
             targetId: const IdUid(17, 8443743811430692582))
       ],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(32, 6733607803340350093),
+      name: 'FileDocument',
+      lastPropertyId: const IdUid(7, 3816932248313874191),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 8434186805896981212),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 6806157077664093777),
+            name: 'uri',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 6090086732534367808),
+            name: 'data',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 7865517604033956747),
+            name: 'searchString',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 3907004278123414044),
+            name: 'thumbnail',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 8368456499863488457),
+            name: 'serviceId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(42, 5063976898366921410),
+            relationTarget: 'ServiceDocument'),
+        ModelProperty(
+            id: const IdUid(7, 3816932248313874191),
+            name: 'relatedDatapointId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(43, 5889454731299176230),
+            relationTarget: 'DataPoint')
+      ],
+      relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(33, 3199854896470237352),
+      name: 'ImageDocument',
+      lastPropertyId: const IdUid(7, 6974958562562519753),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 1393523327987614350),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 2202052637700890477),
+            name: 'uri',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 7039569670137007321),
+            name: 'data',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 4147824923781718854),
+            name: 'searchString',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 7608363150273988244),
+            name: 'mediaTags',
+            type: 30,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 35485257592251040),
+            name: 'serviceId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(44, 6715182892859029885),
+            relationTarget: 'ServiceDocument'),
+        ModelProperty(
+            id: const IdUid(7, 6974958562562519753),
+            name: 'relatedDatapointId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(45, 5981393423004271311),
+            relationTarget: 'DataPoint')
+      ],
+      relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(34, 6580086254301391016),
+      name: 'LinkDocument',
+      lastPropertyId: const IdUid(6, 8761767811309346826),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 2798261362149453042),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 5076610417622606416),
+            name: 'uri',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 322578933858145357),
+            name: 'data',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 824473207285892145),
+            name: 'searchString',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 3790646864221057617),
+            name: 'serviceId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(46, 8928626685733371733),
+            relationTarget: 'ServiceDocument'),
+        ModelProperty(
+            id: const IdUid(6, 8761767811309346826),
+            name: 'relatedDatapointId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(47, 4189976758467396925),
+            relationTarget: 'DataPoint')
+      ],
+      relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(35, 1957467003173086369),
+      name: 'ServiceDocument',
+      lastPropertyId: const IdUid(5, 6805920536238194313),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 4813387913626872878),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 4493364700905567042),
+            name: 'serviceName',
+            type: 9,
+            flags: 2080,
+            indexId: const IdUid(48, 426496036705934259)),
+        ModelProperty(
+            id: const IdUid(3, 8486442599321895495),
+            name: 'companyName',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 5939934687164224825),
+            name: 'image',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 6805920536238194313),
+            name: 'totalDatapoints',
+            type: 6,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(36, 3177292059338449348),
+      name: 'VideoDocument',
+      lastPropertyId: const IdUid(7, 5505033573211785519),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 9209955834123404426),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 2775051002555614165),
+            name: 'uri',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 5699737781623885431),
+            name: 'data',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 8822494434286069805),
+            name: 'searchString',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 5678109207131033485),
+            name: 'thumbnail',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 5021528341812024427),
+            name: 'serviceId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(49, 6741754154682230088),
+            relationTarget: 'ServiceDocument'),
+        ModelProperty(
+            id: const IdUid(7, 5505033573211785519),
+            name: 'relatedDatapointId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(50, 8673068564917753083),
+            relationTarget: 'DataPoint')
+      ],
+      relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[])
 ];
 
@@ -1467,9 +1695,9 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(31, 8819168080769456448),
-      lastIndexId: const IdUid(41, 6055987803180152942),
-      lastRelationId: const IdUid(21, 7757894380190894923),
+      lastEntityId: const IdUid(36, 3177292059338449348),
+      lastIndexId: const IdUid(50, 8673068564917753083),
+      lastRelationId: const IdUid(22, 3122676908211013825),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [],
@@ -1734,7 +1962,8 @@ ModelDefinition getObjectBoxModel() {
         toManyRelations: (DataPoint object) => {
               RelInfo<DataPoint>.toMany(5, object.id): object.images,
               RelInfo<DataPoint>.toMany(6, object.id): object.videos,
-              RelInfo<DataPoint>.toMany(7, object.id): object.files
+              RelInfo<DataPoint>.toMany(7, object.id): object.files,
+              RelInfo<DataPoint>.toMany(22, object.id): object.links
             },
         getId: (DataPoint object) => object.id,
         setId: (DataPoint object, int id) {
@@ -1782,6 +2011,8 @@ ModelDefinition getObjectBoxModel() {
               RelInfo<DataPoint>.toMany(6, object.id), store.box<DataPoint>());
           InternalToManyAccess.setRelInfo(object.files, store,
               RelInfo<DataPoint>.toMany(7, object.id), store.box<DataPoint>());
+          InternalToManyAccess.setRelInfo(object.links, store,
+              RelInfo<DataPoint>.toMany(22, object.id), store.box<DataPoint>());
           return object;
         }),
     DataPointName: EntityDefinition<DataPointName>(
@@ -2981,6 +3212,235 @@ ModelDefinition getObjectBoxModel() {
               RelInfo<YearBucket>.toMany(21, object.id),
               store.box<YearBucket>());
           return object;
+        }),
+    FileDocument: EntityDefinition<FileDocument>(
+        model: _entities[31],
+        toOneRelations: (FileDocument object) =>
+            [object.service, object.relatedDatapoint],
+        toManyRelations: (FileDocument object) => {},
+        getId: (FileDocument object) => object.id,
+        setId: (FileDocument object, int id) {
+          object.id = id;
+        },
+        objectToFB: (FileDocument object, fb.Builder fbb) {
+          final uriOffset = fbb.writeString(object.uri);
+          final dataOffset = fbb.writeString(object.data);
+          final searchStringOffset = fbb.writeString(object.searchString);
+          final thumbnailOffset = object.thumbnail == null
+              ? null
+              : fbb.writeString(object.thumbnail!);
+          fbb.startTable(8);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, uriOffset);
+          fbb.addOffset(2, dataOffset);
+          fbb.addOffset(3, searchStringOffset);
+          fbb.addOffset(4, thumbnailOffset);
+          fbb.addInt64(5, object.service.targetId);
+          fbb.addInt64(6, object.relatedDatapoint.targetId);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = FileDocument(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              uri: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 6, ''),
+              data: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 8, ''),
+              thumbnail: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 12))
+            ..searchString = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 10, '');
+          object.service.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
+          object.service.attach(store);
+          object.relatedDatapoint.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
+          object.relatedDatapoint.attach(store);
+          return object;
+        }),
+    ImageDocument: EntityDefinition<ImageDocument>(
+        model: _entities[32],
+        toOneRelations: (ImageDocument object) =>
+            [object.service, object.relatedDatapoint],
+        toManyRelations: (ImageDocument object) => {},
+        getId: (ImageDocument object) => object.id,
+        setId: (ImageDocument object, int id) {
+          object.id = id;
+        },
+        objectToFB: (ImageDocument object, fb.Builder fbb) {
+          final uriOffset = fbb.writeString(object.uri);
+          final dataOffset = fbb.writeString(object.data);
+          final searchStringOffset = fbb.writeString(object.searchString);
+          final mediaTagsOffset = fbb.writeList(
+              object.mediaTags.map(fbb.writeString).toList(growable: false));
+          fbb.startTable(8);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, uriOffset);
+          fbb.addOffset(2, dataOffset);
+          fbb.addOffset(3, searchStringOffset);
+          fbb.addOffset(4, mediaTagsOffset);
+          fbb.addInt64(5, object.service.targetId);
+          fbb.addInt64(6, object.relatedDatapoint.targetId);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = ImageDocument(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              uri: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 6, ''),
+              data: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 8, ''))
+            ..searchString = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 10, '')
+            ..mediaTags = const fb.ListReader<String>(
+                    fb.StringReader(asciiOptimization: true),
+                    lazy: false)
+                .vTableGet(buffer, rootOffset, 12, []);
+          object.service.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
+          object.service.attach(store);
+          object.relatedDatapoint.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
+          object.relatedDatapoint.attach(store);
+          return object;
+        }),
+    LinkDocument: EntityDefinition<LinkDocument>(
+        model: _entities[33],
+        toOneRelations: (LinkDocument object) =>
+            [object.service, object.relatedDatapoint],
+        toManyRelations: (LinkDocument object) => {},
+        getId: (LinkDocument object) => object.id,
+        setId: (LinkDocument object, int id) {
+          object.id = id;
+        },
+        objectToFB: (LinkDocument object, fb.Builder fbb) {
+          final uriOffset = fbb.writeString(object.uri);
+          final dataOffset = fbb.writeString(object.data);
+          final searchStringOffset = fbb.writeString(object.searchString);
+          fbb.startTable(7);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, uriOffset);
+          fbb.addOffset(2, dataOffset);
+          fbb.addOffset(3, searchStringOffset);
+          fbb.addInt64(4, object.service.targetId);
+          fbb.addInt64(5, object.relatedDatapoint.targetId);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = LinkDocument(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              uri: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 6, ''),
+              data: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 8, ''))
+            ..searchString = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 10, '');
+          object.service.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
+          object.service.attach(store);
+          object.relatedDatapoint.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
+          object.relatedDatapoint.attach(store);
+          return object;
+        }),
+    ServiceDocument: EntityDefinition<ServiceDocument>(
+        model: _entities[34],
+        toOneRelations: (ServiceDocument object) => [],
+        toManyRelations: (ServiceDocument object) => {},
+        getId: (ServiceDocument object) => object.id,
+        setId: (ServiceDocument object, int id) {
+          object.id = id;
+        },
+        objectToFB: (ServiceDocument object, fb.Builder fbb) {
+          final serviceNameOffset = fbb.writeString(object.serviceName);
+          final companyNameOffset = fbb.writeString(object.companyName);
+          final imageOffset = fbb.writeString(object.image);
+          fbb.startTable(6);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, serviceNameOffset);
+          fbb.addOffset(2, companyNameOffset);
+          fbb.addOffset(3, imageOffset);
+          fbb.addInt64(4, object.totalDatapoints);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = ServiceDocument(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              serviceName: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 6, ''),
+              companyName: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 8, ''),
+              image: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 10, ''),
+              totalDatapoints:
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0));
+
+          return object;
+        }),
+    VideoDocument: EntityDefinition<VideoDocument>(
+        model: _entities[35],
+        toOneRelations: (VideoDocument object) =>
+            [object.service, object.relatedDatapoint],
+        toManyRelations: (VideoDocument object) => {},
+        getId: (VideoDocument object) => object.id,
+        setId: (VideoDocument object, int id) {
+          object.id = id;
+        },
+        objectToFB: (VideoDocument object, fb.Builder fbb) {
+          final uriOffset = fbb.writeString(object.uri);
+          final dataOffset = fbb.writeString(object.data);
+          final searchStringOffset = fbb.writeString(object.searchString);
+          final thumbnailOffset = object.thumbnail == null
+              ? null
+              : fbb.writeString(object.thumbnail!);
+          fbb.startTable(8);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, uriOffset);
+          fbb.addOffset(2, dataOffset);
+          fbb.addOffset(3, searchStringOffset);
+          fbb.addOffset(4, thumbnailOffset);
+          fbb.addInt64(5, object.service.targetId);
+          fbb.addInt64(6, object.relatedDatapoint.targetId);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = VideoDocument(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              uri: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 6, ''),
+              data: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 8, ''),
+              thumbnail: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 12))
+            ..searchString = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 10, '');
+          object.service.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
+          object.service.attach(store);
+          object.relatedDatapoint.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
+          object.relatedDatapoint.attach(store);
+          return object;
         })
   };
 
@@ -3144,7 +3604,7 @@ class DataPoint_ {
       QueryRelationToOne<DataPoint, DataCategory>(_entities[6].properties[3]);
 
   /// see [DataPoint.service]
-  static final service = QueryRelationToOne<DataPoint, ServiceObjectBox>(
+  static final service = QueryRelationToOne<DataPoint, ServiceDocument>(
       _entities[6].properties[4]);
 
   /// see [DataPoint.searchString]
@@ -3157,15 +3617,19 @@ class DataPoint_ {
 
   /// see [DataPoint.images]
   static final images =
-      QueryRelationToMany<DataPoint, ImageObjectBox>(_entities[6].relations[0]);
+      QueryRelationToMany<DataPoint, ImageDocument>(_entities[6].relations[0]);
 
   /// see [DataPoint.videos]
   static final videos =
-      QueryRelationToMany<DataPoint, VideoObjectBox>(_entities[6].relations[1]);
+      QueryRelationToMany<DataPoint, VideoDocument>(_entities[6].relations[1]);
 
   /// see [DataPoint.files]
   static final files =
-      QueryRelationToMany<DataPoint, FileObjectBox>(_entities[6].relations[2]);
+      QueryRelationToMany<DataPoint, FileDocument>(_entities[6].relations[2]);
+
+  /// see [DataPoint.links]
+  static final links =
+      QueryRelationToMany<DataPoint, LinkDocument>(_entities[6].relations[3]);
 }
 
 /// [DataPointName] entity fields to define ObjectBox queries.
@@ -3921,4 +4385,147 @@ class YearBucket_ {
   /// see [YearBucket.months]
   static final months =
       QueryRelationToMany<YearBucket, MonthBucket>(_entities[30].relations[0]);
+}
+
+/// [FileDocument] entity fields to define ObjectBox queries.
+class FileDocument_ {
+  /// see [FileDocument.id]
+  static final id =
+      QueryIntegerProperty<FileDocument>(_entities[31].properties[0]);
+
+  /// see [FileDocument.uri]
+  static final uri =
+      QueryStringProperty<FileDocument>(_entities[31].properties[1]);
+
+  /// see [FileDocument.data]
+  static final data =
+      QueryStringProperty<FileDocument>(_entities[31].properties[2]);
+
+  /// see [FileDocument.searchString]
+  static final searchString =
+      QueryStringProperty<FileDocument>(_entities[31].properties[3]);
+
+  /// see [FileDocument.thumbnail]
+  static final thumbnail =
+      QueryStringProperty<FileDocument>(_entities[31].properties[4]);
+
+  /// see [FileDocument.service]
+  static final service = QueryRelationToOne<FileDocument, ServiceDocument>(
+      _entities[31].properties[5]);
+
+  /// see [FileDocument.relatedDatapoint]
+  static final relatedDatapoint =
+      QueryRelationToOne<FileDocument, DataPoint>(_entities[31].properties[6]);
+}
+
+/// [ImageDocument] entity fields to define ObjectBox queries.
+class ImageDocument_ {
+  /// see [ImageDocument.id]
+  static final id =
+      QueryIntegerProperty<ImageDocument>(_entities[32].properties[0]);
+
+  /// see [ImageDocument.uri]
+  static final uri =
+      QueryStringProperty<ImageDocument>(_entities[32].properties[1]);
+
+  /// see [ImageDocument.data]
+  static final data =
+      QueryStringProperty<ImageDocument>(_entities[32].properties[2]);
+
+  /// see [ImageDocument.searchString]
+  static final searchString =
+      QueryStringProperty<ImageDocument>(_entities[32].properties[3]);
+
+  /// see [ImageDocument.mediaTags]
+  static final mediaTags =
+      QueryStringVectorProperty<ImageDocument>(_entities[32].properties[4]);
+
+  /// see [ImageDocument.service]
+  static final service = QueryRelationToOne<ImageDocument, ServiceDocument>(
+      _entities[32].properties[5]);
+
+  /// see [ImageDocument.relatedDatapoint]
+  static final relatedDatapoint =
+      QueryRelationToOne<ImageDocument, DataPoint>(_entities[32].properties[6]);
+}
+
+/// [LinkDocument] entity fields to define ObjectBox queries.
+class LinkDocument_ {
+  /// see [LinkDocument.id]
+  static final id =
+      QueryIntegerProperty<LinkDocument>(_entities[33].properties[0]);
+
+  /// see [LinkDocument.uri]
+  static final uri =
+      QueryStringProperty<LinkDocument>(_entities[33].properties[1]);
+
+  /// see [LinkDocument.data]
+  static final data =
+      QueryStringProperty<LinkDocument>(_entities[33].properties[2]);
+
+  /// see [LinkDocument.searchString]
+  static final searchString =
+      QueryStringProperty<LinkDocument>(_entities[33].properties[3]);
+
+  /// see [LinkDocument.service]
+  static final service = QueryRelationToOne<LinkDocument, ServiceDocument>(
+      _entities[33].properties[4]);
+
+  /// see [LinkDocument.relatedDatapoint]
+  static final relatedDatapoint =
+      QueryRelationToOne<LinkDocument, DataPoint>(_entities[33].properties[5]);
+}
+
+/// [ServiceDocument] entity fields to define ObjectBox queries.
+class ServiceDocument_ {
+  /// see [ServiceDocument.id]
+  static final id =
+      QueryIntegerProperty<ServiceDocument>(_entities[34].properties[0]);
+
+  /// see [ServiceDocument.serviceName]
+  static final serviceName =
+      QueryStringProperty<ServiceDocument>(_entities[34].properties[1]);
+
+  /// see [ServiceDocument.companyName]
+  static final companyName =
+      QueryStringProperty<ServiceDocument>(_entities[34].properties[2]);
+
+  /// see [ServiceDocument.image]
+  static final image =
+      QueryStringProperty<ServiceDocument>(_entities[34].properties[3]);
+
+  /// see [ServiceDocument.totalDatapoints]
+  static final totalDatapoints =
+      QueryIntegerProperty<ServiceDocument>(_entities[34].properties[4]);
+}
+
+/// [VideoDocument] entity fields to define ObjectBox queries.
+class VideoDocument_ {
+  /// see [VideoDocument.id]
+  static final id =
+      QueryIntegerProperty<VideoDocument>(_entities[35].properties[0]);
+
+  /// see [VideoDocument.uri]
+  static final uri =
+      QueryStringProperty<VideoDocument>(_entities[35].properties[1]);
+
+  /// see [VideoDocument.data]
+  static final data =
+      QueryStringProperty<VideoDocument>(_entities[35].properties[2]);
+
+  /// see [VideoDocument.searchString]
+  static final searchString =
+      QueryStringProperty<VideoDocument>(_entities[35].properties[3]);
+
+  /// see [VideoDocument.thumbnail]
+  static final thumbnail =
+      QueryStringProperty<VideoDocument>(_entities[35].properties[4]);
+
+  /// see [VideoDocument.service]
+  static final service = QueryRelationToOne<VideoDocument, ServiceDocument>(
+      _entities[35].properties[5]);
+
+  /// see [VideoDocument.relatedDatapoint]
+  static final relatedDatapoint =
+      QueryRelationToOne<VideoDocument, DataPoint>(_entities[35].properties[6]);
 }

@@ -19,6 +19,7 @@ class DataPointRepository {
   List<int> addMany(List<DataPoint> dataPoints) => _dataBox.putMany(dataPoints);
   List<DataPoint> readAll() => _dataBox.getAll();
   int count() => _dataBox.count();
+  
   List<UIDTO> search(String searchString, int offset, int limit) {
     var builder = _dataBox
         .query(DataPoint_.searchString
