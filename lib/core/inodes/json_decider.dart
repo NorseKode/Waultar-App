@@ -3,17 +3,6 @@
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:collection/collection.dart';
 
-class DataBuilder {
-  DataCategory category;
-  late DataPointName name;
-
-  DataBuilder(this.category);
-
-  void setName(String name) {
-    this.name = DataPointName(name: name);
-  }
-}
-
 enum Decision {
   embedAsDataPoint,
   linkAsDataPoint,
@@ -29,7 +18,7 @@ class JsonExpert {
     if (element is Map<String, dynamic>) {
       // TODO - do this smarter
       // how to check for nested datapoint ?
-      // the only cases where we should return linkAsNewName is 
+      // the only cases where we should return linkAsNewName is
       // when we encounter something like recently_viewed, but at the same time
       // exclude stuff like your_posts which has similiar pattern
       if (element.containsKey('children') || element.containsKey('entries')) {
@@ -40,7 +29,7 @@ class JsonExpert {
     }
     if (element is List<dynamic>) {
       return Decision.linkAsNewName;
-    } 
+    }
     return Decision.embedAsDataPoint;
   }
 
@@ -100,4 +89,3 @@ class JsonExpert {
     return InternalValueDecision.scalar;
   }
 }
-

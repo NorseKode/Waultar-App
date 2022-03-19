@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
+import 'package:waultar/core/inodes/data_builder.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
@@ -22,7 +23,24 @@ class TreeParser {
   late String formerFileName;
   late String formerFileParentName;
 
+  late String basePathToFiles;
+
   Future<void> parseManyPaths(List<String> paths) async {
+    if (paths.length > 1) {
+      var basePathToFiles = StringBuffer();
+      var path1 = paths.first;
+      var path2 = paths.last;
+
+      for (var i = 0; i < path1.length; i++) {
+        if (path1[i] == path2[i]) {
+          basePathToFiles.write(path1[i]);
+        } else {
+          break;
+        }
+      }
+      this.basePathToFiles = basePathToFiles.toString();
+    }
+
     for (var path in paths) {
       if (Extensions.isJson(path)) {
         await parsePath(path);
@@ -54,21 +72,20 @@ class TreeParser {
     parent ??= DataPointName(name: _cleanName(initialName));
 
     if (json is Map<String, dynamic> && json.length == 1) {
-      return parseName(json.values.first, category,
-          _cleanName(json.keys.first), null);
+      return parseName(
+          json.values.first, category, _cleanName(json.keys.first), null);
     }
 
     // it's a map with several entries and each entry should either be embedded as direct datapoint leaf
     // to the current name, or be split into a new child with the key as name, and attach that name as child to the current name
     var mapToEmbedWith = {};
     if (json is Map<String, dynamic> && json.length > 1) {
-
       var cleanedMap = flatten(json);
 
       // we iterate over all the key-value pairs in the map ..
       for (var entry in cleanedMap.entries) {
         // and let the json expert decide what to do with each key-value pair
-        final decision = JsonExpert.process({entry.key:entry.value});
+        final decision = JsonExpert.process({entry.key: entry.value});
 
         // if the key-value pair is {string:scalar} - the decider saw, that the value was a scalar
         if (decision == Decision.embedAsDataPoint) {
@@ -84,8 +101,14 @@ class TreeParser {
               parseName(entry.value, category, _cleanName(entry.key), null));
         }
 
-        // what here ?
         if (decision == Decision.linkAsDataPoint) {
+          // TODO - implement databuilder fully and use here
+          // var builder = DataBuilder(basePathToFiles)
+          //   ..setName(parent)
+          //   ..setCategory(category)
+          //   ..setData(entry.value);
+          // parent.dataPoints.add(builder.build());
+
           var directDataPoint = DataPoint();
           directDataPoint.category.target = category;
           directDataPoint.searchString = "";
@@ -120,17 +143,19 @@ class TreeParser {
 
         if (decision == Decision.linkAsNewName) {
           // check for name or title keys to use as name for new subtree
-          // typechecking just for safety .. 
+          // typechecking just for safety ..
           // when decision is linkAsNewName for a list element
           // the list element is with high certainty as map
           if (item is Map<String, dynamic>) {
             var nameBasedOnTitle = item['title'];
             if (nameBasedOnTitle != null && nameBasedOnTitle is String) {
-              parent.children.add(parseName(item, category, nameBasedOnTitle, null));
+              parent.children
+                  .add(parseName(item, category, nameBasedOnTitle, null));
             }
             var nameBasedOnName = item['name'];
             if (nameBasedOnName != null && nameBasedOnName is String) {
-              parent.children.add(parseName(item, category, nameBasedOnName, null));
+              parent.children
+                  .add(parseName(item, category, nameBasedOnName, null));
             } else {
               parent.children.add(parseName(item, category, initialName, null));
             }
@@ -174,7 +199,6 @@ class TreeParser {
     parent.count = parent.children.length + parent.dataPoints.length;
     return parent;
   }
-
 
   Future<dynamic> getJson(File file) async {
     var json = await file.readAsString();
@@ -271,9 +295,8 @@ class TreeParser {
               updated.addAll({keyState: flattenedValue});
             }
           } else {
-
             // TODO - change key to flattenedKey if the results are too unprecise
-            updated.addAll({flattenedKey:flattenedValue});
+            updated.addAll({flattenedKey: flattenedValue});
           }
         }
 

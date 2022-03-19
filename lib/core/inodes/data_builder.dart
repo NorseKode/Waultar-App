@@ -1,6 +1,6 @@
-
 import 'dart:convert';
 
+import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/data/entities/media/file_objectbox.dart';
 import 'package:waultar/data/entities/media/image_objectbox.dart';
@@ -9,8 +9,12 @@ import 'package:waultar/data/entities/misc/service_objectbox.dart';
 
 class DataBuilder {
   late DataPoint dataPoint;
+  final String basePathToMedia;
 
-  DataBuilder() {
+  // TODO - add service as field as well
+  // - should be used for relations and the datapoint itself
+
+  DataBuilder(this.basePathToMedia) {
     dataPoint = DataPoint();
   }
 
@@ -41,7 +45,7 @@ class DataBuilder {
       - and should be acceptable for NLP
     
     should we scout for timestamps here as well or later in the pipeline ?
-    */ 
+    */
     _scout();
 
     return dataPoint;
@@ -59,7 +63,17 @@ class DataBuilder {
     var filesFound = <FileObjectBox>[];
     // let's just use a nested funtion to recursively find our targets in the jsonMap
     recurse(dynamic json) {
+      if (json is Map<String, dynamic>) {
+        for (var entry in json.entries) {
+          var value = entry.value;
+          if (value is String) {
+            if (Extensions.isFile(value)) {
 
+            }
+          }
+        }
+      }
+      if (json is List<dynamic>) {}
     }
 
     recurse(json);
@@ -67,6 +81,5 @@ class DataBuilder {
     dataPoint.images.addAll(imagesFound);
     dataPoint.videos.addAll(videosFound);
     dataPoint.files.addAll(filesFound);
-
   }
 }
