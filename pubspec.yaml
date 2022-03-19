@@ -51,7 +51,7 @@ dependencies:
   # for dependency injection
   get_it: ^7.2.0
 
-  objectbox: ^1.4.0-dev.0
+  objectbox: ^1.4.1
   objectbox_flutter_libs: any
 
   pretty_json: ^2.0.0
