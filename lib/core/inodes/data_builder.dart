@@ -4,10 +4,7 @@ import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/inodes/media_documents.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
-import 'package:waultar/data/entities/media/file_objectbox.dart';
-import 'package:waultar/data/entities/media/image_objectbox.dart';
-import 'package:waultar/data/entities/media/video_objectbox.dart';
-import 'package:waultar/data/entities/misc/service_objectbox.dart';
+import 'package:path/path.dart' as dart_path;
 
 class DataBuilder {
   late DataPoint dataPoint;
@@ -34,7 +31,7 @@ class DataBuilder {
   }
 
   void setData(String json) {
-    dataPoint.values = jsonEncode(json);
+    dataPoint.values = json;
   }
 
   DataPoint build() {
@@ -64,19 +61,34 @@ class DataBuilder {
     var videosFound = <VideoDocument>[];
     var filesFound = <FileDocument>[];
     var linksFound = <LinkDocument>[];
+    var timeStampsFound = <DateTime>[];
     // let's just use a nested funtion to recursively find our targets in the jsonMap
     recurse(dynamic json) {
       if (json is Map<String, dynamic>) {
         for (var entry in json.entries) {
           var value = entry.value;
           if (value is String) {
-            if (Extensions.isFile(value)) {
-
+            if (Extensions.isImage(value)) {
+              var image = ImageDocument(
+                uri: dart_path.normalize('$basePathToMedia/$value'),
+                data: jsonEncode(json),
+              );
+              image.relatedDatapoint.target = dataPoint;
+              image.service.target = dataPoint.service.target;
+              imagesFound.add(image);
             }
+
+            if (Extensions.isFile(value)) {}
+          } else {
+            recurse(entry.value);
           }
         }
       }
-      if (json is List<dynamic>) {}
+      if (json is List<dynamic>) {
+        for (var element in json) {
+          recurse(element);
+        }
+      }
     }
 
     recurse(json);
@@ -85,6 +97,5 @@ class DataBuilder {
     dataPoint.videos.addAll(videosFound);
     dataPoint.files.addAll(filesFound);
     dataPoint.links.addAll(linksFound);
-    
   }
 }
