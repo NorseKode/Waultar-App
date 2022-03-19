@@ -6,6 +6,7 @@ import 'package:pretty_json/pretty_json.dart';
 import 'package:waultar/core/inodes/data_builder.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
+import 'package:path/path.dart' as dart_path;
 
 import 'objectbox/setup.dart';
 
@@ -84,7 +85,7 @@ Future<void> main() async {
         }
       ],
       "title": "Lukas Vinther Offenberg Larsen added a new photos."
-    },
+    }
   ''';
   group('Facebook databuilder', () {
     test(' - datapoint with one image relation', () {
@@ -100,9 +101,28 @@ Future<void> main() async {
       final dataPoint = builder.build();
       expect(dataPoint.images.isNotEmpty, true);
       var image = dataPoint.images.first;
-      print(image.uri);
       var imageData = jsonDecode(image.data);
-      print(prettyJson(imageData));
+      expect(
+          image.uri,
+          dart_path.normalize(
+              '$fbBasePath/posts/media/your_posts/Landscape-Color-Test.jpg'));
+      expect(imageData.length, 5);
+      expect(image.service.hasValue, true);
+      expect(image.service.target!.serviceName, 'Facebook');
+    });
+
+    test(' - datapoint with two image relations', () {
+      var dataName = DataPointName(name: 'Test name');
+      var builder = DataBuilder(fbBasePath);
+
+      builder
+        ..setName(dataName)
+        ..setCategory(testCategory)
+        ..setService(fbService)
+        ..setData(fbpostWithTwoImages);
+
+      final dataPoint = builder.build();
+      expect(dataPoint.images.length, 2);
     });
   });
 }
