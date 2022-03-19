@@ -133,7 +133,8 @@ class TreeParser {
         if (decision == Decision.linkAsDataPoint) {
           var directDataPoint = DataPoint();
           directDataPoint.category.target = category;
-          directDataPoint.searchString = parent.name; // TODO - move this into the builder
+          directDataPoint.searchString =
+              parent.name; // TODO - move this into the builder
           directDataPoint.dataPointName.target = parent;
           directDataPoint.values = jsonEncode(flatten(item));
           directDataPoint.stringName = parent.name;
@@ -220,96 +221,96 @@ class TreeParser {
 
     return temp.trim();
   }
+}
 
-  Map<String, dynamic> flatten(dynamic json, {String nameToFallBackOn = ""}) {
-    var result = _flattenRecurse(nameToFallBackOn, json);
-    return result;
-  }
+Map<String, dynamic> flatten(dynamic json, {String nameToFallBackOn = ""}) {
+  var result = _flattenRecurse(nameToFallBackOn, json);
+  return result;
+}
 
-  dynamic _flattenRecurse(String keyState, dynamic acc) {
-    // handle json list
-    if (acc is List<dynamic>) {
-      var count = acc.length;
+dynamic _flattenRecurse(String keyState, dynamic acc) {
+  // handle json list
+  if (acc is List<dynamic>) {
+    var count = acc.length;
 
-      if (count == 0) {
-        return {keyState: 'no data'};
-      }
-
-      if (count == 1) {
-        var type = acc.first;
-        return _flattenRecurse(keyState, type);
-      }
-
-      if (count > 1) {
-        var list = [];
-        for (var item in acc) {
-          if (item is Map<String, dynamic> || item is List<dynamic>) {
-            var flattenedInner = _flattenRecurse("", item);
-            list.add(flattenedInner);
-          } else {
-            list.add(item);
-          }
-        }
-        return {keyState: list};
-      }
+    if (count == 0) {
+      return {keyState: 'no data'};
     }
 
-    // handle json map
-    if (acc is Map<String, dynamic>) {
-      var entries = acc.entries;
-      var count = entries.length;
-
-      if (count == 0) {
-        return {keyState: "no data"};
-      }
-
-      if (count == 1) {
-        var key = entries.first.key;
-        var value = entries.first.value;
-        return _flattenRecurse(key, value);
-      }
-
-      if (count > 1) {
-        Map<String, dynamic> updated = {};
-
-        for (var item in entries) {
-          var key = item.key;
-          var value = item.value;
-
-          var flattenedInner = _flattenRecurse(key, value);
-          var flattenedKey = flattenedInner.entries.first.key;
-          var flattenedValue = flattenedInner.entries.first.value;
-
-          // facebook often stores duplicate datetimes which we just discard
-          if (DateTime.tryParse(flattenedValue.toString()) != null &&
-              updated.containsValue(flattenedValue)) {
-            continue;
-          }
-
-          // the recursive call might return a key already existing in the updated map
-          // if that is the case, put the returned value with the old key
-          if (updated.containsKey(flattenedKey)) {
-            if (!updated.containsKey(key)) {
-              updated.addAll({key: flattenedValue});
-            } else {
-              updated.addAll({keyState: flattenedValue});
-            }
-          } else {
-            // TODO - change key to flattenedKey if the results are too unprecise
-            updated.addAll({flattenedKey: flattenedValue});
-          }
-        }
-
-        acc = updated;
-      }
+    if (count == 1) {
+      var type = acc.first;
+      return _flattenRecurse(keyState, type);
     }
 
-    // if the acc is neither a list or map, we reached a leaf
-    // e.g. we either reached null, datetime, number, string or bool
-    if (keyState.isEmpty) return acc;
-    if (acc is String && acc.isEmpty) return {keyState: "no data"};
-    if (acc == null) return {keyState: "no data"};
-
-    return {keyState: acc};
+    if (count > 1) {
+      var list = [];
+      for (var item in acc) {
+        if (item is Map<String, dynamic> || item is List<dynamic>) {
+          var flattenedInner = _flattenRecurse("", item);
+          list.add(flattenedInner);
+        } else {
+          list.add(item);
+        }
+      }
+      return {keyState: list};
+    }
   }
+
+  // handle json map
+  if (acc is Map<String, dynamic>) {
+    var entries = acc.entries;
+    var count = entries.length;
+
+    if (count == 0) {
+      return {keyState: "no data"};
+    }
+
+    if (count == 1) {
+      var key = entries.first.key;
+      var value = entries.first.value;
+      return _flattenRecurse(key, value);
+    }
+
+    if (count > 1) {
+      Map<String, dynamic> updated = {};
+
+      for (var item in entries) {
+        var key = item.key;
+        var value = item.value;
+
+        var flattenedInner = _flattenRecurse(key, value);
+        var flattenedKey = flattenedInner.entries.first.key;
+        var flattenedValue = flattenedInner.entries.first.value;
+
+        // facebook often stores duplicate datetimes which we just discard
+        if (DateTime.tryParse(flattenedValue.toString()) != null &&
+            updated.containsValue(flattenedValue)) {
+          continue;
+        }
+
+        // the recursive call might return a key already existing in the updated map
+        // if that is the case, put the returned value with the old key
+        if (updated.containsKey(flattenedKey)) {
+          if (!updated.containsKey(key)) {
+            updated.addAll({key: flattenedValue});
+          } else {
+            updated.addAll({keyState: flattenedValue});
+          }
+        } else {
+          // TODO - change key to flattenedKey if the results are too unprecise
+          updated.addAll({flattenedKey: flattenedValue});
+        }
+      }
+
+      acc = updated;
+    }
+  }
+
+  // if the acc is neither a list or map, we reached a leaf
+  // e.g. we either reached null, datetime, number, string or bool
+  if (keyState.isEmpty) return acc;
+  if (acc is String && acc.isEmpty) return {keyState: "no data"};
+  if (acc == null) return {keyState: "no data"};
+
+  return {keyState: acc};
 }

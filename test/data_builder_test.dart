@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pretty_json/pretty_json.dart';
 import 'package:waultar/core/inodes/data_builder.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
@@ -97,6 +99,10 @@ Future<void> main() async {
 
       final dataPoint = builder.build();
       expect(dataPoint.images.isNotEmpty, true);
+      var image = dataPoint.images.first;
+      print(image.uri);
+      var imageData = jsonDecode(image.data);
+      print(prettyJson(imageData));
     });
   });
 }

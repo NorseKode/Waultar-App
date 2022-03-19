@@ -5,6 +5,7 @@ import 'package:waultar/core/inodes/media_documents.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:path/path.dart' as dart_path;
+import 'package:waultar/core/inodes/tree_parser.dart';
 
 class DataBuilder {
   late DataPoint dataPoint;
@@ -71,7 +72,7 @@ class DataBuilder {
             if (Extensions.isImage(value)) {
               var image = ImageDocument(
                 uri: dart_path.normalize('$basePathToMedia/$value'),
-                data: jsonEncode(json),
+                data: jsonEncode(flatten(json)),
               );
               image.relatedDatapoint.target = dataPoint;
               image.service.target = dataPoint.service.target;
