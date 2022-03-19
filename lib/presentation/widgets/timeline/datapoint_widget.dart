@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -85,13 +87,15 @@ class _DataPointWidgetState extends State<DataPointWidget> {
                           TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
                 ),
                 SizedBox(width: 20),
-                Expanded(
-                  child: Text(
-                      DateFormat('dd. MMMM y H:m')
-                          .format(widget.dpList[index].getTimestamp()),
-                      style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
-                ),
+                widget.dpList[index].getTimestamp() == null
+                    ? Container()
+                    : Expanded(
+                        child: Text(
+                            DateFormat('dd. MMMM y H:m')
+                                .format(widget.dpList[index].getTimestamp()!),
+                            style: TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.w400)),
+                      ),
               ],
             );
           },

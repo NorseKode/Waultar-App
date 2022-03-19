@@ -32,9 +32,9 @@ class _SearchState extends State<Search> {
     setState(() {
       isAppend
           ? _contents +=
-              _textSearchService.search(_searchCategories, _controller.text, _limit, _offset)
+              _textSearchService.searchAll(_controller.text, _offset, _limit)
           : _contents =
-              _textSearchService.search(_searchCategories, _controller.text, _limit, _offset);
+              _textSearchService.searchAll(_controller.text, _offset, _limit);
     });
   }
 

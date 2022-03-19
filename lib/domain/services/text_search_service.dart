@@ -32,10 +32,8 @@ class TextSearchService extends ITextSearchService {
     return returnList;
   }
 
+  @override
   List<UIModel> searchAll(String search, int offset, int limit) {
-    var returnList = <UIModel>[];
-
-
-    return returnList;
+    return _dataRepo.search(search, offset, limit);
   }
 }

@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:flutter/material.dart';
+import 'package:pretty_json/pretty_json.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
@@ -17,7 +19,7 @@ class DataPointRepository {
   List<int> addMany(List<DataPoint> dataPoints) => _dataBox.putMany(dataPoints);
   List<DataPoint> readAll() => _dataBox.getAll();
   int count() => _dataBox.count();
-  List<DataPoint> search(String searchString, int offset, int limit) {
+  List<UIDTO> search(String searchString, int offset, int limit) {
     var builder = _dataBox
         .query(DataPoint_.searchString
             .contains(searchString, caseSensitive: false))
@@ -25,7 +27,7 @@ class DataPointRepository {
     builder
       ..offset = offset
       ..limit = limit;
-    return builder.find();
+    return builder.find().map((e) => UIDTO(e.searchString, e.category.target!, e.asMap)).toList();
   }
 }
 
@@ -34,29 +36,38 @@ class UIDTO implements UIModel {
   final String stringName;
   final DataCategory category;
   final Map<String, dynamic> dataMap;
-  
+  late Color associatedColor;
+  late String mostInformativeField;
+  late DateTime timeStamp;
+
+  UIDTO(this.stringName, this.category, this.dataMap) {
+    associatedColor = Colors.amberAccent; // keep this stored in the category instead, or embed in datapoint - depends on how often we will retrieve color together with datapoint
+
+  }
+
   @override
   Color getAssociatedColor() {
-    // TODO: implement getAssociatedColor
-    throw UnimplementedError();
+    return associatedColor;
   }
 
   @override
   String getMostInformativeField() {
-    // TODO: implement getMostInformativeField
-    throw UnimplementedError();
+    return 'MOST INFORMATIVE FIELD TEST';
   }
 
   @override
-  DateTime getTimestamp() {
-    // TODO: implement getTimestamp
-    throw UnimplementedError();
+  DateTime? getTimestamp() {
+    return null;
   }
 
   @override
-  Map<String, String> toMap() {
-    // TODO: implement toMap
-    throw UnimplementedError();
+  Map<String, dynamic> toMap() {
+    return dataMap;
+  }
+
+  @override
+  String toString() {
+    return 'Dataname: $stringName \nData: \n${prettyJson(dataMap)}';
   }
 
 }

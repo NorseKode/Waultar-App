@@ -111,7 +111,7 @@ class TreeParser {
 
           var directDataPoint = DataPoint();
           directDataPoint.category.target = category;
-          directDataPoint.searchString = "";
+          directDataPoint.searchString = parent.name;
           directDataPoint.dataPointName.target = parent;
           directDataPoint.values = jsonEncode(flatten(entry.value));
           directDataPoint.stringName = parent.name;
@@ -133,7 +133,7 @@ class TreeParser {
         if (decision == Decision.linkAsDataPoint) {
           var directDataPoint = DataPoint();
           directDataPoint.category.target = category;
-          directDataPoint.searchString = "";
+          directDataPoint.searchString = parent.name; // TODO - move this into the builder
           directDataPoint.dataPointName.target = parent;
           directDataPoint.values = jsonEncode(flatten(item));
           directDataPoint.stringName = parent.name;
@@ -169,7 +169,7 @@ class TreeParser {
     if (mapToEmbedWith.isNotEmpty) {
       var directDataPoint = DataPoint();
       directDataPoint.category.target = category;
-      directDataPoint.searchString = "";
+      directDataPoint.searchString = parent.name;
       directDataPoint.dataPointName.target = parent;
       directDataPoint.values = jsonEncode(mapToEmbedWith);
 
@@ -187,7 +187,7 @@ class TreeParser {
     if (listToEmbed.isNotEmpty) {
       var directDataPoint = DataPoint();
       directDataPoint.category.target = category;
-      directDataPoint.searchString = "";
+      directDataPoint.searchString = parent.name;
       directDataPoint.dataPointName.target = parent;
       directDataPoint.values = jsonEncode(listToEmbed);
 
