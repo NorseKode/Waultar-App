@@ -6,12 +6,6 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_timebuckets_repos
 import 'package:waultar/startup.dart';
 
 class TimeBucketsCreator {
-  final IGroupRepository _groupRepo =
-      locator.get<IGroupRepository>(instanceName: 'groupRepo');
-  final IPostRepository _postRepo =
-      locator.get<IPostRepository>(instanceName: 'postRepo');
-  final IEventRepository _eventRepo =
-      locator.get<IEventRepository>(instanceName: 'eventRepo');
   final ITimeBucketsRepository _timeRepo =
       locator.get<ITimeBucketsRepository>(instanceName: 'timeRepo');
   TimeBucketsCreator();

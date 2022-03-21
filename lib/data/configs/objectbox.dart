@@ -1,5 +1,5 @@
+import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
-import 'package:waultar/data/entities/misc/service_objectbox.dart';
 import 'package:path/path.dart' as dart_path;
 
 import '../entities/misc/appsettings_objectbox.dart';
@@ -115,29 +115,29 @@ class ObjectBox {
     }
 
     var facebookService = store
-        .box<ServiceObjectBox>()
-        .query(ServiceObjectBox_.name.equals('Facebook'))
+        .box<ServiceDocument>()
+        .query(ServiceDocument_.serviceName.equals('Facebook'))
         .build()
         .findUnique();
     if (facebookService == null) {
-      facebookService = ServiceObjectBox(
-          name: 'Facebook',
-          company: 'Meta',
+      facebookService = ServiceDocument(
+          serviceName: 'Facebook',
+          companyName: 'Meta',
           image: dart_path.normalize('/assests/service_icons/todo.svg'));
-      store.box<ServiceObjectBox>().put(facebookService);
+      store.box<ServiceDocument>().put(facebookService);
     }
 
     var instagramService = store
-        .box<ServiceObjectBox>()
-        .query(ServiceObjectBox_.name.equals('Instagram'))
+        .box<ServiceDocument>()
+        .query(ServiceDocument_.serviceName.equals('Instagram'))
         .build()
         .findUnique();
     if (instagramService == null) {
-      instagramService = ServiceObjectBox(
-          name: 'Instagram',
-          company: 'Meta',
+      instagramService = ServiceDocument(
+          serviceName: 'Instagram',
+          companyName: 'Meta',
           image: dart_path.normalize('/assests/service_icons/todo.svg'));
-      store.box<ServiceObjectBox>().put(instagramService);
+      store.box<ServiceDocument>().put(instagramService);
     }
   }
 

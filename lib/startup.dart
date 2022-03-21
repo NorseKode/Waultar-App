@@ -4,46 +4,28 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_comment_repository.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_event_repository.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_file_repository.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_group_repository.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_image_repository.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_link_repository.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_post_poll_repository.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_timebuckets_repository.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_video_repository.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_utility_repostitory.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
+import 'package:waultar/core/inodes/service_repo.dart';
 import 'package:waultar/core/inodes/tree_parser.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/ai/image_classifier.dart';
 import 'package:waultar/core/ai/image_classifier_mobilenetv3.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
+import 'package:waultar/core/inodes/util_repo.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/repositories/appsettings_repo.dart';
-import 'package:waultar/data/repositories/comment_repo.dart';
-import 'package:waultar/data/repositories/event_repo.dart';
-import 'package:waultar/data/repositories/file_repo.dart';
-import 'package:waultar/data/repositories/group_repo.dart';
-import 'package:waultar/data/repositories/image_repo.dart';
-import 'package:waultar/data/repositories/link_repo.dart';
 import 'package:waultar/data/repositories/model_builders/i_model_director.dart';
 import 'package:waultar/data/repositories/model_builders/model_director.dart';
 import 'package:waultar/data/repositories/objectbox_builders/i_objectbox_director.dart';
 import 'package:waultar/data/repositories/objectbox_builders/objectbox_director.dart';
-import 'package:waultar/data/repositories/post_poll_repo.dart';
-import 'package:waultar/data/repositories/post_repo.dart';
-import 'package:waultar/data/repositories/profile_repo.dart';
-import 'package:waultar/data/repositories/service_repo.dart';
 import 'package:waultar/data/repositories/timebuckets_repo.dart';
-import 'package:waultar/data/repositories/video_repo.dart';
 import 'package:waultar/domain/services/appsettings_service.dart';
 import 'package:waultar/domain/services/collections_service.dart';
 import 'package:waultar/domain/services/ml_service.dart';
@@ -100,42 +82,13 @@ Future<void> setupServices() async {
     // and the objectboxDirector to map from models to entities
     locator.registerSingleton<IAppSettingsRepository>(AppSettingsRepository(_context),
         instanceName: 'appSettingsRepo');
-    locator.registerSingleton<IPostRepository>(
-        PostRepository(_context, _objectboxDirector, _modelDirector),
-        instanceName: 'postRepo');
     locator.registerSingleton<IServiceRepository>(
-        ServiceRepo(_context, _objectboxDirector, _modelDirector),
+        ServiceRepository(_context),
         instanceName: 'serviceRepo');
-    locator.registerSingleton<IProfileRepository>(
-        ProfileRepository(_context, _objectboxDirector, _modelDirector),
-        instanceName: 'profileRepo');
-    locator.registerSingleton<IEventRepository>(
-        EventRepository(_context, _objectboxDirector, _modelDirector),
-        instanceName: 'eventRepo');
-    locator.registerSingleton<IGroupRepository>(
-        GroupRepository(_context, _objectboxDirector, _modelDirector),
-        instanceName: 'groupRepo');
-    locator.registerSingleton<IImageRepository>(
-        ImageRepository(_context, _objectboxDirector, _modelDirector),
-        instanceName: 'imageRepo');
-    locator.registerSingleton<IVideoRepository>(
-        VideoRepository(_context, _objectboxDirector, _modelDirector),
-        instanceName: 'videoRepo');
-    locator.registerSingleton<ILinkRepository>(
-        LinkRepository(_context, _objectboxDirector, _modelDirector),
-        instanceName: 'linkRepo');
-    locator.registerSingleton<IFileRepository>(
-        FileRepository(_context, _objectboxDirector, _modelDirector),
-        instanceName: 'fileRepo');
-    locator.registerSingleton<IPostPollRepository>(
-        PostPollRepository(_context, _objectboxDirector, _modelDirector),
-        instanceName: 'postPollRepo');
     locator.registerSingleton<ITimeBucketsRepository>(
         TimeBucketsRepository(_context),
         instanceName: 'timeRepo');
-    locator.registerSingleton<ICommentRepository>(
-        CommentRepository(_context, _objectboxDirector, _modelDirector),
-        instanceName: 'commentRepo');
+    locator.registerSingleton<IUtilityRepository>(UtilityRepository(_context), instanceName: 'utilsRepo');
 
     final _categoryRepo = DataCategoryRepository(_context);
     final _nameRepo = DataPointNameRepository(_context);
@@ -147,6 +100,7 @@ Future<void> setupServices() async {
         instanceName: "nameRepo");
     locator.registerSingleton<DataPointRepository>(_dataRepo,
         instanceName: "dataRepo");
+
     // AI Models
     locator.registerSingleton<ImageClassifier>(
       ImageClassifierMobileNetV3(),

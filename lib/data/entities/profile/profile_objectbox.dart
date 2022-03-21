@@ -1,17 +1,16 @@
 import 'package:objectbox/objectbox.dart';
-import 'package:waultar/data/entities/media/image_objectbox.dart';
-import 'package:waultar/data/entities/misc/change_objectbox.dart';
+import 'package:waultar/core/inodes/media_documents.dart';
+import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/data/entities/misc/email_objectbox.dart';
-import 'package:waultar/data/entities/misc/service_objectbox.dart';
 
 @Entity()
 class ProfileObjectBox {
   int id;
-  final service = ToOne<ServiceObjectBox>();
+  final service = ToOne<ServiceDocument>();
   String uri;
   String? username;
   String fullName;
-  final profilePicture = ToOne<ImageObjectBox>();
+  final profilePicture = ToOne<ImageDocument>();
   final emails = ToMany<EmailObjectBox>();
   String? gender;
   String? bio;
@@ -26,8 +25,6 @@ class ProfileObjectBox {
   DateTime? dateOfBirth;
   String? bloodInfo;
   String? friendPeerGroup;
-  final changes = ToMany<ChangeObjectBox>();
-  // final activities = ToMany<ActivityModel>();
   String? eligibility;
   List<String>? metadata;
   String? basePathToFiles;

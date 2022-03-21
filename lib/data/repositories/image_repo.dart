@@ -4,7 +4,6 @@ import 'package:waultar/core/models/media/image_model.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
-import 'package:waultar/data/entities/media/image_objectbox.dart';
 import 'package:waultar/data/repositories/model_builders/i_model_director.dart';
 import 'package:waultar/data/repositories/objectbox_builders/i_objectbox_director.dart';
 
