@@ -9,11 +9,12 @@ import 'package:waultar/core/inodes/datapoint_repo.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:path/path.dart' as dart_path;
 import 'package:waultar/core/inodes/tree_parser.dart';
+import 'package:waultar/data/configs/objectbox.dart';
 
-import 'setup.dart';
+import 'test_utils.dart';
 
 Future<void> main() async {
-  late final ObjectBoxMock _context;
+  late final ObjectBox _context;
   late final DataPointRepository _dataRepo;
   late final DataCategoryRepository _categoryRepo;
   late final DataPointNameRepository _nameRepo;
@@ -46,12 +47,12 @@ Future<void> main() async {
 
   tearDownAll(() async {
     _context.store.close();
-    await deleteTestDb();
+    await TestUtils.deleteTestDb();
   });
 
   setUpAll(() async {
-    await deleteTestDb();
-    _context = await ObjectBoxMock.create();
+    await TestUtils.deleteTestDb();
+    _context = await TestUtils.createTestDb();
     _dataRepo = DataPointRepository(_context);
     _categoryRepo = DataCategoryRepository(_context);
     _nameRepo = DataPointNameRepository(_context);

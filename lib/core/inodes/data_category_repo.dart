@@ -27,8 +27,6 @@ class DataCategoryRepository {
 
   void updateCounts() {
     var categories = _categoryBox.getAll();
-    var totalDataPoints = _context.store.box<DataPoint>().count();
-    print(totalDataPoints);
     for (var category in categories) {
       var builder = _context.store.box<DataPoint>().query();
       builder.link(DataPoint_.category, DataCategory_.id.equals(category.id));

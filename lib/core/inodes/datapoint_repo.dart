@@ -19,7 +19,7 @@ class DataPointRepository {
   List<int> addMany(List<DataPoint> dataPoints) => _dataBox.putMany(dataPoints);
   List<DataPoint> readAll() => _dataBox.getAll();
   int count() => _dataBox.count();
-  
+
   List<UIDTO> search(String searchString, int offset, int limit) {
     var builder = _dataBox
         .query(DataPoint_.searchString
@@ -28,12 +28,31 @@ class DataPointRepository {
     builder
       ..offset = offset
       ..limit = limit;
-    return builder.find().map((e) => UIDTO(e.searchString, e.category.target!, e.asMap)).toList();
+    return builder
+        .find()
+        .map((e) => UIDTO(e.searchString, e.category.target!, e.asMap))
+        .toList();
+  }
+
+  List<UIDTO> searchWithCategories(
+      List<int> categorieIDs, String searchString, int offset, int limit) {
+    var builder = _dataBox.query(
+        DataPoint_.searchString.contains(searchString, caseSensitive: false));
+    builder.link(DataPoint_.category, DataCategory_.id.oneOf(categorieIDs));
+
+    var query = builder.build();
+    query
+      ..offset = offset
+      ..limit = limit;
+
+    return query
+        .find()
+        .map((e) => UIDTO(e.stringName, e.category.target!, e.asMap))
+        .toList();
   }
 }
 
 class UIDTO implements UIModel {
-
   final String stringName;
   final DataCategory category;
   final Map<String, dynamic> dataMap;
@@ -42,8 +61,8 @@ class UIDTO implements UIModel {
   late DateTime timeStamp;
 
   UIDTO(this.stringName, this.category, this.dataMap) {
-    associatedColor = Colors.amberAccent; // keep this stored in the category instead, or embed in datapoint - depends on how often we will retrieve color together with datapoint
-
+    associatedColor = Colors
+        .amberAccent; // keep this stored in the category instead, or embed in datapoint - depends on how often we will retrieve color together with datapoint
   }
 
   @override
@@ -70,5 +89,4 @@ class UIDTO implements UIModel {
   String toString() {
     return 'Dataname: $stringName \nData: \n${prettyJson(dataMap)}';
   }
-
 }

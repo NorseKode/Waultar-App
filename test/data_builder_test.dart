@@ -7,17 +7,47 @@ import 'package:waultar/core/inodes/data_builder.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:path/path.dart' as dart_path;
+import 'package:waultar/data/configs/objectbox.dart';
 
-import 'objectbox/setup.dart';
+import 'objectbox/test_utils.dart';
 
 Future<void> main() async {
-  late final ObjectBoxMock _context;
+  late final ObjectBox _context;
   final DataCategory testCategory =
       DataCategory(name: 'TEST', matchingFolders: []);
   final scriptDir = File(Platform.script.toFilePath()).parent;
   final String fbBasePath = '${scriptDir.path}/test/objectbox/data/Facebook/';
   final ServiceDocument fbService = ServiceDocument(
       serviceName: 'Facebook', companyName: 'Meta', image: 'some path');
+
+  String instagramPostWithManyImages = '''
+  {
+      "media": [
+        {
+          "uri": "posts/media/your_posts/Landscape-Color-Test.jpg",
+          "creation_timestamp": 1601488182,
+          "title": ""
+        },
+        {
+          "uri": "posts/media/your_posts/Landscape-Color-Test.jpg",
+          "creation_timestamp": 1601488182,
+          "title": ""
+        },
+        {
+          "uri": "posts/media/your_posts/Landscape-Color-Test.jpg",
+          "creation_timestamp": 1601488182,
+          "title": ""
+        },
+        {
+          "uri": "posts/media/your_posts/Landscape-Color-Test.jpg",
+          "creation_timestamp": 1601488182,
+          "title": ""
+        }
+      ],
+      "title": "This is a test",
+      "creation_timestamp": 1601488182
+  }
+''';
 
   String fbpostWithOneImage = '''
     {
@@ -123,6 +153,25 @@ Future<void> main() async {
 
       final dataPoint = builder.build();
       expect(dataPoint.images.length, 2);
+    });
+  });
+
+  group('Builder with instagram post', () {
+    test(' - post with four images', () {
+      var dataName = DataPointName(name: 'Test name');
+      var builder = DataBuilder(fbBasePath);
+
+      builder
+        ..setName(dataName)
+        ..setCategory(testCategory)
+        ..setService(fbService)
+        ..setData(instagramPostWithManyImages);
+      final dataPoint = builder.build();
+      expect(dataPoint.images.length, 4);
+      expect(
+          dataPoint.images.first.uri,
+          dart_path.normalize(
+              '$fbBasePath/posts/media/your_posts/Landscape-Color-Test.jpg'));
     });
   });
 }
