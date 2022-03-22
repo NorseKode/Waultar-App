@@ -2,15 +2,12 @@ import 'dart:convert';
 
 import 'package:objectbox/objectbox.dart';
 import 'package:pretty_json/pretty_json.dart';
-import 'package:waultar/configs/globals/app_logger.dart';
-import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/inodes/media_documents.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_parser.dart';
 import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 import 'package:path/path.dart' as dart_path;
-import 'package:waultar/startup.dart';
 
 @Entity()
 class DataPoint {

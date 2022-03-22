@@ -198,7 +198,7 @@
     },
     {
       "id": "5:3433188621516381457",
-      "lastPropertyId": "5:2838587228182119831",
+      "lastPropertyId": "7:3398435305510469048",
       "name": "DayBucket",
       "properties": [
         {
@@ -218,17 +218,22 @@
           "type": 6
         },
         {
-          "id": "4:2035953540501364365",
-          "name": "stringMap",
-          "type": 9
-        },
-        {
           "id": "5:2838587228182119831",
           "name": "monthId",
           "type": 11,
           "flags": 520,
           "indexId": "10:1078578364708494110",
           "relationTarget": "MonthBucket"
+        },
+        {
+          "id": "6:3337823813404384037",
+          "name": "categoryCountMap",
+          "type": 9
+        },
+        {
+          "id": "7:3398435305510469048",
+          "name": "serviceCountMap",
+          "type": 9
         }
       ],
       "relations": [
@@ -441,7 +446,7 @@
     },
     {
       "id": "10:8435003594428266350",
-      "lastPropertyId": "5:8291557268047104774",
+      "lastPropertyId": "7:3498040681430748298",
       "name": "MonthBucket",
       "properties": [
         {
@@ -461,17 +466,22 @@
           "type": 6
         },
         {
-          "id": "4:3577269985980726905",
-          "name": "stringMap",
-          "type": 9
-        },
-        {
           "id": "5:8291557268047104774",
           "name": "yearId",
           "type": 11,
           "flags": 520,
           "indexId": "21:7018994529609422724",
           "relationTarget": "YearBucket"
+        },
+        {
+          "id": "6:2974902989043831979",
+          "name": "categoryCountMap",
+          "type": 9
+        },
+        {
+          "id": "7:3498040681430748298",
+          "name": "serviceCountMap",
+          "type": 9
         }
       ],
       "relations": [
@@ -676,7 +686,7 @@
     },
     {
       "id": "16:1644285727565833936",
-      "lastPropertyId": "4:1706698378423798331",
+      "lastPropertyId": "6:4553593271379210224",
       "name": "YearBucket",
       "properties": [
         {
@@ -698,8 +708,13 @@
           "type": 6
         },
         {
-          "id": "4:1706698378423798331",
-          "name": "stringMap",
+          "id": "5:8948132087986429371",
+          "name": "categoryCountMap",
+          "type": 9
+        },
+        {
+          "id": "6:4553593271379210224",
+          "name": "serviceCountMap",
           "type": 9
         }
       ],
@@ -720,7 +735,11 @@
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    2035953540501364365,
+    3577269985980726905,
+    1706698378423798331
+  ],
   "retiredRelationUids": [],
   "version": 1
 }
