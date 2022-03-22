@@ -1,0 +1,31 @@
+{
+    "autofill_information_v2": {
+      "CITY": [
+        "Copenhagen"
+      ],
+      "COUNTRY": [
+        "DK"
+      ],
+      "EMAIL": [
+        "gustavlj@live.dk"
+      ],
+      "PHONE": [
+        "+4522926591"
+      ],
+      "GENDER": [
+        "male"
+      ],
+      "FIRST_NAME": [
+        "Gustav"
+      ],
+      "LAST_NAME": [
+        "Johansen"
+      ],
+      "FULL_NAME": [
+        "Gustav Johansen"
+      ],
+      "WORK_EMAIL": [
+        "gustavlj@live.dk"
+      ]
+    }
+  } 

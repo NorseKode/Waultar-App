@@ -9,6 +9,7 @@ import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/domain/services/timeline_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_widget_box.dart';
 import 'package:waultar/startup.dart';
 
 class TimelineWidget extends StatefulWidget {
@@ -160,11 +161,9 @@ class _TimelineWidgetState extends State<TimelineWidget> {
     if (blocks.isEmpty) return Container();
     maxDatapointCount = _maxListLength(blocks);
     rowCount = 5;
-    // rowCount =
-    //     (((int.parse((maxDatapointCount.toString()).substring(0, 1))) * 5) / 2)
-    //         .ceil();
 
-    return Container(
+    return DefaultWidgetBox(
+        child: Container(
       child: blocks.isEmpty
           ? Expanded(child: Container(child: Center(child: Text("No data"))))
           : Column(
@@ -218,6 +217,6 @@ class _TimelineWidgetState extends State<TimelineWidget> {
                 )
               ],
             ),
-    );
+    ));
   }
 }

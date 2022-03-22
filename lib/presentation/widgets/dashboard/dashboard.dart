@@ -38,8 +38,9 @@ class _DashboardState extends State<Dashboard> {
     localizer = AppLocalizations.of(context)!;
     themeProvider = Provider.of<ThemeProvider>(context);
 
-    List<Widget> serviceWidgets = List.generate(
-        services.length, (e) => ServiceWidget(service: services[e]));
+    // List<Widget> serviceWidgets = List.generate(
+    //     services.length, (e) => ServiceWidget(service: services[e]));
+    List<Widget> serviceWidgets = [];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

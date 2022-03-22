@@ -1,7 +1,5 @@
 import 'package:objectbox/objectbox.dart';
-import 'package:waultar/data/entities/content/event_objectbox.dart';
-import 'package:waultar/data/entities/content/group_objectbox.dart';
-import 'package:waultar/data/entities/content/post_objectbox.dart';
+import 'package:waultar/core/inodes/tree_nodes.dart';
 
 @Entity()
 class YearBucket {
@@ -51,9 +49,7 @@ class DayBucket {
 
   final month = ToOne<MonthBucket>();
 
-  final posts = ToMany<PostObjectBox>();
-  final groups = ToMany<GroupObjectBox>();
-  final events = ToMany<EventObjectBox>();
+  final dataPoints = ToMany<DataPoint>();
 
   DayBucket(
       {this.id = 0,

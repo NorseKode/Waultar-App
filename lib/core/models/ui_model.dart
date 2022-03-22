@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 abstract class UIModel {
-  DateTime getTimestamp();
+  DateTime? getTimestamp();
 
   String getMostInformativeField();
 
   Color getAssociatedColor();
 
-  Map<String, String> toMap();
+  Map<String, dynamic> toMap();
 }

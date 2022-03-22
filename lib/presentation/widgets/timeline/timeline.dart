@@ -82,10 +82,7 @@ class _TimelineState extends State<Timeline> {
           flex: 3,
           child: Row(
             children: [
-              Expanded(
-                  flex: 4,
-                  child:
-                      DefaultWidgetBox(child: TimelineWidget(blocks: blocks))),
+              Expanded(flex: 4, child: TimelineWidget(blocks: blocks)),
               SizedBox(width: 20),
               Expanded(flex: 2, child: FilterWidget(blocks: blocks))
             ],
