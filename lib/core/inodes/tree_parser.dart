@@ -164,7 +164,7 @@ class TreeParser {
             parent,
             service,
             profile,
-            json,
+            entry.value,
             basePathToFiles,
           );
           
@@ -186,7 +186,7 @@ class TreeParser {
 
         if (decision == Decision.linkAsDataPoint) {
           var directDataPoint = DataPoint.parse(category, parent, service,
-              profile, json, basePathToFiles);
+              profile, item, basePathToFiles);
 
           parent.dataPoints.add(directDataPoint);
         }
@@ -223,7 +223,7 @@ class TreeParser {
             parent,
             service,
             profile,
-            json,
+            mapToEmbedWith,
             basePathToFiles,
           );
 
@@ -244,7 +244,7 @@ class TreeParser {
             parent,
             service,
             profile,
-            json,
+            listToEmbed,
             basePathToFiles,
           );
       parent.dataPoints.add(directDataPoint);
