@@ -24,9 +24,10 @@ class PlaceModel extends BaseModel {
       : name = json['name'],
         address = json.containsKey('address') ? json['address'] : null,
         uri = json.containsKey('uri') ? Uri(path: json['url']) : null,
-        coordinate = json.containsKey('coordinate')
-            ? CoordinateModel.fromJson(json['coordinate'])
-            : null,
+        coordinate =
+            json.containsKey('coordinate') && json['coordinate'] is double
+                ? CoordinateModel.fromJson(json['coordinate'])
+                : null,
         super(0, profile, json.toString());
 
   @override

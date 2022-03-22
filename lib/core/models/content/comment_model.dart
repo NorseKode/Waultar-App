@@ -38,10 +38,13 @@ class CommentModel extends BaseModel {
   CommentModel.fromInstagram(Map<String, dynamic> json, ProfileModel profile)
       : commented = PersonModel(profile: profile, name: json["title"], raw: ""),
         timestamp = json.containsKey(_instagramKey)
-            ? ModelHelper.intToTimestamp(((json[_instagramKey]).first)["timestamp"]) ??
+            ? ModelHelper.intToTimestamp(
+                    ((json[_instagramKey]).first)["timestamp"]) ??
                 DateTime.fromMicrosecondsSinceEpoch(0)
             : DateTime.fromMillisecondsSinceEpoch(0),
-        text = json.containsKey(_instagramKey) ? ((json[_instagramKey]).first)["value"] : "",
+        text = json.containsKey(_instagramKey)
+            ? ((json[_instagramKey]).first)["value"]
+            : "",
         super(0, profile, json.toString());
 
   CommentModel.fromFacebook(Map<String, dynamic> json, ProfileModel profile)
@@ -61,16 +64,21 @@ class CommentModel extends BaseModel {
       var data = ((json["data"]).first)["comment"];
       text = data["comment"];
       if (data.containsKey("group")) {
-        group = GroupModel(id: 0, profile: profile, raw: "raw", name: data["group"]);
+        group = GroupModel(
+            id: 0, profile: profile, raw: "raw", name: data["group"]);
       }
+    } else {
+      text = "";
     }
 
-    if (json["attachments"] is List<dynamic> && json["attachments"].length == 1) {
+    if (json["attachments"] is List<dynamic> &&
+        json["attachments"].length == 1) {
       var attachments = (((json["attachments"]).first)["data"]).first;
       if (attachments.containsKey("event")) {
         event = EventModel.fromJson(attachments["event"], profile);
       } else {
-        var possibleMedia = ParseHelper.parseMediaNoKnownKey(attachments, profile);
+        var possibleMedia =
+            ParseHelper.parseMediaNoKnownKey(attachments, profile);
 
         if (possibleMedia != null) {
           media = [possibleMedia];
@@ -79,17 +87,17 @@ class CommentModel extends BaseModel {
     }
 
     String personText = json["title"];
-    var exp = personText.contains(" own ") 
-      ? RegExp(r"(\w.+)((?:commented on )|(?:replied to ))(\w.+)")
-      : RegExp(r"(\w.+)((?:commented on )|(?:replied to ))(\w.+)'s");
+    var exp = personText.contains(" own ")
+        ? RegExp(r"(\w.+)((?:commented on )|(?:replied to ))(\w.+)")
+        : RegExp(r"(\w.+)((?:commented on )|(?:replied to ))(\w.+)'s");
     var match = exp.firstMatch(personText);
     commented = PersonModel(
       id: 0,
-      name: match != null 
-        ? personText.contains(" own ")
-          ? match.group(1)!.trimRight()
-          : match.group(3)! 
-        : "TODO: localization", //throw Tuple2("Couldn't find a name to a comment", json.toString()),
+      name: match != null
+          ? personText.contains(" own ")
+              ? match.group(1)!.trimRight()
+              : match.group(3)!
+          : "TODO: localization", //throw Tuple2("Couldn't find a name to a comment", json.toString()),
       profile: profile,
       raw: '',
     );
