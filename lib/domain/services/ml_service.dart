@@ -4,10 +4,15 @@ import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_image_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/ai/image_classifier.dart';
+import 'package:waultar/core/inodes/media_repo.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/startup.dart';
 
 class MLService extends IMLService {
+  final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
+  final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
+  final _classifier = locator.get<ImageClassifier>(instanceName: 'imageClassifier');
+
   @override
   Future<void> classifyAllImagesSeparateThreadFromDB() {
     // TODO: implement classifyAllImagesSeparateThreadFromDB
@@ -22,8 +27,32 @@ class MLService extends IMLService {
 
   @override
   int classifyImagesFromDB() {
-    // TODO: implement classifyImagesFromDB
     throw UnimplementedError();
+  // var startTime = DateTime.now();
+
+  //   int updated = 0;
+  //   int offset = 0;
+  //   int limit = 100;
+  //   var images = _mediaRepo.getImagesPagination(offset, limit);
+    
+  //   while (images != null || images.isNotEmpty) {
+  //     for (var image in images) {
+  //       image.mediaTags = _classifier.predict(image.uri, 5).map((e) => e.item1).toList();
+  //       updated++;
+  //     }
+
+  //     _mediaRepo.updateImages(images);
+  //     offset += 100;
+  //     images = _media
+  //   }
+
+  //   if (ISPERFORMANCETRACKING) {
+  //     PerformanceHelper.logRunTime(
+  //         startTime, DateTime.now(), _appLogger, "Classifying of all images from the database");
+  //   }
+
+  //   return updated;
+  
   }
 
   @override

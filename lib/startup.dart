@@ -12,6 +12,7 @@ import 'package:waultar/core/abstracts/abstract_services/i_collections_service.d
 import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
+import 'package:waultar/core/inodes/media_repo.dart';
 import 'package:waultar/core/inodes/profile_repo.dart';
 import 'package:waultar/core/inodes/service_repo.dart';
 import 'package:waultar/core/inodes/tree_parser.dart';
@@ -44,13 +45,10 @@ late final String _logFolderPath;
 
 Future<void> setupServices() async {
   await initApplicationPaths().whenComplete(() async {
-    locator.registerSingleton<String>(_waultarPath,
-        instanceName: 'waultar_root_directory');
+    locator.registerSingleton<String>(_waultarPath, instanceName: 'waultar_root_directory');
     locator.registerSingleton<String>(_dbFolderPath, instanceName: 'db_folder');
-    locator.registerSingleton<String>(_extractsFolderPath,
-        instanceName: 'extracts_folder');
-    locator.registerSingleton<String>(_logFolderPath,
-        instanceName: 'log_folder');
+    locator.registerSingleton<String>(_extractsFolderPath, instanceName: 'extracts_folder');
+    locator.registerSingleton<String>(_logFolderPath, instanceName: 'log_folder');
 
     os = detectPlatform();
     locator.registerSingleton<OS>(os, instanceName: 'platform');
@@ -68,8 +66,7 @@ Future<void> setupServices() async {
     // register all abstract repositories with their concrete implementations
     // each repo gets injected the context (to access the relevant store)
     // and the objectboxDirector to map from models to entities
-    locator.registerSingleton<IAppSettingsRepository>(
-        AppSettingsRepository(_context),
+    locator.registerSingleton<IAppSettingsRepository>(AppSettingsRepository(_context),
         instanceName: 'appSettingsRepo');
     locator.registerSingleton<IServiceRepository>(ServiceRepository(_context),
         instanceName: 'serviceRepo');
@@ -85,12 +82,13 @@ Future<void> setupServices() async {
     final _nameRepo = DataPointNameRepository(_context);
     final _dataRepo = DataPointRepository(_context);
 
-    locator.registerSingleton<DataCategoryRepository>(_categoryRepo,
-        instanceName: "categoryRepo");
-    locator.registerSingleton<DataPointNameRepository>(_nameRepo,
-        instanceName: "nameRepo");
-    locator.registerSingleton<DataPointRepository>(_dataRepo,
-        instanceName: "dataRepo");
+    locator.registerSingleton<DataCategoryRepository>(_categoryRepo, instanceName: "categoryRepo");
+    locator.registerSingleton<DataPointNameRepository>(_nameRepo, instanceName: "nameRepo");
+    locator.registerSingleton<DataPointRepository>(_dataRepo, instanceName: "dataRepo");
+    locator.registerSingleton<MediaRepository>(
+      MediaRepository(_context),
+      instanceName: 'mediaRepo',
+    );
 
     // AI Models
     locator.registerSingleton<ImageClassifier>(
@@ -109,11 +107,9 @@ Future<void> setupServices() async {
     locator.registerSingleton<ICollectionsService>(
         CollectionsService(_categoryRepo, _nameRepo, _dataRepo),
         instanceName: 'collectionsService');
-    locator.registerSingleton<TreeParser>(
-        TreeParser(_categoryRepo, _nameRepo, _dataRepo),
+    locator.registerSingleton<TreeParser>(TreeParser(_categoryRepo, _nameRepo, _dataRepo),
         instanceName: 'parser');
-    locator.registerSingleton<IMLService>(MLService(),
-        instanceName: 'mlService');
+    locator.registerSingleton<IMLService>(MLService(), instanceName: 'mlService');
 
     // locator.registerSingleton<ITimelineService>(
     //     TimeLineService(

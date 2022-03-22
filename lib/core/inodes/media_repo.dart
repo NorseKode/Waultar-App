@@ -24,6 +24,9 @@ class MediaRepository {
       ..limit = limit;
     return query.find();
   }
+  List<int> updateImages(List<ImageDocument> images) {
+    return _imageBox.putMany(images);
+  }
 
   List<VideoDocument> getAllVideos() => _videoBox.getAll();
   List<FileDocument> getAllFiles() => _fileBox.getAll();

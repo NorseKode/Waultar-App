@@ -29,12 +29,6 @@ class DataPoint {
 
   List<int> timestamps = [];
 
-  // perhaps make it a list ?
-  // a datapoint can contain several searchable strings, and if we put all usergenerated
-  // strings are in this list we can do NLP on each list element
-  // this way we ensure the NLP is done on correct sets of the strings, and not the entire concatenated string
-  // timecomplexity will not be worsen - spacecomplexity will as the index for a list will be larger
-  // @Index()
   List<String> searchStrings = [];
 
   // the actual data stored in JSON format
@@ -98,6 +92,7 @@ class DataPoint {
 
               image.relatedDatapoint.target = this;
               image.service.target = service.target;
+              image.profile.target = profile.target;
               images.add(image);
             } else if (Extensions.isVideo(value)) {
               var video = VideoDocument(
@@ -107,6 +102,7 @@ class DataPoint {
 
               video.relatedDatapoint.target = this;
               video.service.target = service.target;
+              video.profile.target = profile.target;
               videos.add(video);
             } else if (Extensions.isFile(value)) {
               var file = FileDocument(
@@ -116,6 +112,7 @@ class DataPoint {
 
               file.relatedDatapoint.target = this;
               file.service.target = service.target;
+              file.profile.target = profile.target;
               files.add(file);
             } else if (Extensions.isLink(value)) {
               var link = LinkDocument(
@@ -125,6 +122,7 @@ class DataPoint {
 
               link.relatedDatapoint.target = this;
               link.service.target = service.target;
+              link.profile.target = profile.target;
               links.add(link);
             } else {
               searchStrings.add(value);
@@ -157,8 +155,6 @@ class DataPoint {
       sb.write(
           "DataPoint relation target name: ${dataPointName.target!.name}\n");
     }
-
-    sb.write("Embedded datapoint name: $stringName\n");
 
     sb.write("Data:\n");
 
