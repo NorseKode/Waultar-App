@@ -15,10 +15,12 @@ import 'package:waultar/core/inodes/datapoint_repo.dart';
 import 'package:waultar/core/inodes/service_repo.dart';
 import 'package:waultar/core/inodes/tree_parser.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
+import 'package:waultar/core/ai/sentiment_classifier.dart';
 import 'package:waultar/core/ai/image_classifier.dart';
 import 'package:waultar/core/ai/image_classifier_mobilenetv3.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/core/inodes/util_repo.dart';
+import 'package:waultar/core/ai/sentiment_classifier_textClassification.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/repositories/appsettings_repo.dart';
 import 'package:waultar/data/repositories/timebuckets_repo.dart';
@@ -62,7 +64,6 @@ Future<void> setupServices() async {
     // });
     locator.registerSingleton<ObjectBox>(_context, instanceName: 'context');
 
-
     // register all abstract repositories with their concrete implementations
     // each repo gets injected the context (to access the relevant store)
     // and the objectboxDirector to map from models to entities
@@ -92,6 +93,11 @@ Future<void> setupServices() async {
     locator.registerSingleton<ImageClassifier>(
       ImageClassifierMobileNetV3(),
       instanceName: 'imageClassifier',
+    );
+
+    locator.registerSingleton<SentimentClassifier>(
+      SentimentClassifierTextClassifierTFLite(),
+      instanceName: 'sentimentClassifier',
     );
 
     // register all services and inject their dependencies

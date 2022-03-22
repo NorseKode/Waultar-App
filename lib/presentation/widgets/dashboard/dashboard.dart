@@ -7,7 +7,9 @@ import 'package:path/path.dart' as path_dart;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:waultar/configs/globals/globals.dart';
+import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
+import 'package:waultar/core/ai/sentiment_classifier.dart';
 import 'package:waultar/core/ai/image_classifier_mobilenetv3.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 
@@ -73,15 +75,6 @@ class _DashboardState extends State<Dashboard> {
                 ), //dashboard widgets
 
                 const SizedBox(height: 20),
-                // DefaultButton(onPressed: () {}),
-                // DefaultButton(text: "Press me! Please do", onPressed: () {}, color: Colors.blue),
-                // DefaultButton(
-                //   icon: Iconsax.add,
-                //   onPressed: () {},
-                //   size: 32,
-                //   textColor: Colors.black,
-                // ),
-                // DefaultButton(text: "Add", icon: Iconsax.woman, onPressed: () {}, size: 15)
               ],
             ),
           ),
