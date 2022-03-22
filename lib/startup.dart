@@ -112,10 +112,10 @@ Future<void> setupServices() async {
     locator.registerSingleton<IMLService>(MLService(),
         instanceName: 'mlService');
 
-    locator.registerSingleton<ITimelineService>(
-        TimeLineService(
-            locator.get<ITimeBucketsRepository>(instanceName: 'timeRepo')),
-        instanceName: 'timeService');
+    // locator.registerSingleton<ITimelineService>(
+    //     TimeLineService(
+    //         locator.get<ITimeBucketsRepository>(instanceName: 'timeRepo')),
+    //     instanceName: 'timeService');
   });
 }
 

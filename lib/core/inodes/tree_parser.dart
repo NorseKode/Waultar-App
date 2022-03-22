@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
@@ -13,8 +14,10 @@ import 'package:path/path.dart' as path_dart;
 import 'package:waultar/core/inodes/json_decider.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
 import 'package:waultar/data/entities/profile/profile_objectbox.dart';
+import 'package:waultar/startup.dart';
 
 class TreeParser {
+  final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
   final DataCategoryRepository _categoryRepo;
   final DataPointNameRepository _nameRepo;
   final DataPointRepository _dataRepo;
@@ -54,7 +57,18 @@ class TreeParser {
   }
 
   Future<ProfileDocument> getProfile(List<String> paths, ServiceDocument service) async {
-    var profilePath = paths.firstWhere((element) => element.contains('profile_information.json'));
+    _appLogger.logger.info("Started Parsing Profile Document");
+
+    var profilePath = "";
+    if (service.serviceName == "Facebook") {
+      profilePath = paths.firstWhere((element) => element.contains('profile_information.json'));
+    } else if (service.serviceName == "Instagram") {
+      profilePath = paths.firstWhere((element) => element.contains('personal_information.json'));
+    } else {
+      // TODO: error
+    }
+
+
     var name = "Couldn't find username";
 
     var jsonData = await getJson(File(profilePath));
@@ -66,12 +80,17 @@ class TreeParser {
         } else if (object.containsKey("full_name")) {
           name = object["full_name"];
           break;
+        } else if (object.containsKey("Username")) {
+          name = (object["Username"])["value"];
+          break;
         }
       }
     }
 
     var profile = ProfileDocument(name: name);
     profile.service.target = service;
+
+    _appLogger.logger.info("Finished Parsing Profile Document");
 
     return profile; 
   }
@@ -80,6 +99,7 @@ class TreeParser {
       String path, ProfileDocument profile, ServiceDocument service) async {
     if (Extensions.isJson(path)) {
       var category = _categoryRepo.getFromFolderName(path);
+      _appLogger.logger.info("Started Parsing Path: $path, Profile: ${profile.toString()}, Service: ${service.toString()}, Category: $category");
       var file = File(path);
       var json = await getJson(file);
       var dirtyInitialName = path_dart.basename(path);
@@ -144,6 +164,9 @@ class TreeParser {
             json,
             basePathToFiles,
           );
+          
+          _appLogger.logger.info("Parsed Decision: Direct Data Point: ${directDataPoint.toString()}");
+          
           parent.dataPoints.add(directDataPoint);
         }
       }
