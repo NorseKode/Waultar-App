@@ -8,6 +8,7 @@ import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
+import 'package:waultar/core/inodes/profile_repo.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:path/path.dart' as path_dart;
@@ -18,6 +19,7 @@ import 'package:waultar/startup.dart';
 
 class TreeParser {
   final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
+  final _profileRepo = locator.get<ProfileRepository>(instanceName: 'profileRepo');
   final DataCategoryRepository _categoryRepo;
   final DataPointNameRepository _nameRepo;
   final DataPointRepository _dataRepo;
@@ -47,10 +49,11 @@ class TreeParser {
     }
 
     var profile = await getProfile(paths, service);
+    var profileRepo = _profileRepo.add(profile);
 
     for (var path in paths) {
       if (Extensions.isJson(path)) {
-        await parsePath(path, profile, service);
+        await parsePath(path, profileRepo, service);
       }
     }
     _categoryRepo.updateCounts();

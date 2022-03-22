@@ -12,6 +12,7 @@ import 'package:waultar/core/abstracts/abstract_services/i_collections_service.d
 import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
+import 'package:waultar/core/inodes/profile_repo.dart';
 import 'package:waultar/core/inodes/service_repo.dart';
 import 'package:waultar/core/inodes/tree_parser.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
@@ -77,6 +78,8 @@ Future<void> setupServices() async {
     //     instanceName: 'timeRepo');
     locator.registerSingleton<IUtilityRepository>(UtilityRepository(_context),
         instanceName: 'utilsRepo');
+    locator.registerSingleton<ProfileRepository>(ProfileRepository(_context),
+        instanceName: 'profileRepo');
 
     final _categoryRepo = DataCategoryRepository(_context);
     final _nameRepo = DataPointNameRepository(_context);
