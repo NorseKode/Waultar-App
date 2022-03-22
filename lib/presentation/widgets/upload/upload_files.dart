@@ -105,5 +105,6 @@ List<String> extractZip(Map<String, String> input) {
   }
 
   inputStream.close();
+  list.sort();
   return list;
 }

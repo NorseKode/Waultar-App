@@ -5,12 +5,8 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_service_repositor
 import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/core/inodes/tree_parser.dart';
-import 'package:waultar/domain/services/browse_service.dart';
-import 'package:waultar/domain/services/time_buckets_creator.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
-import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:waultar/presentation/widgets/general/default_widgets/post_widget.dart';
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 import 'package:waultar/presentation/widgets/snackbar_custom.dart';
 import 'package:waultar/presentation/widgets/upload/upload_files.dart';
@@ -27,13 +23,9 @@ class Browse extends StatefulWidget {
 
 class _BrowseState extends State<Browse> {
   late AppLocalizations localizer;
-  final _browseService = BrowseService();
-
-  List<dynamic>? _models;
   late ThemeProvider themeProvider;
 
   final TreeParser parser = locator.get<TreeParser>(instanceName: 'parser');
-
   final IServiceRepository _serviceRepo =
       locator.get<IServiceRepository>(instanceName: 'serviceRepo');
 
@@ -43,6 +35,7 @@ class _BrowseState extends State<Browse> {
   //     locator.get<InodeParserService>(instanceName: 'inodeParser');
   final ICollectionsService _collectionsService =
       locator.get<ICollectionsService>(instanceName: 'collectionsService');
+  
   late List<DataCategory> _categories;
   late List<DataPointName> _names;
 
@@ -75,11 +68,11 @@ class _BrowseState extends State<Browse> {
               'path': dart_path.normalize(zipFiles.first),
               'extracts_folder':
                   locator.get<String>(instanceName: 'extracts_folder'),
-              'service_name': service.name
+              'service_name': service.serviceName
             };
             var uploadedFiles = await compute(extractZip, inputMap);
             await parser
-                .parseManyPaths(uploadedFiles)
+                .parseManyPaths(uploadedFiles, service)
                 .whenComplete(() => setState(() {
                       _categories = _collectionsService.getAllCategories();
                       isLoading = false;

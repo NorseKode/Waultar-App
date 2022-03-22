@@ -11,17 +11,17 @@ class TextSearchService extends ITextSearchService {
   List<UIModel> search(Map<SearchCategories, bool> inputCategories, String search, int limit, int offset) {
     var returnList = <UIModel>[];
 
-    inputCategories.forEach((key, value) {
-      if (key == SearchCategories.post && value) {
-        returnList.addAll(_postRepo.search(search, offset, limit - 10));
-      }
-      if (key == SearchCategories.media && value) {
-        returnList.addAll(_imageRepo.search(search, offset, limit - 10));
-      }
-      if(key == SearchCategories.comment && value) {
-        returnList.addAll(_commentRepo.search(search, offset, limit - 10));
-      }
-    });
+    // inputCategories.forEach((key, value) {
+    //   if (key == SearchCategories.post && value) {
+    //     returnList.addAll(_postRepo.search(search, offset, limit - 10));
+    //   }
+    //   if (key == SearchCategories.media && value) {
+    //     returnList.addAll(_imageRepo.search(search, offset, limit - 10));
+    //   }
+    //   if(key == SearchCategories.comment && value) {
+    //     returnList.addAll(_commentRepo.search(search, offset, limit - 10));
+    //   }
+    // });
 
     return returnList;
   }

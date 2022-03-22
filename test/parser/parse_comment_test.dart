@@ -1,64 +1,84 @@
-import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as path_dart;
-import 'package:waultar/core/models/content/comment_model.dart';
-import 'package:waultar/core/models/media/image_model.dart';
-import 'package:waultar/core/models/media/link_model.dart';
-import 'package:waultar/core/models/media/video_model.dart';
+import 'package:waultar/core/inodes/tree_nodes.dart';
+import 'package:waultar/core/inodes/tree_parser.dart';
 import 'package:waultar/core/models/model_helper.dart';
-import 'package:waultar/core/parsers/facebook_parser.dart';
-import 'package:waultar/core/parsers/instagram_parser.dart';
-
 import '../test_helper.dart';
 
 main() {
   // var facebookProfile = TestHelper.facebookProfile;
   // var instagramProfile = TestHelper.instagramProfile;
-  // var facebookComments =
-  //     File(path_dart.join(TestHelper.pathToCurrentFile(), "data", "facebook_comments.json"));
-  // var instagramComments =
-  //     File(path_dart.join(TestHelper.pathToCurrentFile(), "data", "post_comments.json"));
+  // var facebookComments = path_dart.join(
+  //   TestHelper.pathToCurrentFile(),
+  //   "data",
+  //   "facebook_comments.json",
+  // );
+  // var instagramComments = path_dart.join(
+  //   TestHelper.pathToCurrentFile(),
+  //   "data",
+  //   "post_comments.json",
+  // );
+  // late final TreeParser _parser;
 
-  // setUpAll(() {
+  // setUpAll(() async {
+  //   _parser = await TestHelper.getTreeParser();
   //   TestHelper.clearTestLogger();
   //   TestHelper.createTestLogger();
   // });
 
   // group("Parsing of comments: ", () {
   //   test("Facebook comments: ", () async {
-  //     var results = await FacebookParser().parseFile(facebookComments, profile: facebookProfile).toList();
+  //     var results = await _parser.parsePath(
+  //       facebookComments,
+  //       TestHelper.profileDocument,
+  //       TestHelper.serviceDocument,
+  //     );
 
-  //     expect(results.length, 10);
+  //     var comments = <DataPoint>[];
+  //     expect(results.dataPoints.length, 8);
 
-  //     var comments = results.whereType<CommentModel>().toList();
+  //     expect(results.children.length, 3);
+  //     results.children.forEach((element) {
+  //       comments.addAll(element.dataPoints);
+  //     });
 
   //     expect(comments.length, 8);
 
-  //     expect(comments[0].group!.name, "REDACTED GROUP");
-  //     expect(comments[1].text, "REDACTED COMMENT");
-  //     expect(comments[1].commented.name, "REDACTED PERSON");
-  //     expect(comments[2].media!.first is ImageModel, true);
-  //     expect(comments[3].media!.first is LinkModel, true);
-  //     expect(comments[4].media!.first is VideoModel, true);
-  //     expect(comments[5].commented.name, "PROFILE");
-  //     expect(comments[7].event!.name, "REDACTED NAME");
+  //     expect(comments[0].asMap["group"], "REDACTED GROUP");
+  //     expect(comments[1].asMap["comment"], "REDACTED COMMENT");
+  //     expect(comments[1].asMap["title"].contains("REDACTED PERSON"), true);
+  //     expect(comments[2].images.isNotEmpty, true);
+  //     expect(comments[3].links.isNotEmpty, true);
+  //     expect(comments[4].videos.isNotEmpty, true);
+  //     expect(comments[5].asMap["title"].contains("PROFILE"), true);
+  //     expect(comments[7].asMap["name"], "REDACTED NAME");
   //   });
 
   //   test('Instagram comments: ', () async {
-  //     var results = await InstagramParser().parseFile(instagramComments, profile: instagramProfile).toList();
+  //     var results = await _parser.parsePath(
+  //       instagramComments,
+  //       TestHelper.profileDocument,
+  //       TestHelper.serviceDocument,
+  //     );
+      
+  //     var comments = <DataPoint>[];
 
-  //     expect(results.length, 2);
+  //     results.children.forEach((element) {
+  //       comments.addAll(element.dataPoints);
+  //     });
 
-  //     var comment1 = results[0] as CommentModel;
-  //     var comment2 = results[1] as CommentModel;
+  //     expect(comments.length, 2);
 
-  //     expect(comment1.text, "The comment");
-  //     expect(comment2.text, "The comment");
-  //     expect(comment1.commented.name, "username");
-  //     expect(comment2.commented.name, "username");
-  //     expect(comment1.timestamp, ModelHelper.intToTimestamp(1550618520));
-  //     expect(comment2.timestamp, ModelHelper.intToTimestamp(1550712540));
+  //     var comment1 = comments[0].asMap;
+  //     var comment2 = comments[1].asMap;
+
+  //     expect(comment1["value"], "The comment");
+  //     expect(comment2["value"], "The comment");
+  //     expect(comment1["title"], "username");
+  //     expect(comment2["title"], "username");
+  //     expect(comment1["timestamp"], ModelHelper.intToTimestamp(1550618520));
+  //     expect(comment2["timestamp"], ModelHelper.intToTimestamp(1550712540));
   //   });
   // });
 }

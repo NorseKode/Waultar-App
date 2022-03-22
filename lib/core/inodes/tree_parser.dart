@@ -3,15 +3,16 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
-import 'package:waultar/core/inodes/data_builder.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
+import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:path/path.dart' as path_dart;
 import 'package:waultar/core/inodes/json_decider.dart';
+import 'package:waultar/core/parsers/parse_helper.dart';
+import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 
 class TreeParser {
   final DataCategoryRepository _categoryRepo;
@@ -25,7 +26,8 @@ class TreeParser {
 
   late String basePathToFiles;
 
-  Future<void> parseManyPaths(List<String> paths) async {
+  Future<void> parseManyPaths(List<String> paths,
+      ServiceDocument service) async {
     if (paths.length > 1) {
       var basePathToFiles = StringBuffer();
       var path1 = paths.first;
@@ -41,15 +43,41 @@ class TreeParser {
       this.basePathToFiles = basePathToFiles.toString();
     }
 
+    var profile = await getProfile(paths, service);
+
     for (var path in paths) {
       if (Extensions.isJson(path)) {
-        await parsePath(path);
+        await parsePath(path, profile, service);
       }
     }
     _categoryRepo.updateCounts();
   }
 
-  Future<DataPointName> parsePath(String path) async {
+  Future<ProfileDocument> getProfile(List<String> paths, ServiceDocument service) async {
+    var profilePath = paths.firstWhere((element) => element.contains('profile_information.json'));
+    var name = "Couldn't find username";
+
+    var jsonData = await getJson(File(profilePath));
+    await for (var object in ParseHelper.returnEveryJsonObject(jsonData)) {
+      if (object is Map<String, dynamic>) {
+        if (object.containsKey("username")) {
+          name = object["username"];
+          break;
+        } else if (object.containsKey("full_name")) {
+          name = object["full_name"];
+          break;
+        }
+      }
+    }
+
+    var profile = ProfileDocument(name: name);
+    profile.service.target = service;
+
+    return profile; 
+  }
+
+  Future<DataPointName> parsePath(
+      String path, ProfileDocument profile, ServiceDocument service) async {
     if (Extensions.isJson(path)) {
       var category = _categoryRepo.getFromFolderName(path);
       var file = File(path);
@@ -57,7 +85,8 @@ class TreeParser {
       var dirtyInitialName = path_dart.basename(path);
       var cleanInitialName = dirtyInitialName.replaceAll(".json", "");
 
-      var name = parseName(json, category, cleanInitialName, null);
+      var name =
+          parseName(json, category, cleanInitialName, profile, service, null);
       category.dataPointNames.add(name);
       _categoryRepo.updateCategory(category);
       return name;
@@ -67,13 +96,18 @@ class TreeParser {
   }
 
   // ! when this method returns, make sure to add the returned datapointname as child to the category parameter
-  DataPointName parseName(dynamic json, DataCategory category,
-      String initialName, DataPointName? parent) {
+  DataPointName parseName(
+      dynamic json,
+      DataCategory category,
+      String initialName,
+      ProfileDocument profile,
+      ServiceDocument service,
+      DataPointName? parent) {
     parent ??= DataPointName(name: _cleanName(initialName));
 
     if (json is Map<String, dynamic> && json.length == 1) {
-      return parseName(
-          json.values.first, category, _cleanName(json.keys.first), null);
+      return parseName(json.values.first, category, _cleanName(json.keys.first),
+          profile, service, null);
     }
 
     // it's a map with several entries and each entry should either be embedded as direct datapoint leaf
@@ -97,25 +131,19 @@ class TreeParser {
 
         // if the key-value pair is {string:complex} - the decider saw, that the value was map or list
         if (decision == Decision.linkAsNewName) {
-          parent.children.add(
-              parseName(entry.value, category, _cleanName(entry.key), null));
+          parent.children.add(parseName(entry.value, category,
+              _cleanName(entry.key), profile, service, null));
         }
 
         if (decision == Decision.linkAsDataPoint) {
-          // TODO - implement databuilder fully and use here
-          // var builder = DataBuilder(basePathToFiles)
-          //   ..setName(parent)
-          //   ..setCategory(category)
-          //   ..setData(entry.value);
-          // parent.dataPoints.add(builder.build());
-
-          var directDataPoint = DataPoint();
-          directDataPoint.category.target = category;
-          directDataPoint.searchString = parent.name;
-          directDataPoint.dataPointName.target = parent;
-          directDataPoint.values = jsonEncode(flatten(entry.value));
-          directDataPoint.stringName = parent.name;
-
+          var directDataPoint = DataPoint.parse(
+            category,
+            parent,
+            service,
+            profile,
+            json,
+            basePathToFiles,
+          );
           parent.dataPoints.add(directDataPoint);
         }
       }
@@ -131,13 +159,8 @@ class TreeParser {
         }
 
         if (decision == Decision.linkAsDataPoint) {
-          var directDataPoint = DataPoint();
-          directDataPoint.category.target = category;
-          directDataPoint.searchString =
-              parent.name; // TODO - move this into the builder
-          directDataPoint.dataPointName.target = parent;
-          directDataPoint.values = jsonEncode(flatten(item));
-          directDataPoint.stringName = parent.name;
+          var directDataPoint = DataPoint.parse(category, parent, service,
+              profile, json, basePathToFiles);
 
           parent.dataPoints.add(directDataPoint);
         }
@@ -150,15 +173,16 @@ class TreeParser {
           if (item is Map<String, dynamic>) {
             var nameBasedOnTitle = item['title'];
             if (nameBasedOnTitle != null && nameBasedOnTitle is String) {
-              parent.children
-                  .add(parseName(item, category, nameBasedOnTitle, null));
+              parent.children.add(parseName(
+                  item, category, nameBasedOnTitle, profile, service, null));
             }
             var nameBasedOnName = item['name'];
             if (nameBasedOnName != null && nameBasedOnName is String) {
-              parent.children
-                  .add(parseName(item, category, nameBasedOnName, null));
+              parent.children.add(parseName(
+                  item, category, nameBasedOnName, profile, service, null));
             } else {
-              parent.children.add(parseName(item, category, initialName, null));
+              parent.children.add(parseName(
+                  item, category, initialName, profile, service, null));
             }
           }
         }
@@ -168,11 +192,14 @@ class TreeParser {
     // if outer json node was a map
     // handle the embedded direct datapoint via the embedded map
     if (mapToEmbedWith.isNotEmpty) {
-      var directDataPoint = DataPoint();
-      directDataPoint.category.target = category;
-      directDataPoint.searchString = parent.name;
-      directDataPoint.dataPointName.target = parent;
-      directDataPoint.values = jsonEncode(mapToEmbedWith);
+      var directDataPoint = DataPoint.parse(
+            category,
+            parent,
+            service,
+            profile,
+            json,
+            basePathToFiles,
+          );
 
       var nameBasedOnTitle = mapToEmbedWith['title'];
       if (nameBasedOnTitle != null && nameBasedOnTitle is String) {
@@ -186,13 +213,14 @@ class TreeParser {
     // if outer json node was a list
     // handle the embedded direct datapoint via the embedded list
     if (listToEmbed.isNotEmpty) {
-      var directDataPoint = DataPoint();
-      directDataPoint.category.target = category;
-      directDataPoint.searchString = parent.name;
-      directDataPoint.dataPointName.target = parent;
-      directDataPoint.values = jsonEncode(listToEmbed);
-
-      directDataPoint.stringName = parent.name;
+      var directDataPoint = DataPoint.parse(
+            category,
+            parent,
+            service,
+            profile,
+            json,
+            basePathToFiles,
+          );
       parent.dataPoints.add(directDataPoint);
     }
 

@@ -21,10 +21,6 @@ import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart
 import 'package:waultar/core/inodes/util_repo.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/repositories/appsettings_repo.dart';
-import 'package:waultar/data/repositories/model_builders/i_model_director.dart';
-import 'package:waultar/data/repositories/model_builders/model_director.dart';
-import 'package:waultar/data/repositories/objectbox_builders/i_objectbox_director.dart';
-import 'package:waultar/data/repositories/objectbox_builders/objectbox_director.dart';
 import 'package:waultar/data/repositories/timebuckets_repo.dart';
 import 'package:waultar/domain/services/appsettings_service.dart';
 import 'package:waultar/domain/services/collections_service.dart';
@@ -36,8 +32,6 @@ import 'configs/globals/os_enum.dart';
 final locator = GetIt.instance;
 late final OS os;
 late final ObjectBox _context;
-late final IObjectBoxDirector _objectboxDirector;
-late final IModelDirector _modelDirector;
 late final AppLogger _logger;
 
 late final String _waultarPath;
@@ -50,8 +44,10 @@ Future<void> setupServices() async {
     locator.registerSingleton<String>(_waultarPath,
         instanceName: 'waultar_root_directory');
     locator.registerSingleton<String>(_dbFolderPath, instanceName: 'db_folder');
-    locator.registerSingleton<String>(_extractsFolderPath, instanceName: 'extracts_folder');
-    locator.registerSingleton<String>(_logFolderPath, instanceName: 'log_folder');
+    locator.registerSingleton<String>(_extractsFolderPath,
+        instanceName: 'extracts_folder');
+    locator.registerSingleton<String>(_logFolderPath,
+        instanceName: 'log_folder');
 
     os = detectPlatform();
     locator.registerSingleton<OS>(os, instanceName: 'platform');
@@ -66,29 +62,20 @@ Future<void> setupServices() async {
     // });
     locator.registerSingleton<ObjectBox>(_context, instanceName: 'context');
 
-    // inject context to objectboxDirector, to access the store and boxes
-    // the director is used to map from models to entities in repositories
-    _objectboxDirector = ObjectBoxDirector(_context);
-    locator.registerSingleton<IObjectBoxDirector>(_objectboxDirector,
-        instanceName: 'objectbox_director');
-
-    // model director is the opposite of ObjectBoxDirector
-    // this director maps from entity to model
-    _modelDirector = ModelDirector();
-    locator.registerSingleton<IModelDirector>(_modelDirector, instanceName: 'model_director');
 
     // register all abstract repositories with their concrete implementations
     // each repo gets injected the context (to access the relevant store)
     // and the objectboxDirector to map from models to entities
-    locator.registerSingleton<IAppSettingsRepository>(AppSettingsRepository(_context),
+    locator.registerSingleton<IAppSettingsRepository>(
+        AppSettingsRepository(_context),
         instanceName: 'appSettingsRepo');
-    locator.registerSingleton<IServiceRepository>(
-        ServiceRepository(_context),
+    locator.registerSingleton<IServiceRepository>(ServiceRepository(_context),
         instanceName: 'serviceRepo');
-    locator.registerSingleton<ITimeBucketsRepository>(
-        TimeBucketsRepository(_context),
-        instanceName: 'timeRepo');
-    locator.registerSingleton<IUtilityRepository>(UtilityRepository(_context), instanceName: 'utilsRepo');
+    // locator.registerSingleton<ITimeBucketsRepository>(
+    //     TimeBucketsRepository(_context),
+    //     instanceName: 'timeRepo');
+    locator.registerSingleton<IUtilityRepository>(UtilityRepository(_context),
+        instanceName: 'utilsRepo');
 
     final _categoryRepo = DataCategoryRepository(_context);
     final _nameRepo = DataPointNameRepository(_context);
@@ -116,7 +103,8 @@ Future<void> setupServices() async {
     locator.registerSingleton<TreeParser>(
         TreeParser(_categoryRepo, _nameRepo, _dataRepo),
         instanceName: 'parser');
-    locator.registerSingleton<IMLService>(MLService(), instanceName: 'mlService');
+    locator.registerSingleton<IMLService>(MLService(),
+        instanceName: 'mlService');
 
     locator.registerSingleton<ITimelineService>(
         TimeLineService(

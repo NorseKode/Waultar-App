@@ -16,60 +16,16 @@ import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 import '../../core/inodes/media_documents.dart';
 import '../../core/inodes/service_document.dart';
 import '../../core/inodes/tree_nodes.dart';
-import '../../data/entities/content/comment_objectbox.dart';
-import '../../data/entities/content/event_objectbox.dart';
-import '../../data/entities/content/group_objectbox.dart';
-import '../../data/entities/content/page_objectbox.dart';
-import '../../data/entities/content/post_event_objectbox.dart';
-import '../../data/entities/content/post_group_objectbox.dart';
-import '../../data/entities/content/post_life_event_objectbox.dart';
-import '../../data/entities/content/post_objectbox.dart';
-import '../../data/entities/content/post_poll_objectbox.dart';
-import '../../data/entities/media/file_objectbox.dart';
-import '../../data/entities/media/image_objectbox.dart';
-import '../../data/entities/media/link_objectbox.dart';
-import '../../data/entities/media/video_objectbox.dart';
-import '../../data/entities/misc/activity_objectbox.dart';
 import '../../data/entities/misc/appsettings_objectbox.dart';
-import '../../data/entities/misc/change_objectbox.dart';
-import '../../data/entities/misc/coordinate_objectbox.dart';
 import '../../data/entities/misc/email_objectbox.dart';
-import '../../data/entities/misc/person_objectbox.dart';
-import '../../data/entities/misc/place_objectbox.dart';
 import '../../data/entities/misc/reaction_objectbox.dart';
 import '../../data/entities/misc/service_objectbox.dart';
-import '../../data/entities/misc/tag_objectbox.dart';
-import '../../data/entities/profile/friend_objectbox.dart';
 import '../../data/entities/profile/profile_objectbox.dart';
 import '../../data/entities/timebuckets/buckets.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
 final _entities = <ModelEntity>[
-  ModelEntity(
-      id: const IdUid(1, 3795801891482101835),
-      name: 'ActivityObjectBox',
-      lastPropertyId: const IdUid(3, 1717525746799835852),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 1161285421398873076),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 8584673890680071496),
-            name: 'raw',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(3, 1717525746799835852),
-            name: 'timestamp',
-            type: 10,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
   ModelEntity(
       id: const IdUid(2, 4851150363265994636),
       name: 'AppSettingsObjectBox',
@@ -85,143 +41,6 @@ final _entities = <ModelEntity>[
             id: const IdUid(2, 6451190763658478777),
             name: 'darkmode',
             type: 1,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(3, 4965065373383824861),
-      name: 'ChangeObjectBox',
-      lastPropertyId: const IdUid(6, 1340934207956687267),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 7983259287787115643),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 689181159427260357),
-            name: 'raw',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(3, 6971421212874221416),
-            name: 'valueName',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 6415434583433626402),
-            name: 'previousValue',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 6890023033685409708),
-            name: 'newValue',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(6, 1340934207956687267),
-            name: 'timestamp',
-            type: 10,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(4, 6983740273254513294),
-      name: 'CommentObjectBox',
-      lastPropertyId: const IdUid(8, 2134071308083692555),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 8989541874585062205),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 5838383754332345674),
-            name: 'commentedId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(1, 4126209793567323672),
-            relationTarget: 'PersonObjectBox'),
-        ModelProperty(
-            id: const IdUid(3, 5763387408553960741),
-            name: 'text',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 8489903348227564331),
-            name: 'timestamp',
-            type: 10,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 1863658403741545754),
-            name: 'groupId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(2, 2104660987898402136),
-            relationTarget: 'GroupObjectBox'),
-        ModelProperty(
-            id: const IdUid(6, 7022691029375467159),
-            name: 'eventId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(3, 2658989780925727914),
-            relationTarget: 'EventObjectBox'),
-        ModelProperty(
-            id: const IdUid(7, 5559805354309708458),
-            name: 'profileId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(4, 6116600837094311881),
-            relationTarget: 'ProfileObjectBox'),
-        ModelProperty(
-            id: const IdUid(8, 2134071308083692555),
-            name: 'textSearch',
-            type: 9,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[
-        ModelRelation(
-            id: const IdUid(1, 4863681988717898198),
-            name: 'images',
-            targetId: const IdUid(15, 4594153462237313951)),
-        ModelRelation(
-            id: const IdUid(2, 8871727695525987543),
-            name: 'videos',
-            targetId: const IdUid(30, 2700976137735647892)),
-        ModelRelation(
-            id: const IdUid(3, 816036762265549526),
-            name: 'files',
-            targetId: const IdUid(12, 4679681511518207465)),
-        ModelRelation(
-            id: const IdUid(4, 4741952086174349780),
-            name: 'links',
-            targetId: const IdUid(16, 6874583669793030153))
-      ],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(5, 1283328611130941740),
-      name: 'CoordinateObjectBox',
-      lastPropertyId: const IdUid(3, 3473875425954359330),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 8141759639395380520),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 2329401923789030544),
-            name: 'longitude',
-            type: 8,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(3, 3473875425954359330),
-            name: 'latitude',
-            type: 8,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -264,7 +83,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(7, 3043056634592448563),
       name: 'DataPoint',
-      lastPropertyId: const IdUid(7, 8197360495033113867),
+      lastPropertyId: const IdUid(9, 272820457015455825),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -299,15 +118,21 @@ final _entities = <ModelEntity>[
             indexId: const IdUid(8, 7955869088216379633),
             relationTarget: 'ServiceDocument'),
         ModelProperty(
-            id: const IdUid(6, 7380539589883038904),
-            name: 'searchString',
-            type: 9,
-            flags: 2048,
-            indexId: const IdUid(9, 2663765426491314377)),
-        ModelProperty(
             id: const IdUid(7, 8197360495033113867),
             name: 'values',
             type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(8, 2806132087800103354),
+            name: 'profileId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(51, 3256618416160863290),
+            relationTarget: 'ProfileDocument'),
+        ModelProperty(
+            id: const IdUid(9, 272820457015455825),
+            name: 'searchStrings',
+            type: 30,
             flags: 0)
       ],
       relations: <ModelRelation>[
@@ -332,7 +157,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(8, 8682398370349702667),
       name: 'DataPointName',
-      lastPropertyId: const IdUid(5, 8610212616701053573),
+      lastPropertyId: const IdUid(6, 6445779001623233457),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -364,7 +189,14 @@ final _entities = <ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const IdUid(12, 7862172577974960991),
-            relationTarget: 'DataPointName')
+            relationTarget: 'DataPointName'),
+        ModelProperty(
+            id: const IdUid(6, 6445779001623233457),
+            name: 'serviceId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(53, 5577920349758892248),
+            relationTarget: 'ServiceDocument')
       ],
       relations: <ModelRelation>[
         ModelRelation(
@@ -414,17 +246,9 @@ final _entities = <ModelEntity>[
       ],
       relations: <ModelRelation>[
         ModelRelation(
-            id: const IdUid(9, 299039894127599677),
-            name: 'posts',
-            targetId: const IdUid(24, 979585410149278652)),
-        ModelRelation(
-            id: const IdUid(10, 7636022078493603537),
-            name: 'groups',
-            targetId: const IdUid(14, 6864014972050303949)),
-        ModelRelation(
-            id: const IdUid(11, 4406179733756429902),
-            name: 'events',
-            targetId: const IdUid(11, 8332202587133248767))
+            id: const IdUid(23, 8928559096394660540),
+            name: 'dataPoints',
+            targetId: const IdUid(7, 3043056634592448563))
       ],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
@@ -453,319 +277,6 @@ final _entities = <ModelEntity>[
             id: const IdUid(4, 7954022458624841013),
             name: 'isCurrent',
             type: 1,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(11, 8332202587133248767),
-      name: 'EventObjectBox',
-      lastPropertyId: const IdUid(11, 6737595775503512458),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 4587038737294963842),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 5845153104500847454),
-            name: 'profileId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(15, 5774914020604473667),
-            relationTarget: 'ProfileObjectBox'),
-        ModelProperty(
-            id: const IdUid(3, 5390962749422182477),
-            name: 'raw',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 6413272319641586882),
-            name: 'name',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 7081656944745130586),
-            name: 'startTimestamp',
-            type: 10,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(6, 3055866053774260607),
-            name: 'endTimestamp',
-            type: 10,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(7, 6346589436253517487),
-            name: 'createdTimestamp',
-            type: 10,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(8, 677819164907542711),
-            name: 'description',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(9, 8097727479687108287),
-            name: 'isUsers',
-            type: 1,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(10, 3064341345386234465),
-            name: 'placeId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(16, 321626096301536826),
-            relationTarget: 'PlaceObjectBox'),
-        ModelProperty(
-            id: const IdUid(11, 6737595775503512458),
-            name: 'dbEventResponse',
-            type: 6,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(12, 4679681511518207465),
-      name: 'FileObjectBox',
-      lastPropertyId: const IdUid(8, 5094306055127876759),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 7620346141431114207),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 7218887142820700261),
-            name: 'profileId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(17, 6448948156229748638),
-            relationTarget: 'ProfileObjectBox'),
-        ModelProperty(
-            id: const IdUid(3, 2263510779286915705),
-            name: 'raw',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 7865094490674183280),
-            name: 'uri',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 9058463918677088644),
-            name: 'metadata',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(6, 6321255913409768299),
-            name: 'timestamp',
-            type: 10,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(7, 8944608361768460619),
-            name: 'thumbnail',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(8, 5094306055127876759),
-            name: 'textSearch',
-            type: 9,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(13, 6203807935129884864),
-      name: 'FriendObjectBox',
-      lastPropertyId: const IdUid(5, 44882144003263824),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 7728267156881202942),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 5100359719383536224),
-            name: 'profileId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(18, 5398113264737463801),
-            relationTarget: 'ProfileObjectBox'),
-        ModelProperty(
-            id: const IdUid(3, 212752859294451977),
-            name: 'timestamp',
-            type: 10,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 1843981772354976681),
-            name: 'raw',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 44882144003263824),
-            name: 'dbFriendType',
-            type: 6,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(14, 6864014972050303949),
-      name: 'GroupObjectBox',
-      lastPropertyId: const IdUid(7, 7975200625589782025),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 6269290217850481707),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 5607369100051783529),
-            name: 'profileId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(19, 7316324532598806106),
-            relationTarget: 'ProfileObjectBox'),
-        ModelProperty(
-            id: const IdUid(3, 760478250557078985),
-            name: 'raw',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 7422830341951292888),
-            name: 'name',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 8917399404295469652),
-            name: 'isUsers',
-            type: 1,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(6, 1583154278200925883),
-            name: 'badge',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(7, 7975200625589782025),
-            name: 'timestamp',
-            type: 10,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(15, 4594153462237313951),
-      name: 'ImageObjectBox',
-      lastPropertyId: const IdUid(10, 1659231952142407718),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 7976348734004712484),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 3800291994579754042),
-            name: 'profileId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(20, 4139895372970891711),
-            relationTarget: 'ProfileObjectBox'),
-        ModelProperty(
-            id: const IdUid(3, 5502358873002749412),
-            name: 'uri',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 4266594565949532365),
-            name: 'metadata',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 7853837452468954563),
-            name: 'timestamp',
-            type: 10,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(6, 3671764349026177923),
-            name: 'title',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(7, 7707968130135551703),
-            name: 'description',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(8, 1565070178060614451),
-            name: 'raw',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(9, 9083404946075652829),
-            name: 'textSearch',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(10, 1659231952142407718),
-            name: 'mediaTags',
-            type: 30,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(16, 6874583669793030153),
-      name: 'LinkObjectBox',
-      lastPropertyId: const IdUid(8, 3545964479220326745),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 6244699297035465669),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 1194203902510102234),
-            name: 'uri',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(3, 4482738340817061006),
-            name: 'metadata',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 6586789343473260490),
-            name: 'timestamp',
-            type: 10,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 6881944740636824666),
-            name: 'profileId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(21, 7517240892132761992),
-            relationTarget: 'ProfileObjectBox'),
-        ModelProperty(
-            id: const IdUid(6, 966864124545939118),
-            name: 'source',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(7, 2847049457723993687),
-            name: 'raw',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(8, 3545964479220326745),
-            name: 'textSearch',
-            type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[],
@@ -809,477 +320,6 @@ final _entities = <ModelEntity>[
             id: const IdUid(12, 1379333204506242091),
             name: 'days',
             targetId: const IdUid(9, 683627476249142809))
-      ],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(18, 8893603910880953301),
-      name: 'PageObjectBox',
-      lastPropertyId: const IdUid(6, 1499906337114510141),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 3427907228057284708),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 7683264366051549952),
-            name: 'raw',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(3, 6661975064467747787),
-            name: 'profileId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(23, 2314237892827660545),
-            relationTarget: 'ProfileObjectBox'),
-        ModelProperty(
-            id: const IdUid(4, 7090421615886951754),
-            name: 'name',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 6056284609273390905),
-            name: 'isUsers',
-            type: 1,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(6, 1499906337114510141),
-            name: 'uri',
-            type: 9,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(19, 6641517078011420630),
-      name: 'PersonObjectBox',
-      lastPropertyId: const IdUid(5, 802238952786042396),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 5691658846605708561),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 4412259263586717711),
-            name: 'profileId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(24, 2706060653108625345),
-            relationTarget: 'ProfileObjectBox'),
-        ModelProperty(
-            id: const IdUid(3, 8858075377353082434),
-            name: 'raw',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 6120028214422899324),
-            name: 'name',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 802238952786042396),
-            name: 'uri',
-            type: 9,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(20, 3525425548103886741),
-      name: 'PlaceObjectBox',
-      lastPropertyId: const IdUid(7, 2917031719448940742),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 3218654599778246277),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 5727216288325945877),
-            name: 'profileId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(25, 5485452967687049477),
-            relationTarget: 'ProfileObjectBox'),
-        ModelProperty(
-            id: const IdUid(3, 6548220019233959392),
-            name: 'raw',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 6182700611658313026),
-            name: 'name',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 1761523229073604874),
-            name: 'address',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(6, 6352445423256088258),
-            name: 'coordinateId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(26, 4384321819508885358),
-            relationTarget: 'CoordinateObjectBox'),
-        ModelProperty(
-            id: const IdUid(7, 2917031719448940742),
-            name: 'uri',
-            type: 9,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(21, 2890588493689130638),
-      name: 'PostEventObjectBox',
-      lastPropertyId: const IdUid(3, 7250381508700264091),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 3995557678002920059),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 7953796464222747982),
-            name: 'postId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(27, 5645812163274756650),
-            relationTarget: 'PostObjectBox'),
-        ModelProperty(
-            id: const IdUid(3, 7250381508700264091),
-            name: 'eventId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(28, 8535659180499871102),
-            relationTarget: 'EventObjectBox')
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(22, 4422998466458530686),
-      name: 'PostGroupObjectBox',
-      lastPropertyId: const IdUid(3, 5980074268235068931),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 7277368604797866201),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 1561077583848149494),
-            name: 'postId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(29, 8812818543749452596),
-            relationTarget: 'PostObjectBox'),
-        ModelProperty(
-            id: const IdUid(3, 5980074268235068931),
-            name: 'groupId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(30, 3377319292351805007),
-            relationTarget: 'GroupObjectBox')
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(23, 6422822775287241532),
-      name: 'PostLifeEventObjectBox',
-      lastPropertyId: const IdUid(6, 4380324628065450865),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 6350474792495127741),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 242279111074651490),
-            name: 'raw',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(3, 3593925108650189637),
-            name: 'profileId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(31, 4191955628479173668),
-            relationTarget: 'ProfileObjectBox'),
-        ModelProperty(
-            id: const IdUid(4, 2850428676845428032),
-            name: 'postId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(32, 3877782352422388454),
-            relationTarget: 'PostObjectBox'),
-        ModelProperty(
-            id: const IdUid(5, 8432453017052557900),
-            name: 'title',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(6, 4380324628065450865),
-            name: 'placeId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(33, 4578007495004394995),
-            relationTarget: 'PlaceObjectBox')
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(24, 979585410149278652),
-      name: 'PostObjectBox',
-      lastPropertyId: const IdUid(9, 8962200090472829202),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 6647695079427280222),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 8117608141222184699),
-            name: 'raw',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(3, 2295932770749946358),
-            name: 'profileId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(34, 8320196610147611879),
-            relationTarget: 'ProfileObjectBox'),
-        ModelProperty(
-            id: const IdUid(4, 1031882539606845595),
-            name: 'timestamp',
-            type: 10,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 4968246254231934873),
-            name: 'description',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(6, 2000726407994311560),
-            name: 'title',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(7, 8517893424015155948),
-            name: 'isArchived',
-            type: 1,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(8, 3851793013766326603),
-            name: 'metadata',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(9, 8962200090472829202),
-            name: 'textSearch',
-            type: 9,
-            flags: 8,
-            indexId: const IdUid(35, 6213680138219298471))
-      ],
-      relations: <ModelRelation>[
-        ModelRelation(
-            id: const IdUid(13, 8347525493178417595),
-            name: 'images',
-            targetId: const IdUid(15, 4594153462237313951)),
-        ModelRelation(
-            id: const IdUid(14, 5039135511920868040),
-            name: 'videos',
-            targetId: const IdUid(30, 2700976137735647892)),
-        ModelRelation(
-            id: const IdUid(15, 7719653765581784574),
-            name: 'files',
-            targetId: const IdUid(12, 4679681511518207465)),
-        ModelRelation(
-            id: const IdUid(16, 4964229300587017791),
-            name: 'links',
-            targetId: const IdUid(16, 6874583669793030153)),
-        ModelRelation(
-            id: const IdUid(17, 3514458830238060346),
-            name: 'mentions',
-            targetId: const IdUid(19, 6641517078011420630)),
-        ModelRelation(
-            id: const IdUid(18, 9216157718458212829),
-            name: 'tags',
-            targetId: const IdUid(29, 6900525965299323259))
-      ],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(25, 8825469226537242840),
-      name: 'PostPollObjectBox',
-      lastPropertyId: const IdUid(5, 3763732327187628443),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 8111929222335059366),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 4190613666852427577),
-            name: 'postId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(36, 6236810856697993841),
-            relationTarget: 'PostObjectBox'),
-        ModelProperty(
-            id: const IdUid(3, 2150474213775782237),
-            name: 'isUsers',
-            type: 1,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 8621933901640980052),
-            name: 'options',
-            type: 30,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 3763732327187628443),
-            name: 'timestamp',
-            type: 10,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(26, 4588463723372096615),
-      name: 'ProfileObjectBox',
-      lastPropertyId: const IdUid(21, 3220927113768729282),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 3476597362342068076),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 4711443958470875167),
-            name: 'serviceId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(37, 1456909018328838562),
-            relationTarget: 'ServiceObjectBox'),
-        ModelProperty(
-            id: const IdUid(3, 2910788714989479201),
-            name: 'uri',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 7528848375697250601),
-            name: 'username',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 4081827096114224211),
-            name: 'fullName',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(6, 8556884087237986948),
-            name: 'profilePictureId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(38, 1020809928874612432),
-            relationTarget: 'ImageObjectBox'),
-        ModelProperty(
-            id: const IdUid(7, 1933872560510870534),
-            name: 'gender',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(8, 6932004358102018442),
-            name: 'bio',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(9, 3365499526729003104),
-            name: 'currentCity',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(10, 4177385701511000085),
-            name: 'phoneNumbers',
-            type: 30,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(11, 3944705038088366964),
-            name: 'isPhoneConfirmed',
-            type: 1,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(12, 7127865273365737283),
-            name: 'createdTimestamp',
-            type: 10,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(13, 7514897168525488195),
-            name: 'isPrivate',
-            type: 1,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(14, 3777234457643933862),
-            name: 'websites',
-            type: 30,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(15, 6153416804116495573),
-            name: 'dateOfBirth',
-            type: 10,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(16, 1995625163197737529),
-            name: 'bloodInfo',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(17, 1241223396905052184),
-            name: 'friendPeerGroup',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(18, 8971602501745109094),
-            name: 'eligibility',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(19, 5841588724068215485),
-            name: 'metadata',
-            type: 30,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(20, 2226786182737865937),
-            name: 'basePathToFiles',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(21, 3220927113768729282),
-            name: 'raw',
-            type: 9,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[
-        ModelRelation(
-            id: const IdUid(19, 2603045215123006531),
-            name: 'emails',
-            targetId: const IdUid(10, 6166934233033795794)),
-        ModelRelation(
-            id: const IdUid(20, 2881972851090031058),
-            name: 'changes',
-            targetId: const IdUid(3, 4965065373383824861))
       ],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
@@ -1337,86 +377,6 @@ final _entities = <ModelEntity>[
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
-      id: const IdUid(29, 6900525965299323259),
-      name: 'TagObjectBox',
-      lastPropertyId: const IdUid(2, 5706999882624075264),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 5818661786277041887),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 5706999882624075264),
-            name: 'name',
-            type: 9,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
-      id: const IdUid(30, 2700976137735647892),
-      name: 'VideoObjectBox',
-      lastPropertyId: const IdUid(10, 8220626561167601011),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 6942627146854640397),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 7107103570104096684),
-            name: 'profileId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(40, 2840294224910629717),
-            relationTarget: 'ProfileObjectBox'),
-        ModelProperty(
-            id: const IdUid(3, 6054617778805049171),
-            name: 'uri',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 364315943966189713),
-            name: 'metadata',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 1834085916231402586),
-            name: 'timestamp',
-            type: 10,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(6, 9218281838148496413),
-            name: 'title',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(7, 3372345563176397564),
-            name: 'description',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(8, 2357502960088749328),
-            name: 'thumbnail',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(9, 9102808829019884620),
-            name: 'raw',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(10, 8220626561167601011),
-            name: 'textSearch',
-            type: 9,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
-  ModelEntity(
       id: const IdUid(31, 8819168080769456448),
       name: 'YearBucket',
       lastPropertyId: const IdUid(4, 4571685762271918812),
@@ -1454,7 +414,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(32, 6733607803340350093),
       name: 'FileDocument',
-      lastPropertyId: const IdUid(7, 3816932248313874191),
+      lastPropertyId: const IdUid(8, 8895921145513519914),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -1495,14 +455,21 @@ final _entities = <ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const IdUid(43, 5889454731299176230),
-            relationTarget: 'DataPoint')
+            relationTarget: 'DataPoint'),
+        ModelProperty(
+            id: const IdUid(8, 8895921145513519914),
+            name: 'profileId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(54, 3131853789107413309),
+            relationTarget: 'ProfileDocument')
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
       id: const IdUid(33, 3199854896470237352),
       name: 'ImageDocument',
-      lastPropertyId: const IdUid(7, 6974958562562519753),
+      lastPropertyId: const IdUid(8, 8912495905167216302),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -1543,14 +510,21 @@ final _entities = <ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const IdUid(45, 5981393423004271311),
-            relationTarget: 'DataPoint')
+            relationTarget: 'DataPoint'),
+        ModelProperty(
+            id: const IdUid(8, 8912495905167216302),
+            name: 'profileId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(55, 3567266636117142457),
+            relationTarget: 'ProfileDocument')
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
       id: const IdUid(34, 6580086254301391016),
       name: 'LinkDocument',
-      lastPropertyId: const IdUid(6, 8761767811309346826),
+      lastPropertyId: const IdUid(7, 3206673773003138916),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -1586,7 +560,14 @@ final _entities = <ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const IdUid(47, 4189976758467396925),
-            relationTarget: 'DataPoint')
+            relationTarget: 'DataPoint'),
+        ModelProperty(
+            id: const IdUid(7, 3206673773003138916),
+            name: 'profileId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(56, 752891130755618211),
+            relationTarget: 'ProfileDocument')
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
@@ -1628,7 +609,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(36, 3177292059338449348),
       name: 'VideoDocument',
-      lastPropertyId: const IdUid(7, 5505033573211785519),
+      lastPropertyId: const IdUid(8, 8658596909673853788),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -1669,7 +650,54 @@ final _entities = <ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const IdUid(50, 8673068564917753083),
-            relationTarget: 'DataPoint')
+            relationTarget: 'DataPoint'),
+        ModelProperty(
+            id: const IdUid(8, 8658596909673853788),
+            name: 'profileId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(60, 3414630470762843373),
+            relationTarget: 'ProfileDocument')
+      ],
+      relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(37, 3865849161310121097),
+      name: 'ProfileDocument',
+      lastPropertyId: const IdUid(6, 8819453598037561695),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 3093997201576894807),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 256087195128343915),
+            name: 'name',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 6240117894434191533),
+            name: 'serviceId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(57, 6530405895709690166),
+            relationTarget: 'ServiceDocument'),
+        ModelProperty(
+            id: const IdUid(4, 5022439828866646692),
+            name: 'dataPointId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(58, 3907260634696439496),
+            relationTarget: 'DataPoint'),
+        ModelProperty(
+            id: const IdUid(5, 7180927662399117170),
+            name: 'profilePictureId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(59, 6747592160332146215),
+            relationTarget: 'ImageDocument')
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[])
@@ -1695,51 +723,196 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(36, 3177292059338449348),
-      lastIndexId: const IdUid(50, 8673068564917753083),
-      lastRelationId: const IdUid(22, 3122676908211013825),
+      lastEntityId: const IdUid(37, 3865849161310121097),
+      lastIndexId: const IdUid(60, 3414630470762843373),
+      lastRelationId: const IdUid(23, 8928559096394660540),
       lastSequenceId: const IdUid(0, 0),
-      retiredEntityUids: const [],
-      retiredIndexUids: const [],
-      retiredPropertyUids: const [],
-      retiredRelationUids: const [],
+      retiredEntityUids: const [
+        3795801891482101835,
+        4965065373383824861,
+        6983740273254513294,
+        1283328611130941740,
+        8332202587133248767,
+        4679681511518207465,
+        6203807935129884864,
+        6864014972050303949,
+        4594153462237313951,
+        6874583669793030153,
+        8893603910880953301,
+        6641517078011420630,
+        3525425548103886741,
+        2890588493689130638,
+        4422998466458530686,
+        6422822775287241532,
+        979585410149278652,
+        8825469226537242840,
+        4588463723372096615,
+        6900525965299323259,
+        2700976137735647892
+      ],
+      retiredIndexUids: const [2663765426491314377, 6022969553980237651],
+      retiredPropertyUids: const [
+        7380539589883038904,
+        1161285421398873076,
+        8584673890680071496,
+        1717525746799835852,
+        7983259287787115643,
+        689181159427260357,
+        6971421212874221416,
+        6415434583433626402,
+        6890023033685409708,
+        1340934207956687267,
+        8989541874585062205,
+        5838383754332345674,
+        5763387408553960741,
+        8489903348227564331,
+        1863658403741545754,
+        7022691029375467159,
+        5559805354309708458,
+        2134071308083692555,
+        8141759639395380520,
+        2329401923789030544,
+        3473875425954359330,
+        4587038737294963842,
+        5845153104500847454,
+        5390962749422182477,
+        6413272319641586882,
+        7081656944745130586,
+        3055866053774260607,
+        6346589436253517487,
+        677819164907542711,
+        8097727479687108287,
+        3064341345386234465,
+        6737595775503512458,
+        7620346141431114207,
+        7218887142820700261,
+        2263510779286915705,
+        7865094490674183280,
+        9058463918677088644,
+        6321255913409768299,
+        8944608361768460619,
+        5094306055127876759,
+        7728267156881202942,
+        5100359719383536224,
+        212752859294451977,
+        1843981772354976681,
+        44882144003263824,
+        6269290217850481707,
+        5607369100051783529,
+        760478250557078985,
+        7422830341951292888,
+        8917399404295469652,
+        1583154278200925883,
+        7975200625589782025,
+        7976348734004712484,
+        3800291994579754042,
+        5502358873002749412,
+        4266594565949532365,
+        7853837452468954563,
+        3671764349026177923,
+        7707968130135551703,
+        1565070178060614451,
+        9083404946075652829,
+        1659231952142407718,
+        6244699297035465669,
+        1194203902510102234,
+        4482738340817061006,
+        6586789343473260490,
+        6881944740636824666,
+        966864124545939118,
+        2847049457723993687,
+        3545964479220326745,
+        3427907228057284708,
+        7683264366051549952,
+        6661975064467747787,
+        7090421615886951754,
+        6056284609273390905,
+        1499906337114510141,
+        5691658846605708561,
+        4412259263586717711,
+        8858075377353082434,
+        6120028214422899324,
+        802238952786042396,
+        3218654599778246277,
+        5727216288325945877,
+        6548220019233959392,
+        6182700611658313026,
+        1761523229073604874,
+        6352445423256088258,
+        2917031719448940742,
+        3995557678002920059,
+        7953796464222747982,
+        7250381508700264091,
+        7277368604797866201,
+        1561077583848149494,
+        5980074268235068931,
+        6350474792495127741,
+        242279111074651490,
+        3593925108650189637,
+        2850428676845428032,
+        8432453017052557900,
+        4380324628065450865,
+        6647695079427280222,
+        8117608141222184699,
+        2295932770749946358,
+        1031882539606845595,
+        4968246254231934873,
+        2000726407994311560,
+        8517893424015155948,
+        3851793013766326603,
+        8962200090472829202,
+        8111929222335059366,
+        4190613666852427577,
+        2150474213775782237,
+        8621933901640980052,
+        3763732327187628443,
+        3476597362342068076,
+        4711443958470875167,
+        2910788714989479201,
+        7528848375697250601,
+        4081827096114224211,
+        8556884087237986948,
+        1933872560510870534,
+        6932004358102018442,
+        3365499526729003104,
+        4177385701511000085,
+        3944705038088366964,
+        7127865273365737283,
+        7514897168525488195,
+        3777234457643933862,
+        6153416804116495573,
+        1995625163197737529,
+        1241223396905052184,
+        8971602501745109094,
+        5841588724068215485,
+        2226786182737865937,
+        3220927113768729282,
+        5818661786277041887,
+        5706999882624075264,
+        6942627146854640397,
+        7107103570104096684,
+        6054617778805049171,
+        364315943966189713,
+        1834085916231402586,
+        9218281838148496413,
+        3372345563176397564,
+        2357502960088749328,
+        9102808829019884620,
+        8220626561167601011,
+        8819453598037561695
+      ],
+      retiredRelationUids: const [
+        299039894127599677,
+        7636022078493603537,
+        4406179733756429902
+      ],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
       version: 1);
 
   final bindings = <Type, EntityDefinition>{
-    ActivityObjectBox: EntityDefinition<ActivityObjectBox>(
-        model: _entities[0],
-        toOneRelations: (ActivityObjectBox object) => [],
-        toManyRelations: (ActivityObjectBox object) => {},
-        getId: (ActivityObjectBox object) => object.id,
-        setId: (ActivityObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (ActivityObjectBox object, fb.Builder fbb) {
-          final rawOffset = fbb.writeString(object.raw);
-          fbb.startTable(4);
-          fbb.addInt64(0, object.id);
-          fbb.addOffset(1, rawOffset);
-          fbb.addInt64(2, object.timestamp.millisecondsSinceEpoch);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-
-          final object = ActivityObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              timestamp: DateTime.fromMillisecondsSinceEpoch(
-                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0)),
-              raw: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 6, ''));
-
-          return object;
-        }),
     AppSettingsObjectBox: EntityDefinition<AppSettingsObjectBox>(
-        model: _entities[1],
+        model: _entities[0],
         toOneRelations: (AppSettingsObjectBox object) => [],
         toManyRelations: (AppSettingsObjectBox object) => {},
         getId: (AppSettingsObjectBox object) => object.id,
@@ -1763,154 +936,8 @@ ModelDefinition getObjectBoxModel() {
 
           return object;
         }),
-    ChangeObjectBox: EntityDefinition<ChangeObjectBox>(
-        model: _entities[2],
-        toOneRelations: (ChangeObjectBox object) => [],
-        toManyRelations: (ChangeObjectBox object) => {},
-        getId: (ChangeObjectBox object) => object.id,
-        setId: (ChangeObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (ChangeObjectBox object, fb.Builder fbb) {
-          final rawOffset = fbb.writeString(object.raw);
-          final valueNameOffset = fbb.writeString(object.valueName);
-          final previousValueOffset = fbb.writeString(object.previousValue);
-          final newValueOffset = fbb.writeString(object.newValue);
-          fbb.startTable(7);
-          fbb.addInt64(0, object.id);
-          fbb.addOffset(1, rawOffset);
-          fbb.addOffset(2, valueNameOffset);
-          fbb.addOffset(3, previousValueOffset);
-          fbb.addOffset(4, newValueOffset);
-          fbb.addInt64(5, object.timestamp.millisecondsSinceEpoch);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-
-          final object = ChangeObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              raw: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 6, ''),
-              valueName: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, ''),
-              previousValue: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 10, ''),
-              newValue: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 12, ''),
-              timestamp: DateTime.fromMillisecondsSinceEpoch(
-                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0)));
-
-          return object;
-        }),
-    CommentObjectBox: EntityDefinition<CommentObjectBox>(
-        model: _entities[3],
-        toOneRelations: (CommentObjectBox object) =>
-            [object.commented, object.group, object.event, object.profile],
-        toManyRelations: (CommentObjectBox object) => {
-              RelInfo<CommentObjectBox>.toMany(1, object.id): object.images,
-              RelInfo<CommentObjectBox>.toMany(2, object.id): object.videos,
-              RelInfo<CommentObjectBox>.toMany(3, object.id): object.files,
-              RelInfo<CommentObjectBox>.toMany(4, object.id): object.links
-            },
-        getId: (CommentObjectBox object) => object.id,
-        setId: (CommentObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (CommentObjectBox object, fb.Builder fbb) {
-          final textOffset = fbb.writeString(object.text);
-          final textSearchOffset = fbb.writeString(object.textSearch);
-          fbb.startTable(9);
-          fbb.addInt64(0, object.id);
-          fbb.addInt64(1, object.commented.targetId);
-          fbb.addOffset(2, textOffset);
-          fbb.addInt64(3, object.timestamp.millisecondsSinceEpoch);
-          fbb.addInt64(4, object.group.targetId);
-          fbb.addInt64(5, object.event.targetId);
-          fbb.addInt64(6, object.profile.targetId);
-          fbb.addOffset(7, textSearchOffset);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-
-          final object = CommentObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              text: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, ''),
-              timestamp: DateTime.fromMillisecondsSinceEpoch(
-                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0)))
-            ..textSearch = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 18, '');
-          object.commented.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
-          object.commented.attach(store);
-          object.group.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
-          object.group.attach(store);
-          object.event.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
-          object.event.attach(store);
-          object.profile.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
-          object.profile.attach(store);
-          InternalToManyAccess.setRelInfo(
-              object.images,
-              store,
-              RelInfo<CommentObjectBox>.toMany(1, object.id),
-              store.box<CommentObjectBox>());
-          InternalToManyAccess.setRelInfo(
-              object.videos,
-              store,
-              RelInfo<CommentObjectBox>.toMany(2, object.id),
-              store.box<CommentObjectBox>());
-          InternalToManyAccess.setRelInfo(
-              object.files,
-              store,
-              RelInfo<CommentObjectBox>.toMany(3, object.id),
-              store.box<CommentObjectBox>());
-          InternalToManyAccess.setRelInfo(
-              object.links,
-              store,
-              RelInfo<CommentObjectBox>.toMany(4, object.id),
-              store.box<CommentObjectBox>());
-          return object;
-        }),
-    CoordinateObjectBox: EntityDefinition<CoordinateObjectBox>(
-        model: _entities[4],
-        toOneRelations: (CoordinateObjectBox object) => [],
-        toManyRelations: (CoordinateObjectBox object) => {},
-        getId: (CoordinateObjectBox object) => object.id,
-        setId: (CoordinateObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (CoordinateObjectBox object, fb.Builder fbb) {
-          fbb.startTable(4);
-          fbb.addInt64(0, object.id);
-          fbb.addFloat64(1, object.longitude);
-          fbb.addFloat64(2, object.latitude);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-
-          final object = CoordinateObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              longitude:
-                  const fb.Float64Reader().vTableGet(buffer, rootOffset, 6, 0),
-              latitude:
-                  const fb.Float64Reader().vTableGet(buffer, rootOffset, 8, 0));
-
-          return object;
-        }),
     DataCategory: EntityDefinition<DataCategory>(
-        model: _entities[5],
+        model: _entities[1],
         toOneRelations: (DataCategory object) => [],
         toManyRelations: (DataCategory object) => {
               RelInfo<DataPointName>.toOneBacklink(4, object.id,
@@ -1956,9 +983,13 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     DataPoint: EntityDefinition<DataPoint>(
-        model: _entities[6],
-        toOneRelations: (DataPoint object) =>
-            [object.dataPointName, object.category, object.service],
+        model: _entities[2],
+        toOneRelations: (DataPoint object) => [
+              object.dataPointName,
+              object.category,
+              object.service,
+              object.profile
+            ],
         toManyRelations: (DataPoint object) => {
               RelInfo<DataPoint>.toMany(5, object.id): object.images,
               RelInfo<DataPoint>.toMany(6, object.id): object.videos,
@@ -1971,16 +1002,19 @@ ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (DataPoint object, fb.Builder fbb) {
           final stringNameOffset = fbb.writeString(object.stringName);
-          final searchStringOffset = fbb.writeString(object.searchString);
           final valuesOffset = fbb.writeString(object.values);
-          fbb.startTable(8);
+          final searchStringsOffset = fbb.writeList(object.searchStrings
+              .map(fbb.writeString)
+              .toList(growable: false));
+          fbb.startTable(10);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.dataPointName.targetId);
           fbb.addOffset(2, stringNameOffset);
           fbb.addInt64(3, object.category.targetId);
           fbb.addInt64(4, object.service.targetId);
-          fbb.addOffset(5, searchStringOffset);
           fbb.addOffset(6, valuesOffset);
+          fbb.addInt64(7, object.profile.targetId);
+          fbb.addOffset(8, searchStringsOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1992,10 +1026,12 @@ ModelDefinition getObjectBoxModel() {
               id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0))
             ..stringName = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 8, '')
-            ..searchString = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 14, '')
             ..values = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 16, '');
+                .vTableGet(buffer, rootOffset, 16, '')
+            ..searchStrings = const fb.ListReader<String>(
+                    fb.StringReader(asciiOptimization: true),
+                    lazy: false)
+                .vTableGet(buffer, rootOffset, 20, []);
           object.dataPointName.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
           object.dataPointName.attach(store);
@@ -2005,6 +1041,9 @@ ModelDefinition getObjectBoxModel() {
           object.service.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
           object.service.attach(store);
+          object.profile.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0);
+          object.profile.attach(store);
           InternalToManyAccess.setRelInfo(object.images, store,
               RelInfo<DataPoint>.toMany(5, object.id), store.box<DataPoint>());
           InternalToManyAccess.setRelInfo(object.videos, store,
@@ -2016,9 +1055,9 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     DataPointName: EntityDefinition<DataPointName>(
-        model: _entities[7],
+        model: _entities[3],
         toOneRelations: (DataPointName object) =>
-            [object.dataCategory, object.parent],
+            [object.dataCategory, object.parent, object.service],
         toManyRelations: (DataPointName object) => {
               RelInfo<DataPointName>.toMany(8, object.id): object.children,
               RelInfo<DataPoint>.toOneBacklink(2, object.id,
@@ -2031,12 +1070,13 @@ ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (DataPointName object, fb.Builder fbb) {
           final nameOffset = fbb.writeString(object.name);
-          fbb.startTable(6);
+          fbb.startTable(7);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.count);
           fbb.addOffset(2, nameOffset);
           fbb.addInt64(3, object.dataCategory.targetId);
           fbb.addInt64(4, object.parent.targetId);
+          fbb.addInt64(5, object.service.targetId);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -2055,6 +1095,9 @@ ModelDefinition getObjectBoxModel() {
           object.parent.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
           object.parent.attach(store);
+          object.service.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
+          object.service.attach(store);
           InternalToManyAccess.setRelInfo(
               object.children,
               store,
@@ -2069,13 +1112,10 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     DayBucket: EntityDefinition<DayBucket>(
-        model: _entities[8],
+        model: _entities[4],
         toOneRelations: (DayBucket object) => [object.month],
-        toManyRelations: (DayBucket object) => {
-              RelInfo<DayBucket>.toMany(9, object.id): object.posts,
-              RelInfo<DayBucket>.toMany(10, object.id): object.groups,
-              RelInfo<DayBucket>.toMany(11, object.id): object.events
-            },
+        toManyRelations: (DayBucket object) =>
+            {RelInfo<DayBucket>.toMany(23, object.id): object.dataPoints},
         getId: (DayBucket object) => object.id,
         setId: (DayBucket object, int id) {
           object.id = id;
@@ -2104,16 +1144,12 @@ ModelDefinition getObjectBoxModel() {
           object.month.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
           object.month.attach(store);
-          InternalToManyAccess.setRelInfo(object.posts, store,
-              RelInfo<DayBucket>.toMany(9, object.id), store.box<DayBucket>());
-          InternalToManyAccess.setRelInfo(object.groups, store,
-              RelInfo<DayBucket>.toMany(10, object.id), store.box<DayBucket>());
-          InternalToManyAccess.setRelInfo(object.events, store,
-              RelInfo<DayBucket>.toMany(11, object.id), store.box<DayBucket>());
+          InternalToManyAccess.setRelInfo(object.dataPoints, store,
+              RelInfo<DayBucket>.toMany(23, object.id), store.box<DayBucket>());
           return object;
         }),
     EmailObjectBox: EntityDefinition<EmailObjectBox>(
-        model: _entities[9],
+        model: _entities[5],
         toOneRelations: (EmailObjectBox object) => [],
         toManyRelations: (EmailObjectBox object) => {},
         getId: (EmailObjectBox object) => object.id,
@@ -2146,339 +1182,8 @@ ModelDefinition getObjectBoxModel() {
 
           return object;
         }),
-    EventObjectBox: EntityDefinition<EventObjectBox>(
-        model: _entities[10],
-        toOneRelations: (EventObjectBox object) =>
-            [object.profile, object.place],
-        toManyRelations: (EventObjectBox object) => {},
-        getId: (EventObjectBox object) => object.id,
-        setId: (EventObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (EventObjectBox object, fb.Builder fbb) {
-          final rawOffset = fbb.writeString(object.raw);
-          final nameOffset = fbb.writeString(object.name);
-          final descriptionOffset = object.description == null
-              ? null
-              : fbb.writeString(object.description!);
-          fbb.startTable(12);
-          fbb.addInt64(0, object.id);
-          fbb.addInt64(1, object.profile.targetId);
-          fbb.addOffset(2, rawOffset);
-          fbb.addOffset(3, nameOffset);
-          fbb.addInt64(4, object.startTimestamp?.millisecondsSinceEpoch);
-          fbb.addInt64(5, object.endTimestamp?.millisecondsSinceEpoch);
-          fbb.addInt64(6, object.createdTimestamp?.millisecondsSinceEpoch);
-          fbb.addOffset(7, descriptionOffset);
-          fbb.addBool(8, object.isUsers);
-          fbb.addInt64(9, object.place.targetId);
-          fbb.addInt64(10, object.dbEventResponse);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-          final startTimestampValue =
-              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 12);
-          final endTimestampValue =
-              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 14);
-          final createdTimestampValue =
-              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 16);
-          final object = EventObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              raw: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, ''),
-              name: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 10, ''),
-              startTimestamp: startTimestampValue == null
-                  ? null
-                  : DateTime.fromMillisecondsSinceEpoch(startTimestampValue),
-              endTimestamp: endTimestampValue == null
-                  ? null
-                  : DateTime.fromMillisecondsSinceEpoch(endTimestampValue),
-              createdTimestamp: createdTimestampValue == null
-                  ? null
-                  : DateTime.fromMillisecondsSinceEpoch(createdTimestampValue),
-              description: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 18),
-              isUsers: const fb.BoolReader()
-                  .vTableGet(buffer, rootOffset, 20, false))
-            ..dbEventResponse = const fb.Int64Reader()
-                .vTableGetNullable(buffer, rootOffset, 24);
-          object.profile.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
-          object.profile.attach(store);
-          object.place.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 22, 0);
-          object.place.attach(store);
-          return object;
-        }),
-    FileObjectBox: EntityDefinition<FileObjectBox>(
-        model: _entities[11],
-        toOneRelations: (FileObjectBox object) => [object.profile],
-        toManyRelations: (FileObjectBox object) => {},
-        getId: (FileObjectBox object) => object.id,
-        setId: (FileObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (FileObjectBox object, fb.Builder fbb) {
-          final rawOffset = fbb.writeString(object.raw);
-          final uriOffset = fbb.writeString(object.uri);
-          final metadataOffset = object.metadata == null
-              ? null
-              : fbb.writeString(object.metadata!);
-          final thumbnailOffset = object.thumbnail == null
-              ? null
-              : fbb.writeString(object.thumbnail!);
-          final textSearchOffset = fbb.writeString(object.textSearch);
-          fbb.startTable(9);
-          fbb.addInt64(0, object.id);
-          fbb.addInt64(1, object.profile.targetId);
-          fbb.addOffset(2, rawOffset);
-          fbb.addOffset(3, uriOffset);
-          fbb.addOffset(4, metadataOffset);
-          fbb.addInt64(5, object.timestamp?.millisecondsSinceEpoch);
-          fbb.addOffset(6, thumbnailOffset);
-          fbb.addOffset(7, textSearchOffset);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-          final timestampValue =
-              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 14);
-          final object = FileObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              raw: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, ''),
-              uri: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 10, ''),
-              metadata: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 12),
-              timestamp: timestampValue == null
-                  ? null
-                  : DateTime.fromMillisecondsSinceEpoch(timestampValue),
-              thumbnail: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 16))
-            ..textSearch = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 18, '');
-          object.profile.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
-          object.profile.attach(store);
-          return object;
-        }),
-    FriendObjectBox: EntityDefinition<FriendObjectBox>(
-        model: _entities[12],
-        toOneRelations: (FriendObjectBox object) => [object.profile],
-        toManyRelations: (FriendObjectBox object) => {},
-        getId: (FriendObjectBox object) => object.id,
-        setId: (FriendObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (FriendObjectBox object, fb.Builder fbb) {
-          final rawOffset = fbb.writeString(object.raw);
-          fbb.startTable(6);
-          fbb.addInt64(0, object.id);
-          fbb.addInt64(1, object.profile.targetId);
-          fbb.addInt64(2, object.timestamp?.millisecondsSinceEpoch);
-          fbb.addOffset(3, rawOffset);
-          fbb.addInt64(4, object.dbFriendType);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-          final timestampValue =
-              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 8);
-          final object = FriendObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              timestamp: timestampValue == null
-                  ? null
-                  : DateTime.fromMillisecondsSinceEpoch(timestampValue),
-              raw: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 10, ''))
-            ..dbFriendType = const fb.Int64Reader()
-                .vTableGetNullable(buffer, rootOffset, 12);
-          object.profile.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
-          object.profile.attach(store);
-          return object;
-        }),
-    GroupObjectBox: EntityDefinition<GroupObjectBox>(
-        model: _entities[13],
-        toOneRelations: (GroupObjectBox object) => [object.profile],
-        toManyRelations: (GroupObjectBox object) => {},
-        getId: (GroupObjectBox object) => object.id,
-        setId: (GroupObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (GroupObjectBox object, fb.Builder fbb) {
-          final rawOffset = fbb.writeString(object.raw);
-          final nameOffset = fbb.writeString(object.name);
-          final badgeOffset =
-              object.badge == null ? null : fbb.writeString(object.badge!);
-          fbb.startTable(8);
-          fbb.addInt64(0, object.id);
-          fbb.addInt64(1, object.profile.targetId);
-          fbb.addOffset(2, rawOffset);
-          fbb.addOffset(3, nameOffset);
-          fbb.addBool(4, object.isUsers);
-          fbb.addOffset(5, badgeOffset);
-          fbb.addInt64(6, object.timestamp?.millisecondsSinceEpoch);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-          final timestampValue =
-              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 16);
-          final object = GroupObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              raw: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, ''),
-              name: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 10, ''),
-              isUsers: const fb.BoolReader()
-                  .vTableGet(buffer, rootOffset, 12, false),
-              badge: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 14),
-              timestamp: timestampValue == null
-                  ? null
-                  : DateTime.fromMillisecondsSinceEpoch(timestampValue));
-          object.profile.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
-          object.profile.attach(store);
-          return object;
-        }),
-    ImageObjectBox: EntityDefinition<ImageObjectBox>(
-        model: _entities[14],
-        toOneRelations: (ImageObjectBox object) => [object.profile],
-        toManyRelations: (ImageObjectBox object) => {},
-        getId: (ImageObjectBox object) => object.id,
-        setId: (ImageObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (ImageObjectBox object, fb.Builder fbb) {
-          final uriOffset = fbb.writeString(object.uri);
-          final metadataOffset = object.metadata == null
-              ? null
-              : fbb.writeString(object.metadata!);
-          final titleOffset =
-              object.title == null ? null : fbb.writeString(object.title!);
-          final descriptionOffset = object.description == null
-              ? null
-              : fbb.writeString(object.description!);
-          final rawOffset = fbb.writeString(object.raw);
-          final textSearchOffset = fbb.writeString(object.textSearch);
-          final mediaTagsOffset = object.mediaTags == null
-              ? null
-              : fbb.writeList(object.mediaTags!
-                  .map(fbb.writeString)
-                  .toList(growable: false));
-          fbb.startTable(11);
-          fbb.addInt64(0, object.id);
-          fbb.addInt64(1, object.profile.targetId);
-          fbb.addOffset(2, uriOffset);
-          fbb.addOffset(3, metadataOffset);
-          fbb.addInt64(4, object.timestamp?.millisecondsSinceEpoch);
-          fbb.addOffset(5, titleOffset);
-          fbb.addOffset(6, descriptionOffset);
-          fbb.addOffset(7, rawOffset);
-          fbb.addOffset(8, textSearchOffset);
-          fbb.addOffset(9, mediaTagsOffset);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-          final timestampValue =
-              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 12);
-          final object = ImageObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              uri: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, ''),
-              metadata: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 10),
-              timestamp: timestampValue == null
-                  ? null
-                  : DateTime.fromMillisecondsSinceEpoch(timestampValue),
-              title: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 14),
-              description: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 16),
-              raw: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 18, ''),
-              mediaTags:
-                  const fb.ListReader<String>(fb.StringReader(asciiOptimization: true), lazy: false)
-                      .vTableGetNullable(buffer, rootOffset, 22))
-            ..textSearch = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 20, '');
-          object.profile.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
-          object.profile.attach(store);
-          return object;
-        }),
-    LinkObjectBox: EntityDefinition<LinkObjectBox>(
-        model: _entities[15],
-        toOneRelations: (LinkObjectBox object) => [object.profile],
-        toManyRelations: (LinkObjectBox object) => {},
-        getId: (LinkObjectBox object) => object.id,
-        setId: (LinkObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (LinkObjectBox object, fb.Builder fbb) {
-          final uriOffset = fbb.writeString(object.uri);
-          final metadataOffset = object.metadata == null
-              ? null
-              : fbb.writeString(object.metadata!);
-          final sourceOffset =
-              object.source == null ? null : fbb.writeString(object.source!);
-          final rawOffset = fbb.writeString(object.raw);
-          final textSearchOffset = fbb.writeString(object.textSearch);
-          fbb.startTable(9);
-          fbb.addInt64(0, object.id);
-          fbb.addOffset(1, uriOffset);
-          fbb.addOffset(2, metadataOffset);
-          fbb.addInt64(3, object.timestamp?.millisecondsSinceEpoch);
-          fbb.addInt64(4, object.profile.targetId);
-          fbb.addOffset(5, sourceOffset);
-          fbb.addOffset(6, rawOffset);
-          fbb.addOffset(7, textSearchOffset);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-          final timestampValue =
-              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 10);
-          final object = LinkObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              uri: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 6, ''),
-              metadata: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 8),
-              timestamp: timestampValue == null
-                  ? null
-                  : DateTime.fromMillisecondsSinceEpoch(timestampValue),
-              source: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 14),
-              raw: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 16, ''))
-            ..textSearch = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 18, '');
-          object.profile.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
-          object.profile.attach(store);
-          return object;
-        }),
     MonthBucket: EntityDefinition<MonthBucket>(
-        model: _entities[16],
+        model: _entities[6],
         toOneRelations: (MonthBucket object) => [object.year],
         toManyRelations: (MonthBucket object) =>
             {RelInfo<MonthBucket>.toMany(12, object.id): object.days},
@@ -2517,509 +1222,8 @@ ModelDefinition getObjectBoxModel() {
               store.box<MonthBucket>());
           return object;
         }),
-    PageObjectBox: EntityDefinition<PageObjectBox>(
-        model: _entities[17],
-        toOneRelations: (PageObjectBox object) => [object.profile],
-        toManyRelations: (PageObjectBox object) => {},
-        getId: (PageObjectBox object) => object.id,
-        setId: (PageObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (PageObjectBox object, fb.Builder fbb) {
-          final rawOffset = fbb.writeString(object.raw);
-          final nameOffset = fbb.writeString(object.name);
-          final uriOffset =
-              object.uri == null ? null : fbb.writeString(object.uri!);
-          fbb.startTable(7);
-          fbb.addInt64(0, object.id);
-          fbb.addOffset(1, rawOffset);
-          fbb.addInt64(2, object.profile.targetId);
-          fbb.addOffset(3, nameOffset);
-          fbb.addBool(4, object.isUsers);
-          fbb.addOffset(5, uriOffset);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-
-          final object = PageObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              raw: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 6, ''),
-              name: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 10, ''),
-              isUsers: const fb.BoolReader()
-                  .vTableGet(buffer, rootOffset, 12, false),
-              uri: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 14));
-          object.profile.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0);
-          object.profile.attach(store);
-          return object;
-        }),
-    PersonObjectBox: EntityDefinition<PersonObjectBox>(
-        model: _entities[18],
-        toOneRelations: (PersonObjectBox object) => [object.profile],
-        toManyRelations: (PersonObjectBox object) => {},
-        getId: (PersonObjectBox object) => object.id,
-        setId: (PersonObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (PersonObjectBox object, fb.Builder fbb) {
-          final rawOffset = fbb.writeString(object.raw);
-          final nameOffset = fbb.writeString(object.name);
-          final uriOffset =
-              object.uri == null ? null : fbb.writeString(object.uri!);
-          fbb.startTable(6);
-          fbb.addInt64(0, object.id);
-          fbb.addInt64(1, object.profile.targetId);
-          fbb.addOffset(2, rawOffset);
-          fbb.addOffset(3, nameOffset);
-          fbb.addOffset(4, uriOffset);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-
-          final object = PersonObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              raw: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, ''),
-              name: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 10, ''),
-              uri: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 12));
-          object.profile.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
-          object.profile.attach(store);
-          return object;
-        }),
-    PlaceObjectBox: EntityDefinition<PlaceObjectBox>(
-        model: _entities[19],
-        toOneRelations: (PlaceObjectBox object) =>
-            [object.profile, object.coordinate],
-        toManyRelations: (PlaceObjectBox object) => {},
-        getId: (PlaceObjectBox object) => object.id,
-        setId: (PlaceObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (PlaceObjectBox object, fb.Builder fbb) {
-          final rawOffset = fbb.writeString(object.raw);
-          final nameOffset = fbb.writeString(object.name);
-          final addressOffset =
-              object.address == null ? null : fbb.writeString(object.address!);
-          final uriOffset =
-              object.uri == null ? null : fbb.writeString(object.uri!);
-          fbb.startTable(8);
-          fbb.addInt64(0, object.id);
-          fbb.addInt64(1, object.profile.targetId);
-          fbb.addOffset(2, rawOffset);
-          fbb.addOffset(3, nameOffset);
-          fbb.addOffset(4, addressOffset);
-          fbb.addInt64(5, object.coordinate.targetId);
-          fbb.addOffset(6, uriOffset);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-
-          final object = PlaceObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              raw: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, ''),
-              name: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 10, ''),
-              address: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 12),
-              uri: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 16));
-          object.profile.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
-          object.profile.attach(store);
-          object.coordinate.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
-          object.coordinate.attach(store);
-          return object;
-        }),
-    PostEventObjectBox: EntityDefinition<PostEventObjectBox>(
-        model: _entities[20],
-        toOneRelations: (PostEventObjectBox object) =>
-            [object.post, object.event],
-        toManyRelations: (PostEventObjectBox object) => {},
-        getId: (PostEventObjectBox object) => object.id,
-        setId: (PostEventObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (PostEventObjectBox object, fb.Builder fbb) {
-          fbb.startTable(4);
-          fbb.addInt64(0, object.id);
-          fbb.addInt64(1, object.post.targetId);
-          fbb.addInt64(2, object.event.targetId);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-
-          final object = PostEventObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0));
-          object.post.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
-          object.post.attach(store);
-          object.event.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0);
-          object.event.attach(store);
-          return object;
-        }),
-    PostGroupObjectBox: EntityDefinition<PostGroupObjectBox>(
-        model: _entities[21],
-        toOneRelations: (PostGroupObjectBox object) =>
-            [object.post, object.group],
-        toManyRelations: (PostGroupObjectBox object) => {},
-        getId: (PostGroupObjectBox object) => object.id,
-        setId: (PostGroupObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (PostGroupObjectBox object, fb.Builder fbb) {
-          fbb.startTable(4);
-          fbb.addInt64(0, object.id);
-          fbb.addInt64(1, object.post.targetId);
-          fbb.addInt64(2, object.group.targetId);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-
-          final object = PostGroupObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0));
-          object.post.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
-          object.post.attach(store);
-          object.group.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0);
-          object.group.attach(store);
-          return object;
-        }),
-    PostLifeEventObjectBox: EntityDefinition<PostLifeEventObjectBox>(
-        model: _entities[22],
-        toOneRelations: (PostLifeEventObjectBox object) =>
-            [object.profile, object.post, object.place],
-        toManyRelations: (PostLifeEventObjectBox object) => {},
-        getId: (PostLifeEventObjectBox object) => object.id,
-        setId: (PostLifeEventObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (PostLifeEventObjectBox object, fb.Builder fbb) {
-          final rawOffset = fbb.writeString(object.raw);
-          final titleOffset = fbb.writeString(object.title);
-          fbb.startTable(7);
-          fbb.addInt64(0, object.id);
-          fbb.addOffset(1, rawOffset);
-          fbb.addInt64(2, object.profile.targetId);
-          fbb.addInt64(3, object.post.targetId);
-          fbb.addOffset(4, titleOffset);
-          fbb.addInt64(5, object.place.targetId);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-
-          final object = PostLifeEventObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              raw: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 6, ''),
-              title: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 12, ''));
-          object.profile.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0);
-          object.profile.attach(store);
-          object.post.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
-          object.post.attach(store);
-          object.place.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
-          object.place.attach(store);
-          return object;
-        }),
-    PostObjectBox: EntityDefinition<PostObjectBox>(
-        model: _entities[23],
-        toOneRelations: (PostObjectBox object) => [object.profile],
-        toManyRelations: (PostObjectBox object) => {
-              RelInfo<PostObjectBox>.toMany(13, object.id): object.images,
-              RelInfo<PostObjectBox>.toMany(14, object.id): object.videos,
-              RelInfo<PostObjectBox>.toMany(15, object.id): object.files,
-              RelInfo<PostObjectBox>.toMany(16, object.id): object.links,
-              RelInfo<PostObjectBox>.toMany(17, object.id): object.mentions,
-              RelInfo<PostObjectBox>.toMany(18, object.id): object.tags
-            },
-        getId: (PostObjectBox object) => object.id,
-        setId: (PostObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (PostObjectBox object, fb.Builder fbb) {
-          final rawOffset = fbb.writeString(object.raw);
-          final descriptionOffset = object.description == null
-              ? null
-              : fbb.writeString(object.description!);
-          final titleOffset =
-              object.title == null ? null : fbb.writeString(object.title!);
-          final metadataOffset = object.metadata == null
-              ? null
-              : fbb.writeString(object.metadata!);
-          final textSearchOffset = fbb.writeString(object.textSearch);
-          fbb.startTable(10);
-          fbb.addInt64(0, object.id);
-          fbb.addOffset(1, rawOffset);
-          fbb.addInt64(2, object.profile.targetId);
-          fbb.addInt64(3, object.timestamp.millisecondsSinceEpoch);
-          fbb.addOffset(4, descriptionOffset);
-          fbb.addOffset(5, titleOffset);
-          fbb.addBool(6, object.isArchived);
-          fbb.addOffset(7, metadataOffset);
-          fbb.addOffset(8, textSearchOffset);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-
-          final object = PostObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              raw: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 6, ''),
-              timestamp: DateTime.fromMillisecondsSinceEpoch(
-                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0)),
-              description: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 12),
-              title: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 14),
-              isArchived: const fb.BoolReader()
-                  .vTableGetNullable(buffer, rootOffset, 16),
-              metadata: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 18))
-            ..textSearch = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 20, '');
-          object.profile.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0);
-          object.profile.attach(store);
-          InternalToManyAccess.setRelInfo(
-              object.images,
-              store,
-              RelInfo<PostObjectBox>.toMany(13, object.id),
-              store.box<PostObjectBox>());
-          InternalToManyAccess.setRelInfo(
-              object.videos,
-              store,
-              RelInfo<PostObjectBox>.toMany(14, object.id),
-              store.box<PostObjectBox>());
-          InternalToManyAccess.setRelInfo(
-              object.files,
-              store,
-              RelInfo<PostObjectBox>.toMany(15, object.id),
-              store.box<PostObjectBox>());
-          InternalToManyAccess.setRelInfo(
-              object.links,
-              store,
-              RelInfo<PostObjectBox>.toMany(16, object.id),
-              store.box<PostObjectBox>());
-          InternalToManyAccess.setRelInfo(
-              object.mentions,
-              store,
-              RelInfo<PostObjectBox>.toMany(17, object.id),
-              store.box<PostObjectBox>());
-          InternalToManyAccess.setRelInfo(
-              object.tags,
-              store,
-              RelInfo<PostObjectBox>.toMany(18, object.id),
-              store.box<PostObjectBox>());
-          return object;
-        }),
-    PostPollObjectBox: EntityDefinition<PostPollObjectBox>(
-        model: _entities[24],
-        toOneRelations: (PostPollObjectBox object) => [object.post],
-        toManyRelations: (PostPollObjectBox object) => {},
-        getId: (PostPollObjectBox object) => object.id,
-        setId: (PostPollObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (PostPollObjectBox object, fb.Builder fbb) {
-          final optionsOffset = object.options == null
-              ? null
-              : fbb.writeList(
-                  object.options!.map(fbb.writeString).toList(growable: false));
-          fbb.startTable(6);
-          fbb.addInt64(0, object.id);
-          fbb.addInt64(1, object.post.targetId);
-          fbb.addBool(2, object.isUsers);
-          fbb.addOffset(3, optionsOffset);
-          fbb.addInt64(4, object.timestamp?.millisecondsSinceEpoch);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-          final timestampValue =
-              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 12);
-          final object = PostPollObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              isUsers:
-                  const fb.BoolReader().vTableGet(buffer, rootOffset, 8, false),
-              options: const fb.ListReader<String>(
-                      fb.StringReader(asciiOptimization: true),
-                      lazy: false)
-                  .vTableGetNullable(buffer, rootOffset, 10),
-              timestamp: timestampValue == null
-                  ? null
-                  : DateTime.fromMillisecondsSinceEpoch(timestampValue));
-          object.post.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
-          object.post.attach(store);
-          return object;
-        }),
-    ProfileObjectBox: EntityDefinition<ProfileObjectBox>(
-        model: _entities[25],
-        toOneRelations: (ProfileObjectBox object) =>
-            [object.service, object.profilePicture],
-        toManyRelations: (ProfileObjectBox object) => {
-              RelInfo<ProfileObjectBox>.toMany(19, object.id): object.emails,
-              RelInfo<ProfileObjectBox>.toMany(20, object.id): object.changes
-            },
-        getId: (ProfileObjectBox object) => object.id,
-        setId: (ProfileObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (ProfileObjectBox object, fb.Builder fbb) {
-          final uriOffset = fbb.writeString(object.uri);
-          final usernameOffset = object.username == null
-              ? null
-              : fbb.writeString(object.username!);
-          final fullNameOffset = fbb.writeString(object.fullName);
-          final genderOffset =
-              object.gender == null ? null : fbb.writeString(object.gender!);
-          final bioOffset =
-              object.bio == null ? null : fbb.writeString(object.bio!);
-          final currentCityOffset = object.currentCity == null
-              ? null
-              : fbb.writeString(object.currentCity!);
-          final phoneNumbersOffset = object.phoneNumbers == null
-              ? null
-              : fbb.writeList(object.phoneNumbers!
-                  .map(fbb.writeString)
-                  .toList(growable: false));
-          final websitesOffset = object.websites == null
-              ? null
-              : fbb.writeList(object.websites!
-                  .map(fbb.writeString)
-                  .toList(growable: false));
-          final bloodInfoOffset = object.bloodInfo == null
-              ? null
-              : fbb.writeString(object.bloodInfo!);
-          final friendPeerGroupOffset = object.friendPeerGroup == null
-              ? null
-              : fbb.writeString(object.friendPeerGroup!);
-          final eligibilityOffset = object.eligibility == null
-              ? null
-              : fbb.writeString(object.eligibility!);
-          final metadataOffset = object.metadata == null
-              ? null
-              : fbb.writeList(object.metadata!
-                  .map(fbb.writeString)
-                  .toList(growable: false));
-          final basePathToFilesOffset = object.basePathToFiles == null
-              ? null
-              : fbb.writeString(object.basePathToFiles!);
-          final rawOffset = fbb.writeString(object.raw);
-          fbb.startTable(22);
-          fbb.addInt64(0, object.id);
-          fbb.addInt64(1, object.service.targetId);
-          fbb.addOffset(2, uriOffset);
-          fbb.addOffset(3, usernameOffset);
-          fbb.addOffset(4, fullNameOffset);
-          fbb.addInt64(5, object.profilePicture.targetId);
-          fbb.addOffset(6, genderOffset);
-          fbb.addOffset(7, bioOffset);
-          fbb.addOffset(8, currentCityOffset);
-          fbb.addOffset(9, phoneNumbersOffset);
-          fbb.addBool(10, object.isPhoneConfirmed);
-          fbb.addInt64(11, object.createdTimestamp.millisecondsSinceEpoch);
-          fbb.addBool(12, object.isPrivate);
-          fbb.addOffset(13, websitesOffset);
-          fbb.addInt64(14, object.dateOfBirth?.millisecondsSinceEpoch);
-          fbb.addOffset(15, bloodInfoOffset);
-          fbb.addOffset(16, friendPeerGroupOffset);
-          fbb.addOffset(17, eligibilityOffset);
-          fbb.addOffset(18, metadataOffset);
-          fbb.addOffset(19, basePathToFilesOffset);
-          fbb.addOffset(20, rawOffset);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-          final dateOfBirthValue =
-              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 32);
-          final object = ProfileObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              uri: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, ''),
-              username: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 10),
-              fullName: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 12, ''),
-              gender: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 16),
-              bio: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 18),
-              currentCity: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 20),
-              phoneNumbers:
-                  const fb.ListReader<String>(fb.StringReader(asciiOptimization: true), lazy: false)
-                      .vTableGetNullable(buffer, rootOffset, 22),
-              isPhoneConfirmed: const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 24),
-              createdTimestamp: DateTime.fromMillisecondsSinceEpoch(const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0)),
-              isPrivate: const fb.BoolReader().vTableGetNullable(buffer, rootOffset, 28),
-              websites: const fb.ListReader<String>(fb.StringReader(asciiOptimization: true), lazy: false).vTableGetNullable(buffer, rootOffset, 30),
-              dateOfBirth: dateOfBirthValue == null ? null : DateTime.fromMillisecondsSinceEpoch(dateOfBirthValue),
-              bloodInfo: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 34),
-              friendPeerGroup: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 36),
-              eligibility: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 38),
-              metadata: const fb.ListReader<String>(fb.StringReader(asciiOptimization: true), lazy: false).vTableGetNullable(buffer, rootOffset, 40),
-              basePathToFiles: const fb.StringReader(asciiOptimization: true).vTableGetNullable(buffer, rootOffset, 42),
-              raw: const fb.StringReader(asciiOptimization: true).vTableGet(buffer, rootOffset, 44, ''));
-          object.service.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
-          object.service.attach(store);
-          object.profilePicture.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
-          object.profilePicture.attach(store);
-          InternalToManyAccess.setRelInfo(
-              object.emails,
-              store,
-              RelInfo<ProfileObjectBox>.toMany(19, object.id),
-              store.box<ProfileObjectBox>());
-          InternalToManyAccess.setRelInfo(
-              object.changes,
-              store,
-              RelInfo<ProfileObjectBox>.toMany(20, object.id),
-              store.box<ProfileObjectBox>());
-          return object;
-        }),
     ReactionObjectBox: EntityDefinition<ReactionObjectBox>(
-        model: _entities[26],
+        model: _entities[7],
         toOneRelations: (ReactionObjectBox object) => [],
         toManyRelations: (ReactionObjectBox object) => {},
         getId: (ReactionObjectBox object) => object.id,
@@ -3050,7 +1254,7 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     ServiceObjectBox: EntityDefinition<ServiceObjectBox>(
-        model: _entities[27],
+        model: _entities[8],
         toOneRelations: (ServiceObjectBox object) => [],
         toManyRelations: (ServiceObjectBox object) => {},
         getId: (ServiceObjectBox object) => object.id,
@@ -3084,101 +1288,8 @@ ModelDefinition getObjectBoxModel() {
 
           return object;
         }),
-    TagObjectBox: EntityDefinition<TagObjectBox>(
-        model: _entities[28],
-        toOneRelations: (TagObjectBox object) => [],
-        toManyRelations: (TagObjectBox object) => {},
-        getId: (TagObjectBox object) => object.id,
-        setId: (TagObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (TagObjectBox object, fb.Builder fbb) {
-          final nameOffset = fbb.writeString(object.name);
-          fbb.startTable(3);
-          fbb.addInt64(0, object.id);
-          fbb.addOffset(1, nameOffset);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-
-          final object = TagObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              name: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 6, ''));
-
-          return object;
-        }),
-    VideoObjectBox: EntityDefinition<VideoObjectBox>(
-        model: _entities[29],
-        toOneRelations: (VideoObjectBox object) => [object.profile],
-        toManyRelations: (VideoObjectBox object) => {},
-        getId: (VideoObjectBox object) => object.id,
-        setId: (VideoObjectBox object, int id) {
-          object.id = id;
-        },
-        objectToFB: (VideoObjectBox object, fb.Builder fbb) {
-          final uriOffset = fbb.writeString(object.uri);
-          final metadataOffset = object.metadata == null
-              ? null
-              : fbb.writeString(object.metadata!);
-          final titleOffset =
-              object.title == null ? null : fbb.writeString(object.title!);
-          final descriptionOffset = object.description == null
-              ? null
-              : fbb.writeString(object.description!);
-          final thumbnailOffset = object.thumbnail == null
-              ? null
-              : fbb.writeString(object.thumbnail!);
-          final rawOffset = fbb.writeString(object.raw);
-          final textSearchOffset = fbb.writeString(object.textSearch);
-          fbb.startTable(11);
-          fbb.addInt64(0, object.id);
-          fbb.addInt64(1, object.profile.targetId);
-          fbb.addOffset(2, uriOffset);
-          fbb.addOffset(3, metadataOffset);
-          fbb.addInt64(4, object.timestamp?.millisecondsSinceEpoch);
-          fbb.addOffset(5, titleOffset);
-          fbb.addOffset(6, descriptionOffset);
-          fbb.addOffset(7, thumbnailOffset);
-          fbb.addOffset(8, rawOffset);
-          fbb.addOffset(9, textSearchOffset);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-          final timestampValue =
-              const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 12);
-          final object = VideoObjectBox(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              uri: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, ''),
-              metadata: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 10),
-              timestamp: timestampValue == null
-                  ? null
-                  : DateTime.fromMillisecondsSinceEpoch(timestampValue),
-              title: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 14),
-              description: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 16),
-              thumbnail: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 18),
-              raw: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 20, ''))
-            ..textSearch = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 22, '');
-          object.profile.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
-          object.profile.attach(store);
-          return object;
-        }),
     YearBucket: EntityDefinition<YearBucket>(
-        model: _entities[30],
+        model: _entities[9],
         toOneRelations: (YearBucket object) => [],
         toManyRelations: (YearBucket object) =>
             {RelInfo<YearBucket>.toMany(21, object.id): object.months},
@@ -3214,9 +1325,9 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     FileDocument: EntityDefinition<FileDocument>(
-        model: _entities[31],
+        model: _entities[10],
         toOneRelations: (FileDocument object) =>
-            [object.service, object.relatedDatapoint],
+            [object.service, object.relatedDatapoint, object.profile],
         toManyRelations: (FileDocument object) => {},
         getId: (FileDocument object) => object.id,
         setId: (FileDocument object, int id) {
@@ -3229,7 +1340,7 @@ ModelDefinition getObjectBoxModel() {
           final thumbnailOffset = object.thumbnail == null
               ? null
               : fbb.writeString(object.thumbnail!);
-          fbb.startTable(8);
+          fbb.startTable(9);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, uriOffset);
           fbb.addOffset(2, dataOffset);
@@ -3237,6 +1348,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(4, thumbnailOffset);
           fbb.addInt64(5, object.service.targetId);
           fbb.addInt64(6, object.relatedDatapoint.targetId);
+          fbb.addInt64(7, object.profile.targetId);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -3251,21 +1363,24 @@ ModelDefinition getObjectBoxModel() {
               data: const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 8, ''),
               thumbnail: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 12))
-            ..searchString = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 10, '');
+                  .vTableGetNullable(buffer, rootOffset, 12),
+              searchString: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 10, ''));
           object.service.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
           object.service.attach(store);
           object.relatedDatapoint.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
           object.relatedDatapoint.attach(store);
+          object.profile.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0);
+          object.profile.attach(store);
           return object;
         }),
     ImageDocument: EntityDefinition<ImageDocument>(
-        model: _entities[32],
+        model: _entities[11],
         toOneRelations: (ImageDocument object) =>
-            [object.service, object.relatedDatapoint],
+            [object.service, object.relatedDatapoint, object.profile],
         toManyRelations: (ImageDocument object) => {},
         getId: (ImageDocument object) => object.id,
         setId: (ImageDocument object, int id) {
@@ -3275,9 +1390,12 @@ ModelDefinition getObjectBoxModel() {
           final uriOffset = fbb.writeString(object.uri);
           final dataOffset = fbb.writeString(object.data);
           final searchStringOffset = fbb.writeString(object.searchString);
-          final mediaTagsOffset = fbb.writeList(
-              object.mediaTags.map(fbb.writeString).toList(growable: false));
-          fbb.startTable(8);
+          final mediaTagsOffset = object.mediaTags == null
+              ? null
+              : fbb.writeList(object.mediaTags!
+                  .map(fbb.writeString)
+                  .toList(growable: false));
+          fbb.startTable(9);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, uriOffset);
           fbb.addOffset(2, dataOffset);
@@ -3285,6 +1403,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(4, mediaTagsOffset);
           fbb.addInt64(5, object.service.targetId);
           fbb.addInt64(6, object.relatedDatapoint.targetId);
+          fbb.addInt64(7, object.profile.targetId);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -3297,25 +1416,28 @@ ModelDefinition getObjectBoxModel() {
               uri: const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 6, ''),
               data: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, ''))
-            ..searchString = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 10, '')
+                  .vTableGet(buffer, rootOffset, 8, ''),
+              searchString: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 10, ''))
             ..mediaTags = const fb.ListReader<String>(
                     fb.StringReader(asciiOptimization: true),
                     lazy: false)
-                .vTableGet(buffer, rootOffset, 12, []);
+                .vTableGetNullable(buffer, rootOffset, 12);
           object.service.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
           object.service.attach(store);
           object.relatedDatapoint.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
           object.relatedDatapoint.attach(store);
+          object.profile.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0);
+          object.profile.attach(store);
           return object;
         }),
     LinkDocument: EntityDefinition<LinkDocument>(
-        model: _entities[33],
+        model: _entities[12],
         toOneRelations: (LinkDocument object) =>
-            [object.service, object.relatedDatapoint],
+            [object.service, object.relatedDatapoint, object.profile],
         toManyRelations: (LinkDocument object) => {},
         getId: (LinkDocument object) => object.id,
         setId: (LinkDocument object, int id) {
@@ -3324,14 +1446,17 @@ ModelDefinition getObjectBoxModel() {
         objectToFB: (LinkDocument object, fb.Builder fbb) {
           final uriOffset = fbb.writeString(object.uri);
           final dataOffset = fbb.writeString(object.data);
-          final searchStringOffset = fbb.writeString(object.searchString);
-          fbb.startTable(7);
+          final searchStringOffset = object.searchString == null
+              ? null
+              : fbb.writeString(object.searchString!);
+          fbb.startTable(8);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, uriOffset);
           fbb.addOffset(2, dataOffset);
           fbb.addOffset(3, searchStringOffset);
           fbb.addInt64(4, object.service.targetId);
           fbb.addInt64(5, object.relatedDatapoint.targetId);
+          fbb.addInt64(6, object.profile.targetId);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -3344,19 +1469,22 @@ ModelDefinition getObjectBoxModel() {
               uri: const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 6, ''),
               data: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 8, ''))
-            ..searchString = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 10, '');
+                  .vTableGet(buffer, rootOffset, 8, ''),
+              searchString: const fb.StringReader(asciiOptimization: true)
+                  .vTableGetNullable(buffer, rootOffset, 10));
           object.service.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
           object.service.attach(store);
           object.relatedDatapoint.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
           object.relatedDatapoint.attach(store);
+          object.profile.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
+          object.profile.attach(store);
           return object;
         }),
     ServiceDocument: EntityDefinition<ServiceDocument>(
-        model: _entities[34],
+        model: _entities[13],
         toOneRelations: (ServiceDocument object) => [],
         toManyRelations: (ServiceDocument object) => {},
         getId: (ServiceDocument object) => object.id,
@@ -3394,9 +1522,9 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     VideoDocument: EntityDefinition<VideoDocument>(
-        model: _entities[35],
+        model: _entities[14],
         toOneRelations: (VideoDocument object) =>
-            [object.service, object.relatedDatapoint],
+            [object.service, object.relatedDatapoint, object.profile],
         toManyRelations: (VideoDocument object) => {},
         getId: (VideoDocument object) => object.id,
         setId: (VideoDocument object, int id) {
@@ -3409,7 +1537,7 @@ ModelDefinition getObjectBoxModel() {
           final thumbnailOffset = object.thumbnail == null
               ? null
               : fbb.writeString(object.thumbnail!);
-          fbb.startTable(8);
+          fbb.startTable(9);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, uriOffset);
           fbb.addOffset(2, dataOffset);
@@ -3417,6 +1545,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(4, thumbnailOffset);
           fbb.addInt64(5, object.service.targetId);
           fbb.addInt64(6, object.relatedDatapoint.targetId);
+          fbb.addInt64(7, object.profile.targetId);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -3431,15 +1560,57 @@ ModelDefinition getObjectBoxModel() {
               data: const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 8, ''),
               thumbnail: const fb.StringReader(asciiOptimization: true)
-                  .vTableGetNullable(buffer, rootOffset, 12))
-            ..searchString = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 10, '');
+                  .vTableGetNullable(buffer, rootOffset, 12),
+              searchString: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 10, ''));
           object.service.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
           object.service.attach(store);
           object.relatedDatapoint.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
           object.relatedDatapoint.attach(store);
+          object.profile.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0);
+          object.profile.attach(store);
+          return object;
+        }),
+    ProfileDocument: EntityDefinition<ProfileDocument>(
+        model: _entities[15],
+        toOneRelations: (ProfileDocument object) =>
+            [object.service, object.dataPoint, object.profilePicture],
+        toManyRelations: (ProfileDocument object) => {},
+        getId: (ProfileDocument object) => object.id,
+        setId: (ProfileDocument object, int id) {
+          object.id = id;
+        },
+        objectToFB: (ProfileDocument object, fb.Builder fbb) {
+          final nameOffset = fbb.writeString(object.name);
+          fbb.startTable(7);
+          fbb.addInt64(0, object.id);
+          fbb.addOffset(1, nameOffset);
+          fbb.addInt64(2, object.service.targetId);
+          fbb.addInt64(3, object.dataPoint.targetId);
+          fbb.addInt64(4, object.profilePicture.targetId);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = ProfileDocument(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              name: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 6, ''));
+          object.service.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0);
+          object.service.attach(store);
+          object.dataPoint.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
+          object.dataPoint.attach(store);
+          object.profilePicture.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
+          object.profilePicture.attach(store);
           return object;
         })
   };
@@ -3447,1085 +1618,425 @@ ModelDefinition getObjectBoxModel() {
   return ModelDefinition(model, bindings);
 }
 
-/// [ActivityObjectBox] entity fields to define ObjectBox queries.
-class ActivityObjectBox_ {
-  /// see [ActivityObjectBox.id]
-  static final id =
-      QueryIntegerProperty<ActivityObjectBox>(_entities[0].properties[0]);
-
-  /// see [ActivityObjectBox.raw]
-  static final raw =
-      QueryStringProperty<ActivityObjectBox>(_entities[0].properties[1]);
-
-  /// see [ActivityObjectBox.timestamp]
-  static final timestamp =
-      QueryIntegerProperty<ActivityObjectBox>(_entities[0].properties[2]);
-}
-
 /// [AppSettingsObjectBox] entity fields to define ObjectBox queries.
 class AppSettingsObjectBox_ {
   /// see [AppSettingsObjectBox.id]
   static final id =
-      QueryIntegerProperty<AppSettingsObjectBox>(_entities[1].properties[0]);
+      QueryIntegerProperty<AppSettingsObjectBox>(_entities[0].properties[0]);
 
   /// see [AppSettingsObjectBox.darkmode]
   static final darkmode =
-      QueryBooleanProperty<AppSettingsObjectBox>(_entities[1].properties[1]);
-}
-
-/// [ChangeObjectBox] entity fields to define ObjectBox queries.
-class ChangeObjectBox_ {
-  /// see [ChangeObjectBox.id]
-  static final id =
-      QueryIntegerProperty<ChangeObjectBox>(_entities[2].properties[0]);
-
-  /// see [ChangeObjectBox.raw]
-  static final raw =
-      QueryStringProperty<ChangeObjectBox>(_entities[2].properties[1]);
-
-  /// see [ChangeObjectBox.valueName]
-  static final valueName =
-      QueryStringProperty<ChangeObjectBox>(_entities[2].properties[2]);
-
-  /// see [ChangeObjectBox.previousValue]
-  static final previousValue =
-      QueryStringProperty<ChangeObjectBox>(_entities[2].properties[3]);
-
-  /// see [ChangeObjectBox.newValue]
-  static final newValue =
-      QueryStringProperty<ChangeObjectBox>(_entities[2].properties[4]);
-
-  /// see [ChangeObjectBox.timestamp]
-  static final timestamp =
-      QueryIntegerProperty<ChangeObjectBox>(_entities[2].properties[5]);
-}
-
-/// [CommentObjectBox] entity fields to define ObjectBox queries.
-class CommentObjectBox_ {
-  /// see [CommentObjectBox.id]
-  static final id =
-      QueryIntegerProperty<CommentObjectBox>(_entities[3].properties[0]);
-
-  /// see [CommentObjectBox.commented]
-  static final commented =
-      QueryRelationToOne<CommentObjectBox, PersonObjectBox>(
-          _entities[3].properties[1]);
-
-  /// see [CommentObjectBox.text]
-  static final text =
-      QueryStringProperty<CommentObjectBox>(_entities[3].properties[2]);
-
-  /// see [CommentObjectBox.timestamp]
-  static final timestamp =
-      QueryIntegerProperty<CommentObjectBox>(_entities[3].properties[3]);
-
-  /// see [CommentObjectBox.group]
-  static final group = QueryRelationToOne<CommentObjectBox, GroupObjectBox>(
-      _entities[3].properties[4]);
-
-  /// see [CommentObjectBox.event]
-  static final event = QueryRelationToOne<CommentObjectBox, EventObjectBox>(
-      _entities[3].properties[5]);
-
-  /// see [CommentObjectBox.profile]
-  static final profile = QueryRelationToOne<CommentObjectBox, ProfileObjectBox>(
-      _entities[3].properties[6]);
-
-  /// see [CommentObjectBox.textSearch]
-  static final textSearch =
-      QueryStringProperty<CommentObjectBox>(_entities[3].properties[7]);
-
-  /// see [CommentObjectBox.images]
-  static final images = QueryRelationToMany<CommentObjectBox, ImageObjectBox>(
-      _entities[3].relations[0]);
-
-  /// see [CommentObjectBox.videos]
-  static final videos = QueryRelationToMany<CommentObjectBox, VideoObjectBox>(
-      _entities[3].relations[1]);
-
-  /// see [CommentObjectBox.files]
-  static final files = QueryRelationToMany<CommentObjectBox, FileObjectBox>(
-      _entities[3].relations[2]);
-
-  /// see [CommentObjectBox.links]
-  static final links = QueryRelationToMany<CommentObjectBox, LinkObjectBox>(
-      _entities[3].relations[3]);
-}
-
-/// [CoordinateObjectBox] entity fields to define ObjectBox queries.
-class CoordinateObjectBox_ {
-  /// see [CoordinateObjectBox.id]
-  static final id =
-      QueryIntegerProperty<CoordinateObjectBox>(_entities[4].properties[0]);
-
-  /// see [CoordinateObjectBox.longitude]
-  static final longitude =
-      QueryDoubleProperty<CoordinateObjectBox>(_entities[4].properties[1]);
-
-  /// see [CoordinateObjectBox.latitude]
-  static final latitude =
-      QueryDoubleProperty<CoordinateObjectBox>(_entities[4].properties[2]);
+      QueryBooleanProperty<AppSettingsObjectBox>(_entities[0].properties[1]);
 }
 
 /// [DataCategory] entity fields to define ObjectBox queries.
 class DataCategory_ {
   /// see [DataCategory.id]
   static final id =
-      QueryIntegerProperty<DataCategory>(_entities[5].properties[0]);
+      QueryIntegerProperty<DataCategory>(_entities[1].properties[0]);
 
   /// see [DataCategory.count]
   static final count =
-      QueryIntegerProperty<DataCategory>(_entities[5].properties[1]);
+      QueryIntegerProperty<DataCategory>(_entities[1].properties[1]);
 
   /// see [DataCategory.matchingFolders]
   static final matchingFolders =
-      QueryStringVectorProperty<DataCategory>(_entities[5].properties[2]);
+      QueryStringVectorProperty<DataCategory>(_entities[1].properties[2]);
 
   /// see [DataCategory.name]
   static final name =
-      QueryStringProperty<DataCategory>(_entities[5].properties[3]);
+      QueryStringProperty<DataCategory>(_entities[1].properties[3]);
 }
 
 /// [DataPoint] entity fields to define ObjectBox queries.
 class DataPoint_ {
   /// see [DataPoint.id]
-  static final id = QueryIntegerProperty<DataPoint>(_entities[6].properties[0]);
+  static final id = QueryIntegerProperty<DataPoint>(_entities[2].properties[0]);
 
   /// see [DataPoint.dataPointName]
   static final dataPointName =
-      QueryRelationToOne<DataPoint, DataPointName>(_entities[6].properties[1]);
+      QueryRelationToOne<DataPoint, DataPointName>(_entities[2].properties[1]);
 
   /// see [DataPoint.stringName]
   static final stringName =
-      QueryStringProperty<DataPoint>(_entities[6].properties[2]);
+      QueryStringProperty<DataPoint>(_entities[2].properties[2]);
 
   /// see [DataPoint.category]
   static final category =
-      QueryRelationToOne<DataPoint, DataCategory>(_entities[6].properties[3]);
+      QueryRelationToOne<DataPoint, DataCategory>(_entities[2].properties[3]);
 
   /// see [DataPoint.service]
   static final service = QueryRelationToOne<DataPoint, ServiceDocument>(
-      _entities[6].properties[4]);
-
-  /// see [DataPoint.searchString]
-  static final searchString =
-      QueryStringProperty<DataPoint>(_entities[6].properties[5]);
+      _entities[2].properties[4]);
 
   /// see [DataPoint.values]
   static final values =
-      QueryStringProperty<DataPoint>(_entities[6].properties[6]);
+      QueryStringProperty<DataPoint>(_entities[2].properties[5]);
+
+  /// see [DataPoint.profile]
+  static final profile = QueryRelationToOne<DataPoint, ProfileDocument>(
+      _entities[2].properties[6]);
+
+  /// see [DataPoint.searchStrings]
+  static final searchStrings =
+      QueryStringVectorProperty<DataPoint>(_entities[2].properties[7]);
 
   /// see [DataPoint.images]
   static final images =
-      QueryRelationToMany<DataPoint, ImageDocument>(_entities[6].relations[0]);
+      QueryRelationToMany<DataPoint, ImageDocument>(_entities[2].relations[0]);
 
   /// see [DataPoint.videos]
   static final videos =
-      QueryRelationToMany<DataPoint, VideoDocument>(_entities[6].relations[1]);
+      QueryRelationToMany<DataPoint, VideoDocument>(_entities[2].relations[1]);
 
   /// see [DataPoint.files]
   static final files =
-      QueryRelationToMany<DataPoint, FileDocument>(_entities[6].relations[2]);
+      QueryRelationToMany<DataPoint, FileDocument>(_entities[2].relations[2]);
 
   /// see [DataPoint.links]
   static final links =
-      QueryRelationToMany<DataPoint, LinkDocument>(_entities[6].relations[3]);
+      QueryRelationToMany<DataPoint, LinkDocument>(_entities[2].relations[3]);
 }
 
 /// [DataPointName] entity fields to define ObjectBox queries.
 class DataPointName_ {
   /// see [DataPointName.id]
   static final id =
-      QueryIntegerProperty<DataPointName>(_entities[7].properties[0]);
+      QueryIntegerProperty<DataPointName>(_entities[3].properties[0]);
 
   /// see [DataPointName.count]
   static final count =
-      QueryIntegerProperty<DataPointName>(_entities[7].properties[1]);
+      QueryIntegerProperty<DataPointName>(_entities[3].properties[1]);
 
   /// see [DataPointName.name]
   static final name =
-      QueryStringProperty<DataPointName>(_entities[7].properties[2]);
+      QueryStringProperty<DataPointName>(_entities[3].properties[2]);
 
   /// see [DataPointName.dataCategory]
   static final dataCategory = QueryRelationToOne<DataPointName, DataCategory>(
-      _entities[7].properties[3]);
+      _entities[3].properties[3]);
 
   /// see [DataPointName.parent]
   static final parent = QueryRelationToOne<DataPointName, DataPointName>(
-      _entities[7].properties[4]);
+      _entities[3].properties[4]);
+
+  /// see [DataPointName.service]
+  static final service = QueryRelationToOne<DataPointName, ServiceDocument>(
+      _entities[3].properties[5]);
 
   /// see [DataPointName.children]
   static final children = QueryRelationToMany<DataPointName, DataPointName>(
-      _entities[7].relations[0]);
+      _entities[3].relations[0]);
 }
 
 /// [DayBucket] entity fields to define ObjectBox queries.
 class DayBucket_ {
   /// see [DayBucket.id]
-  static final id = QueryIntegerProperty<DayBucket>(_entities[8].properties[0]);
+  static final id = QueryIntegerProperty<DayBucket>(_entities[4].properties[0]);
 
   /// see [DayBucket.day]
   static final day =
-      QueryIntegerProperty<DayBucket>(_entities[8].properties[1]);
+      QueryIntegerProperty<DayBucket>(_entities[4].properties[1]);
 
   /// see [DayBucket.total]
   static final total =
-      QueryIntegerProperty<DayBucket>(_entities[8].properties[2]);
+      QueryIntegerProperty<DayBucket>(_entities[4].properties[2]);
 
   /// see [DayBucket.stringMap]
   static final stringMap =
-      QueryStringProperty<DayBucket>(_entities[8].properties[3]);
+      QueryStringProperty<DayBucket>(_entities[4].properties[3]);
 
   /// see [DayBucket.month]
   static final month =
-      QueryRelationToOne<DayBucket, MonthBucket>(_entities[8].properties[4]);
+      QueryRelationToOne<DayBucket, MonthBucket>(_entities[4].properties[4]);
 
-  /// see [DayBucket.posts]
-  static final posts =
-      QueryRelationToMany<DayBucket, PostObjectBox>(_entities[8].relations[0]);
-
-  /// see [DayBucket.groups]
-  static final groups =
-      QueryRelationToMany<DayBucket, GroupObjectBox>(_entities[8].relations[1]);
-
-  /// see [DayBucket.events]
-  static final events =
-      QueryRelationToMany<DayBucket, EventObjectBox>(_entities[8].relations[2]);
+  /// see [DayBucket.dataPoints]
+  static final dataPoints =
+      QueryRelationToMany<DayBucket, DataPoint>(_entities[4].relations[0]);
 }
 
 /// [EmailObjectBox] entity fields to define ObjectBox queries.
 class EmailObjectBox_ {
   /// see [EmailObjectBox.id]
   static final id =
-      QueryIntegerProperty<EmailObjectBox>(_entities[9].properties[0]);
+      QueryIntegerProperty<EmailObjectBox>(_entities[5].properties[0]);
 
   /// see [EmailObjectBox.raw]
   static final raw =
-      QueryStringProperty<EmailObjectBox>(_entities[9].properties[1]);
+      QueryStringProperty<EmailObjectBox>(_entities[5].properties[1]);
 
   /// see [EmailObjectBox.email]
   static final email =
-      QueryStringProperty<EmailObjectBox>(_entities[9].properties[2]);
+      QueryStringProperty<EmailObjectBox>(_entities[5].properties[2]);
 
   /// see [EmailObjectBox.isCurrent]
   static final isCurrent =
-      QueryBooleanProperty<EmailObjectBox>(_entities[9].properties[3]);
-}
-
-/// [EventObjectBox] entity fields to define ObjectBox queries.
-class EventObjectBox_ {
-  /// see [EventObjectBox.id]
-  static final id =
-      QueryIntegerProperty<EventObjectBox>(_entities[10].properties[0]);
-
-  /// see [EventObjectBox.profile]
-  static final profile = QueryRelationToOne<EventObjectBox, ProfileObjectBox>(
-      _entities[10].properties[1]);
-
-  /// see [EventObjectBox.raw]
-  static final raw =
-      QueryStringProperty<EventObjectBox>(_entities[10].properties[2]);
-
-  /// see [EventObjectBox.name]
-  static final name =
-      QueryStringProperty<EventObjectBox>(_entities[10].properties[3]);
-
-  /// see [EventObjectBox.startTimestamp]
-  static final startTimestamp =
-      QueryIntegerProperty<EventObjectBox>(_entities[10].properties[4]);
-
-  /// see [EventObjectBox.endTimestamp]
-  static final endTimestamp =
-      QueryIntegerProperty<EventObjectBox>(_entities[10].properties[5]);
-
-  /// see [EventObjectBox.createdTimestamp]
-  static final createdTimestamp =
-      QueryIntegerProperty<EventObjectBox>(_entities[10].properties[6]);
-
-  /// see [EventObjectBox.description]
-  static final description =
-      QueryStringProperty<EventObjectBox>(_entities[10].properties[7]);
-
-  /// see [EventObjectBox.isUsers]
-  static final isUsers =
-      QueryBooleanProperty<EventObjectBox>(_entities[10].properties[8]);
-
-  /// see [EventObjectBox.place]
-  static final place = QueryRelationToOne<EventObjectBox, PlaceObjectBox>(
-      _entities[10].properties[9]);
-
-  /// see [EventObjectBox.dbEventResponse]
-  static final dbEventResponse =
-      QueryIntegerProperty<EventObjectBox>(_entities[10].properties[10]);
-}
-
-/// [FileObjectBox] entity fields to define ObjectBox queries.
-class FileObjectBox_ {
-  /// see [FileObjectBox.id]
-  static final id =
-      QueryIntegerProperty<FileObjectBox>(_entities[11].properties[0]);
-
-  /// see [FileObjectBox.profile]
-  static final profile = QueryRelationToOne<FileObjectBox, ProfileObjectBox>(
-      _entities[11].properties[1]);
-
-  /// see [FileObjectBox.raw]
-  static final raw =
-      QueryStringProperty<FileObjectBox>(_entities[11].properties[2]);
-
-  /// see [FileObjectBox.uri]
-  static final uri =
-      QueryStringProperty<FileObjectBox>(_entities[11].properties[3]);
-
-  /// see [FileObjectBox.metadata]
-  static final metadata =
-      QueryStringProperty<FileObjectBox>(_entities[11].properties[4]);
-
-  /// see [FileObjectBox.timestamp]
-  static final timestamp =
-      QueryIntegerProperty<FileObjectBox>(_entities[11].properties[5]);
-
-  /// see [FileObjectBox.thumbnail]
-  static final thumbnail =
-      QueryStringProperty<FileObjectBox>(_entities[11].properties[6]);
-
-  /// see [FileObjectBox.textSearch]
-  static final textSearch =
-      QueryStringProperty<FileObjectBox>(_entities[11].properties[7]);
-}
-
-/// [FriendObjectBox] entity fields to define ObjectBox queries.
-class FriendObjectBox_ {
-  /// see [FriendObjectBox.id]
-  static final id =
-      QueryIntegerProperty<FriendObjectBox>(_entities[12].properties[0]);
-
-  /// see [FriendObjectBox.profile]
-  static final profile = QueryRelationToOne<FriendObjectBox, ProfileObjectBox>(
-      _entities[12].properties[1]);
-
-  /// see [FriendObjectBox.timestamp]
-  static final timestamp =
-      QueryIntegerProperty<FriendObjectBox>(_entities[12].properties[2]);
-
-  /// see [FriendObjectBox.raw]
-  static final raw =
-      QueryStringProperty<FriendObjectBox>(_entities[12].properties[3]);
-
-  /// see [FriendObjectBox.dbFriendType]
-  static final dbFriendType =
-      QueryIntegerProperty<FriendObjectBox>(_entities[12].properties[4]);
-}
-
-/// [GroupObjectBox] entity fields to define ObjectBox queries.
-class GroupObjectBox_ {
-  /// see [GroupObjectBox.id]
-  static final id =
-      QueryIntegerProperty<GroupObjectBox>(_entities[13].properties[0]);
-
-  /// see [GroupObjectBox.profile]
-  static final profile = QueryRelationToOne<GroupObjectBox, ProfileObjectBox>(
-      _entities[13].properties[1]);
-
-  /// see [GroupObjectBox.raw]
-  static final raw =
-      QueryStringProperty<GroupObjectBox>(_entities[13].properties[2]);
-
-  /// see [GroupObjectBox.name]
-  static final name =
-      QueryStringProperty<GroupObjectBox>(_entities[13].properties[3]);
-
-  /// see [GroupObjectBox.isUsers]
-  static final isUsers =
-      QueryBooleanProperty<GroupObjectBox>(_entities[13].properties[4]);
-
-  /// see [GroupObjectBox.badge]
-  static final badge =
-      QueryStringProperty<GroupObjectBox>(_entities[13].properties[5]);
-
-  /// see [GroupObjectBox.timestamp]
-  static final timestamp =
-      QueryIntegerProperty<GroupObjectBox>(_entities[13].properties[6]);
-}
-
-/// [ImageObjectBox] entity fields to define ObjectBox queries.
-class ImageObjectBox_ {
-  /// see [ImageObjectBox.id]
-  static final id =
-      QueryIntegerProperty<ImageObjectBox>(_entities[14].properties[0]);
-
-  /// see [ImageObjectBox.profile]
-  static final profile = QueryRelationToOne<ImageObjectBox, ProfileObjectBox>(
-      _entities[14].properties[1]);
-
-  /// see [ImageObjectBox.uri]
-  static final uri =
-      QueryStringProperty<ImageObjectBox>(_entities[14].properties[2]);
-
-  /// see [ImageObjectBox.metadata]
-  static final metadata =
-      QueryStringProperty<ImageObjectBox>(_entities[14].properties[3]);
-
-  /// see [ImageObjectBox.timestamp]
-  static final timestamp =
-      QueryIntegerProperty<ImageObjectBox>(_entities[14].properties[4]);
-
-  /// see [ImageObjectBox.title]
-  static final title =
-      QueryStringProperty<ImageObjectBox>(_entities[14].properties[5]);
-
-  /// see [ImageObjectBox.description]
-  static final description =
-      QueryStringProperty<ImageObjectBox>(_entities[14].properties[6]);
-
-  /// see [ImageObjectBox.raw]
-  static final raw =
-      QueryStringProperty<ImageObjectBox>(_entities[14].properties[7]);
-
-  /// see [ImageObjectBox.textSearch]
-  static final textSearch =
-      QueryStringProperty<ImageObjectBox>(_entities[14].properties[8]);
-
-  /// see [ImageObjectBox.mediaTags]
-  static final mediaTags =
-      QueryStringVectorProperty<ImageObjectBox>(_entities[14].properties[9]);
-}
-
-/// [LinkObjectBox] entity fields to define ObjectBox queries.
-class LinkObjectBox_ {
-  /// see [LinkObjectBox.id]
-  static final id =
-      QueryIntegerProperty<LinkObjectBox>(_entities[15].properties[0]);
-
-  /// see [LinkObjectBox.uri]
-  static final uri =
-      QueryStringProperty<LinkObjectBox>(_entities[15].properties[1]);
-
-  /// see [LinkObjectBox.metadata]
-  static final metadata =
-      QueryStringProperty<LinkObjectBox>(_entities[15].properties[2]);
-
-  /// see [LinkObjectBox.timestamp]
-  static final timestamp =
-      QueryIntegerProperty<LinkObjectBox>(_entities[15].properties[3]);
-
-  /// see [LinkObjectBox.profile]
-  static final profile = QueryRelationToOne<LinkObjectBox, ProfileObjectBox>(
-      _entities[15].properties[4]);
-
-  /// see [LinkObjectBox.source]
-  static final source =
-      QueryStringProperty<LinkObjectBox>(_entities[15].properties[5]);
-
-  /// see [LinkObjectBox.raw]
-  static final raw =
-      QueryStringProperty<LinkObjectBox>(_entities[15].properties[6]);
-
-  /// see [LinkObjectBox.textSearch]
-  static final textSearch =
-      QueryStringProperty<LinkObjectBox>(_entities[15].properties[7]);
+      QueryBooleanProperty<EmailObjectBox>(_entities[5].properties[3]);
 }
 
 /// [MonthBucket] entity fields to define ObjectBox queries.
 class MonthBucket_ {
   /// see [MonthBucket.id]
   static final id =
-      QueryIntegerProperty<MonthBucket>(_entities[16].properties[0]);
+      QueryIntegerProperty<MonthBucket>(_entities[6].properties[0]);
 
   /// see [MonthBucket.month]
   static final month =
-      QueryIntegerProperty<MonthBucket>(_entities[16].properties[1]);
+      QueryIntegerProperty<MonthBucket>(_entities[6].properties[1]);
 
   /// see [MonthBucket.total]
   static final total =
-      QueryIntegerProperty<MonthBucket>(_entities[16].properties[2]);
+      QueryIntegerProperty<MonthBucket>(_entities[6].properties[2]);
 
   /// see [MonthBucket.stringMap]
   static final stringMap =
-      QueryStringProperty<MonthBucket>(_entities[16].properties[3]);
+      QueryStringProperty<MonthBucket>(_entities[6].properties[3]);
 
   /// see [MonthBucket.year]
   static final year =
-      QueryRelationToOne<MonthBucket, YearBucket>(_entities[16].properties[4]);
+      QueryRelationToOne<MonthBucket, YearBucket>(_entities[6].properties[4]);
 
   /// see [MonthBucket.days]
   static final days =
-      QueryRelationToMany<MonthBucket, DayBucket>(_entities[16].relations[0]);
-}
-
-/// [PageObjectBox] entity fields to define ObjectBox queries.
-class PageObjectBox_ {
-  /// see [PageObjectBox.id]
-  static final id =
-      QueryIntegerProperty<PageObjectBox>(_entities[17].properties[0]);
-
-  /// see [PageObjectBox.raw]
-  static final raw =
-      QueryStringProperty<PageObjectBox>(_entities[17].properties[1]);
-
-  /// see [PageObjectBox.profile]
-  static final profile = QueryRelationToOne<PageObjectBox, ProfileObjectBox>(
-      _entities[17].properties[2]);
-
-  /// see [PageObjectBox.name]
-  static final name =
-      QueryStringProperty<PageObjectBox>(_entities[17].properties[3]);
-
-  /// see [PageObjectBox.isUsers]
-  static final isUsers =
-      QueryBooleanProperty<PageObjectBox>(_entities[17].properties[4]);
-
-  /// see [PageObjectBox.uri]
-  static final uri =
-      QueryStringProperty<PageObjectBox>(_entities[17].properties[5]);
-}
-
-/// [PersonObjectBox] entity fields to define ObjectBox queries.
-class PersonObjectBox_ {
-  /// see [PersonObjectBox.id]
-  static final id =
-      QueryIntegerProperty<PersonObjectBox>(_entities[18].properties[0]);
-
-  /// see [PersonObjectBox.profile]
-  static final profile = QueryRelationToOne<PersonObjectBox, ProfileObjectBox>(
-      _entities[18].properties[1]);
-
-  /// see [PersonObjectBox.raw]
-  static final raw =
-      QueryStringProperty<PersonObjectBox>(_entities[18].properties[2]);
-
-  /// see [PersonObjectBox.name]
-  static final name =
-      QueryStringProperty<PersonObjectBox>(_entities[18].properties[3]);
-
-  /// see [PersonObjectBox.uri]
-  static final uri =
-      QueryStringProperty<PersonObjectBox>(_entities[18].properties[4]);
-}
-
-/// [PlaceObjectBox] entity fields to define ObjectBox queries.
-class PlaceObjectBox_ {
-  /// see [PlaceObjectBox.id]
-  static final id =
-      QueryIntegerProperty<PlaceObjectBox>(_entities[19].properties[0]);
-
-  /// see [PlaceObjectBox.profile]
-  static final profile = QueryRelationToOne<PlaceObjectBox, ProfileObjectBox>(
-      _entities[19].properties[1]);
-
-  /// see [PlaceObjectBox.raw]
-  static final raw =
-      QueryStringProperty<PlaceObjectBox>(_entities[19].properties[2]);
-
-  /// see [PlaceObjectBox.name]
-  static final name =
-      QueryStringProperty<PlaceObjectBox>(_entities[19].properties[3]);
-
-  /// see [PlaceObjectBox.address]
-  static final address =
-      QueryStringProperty<PlaceObjectBox>(_entities[19].properties[4]);
-
-  /// see [PlaceObjectBox.coordinate]
-  static final coordinate =
-      QueryRelationToOne<PlaceObjectBox, CoordinateObjectBox>(
-          _entities[19].properties[5]);
-
-  /// see [PlaceObjectBox.uri]
-  static final uri =
-      QueryStringProperty<PlaceObjectBox>(_entities[19].properties[6]);
-}
-
-/// [PostEventObjectBox] entity fields to define ObjectBox queries.
-class PostEventObjectBox_ {
-  /// see [PostEventObjectBox.id]
-  static final id =
-      QueryIntegerProperty<PostEventObjectBox>(_entities[20].properties[0]);
-
-  /// see [PostEventObjectBox.post]
-  static final post = QueryRelationToOne<PostEventObjectBox, PostObjectBox>(
-      _entities[20].properties[1]);
-
-  /// see [PostEventObjectBox.event]
-  static final event = QueryRelationToOne<PostEventObjectBox, EventObjectBox>(
-      _entities[20].properties[2]);
-}
-
-/// [PostGroupObjectBox] entity fields to define ObjectBox queries.
-class PostGroupObjectBox_ {
-  /// see [PostGroupObjectBox.id]
-  static final id =
-      QueryIntegerProperty<PostGroupObjectBox>(_entities[21].properties[0]);
-
-  /// see [PostGroupObjectBox.post]
-  static final post = QueryRelationToOne<PostGroupObjectBox, PostObjectBox>(
-      _entities[21].properties[1]);
-
-  /// see [PostGroupObjectBox.group]
-  static final group = QueryRelationToOne<PostGroupObjectBox, GroupObjectBox>(
-      _entities[21].properties[2]);
-}
-
-/// [PostLifeEventObjectBox] entity fields to define ObjectBox queries.
-class PostLifeEventObjectBox_ {
-  /// see [PostLifeEventObjectBox.id]
-  static final id =
-      QueryIntegerProperty<PostLifeEventObjectBox>(_entities[22].properties[0]);
-
-  /// see [PostLifeEventObjectBox.raw]
-  static final raw =
-      QueryStringProperty<PostLifeEventObjectBox>(_entities[22].properties[1]);
-
-  /// see [PostLifeEventObjectBox.profile]
-  static final profile =
-      QueryRelationToOne<PostLifeEventObjectBox, ProfileObjectBox>(
-          _entities[22].properties[2]);
-
-  /// see [PostLifeEventObjectBox.post]
-  static final post = QueryRelationToOne<PostLifeEventObjectBox, PostObjectBox>(
-      _entities[22].properties[3]);
-
-  /// see [PostLifeEventObjectBox.title]
-  static final title =
-      QueryStringProperty<PostLifeEventObjectBox>(_entities[22].properties[4]);
-
-  /// see [PostLifeEventObjectBox.place]
-  static final place =
-      QueryRelationToOne<PostLifeEventObjectBox, PlaceObjectBox>(
-          _entities[22].properties[5]);
-}
-
-/// [PostObjectBox] entity fields to define ObjectBox queries.
-class PostObjectBox_ {
-  /// see [PostObjectBox.id]
-  static final id =
-      QueryIntegerProperty<PostObjectBox>(_entities[23].properties[0]);
-
-  /// see [PostObjectBox.raw]
-  static final raw =
-      QueryStringProperty<PostObjectBox>(_entities[23].properties[1]);
-
-  /// see [PostObjectBox.profile]
-  static final profile = QueryRelationToOne<PostObjectBox, ProfileObjectBox>(
-      _entities[23].properties[2]);
-
-  /// see [PostObjectBox.timestamp]
-  static final timestamp =
-      QueryIntegerProperty<PostObjectBox>(_entities[23].properties[3]);
-
-  /// see [PostObjectBox.description]
-  static final description =
-      QueryStringProperty<PostObjectBox>(_entities[23].properties[4]);
-
-  /// see [PostObjectBox.title]
-  static final title =
-      QueryStringProperty<PostObjectBox>(_entities[23].properties[5]);
-
-  /// see [PostObjectBox.isArchived]
-  static final isArchived =
-      QueryBooleanProperty<PostObjectBox>(_entities[23].properties[6]);
-
-  /// see [PostObjectBox.metadata]
-  static final metadata =
-      QueryStringProperty<PostObjectBox>(_entities[23].properties[7]);
-
-  /// see [PostObjectBox.textSearch]
-  static final textSearch =
-      QueryStringProperty<PostObjectBox>(_entities[23].properties[8]);
-
-  /// see [PostObjectBox.images]
-  static final images = QueryRelationToMany<PostObjectBox, ImageObjectBox>(
-      _entities[23].relations[0]);
-
-  /// see [PostObjectBox.videos]
-  static final videos = QueryRelationToMany<PostObjectBox, VideoObjectBox>(
-      _entities[23].relations[1]);
-
-  /// see [PostObjectBox.files]
-  static final files = QueryRelationToMany<PostObjectBox, FileObjectBox>(
-      _entities[23].relations[2]);
-
-  /// see [PostObjectBox.links]
-  static final links = QueryRelationToMany<PostObjectBox, LinkObjectBox>(
-      _entities[23].relations[3]);
-
-  /// see [PostObjectBox.mentions]
-  static final mentions = QueryRelationToMany<PostObjectBox, PersonObjectBox>(
-      _entities[23].relations[4]);
-
-  /// see [PostObjectBox.tags]
-  static final tags = QueryRelationToMany<PostObjectBox, TagObjectBox>(
-      _entities[23].relations[5]);
-}
-
-/// [PostPollObjectBox] entity fields to define ObjectBox queries.
-class PostPollObjectBox_ {
-  /// see [PostPollObjectBox.id]
-  static final id =
-      QueryIntegerProperty<PostPollObjectBox>(_entities[24].properties[0]);
-
-  /// see [PostPollObjectBox.post]
-  static final post = QueryRelationToOne<PostPollObjectBox, PostObjectBox>(
-      _entities[24].properties[1]);
-
-  /// see [PostPollObjectBox.isUsers]
-  static final isUsers =
-      QueryBooleanProperty<PostPollObjectBox>(_entities[24].properties[2]);
-
-  /// see [PostPollObjectBox.options]
-  static final options =
-      QueryStringVectorProperty<PostPollObjectBox>(_entities[24].properties[3]);
-
-  /// see [PostPollObjectBox.timestamp]
-  static final timestamp =
-      QueryIntegerProperty<PostPollObjectBox>(_entities[24].properties[4]);
-}
-
-/// [ProfileObjectBox] entity fields to define ObjectBox queries.
-class ProfileObjectBox_ {
-  /// see [ProfileObjectBox.id]
-  static final id =
-      QueryIntegerProperty<ProfileObjectBox>(_entities[25].properties[0]);
-
-  /// see [ProfileObjectBox.service]
-  static final service = QueryRelationToOne<ProfileObjectBox, ServiceObjectBox>(
-      _entities[25].properties[1]);
-
-  /// see [ProfileObjectBox.uri]
-  static final uri =
-      QueryStringProperty<ProfileObjectBox>(_entities[25].properties[2]);
-
-  /// see [ProfileObjectBox.username]
-  static final username =
-      QueryStringProperty<ProfileObjectBox>(_entities[25].properties[3]);
-
-  /// see [ProfileObjectBox.fullName]
-  static final fullName =
-      QueryStringProperty<ProfileObjectBox>(_entities[25].properties[4]);
-
-  /// see [ProfileObjectBox.profilePicture]
-  static final profilePicture =
-      QueryRelationToOne<ProfileObjectBox, ImageObjectBox>(
-          _entities[25].properties[5]);
-
-  /// see [ProfileObjectBox.gender]
-  static final gender =
-      QueryStringProperty<ProfileObjectBox>(_entities[25].properties[6]);
-
-  /// see [ProfileObjectBox.bio]
-  static final bio =
-      QueryStringProperty<ProfileObjectBox>(_entities[25].properties[7]);
-
-  /// see [ProfileObjectBox.currentCity]
-  static final currentCity =
-      QueryStringProperty<ProfileObjectBox>(_entities[25].properties[8]);
-
-  /// see [ProfileObjectBox.phoneNumbers]
-  static final phoneNumbers =
-      QueryStringVectorProperty<ProfileObjectBox>(_entities[25].properties[9]);
-
-  /// see [ProfileObjectBox.isPhoneConfirmed]
-  static final isPhoneConfirmed =
-      QueryBooleanProperty<ProfileObjectBox>(_entities[25].properties[10]);
-
-  /// see [ProfileObjectBox.createdTimestamp]
-  static final createdTimestamp =
-      QueryIntegerProperty<ProfileObjectBox>(_entities[25].properties[11]);
-
-  /// see [ProfileObjectBox.isPrivate]
-  static final isPrivate =
-      QueryBooleanProperty<ProfileObjectBox>(_entities[25].properties[12]);
-
-  /// see [ProfileObjectBox.websites]
-  static final websites =
-      QueryStringVectorProperty<ProfileObjectBox>(_entities[25].properties[13]);
-
-  /// see [ProfileObjectBox.dateOfBirth]
-  static final dateOfBirth =
-      QueryIntegerProperty<ProfileObjectBox>(_entities[25].properties[14]);
-
-  /// see [ProfileObjectBox.bloodInfo]
-  static final bloodInfo =
-      QueryStringProperty<ProfileObjectBox>(_entities[25].properties[15]);
-
-  /// see [ProfileObjectBox.friendPeerGroup]
-  static final friendPeerGroup =
-      QueryStringProperty<ProfileObjectBox>(_entities[25].properties[16]);
-
-  /// see [ProfileObjectBox.eligibility]
-  static final eligibility =
-      QueryStringProperty<ProfileObjectBox>(_entities[25].properties[17]);
-
-  /// see [ProfileObjectBox.metadata]
-  static final metadata =
-      QueryStringVectorProperty<ProfileObjectBox>(_entities[25].properties[18]);
-
-  /// see [ProfileObjectBox.basePathToFiles]
-  static final basePathToFiles =
-      QueryStringProperty<ProfileObjectBox>(_entities[25].properties[19]);
-
-  /// see [ProfileObjectBox.raw]
-  static final raw =
-      QueryStringProperty<ProfileObjectBox>(_entities[25].properties[20]);
-
-  /// see [ProfileObjectBox.emails]
-  static final emails = QueryRelationToMany<ProfileObjectBox, EmailObjectBox>(
-      _entities[25].relations[0]);
-
-  /// see [ProfileObjectBox.changes]
-  static final changes = QueryRelationToMany<ProfileObjectBox, ChangeObjectBox>(
-      _entities[25].relations[1]);
+      QueryRelationToMany<MonthBucket, DayBucket>(_entities[6].relations[0]);
 }
 
 /// [ReactionObjectBox] entity fields to define ObjectBox queries.
 class ReactionObjectBox_ {
   /// see [ReactionObjectBox.id]
   static final id =
-      QueryIntegerProperty<ReactionObjectBox>(_entities[26].properties[0]);
+      QueryIntegerProperty<ReactionObjectBox>(_entities[7].properties[0]);
 
   /// see [ReactionObjectBox.raw]
   static final raw =
-      QueryStringProperty<ReactionObjectBox>(_entities[26].properties[1]);
+      QueryStringProperty<ReactionObjectBox>(_entities[7].properties[1]);
 
   /// see [ReactionObjectBox.reaction]
   static final reaction =
-      QueryStringProperty<ReactionObjectBox>(_entities[26].properties[2]);
+      QueryStringProperty<ReactionObjectBox>(_entities[7].properties[2]);
 }
 
 /// [ServiceObjectBox] entity fields to define ObjectBox queries.
 class ServiceObjectBox_ {
   /// see [ServiceObjectBox.id]
   static final id =
-      QueryIntegerProperty<ServiceObjectBox>(_entities[27].properties[0]);
+      QueryIntegerProperty<ServiceObjectBox>(_entities[8].properties[0]);
 
   /// see [ServiceObjectBox.name]
   static final name =
-      QueryStringProperty<ServiceObjectBox>(_entities[27].properties[1]);
+      QueryStringProperty<ServiceObjectBox>(_entities[8].properties[1]);
 
   /// see [ServiceObjectBox.company]
   static final company =
-      QueryStringProperty<ServiceObjectBox>(_entities[27].properties[2]);
+      QueryStringProperty<ServiceObjectBox>(_entities[8].properties[2]);
 
   /// see [ServiceObjectBox.image]
   static final image =
-      QueryStringProperty<ServiceObjectBox>(_entities[27].properties[3]);
-}
-
-/// [TagObjectBox] entity fields to define ObjectBox queries.
-class TagObjectBox_ {
-  /// see [TagObjectBox.id]
-  static final id =
-      QueryIntegerProperty<TagObjectBox>(_entities[28].properties[0]);
-
-  /// see [TagObjectBox.name]
-  static final name =
-      QueryStringProperty<TagObjectBox>(_entities[28].properties[1]);
-}
-
-/// [VideoObjectBox] entity fields to define ObjectBox queries.
-class VideoObjectBox_ {
-  /// see [VideoObjectBox.id]
-  static final id =
-      QueryIntegerProperty<VideoObjectBox>(_entities[29].properties[0]);
-
-  /// see [VideoObjectBox.profile]
-  static final profile = QueryRelationToOne<VideoObjectBox, ProfileObjectBox>(
-      _entities[29].properties[1]);
-
-  /// see [VideoObjectBox.uri]
-  static final uri =
-      QueryStringProperty<VideoObjectBox>(_entities[29].properties[2]);
-
-  /// see [VideoObjectBox.metadata]
-  static final metadata =
-      QueryStringProperty<VideoObjectBox>(_entities[29].properties[3]);
-
-  /// see [VideoObjectBox.timestamp]
-  static final timestamp =
-      QueryIntegerProperty<VideoObjectBox>(_entities[29].properties[4]);
-
-  /// see [VideoObjectBox.title]
-  static final title =
-      QueryStringProperty<VideoObjectBox>(_entities[29].properties[5]);
-
-  /// see [VideoObjectBox.description]
-  static final description =
-      QueryStringProperty<VideoObjectBox>(_entities[29].properties[6]);
-
-  /// see [VideoObjectBox.thumbnail]
-  static final thumbnail =
-      QueryStringProperty<VideoObjectBox>(_entities[29].properties[7]);
-
-  /// see [VideoObjectBox.raw]
-  static final raw =
-      QueryStringProperty<VideoObjectBox>(_entities[29].properties[8]);
-
-  /// see [VideoObjectBox.textSearch]
-  static final textSearch =
-      QueryStringProperty<VideoObjectBox>(_entities[29].properties[9]);
+      QueryStringProperty<ServiceObjectBox>(_entities[8].properties[3]);
 }
 
 /// [YearBucket] entity fields to define ObjectBox queries.
 class YearBucket_ {
   /// see [YearBucket.id]
   static final id =
-      QueryIntegerProperty<YearBucket>(_entities[30].properties[0]);
+      QueryIntegerProperty<YearBucket>(_entities[9].properties[0]);
 
   /// see [YearBucket.year]
   static final year =
-      QueryIntegerProperty<YearBucket>(_entities[30].properties[1]);
+      QueryIntegerProperty<YearBucket>(_entities[9].properties[1]);
 
   /// see [YearBucket.total]
   static final total =
-      QueryIntegerProperty<YearBucket>(_entities[30].properties[2]);
+      QueryIntegerProperty<YearBucket>(_entities[9].properties[2]);
 
   /// see [YearBucket.stringMap]
   static final stringMap =
-      QueryStringProperty<YearBucket>(_entities[30].properties[3]);
+      QueryStringProperty<YearBucket>(_entities[9].properties[3]);
 
   /// see [YearBucket.months]
   static final months =
-      QueryRelationToMany<YearBucket, MonthBucket>(_entities[30].relations[0]);
+      QueryRelationToMany<YearBucket, MonthBucket>(_entities[9].relations[0]);
 }
 
 /// [FileDocument] entity fields to define ObjectBox queries.
 class FileDocument_ {
   /// see [FileDocument.id]
   static final id =
-      QueryIntegerProperty<FileDocument>(_entities[31].properties[0]);
+      QueryIntegerProperty<FileDocument>(_entities[10].properties[0]);
 
   /// see [FileDocument.uri]
   static final uri =
-      QueryStringProperty<FileDocument>(_entities[31].properties[1]);
+      QueryStringProperty<FileDocument>(_entities[10].properties[1]);
 
   /// see [FileDocument.data]
   static final data =
-      QueryStringProperty<FileDocument>(_entities[31].properties[2]);
+      QueryStringProperty<FileDocument>(_entities[10].properties[2]);
 
   /// see [FileDocument.searchString]
   static final searchString =
-      QueryStringProperty<FileDocument>(_entities[31].properties[3]);
+      QueryStringProperty<FileDocument>(_entities[10].properties[3]);
 
   /// see [FileDocument.thumbnail]
   static final thumbnail =
-      QueryStringProperty<FileDocument>(_entities[31].properties[4]);
+      QueryStringProperty<FileDocument>(_entities[10].properties[4]);
 
   /// see [FileDocument.service]
   static final service = QueryRelationToOne<FileDocument, ServiceDocument>(
-      _entities[31].properties[5]);
+      _entities[10].properties[5]);
 
   /// see [FileDocument.relatedDatapoint]
   static final relatedDatapoint =
-      QueryRelationToOne<FileDocument, DataPoint>(_entities[31].properties[6]);
+      QueryRelationToOne<FileDocument, DataPoint>(_entities[10].properties[6]);
+
+  /// see [FileDocument.profile]
+  static final profile = QueryRelationToOne<FileDocument, ProfileDocument>(
+      _entities[10].properties[7]);
 }
 
 /// [ImageDocument] entity fields to define ObjectBox queries.
 class ImageDocument_ {
   /// see [ImageDocument.id]
   static final id =
-      QueryIntegerProperty<ImageDocument>(_entities[32].properties[0]);
+      QueryIntegerProperty<ImageDocument>(_entities[11].properties[0]);
 
   /// see [ImageDocument.uri]
   static final uri =
-      QueryStringProperty<ImageDocument>(_entities[32].properties[1]);
+      QueryStringProperty<ImageDocument>(_entities[11].properties[1]);
 
   /// see [ImageDocument.data]
   static final data =
-      QueryStringProperty<ImageDocument>(_entities[32].properties[2]);
+      QueryStringProperty<ImageDocument>(_entities[11].properties[2]);
 
   /// see [ImageDocument.searchString]
   static final searchString =
-      QueryStringProperty<ImageDocument>(_entities[32].properties[3]);
+      QueryStringProperty<ImageDocument>(_entities[11].properties[3]);
 
   /// see [ImageDocument.mediaTags]
   static final mediaTags =
-      QueryStringVectorProperty<ImageDocument>(_entities[32].properties[4]);
+      QueryStringVectorProperty<ImageDocument>(_entities[11].properties[4]);
 
   /// see [ImageDocument.service]
   static final service = QueryRelationToOne<ImageDocument, ServiceDocument>(
-      _entities[32].properties[5]);
+      _entities[11].properties[5]);
 
   /// see [ImageDocument.relatedDatapoint]
   static final relatedDatapoint =
-      QueryRelationToOne<ImageDocument, DataPoint>(_entities[32].properties[6]);
+      QueryRelationToOne<ImageDocument, DataPoint>(_entities[11].properties[6]);
+
+  /// see [ImageDocument.profile]
+  static final profile = QueryRelationToOne<ImageDocument, ProfileDocument>(
+      _entities[11].properties[7]);
 }
 
 /// [LinkDocument] entity fields to define ObjectBox queries.
 class LinkDocument_ {
   /// see [LinkDocument.id]
   static final id =
-      QueryIntegerProperty<LinkDocument>(_entities[33].properties[0]);
+      QueryIntegerProperty<LinkDocument>(_entities[12].properties[0]);
 
   /// see [LinkDocument.uri]
   static final uri =
-      QueryStringProperty<LinkDocument>(_entities[33].properties[1]);
+      QueryStringProperty<LinkDocument>(_entities[12].properties[1]);
 
   /// see [LinkDocument.data]
   static final data =
-      QueryStringProperty<LinkDocument>(_entities[33].properties[2]);
+      QueryStringProperty<LinkDocument>(_entities[12].properties[2]);
 
   /// see [LinkDocument.searchString]
   static final searchString =
-      QueryStringProperty<LinkDocument>(_entities[33].properties[3]);
+      QueryStringProperty<LinkDocument>(_entities[12].properties[3]);
 
   /// see [LinkDocument.service]
   static final service = QueryRelationToOne<LinkDocument, ServiceDocument>(
-      _entities[33].properties[4]);
+      _entities[12].properties[4]);
 
   /// see [LinkDocument.relatedDatapoint]
   static final relatedDatapoint =
-      QueryRelationToOne<LinkDocument, DataPoint>(_entities[33].properties[5]);
+      QueryRelationToOne<LinkDocument, DataPoint>(_entities[12].properties[5]);
+
+  /// see [LinkDocument.profile]
+  static final profile = QueryRelationToOne<LinkDocument, ProfileDocument>(
+      _entities[12].properties[6]);
 }
 
 /// [ServiceDocument] entity fields to define ObjectBox queries.
 class ServiceDocument_ {
   /// see [ServiceDocument.id]
   static final id =
-      QueryIntegerProperty<ServiceDocument>(_entities[34].properties[0]);
+      QueryIntegerProperty<ServiceDocument>(_entities[13].properties[0]);
 
   /// see [ServiceDocument.serviceName]
   static final serviceName =
-      QueryStringProperty<ServiceDocument>(_entities[34].properties[1]);
+      QueryStringProperty<ServiceDocument>(_entities[13].properties[1]);
 
   /// see [ServiceDocument.companyName]
   static final companyName =
-      QueryStringProperty<ServiceDocument>(_entities[34].properties[2]);
+      QueryStringProperty<ServiceDocument>(_entities[13].properties[2]);
 
   /// see [ServiceDocument.image]
   static final image =
-      QueryStringProperty<ServiceDocument>(_entities[34].properties[3]);
+      QueryStringProperty<ServiceDocument>(_entities[13].properties[3]);
 
   /// see [ServiceDocument.totalDatapoints]
   static final totalDatapoints =
-      QueryIntegerProperty<ServiceDocument>(_entities[34].properties[4]);
+      QueryIntegerProperty<ServiceDocument>(_entities[13].properties[4]);
 }
 
 /// [VideoDocument] entity fields to define ObjectBox queries.
 class VideoDocument_ {
   /// see [VideoDocument.id]
   static final id =
-      QueryIntegerProperty<VideoDocument>(_entities[35].properties[0]);
+      QueryIntegerProperty<VideoDocument>(_entities[14].properties[0]);
 
   /// see [VideoDocument.uri]
   static final uri =
-      QueryStringProperty<VideoDocument>(_entities[35].properties[1]);
+      QueryStringProperty<VideoDocument>(_entities[14].properties[1]);
 
   /// see [VideoDocument.data]
   static final data =
-      QueryStringProperty<VideoDocument>(_entities[35].properties[2]);
+      QueryStringProperty<VideoDocument>(_entities[14].properties[2]);
 
   /// see [VideoDocument.searchString]
   static final searchString =
-      QueryStringProperty<VideoDocument>(_entities[35].properties[3]);
+      QueryStringProperty<VideoDocument>(_entities[14].properties[3]);
 
   /// see [VideoDocument.thumbnail]
   static final thumbnail =
-      QueryStringProperty<VideoDocument>(_entities[35].properties[4]);
+      QueryStringProperty<VideoDocument>(_entities[14].properties[4]);
 
   /// see [VideoDocument.service]
   static final service = QueryRelationToOne<VideoDocument, ServiceDocument>(
-      _entities[35].properties[5]);
+      _entities[14].properties[5]);
 
   /// see [VideoDocument.relatedDatapoint]
   static final relatedDatapoint =
-      QueryRelationToOne<VideoDocument, DataPoint>(_entities[35].properties[6]);
+      QueryRelationToOne<VideoDocument, DataPoint>(_entities[14].properties[6]);
+
+  /// see [VideoDocument.profile]
+  static final profile = QueryRelationToOne<VideoDocument, ProfileDocument>(
+      _entities[14].properties[7]);
+}
+
+/// [ProfileDocument] entity fields to define ObjectBox queries.
+class ProfileDocument_ {
+  /// see [ProfileDocument.id]
+  static final id =
+      QueryIntegerProperty<ProfileDocument>(_entities[15].properties[0]);
+
+  /// see [ProfileDocument.name]
+  static final name =
+      QueryStringProperty<ProfileDocument>(_entities[15].properties[1]);
+
+  /// see [ProfileDocument.service]
+  static final service = QueryRelationToOne<ProfileDocument, ServiceDocument>(
+      _entities[15].properties[2]);
+
+  /// see [ProfileDocument.dataPoint]
+  static final dataPoint = QueryRelationToOne<ProfileDocument, DataPoint>(
+      _entities[15].properties[3]);
+
+  /// see [ProfileDocument.profilePicture]
+  static final profilePicture =
+      QueryRelationToOne<ProfileDocument, ImageDocument>(
+          _entities[15].properties[4]);
 }

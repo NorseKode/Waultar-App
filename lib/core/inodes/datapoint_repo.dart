@@ -22,7 +22,7 @@ class DataPointRepository {
 
   List<UIDTO> search(String searchString, int offset, int limit) {
     var builder = _dataBox
-        .query(DataPoint_.searchString
+        .query(DataPoint_.searchStrings
             .contains(searchString, caseSensitive: false))
         .build();
     builder
@@ -30,14 +30,14 @@ class DataPointRepository {
       ..limit = limit;
     return builder
         .find()
-        .map((e) => UIDTO(e.searchString, e.category.target!, e.asMap))
+        .map((e) => UIDTO(e.stringName, e.category.target!, e.asMap))
         .toList();
   }
 
   List<UIDTO> searchWithCategories(
       List<int> categorieIDs, String searchString, int offset, int limit) {
     var builder = _dataBox.query(
-        DataPoint_.searchString.contains(searchString, caseSensitive: false));
+        DataPoint_.searchStrings.contains(searchString, caseSensitive: false));
     builder.link(DataPoint_.category, DataCategory_.id.oneOf(categorieIDs));
 
     var query = builder.build();

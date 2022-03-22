@@ -62,6 +62,12 @@ class ObjectBox {
       ]);
       listToAdd.add(reactions);
 
+      var comments = DataCategory(name: 'Comments', matchingFolders: [
+        "facebook_comments.json",
+        "post_comments.json"
+      ]);
+      listToAdd.add(comments);
+
       var social = DataCategory(name: "Social", matchingFolders: [
         "events",
         "friends_and_followers",

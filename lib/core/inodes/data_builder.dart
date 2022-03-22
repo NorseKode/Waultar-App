@@ -93,7 +93,6 @@ class DataBuilder {
     }
 
     recurse(json);
-    dataPoint.searchString = sb.toString();
     dataPoint.images.addAll(imagesFound);
     dataPoint.videos.addAll(videosFound);
     dataPoint.files.addAll(filesFound);
