@@ -20,102 +20,234 @@ class ObjectBox {
     if (_categoryBox.count() == 0) {
       var listToAdd = <DataCategory>[];
 
-      var interactions = DataCategory(name: "Interactions", matchingFolders: [
-        "activity_messages",
-        "polls",
-        "interactions",
-        "reviews",
-        "saved_items_and_collections",
-        "your_interactions_on_facebook"
-      ]);
+      var interactions = DataCategory(
+        name: "Interactions",
+        matchingFoldersFacebook: [
+          "activity_messages",
+          "polls",
+          "interactions",
+          "reviews",
+          "saved_items_and_collections",
+          "your_interactions_on_facebook"
+        ],
+        matchingFoldersInstagram: [
+          "likes",
+          "story_sticker_interactions",
+          "ads_and_content",
+          "saved"
+        ],
+      );
       listToAdd.add(interactions);
 
-      var advertisement = DataCategory(name: "Advertisement", matchingFolders: [
-        "ads_information",
-        "other_logged_information",
-        "your_topics"
-      ]);
+      var advertisement = DataCategory(
+        name: "Advertisement",
+        matchingFoldersFacebook: [
+          "ads_information",
+          "other_logged_information",
+          "your_topics",
+        ],
+        matchingFoldersInstagram: [
+          "your_topics",
+          "ads_and_businesses",
+          "monetization",
+          "ads_interests.json"
+        ],
+      );
       listToAdd.add(advertisement);
 
       var thirdPartyExchanges = DataCategory(
-          name: "Third Party Exchanges",
-          matchingFolders: ["apps_and_websites_off_of_facebook"]);
+        name: "Third Party Exchanges",
+        matchingFoldersFacebook: [
+          "apps_and_websites_off_of_facebook",
+        ],
+        matchingFoldersInstagram: [],
+      );
       listToAdd.add(thirdPartyExchanges);
 
-      var other = DataCategory(name: "Other", matchingFolders: [
-        "bug_bounty",
-        "communities",
-        "facebook_accounts_center",
-        "facebook_assistant",
-        "facebook_portal",
-        "fundraisers",
-        "journalist_registration",
-        "live_audio_rooms",
-        "music_recommendations",
-        "spark_ar",
-        "your_problem_reports"
-      ]);
+      var other = DataCategory(
+        name: "Other",
+        matchingFoldersFacebook: [
+          "bug_bounty",
+          "communities",
+          "facebook_accounts_center",
+          "facebook_assistant",
+          "facebook_portal",
+          "fundraisers",
+          "journalist_registration",
+          "live_audio_rooms",
+          "music_recommendations",
+          "spark_ar",
+          "your_problem_reports",
+        ],
+        matchingFoldersInstagram: [
+          "apps_and_websites",
+          "contacts",
+          "loyalty_accounts",
+          "guides",
+          "fundraisers",
+        ],
+      );
       listToAdd.add(other);
 
-      var reactions = DataCategory(name: "Reactions", matchingFolders: [
-        "comments_and_reactions",
-      ]);
+      var reactions = DataCategory(
+        name: "Reactions",
+        matchingFoldersFacebook: [
+          "posts_and_comments.json",
+        ],
+        matchingFoldersInstagram: [
+          "likes",
+        ],
+      );
       listToAdd.add(reactions);
 
-      var comments = DataCategory(name: 'Comments', matchingFolders: [
-        "facebook_comments.json",
-        "post_comments.json"
-      ]);
+      var comments = DataCategory(
+        name: 'Comments',
+        matchingFoldersFacebook: [
+          "comments.json",
+          "your_comments_in_groups.json",
+        ],
+        matchingFoldersInstagram: [
+          "comments",
+        ],
+      );
       listToAdd.add(comments);
 
-      var social = DataCategory(name: "Social", matchingFolders: [
-        "events",
-        "friends_and_followers",
-        "groups",
-        "other_activity",
-        "pages"
-      ]);
+      var social = DataCategory(
+        name: "Social",
+        matchingFoldersFacebook: [
+          "events",
+          "friends_and_followers",
+          "groups",
+          "other_activity",
+          "pages",
+        ],
+        matchingFoldersInstagram: [
+          "events",
+          "followers_and_following",
+        ],
+      );
       listToAdd.add(social);
 
-      var gaming =
-          DataCategory(name: "Gaming", matchingFolders: ["facebook_gaming"]);
+      var gaming = DataCategory(
+        name: "Gaming",
+        matchingFoldersFacebook: [
+          "facebook_gaming",
+        ],
+        matchingFoldersInstagram: [],
+      );
       listToAdd.add(gaming);
 
       var shopping = DataCategory(
-          name: "Shopping",
-          matchingFolders: ["facebook_marketplace", "facebook_payments"]);
+        name: "Shopping",
+        matchingFoldersFacebook: [
+          "facebook_marketplace",
+          "facebook_payments",
+        ],
+        matchingFoldersInstagram: ["recently_viewed_items"],
+      );
       listToAdd.add(shopping);
 
       var location = DataCategory(
-          name: "Location", matchingFolders: ["location", "your_places"]);
+        name: "Location",
+        matchingFoldersFacebook: [
+          "location",
+          "your_places",
+        ],
+        matchingFoldersInstagram: [],
+      );
       listToAdd.add(location);
 
-      var messaging =
-          DataCategory(name: "Messaging", matchingFolders: ["messages"]);
+      var messaging = DataCategory(
+        name: "Messaging",
+        matchingFoldersFacebook: [
+          "messages",
+        ],
+        matchingFoldersInstagram: [
+          "messages",
+        ],
+      );
       listToAdd.add(messaging);
 
       var preferences = DataCategory(
-          name: "Preferences", matchingFolders: ["news_feed", "preferences"]);
+        name: "Preferences",
+        matchingFoldersFacebook: [
+          "news_feed",
+          "preferences",
+        ],
+        matchingFoldersInstagram: [
+          "autofill_information",
+          "comments_settings",
+        ],
+      );
       listToAdd.add(preferences);
 
       var profile = DataCategory(
-          name: "Profile", matchingFolders: ["profile_information"]);
+        name: "Profile",
+        matchingFoldersFacebook: [
+          "profile_information",
+        ],
+        matchingFoldersInstagram: [
+          "account_information",
+          "login_and_account_creation",
+          "information_about_you",
+        ],
+      );
       listToAdd.add(profile);
 
-      var serach = DataCategory(name: "Serach", matchingFolders: ["search"]);
+      var serach = DataCategory(
+        name: "Serach",
+        matchingFoldersFacebook: [
+          "search",
+        ],
+        matchingFoldersInstagram: ["recent_searches"],
+      );
       listToAdd.add(serach);
 
       var loggedData = DataCategory(
-          name: "Logged Data",
-          matchingFolders: ["security_and_login_information"]);
+        name: "Logged Data",
+        matchingFoldersFacebook: [
+          "security_and_login_information",
+        ],
+        matchingFoldersInstagram: [
+          "past_instagram_insights",
+          "device_information",
+        ],
+      );
       listToAdd.add(loggedData);
 
       var posts = DataCategory(
-          name: "Posts", matchingFolders: ["posts", "short_videos"]);
+        name: "Posts",
+        matchingFoldersFacebook: [
+          "posts",
+          "short_videos",
+        ],
+        matchingFoldersInstagram: [
+          "content",
+        ],
+      );
       listToAdd.add(posts);
 
-      var stories = DataCategory(name: "Stories", matchingFolders: ["stories"]);
+      var stories = DataCategory(
+        name: "Stories",
+        matchingFoldersFacebook: [
+          "stories",
+        ],
+        matchingFoldersInstagram: [
+          "stories.json",
+        ],
+      );
       listToAdd.add(stories);
+
+      var files = DataCategory(
+        name: "Files",
+        matchingFoldersFacebook: [
+          "",
+        ],
+        matchingFoldersInstagram: [
+          "profile_photos.json",
+        ],
+      );
+      listToAdd.add(files);
 
       _categoryBox.putMany(listToAdd);
     }

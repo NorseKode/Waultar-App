@@ -101,7 +101,7 @@ class TreeParser {
   Future<DataPointName> parsePath(
       String path, ProfileDocument profile, ServiceDocument service) async {
     if (Extensions.isJson(path)) {
-      var category = _categoryRepo.getFromFolderName(path);
+      var category = _categoryRepo.getFromFolderName(path, service);
       _appLogger.logger.info("Started Parsing Path: $path, Profile: ${profile.toString()}, Service: ${service.toString()}, Category: $category");
       var file = File(path);
       var json = await getJson(file);

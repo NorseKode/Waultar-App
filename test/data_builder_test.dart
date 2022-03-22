@@ -14,7 +14,7 @@ import 'objectbox/test_utils.dart';
 Future<void> main() async {
   late final ObjectBox _context;
   final DataCategory testCategory =
-      DataCategory(name: 'TEST', matchingFolders: []);
+      DataCategory(name: 'TEST', matchingFoldersFacebook: [], matchingFoldersInstagram: []);
   final scriptDir = File(Platform.script.toFilePath()).parent;
   final String fbBasePath = '${scriptDir.path}/test/objectbox/data/Facebook/';
   final ServiceDocument fbService = ServiceDocument(

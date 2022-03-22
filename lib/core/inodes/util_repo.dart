@@ -17,6 +17,7 @@ class UtilityRepository implements IUtilityRepository {
     removed += nukeAllLinks();
     removed += _nukeAllDataPoints();
     removed += _nukeAllNames();
+    _resetCounts();
 
     return removed;
   }
@@ -38,11 +39,11 @@ class UtilityRepository implements IUtilityRepository {
   
 
   void _resetCounts() {
-    // TODO - imlement with a single transaction. 
-    // should reset all computed values, which includes :
-    // - service counts
-    // - category counts
-    // - timebucket counts
+    var categories = _context.store.box<DataCategory>().getAll();
+    for (var category in categories) {
+      category.count = 0;
+    }
+    _context.store.box<DataCategory>().putMany(categories);
   }
 
   @override
@@ -68,5 +69,4 @@ class UtilityRepository implements IUtilityRepository {
 
   @override
   int getTotalCountVideos() => _context.store.box<VideoDocument>().count();
-    
 }

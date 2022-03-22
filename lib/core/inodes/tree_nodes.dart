@@ -203,7 +203,8 @@ class DataCategory {
 
   int count;
 
-  List<String> matchingFolders;
+  List<String> matchingFoldersFacebook;
+  List<String> matchingFoldersInstagram;
 
   @Index()
   @Unique()
@@ -216,6 +217,7 @@ class DataCategory {
     this.id = 0,
     this.count = 0,
     required this.name,
-    required this.matchingFolders,
+    required this.matchingFoldersFacebook,
+    required this.matchingFoldersInstagram,
   });
 }

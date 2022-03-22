@@ -1,3 +1,4 @@
+import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
@@ -14,10 +15,7 @@ class DataCategoryRepository {
   int updateCategory(DataCategory category) => _categoryBox.put(category);
 
   DataCategory? getCategoryByName(String name) {
-    var category = _categoryBox
-        .query(DataCategory_.name.equals(name))
-        .build()
-        .findUnique();
+    var category = _categoryBox.query(DataCategory_.name.equals(name)).build().findUnique();
     return category;
   }
 
@@ -56,7 +54,7 @@ class DataCategoryRepository {
     return null;
   }
 
-  DataCategory getFromFolderName(String folderName) {
+  DataCategory getFromFolderName(String folderName, ServiceDocument service) {
     // get category from service based on parent directory for the file
     // keep looking backwards in the path until we reach root folder
 
@@ -66,45 +64,43 @@ class DataCategoryRepository {
 
       // if still none are found, set category to "Other" (default)
       if (name == "Facebook" || name == "Instagram") {
-        return _categoryBox
-            .query(DataCategory_.name.equals("Other"))
-            .build()
-            .findUnique()!;
+        return _categoryBox.query(DataCategory_.name.equals("Other")).build().findUnique()!;
       }
 
-      var category = _categoryBox
-          .query(DataCategory_.matchingFolders.contains(name))
-          .build()
-          .findFirst();
+      var category = service.serviceName == "Facebook"
+          ? _categoryBox
+              .query(DataCategory_.matchingFoldersFacebook.contains(name))
+              .build()
+              .findFirst()
+          : _categoryBox
+              .query(DataCategory_.matchingFoldersInstagram.contains(name))
+              .build()
+              .findFirst();
 
       // if none is found :
       if (category == null) {
-        return getFromFolderName(
-            folderName.substring(0, folderName.length - name.length));
+        return getFromFolderName(folderName.substring(0, folderName.length - name.length), service);
       } else {
         return category;
       }
     } on Exception catch (e) {
       // ignore: avoid_print
       print(e);
-      return _categoryBox
-          .query(DataCategory_.name.equals("Other"))
-          .build()
-          .findUnique()!;
+      return _categoryBox.query(DataCategory_.name.equals("Other")).build().findUnique()!;
     }
   }
 
   int count() => _categoryBox.count();
 
-  int addCategory(String name, List<String> matchingFolders) {
-    var existing = _categoryBox
-        .query(DataCategory_.name.equals(name))
-        .build()
-        .findUnique();
+  int addCategory(
+      String name, List<String> matchingFoldersFacebook, List<String> matchingFoldersInstagram) {
+    var existing = _categoryBox.query(DataCategory_.name.equals(name)).build().findUnique();
 
     if (existing == null) {
-      return _categoryBox
-          .put(DataCategory(name: name, matchingFolders: matchingFolders));
+      return _categoryBox.put(DataCategory(
+          name: name,
+          matchingFoldersFacebook: matchingFoldersFacebook,
+          matchingFoldersInstagram: matchingFoldersInstagram));
     }
 
     return existing.id;
