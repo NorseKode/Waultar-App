@@ -48,7 +48,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(2, 8521560814133505752),
       name: 'DataCategory',
-      lastPropertyId: const IdUid(5, 1481045219983849224),
+      lastPropertyId: const IdUid(6, 5146326500439392814),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -76,7 +76,12 @@ final _entities = <ModelEntity>[
             name: 'name',
             type: 9,
             flags: 2080,
-            indexId: const IdUid(1, 3225060361381272079))
+            indexId: const IdUid(1, 3225060361381272079)),
+        ModelProperty(
+            id: const IdUid(6, 5146326500439392814),
+            name: 'dbColor',
+            type: 6,
+            flags: 0)
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[
@@ -88,7 +93,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(3, 747020510639630195),
       name: 'DataPoint',
-      lastPropertyId: const IdUid(8, 4923624894740856823),
+      lastPropertyId: const IdUid(12, 9119741286260688645),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -138,6 +143,16 @@ final _entities = <ModelEntity>[
             id: const IdUid(8, 4923624894740856823),
             name: 'values',
             type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(11, 5326578534447053821),
+            name: 'timestamps',
+            type: 23,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(12, 9119741286260688645),
+            name: 'createdAt',
+            type: 10,
             flags: 0)
       ],
       relations: <ModelRelation>[
@@ -162,7 +177,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(4, 7429836309845956029),
       name: 'DataPointName',
-      lastPropertyId: const IdUid(6, 6374307156085070498),
+      lastPropertyId: const IdUid(7, 8919670594220832819),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -720,6 +735,45 @@ final _entities = <ModelEntity>[
             name: 'months',
             targetId: const IdUid(10, 8435003594428266350))
       ],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(17, 3692518023531825614),
+      name: 'DateTimeTest',
+      lastPropertyId: const IdUid(7, 1459649250216137011),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 4493553098824293553),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 3930665163622164846),
+            name: 'timestamp',
+            type: 12,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 6478515224508221079),
+            name: 'int8list',
+            type: 23,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(5, 1450618187840150462),
+            name: 'uint8list',
+            type: 23,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 1495718743066646688),
+            name: 'dbColor',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(7, 1459649250216137011),
+            name: 'timestamps',
+            type: 30,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[])
 ];
 
@@ -743,7 +797,7 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(16, 1644285727565833936),
+      lastEntityId: const IdUid(17, 3692518023531825614),
       lastIndexId: const IdUid(30, 3761383902872286368),
       lastRelationId: const IdUid(8, 2590360741820126253),
       lastSequenceId: const IdUid(0, 0),
@@ -752,7 +806,11 @@ ModelDefinition getObjectBoxModel() {
       retiredPropertyUids: const [
         2035953540501364365,
         3577269985980726905,
-        1706698378423798331
+        1706698378423798331,
+        8919670594220832819,
+        5089136858942224688,
+        2643806434806109173,
+        9018092681122822111
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -807,12 +865,13 @@ ModelDefinition getObjectBoxModel() {
               .map(fbb.writeString)
               .toList(growable: false));
           final nameOffset = fbb.writeString(object.name);
-          fbb.startTable(6);
+          fbb.startTable(7);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.count);
           fbb.addOffset(2, matchingFoldersFacebookOffset);
           fbb.addOffset(3, matchingFoldersInstagramOffset);
           fbb.addOffset(4, nameOffset);
+          fbb.addInt64(5, object.dbColor);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -832,7 +891,9 @@ ModelDefinition getObjectBoxModel() {
               matchingFoldersInstagram: const fb.ListReader<String>(
                       fb.StringReader(asciiOptimization: true),
                       lazy: false)
-                  .vTableGet(buffer, rootOffset, 10, []));
+                  .vTableGet(buffer, rootOffset, 10, []))
+            ..dbColor =
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
           InternalToManyAccess.setRelInfo(
               object.dataPointNames,
               store,
@@ -865,7 +926,8 @@ ModelDefinition getObjectBoxModel() {
               .map(fbb.writeString)
               .toList(growable: false));
           final valuesOffset = fbb.writeString(object.values);
-          fbb.startTable(9);
+          final timestampsOffset = fbb.writeListInt8(object.timestamps);
+          fbb.startTable(13);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.dataPointName.targetId);
           fbb.addOffset(2, stringNameOffset);
@@ -874,6 +936,8 @@ ModelDefinition getObjectBoxModel() {
           fbb.addInt64(5, object.service.targetId);
           fbb.addOffset(6, searchStringsOffset);
           fbb.addOffset(7, valuesOffset);
+          fbb.addOffset(10, timestampsOffset);
+          fbb.addInt64(11, object.createdAt.millisecondsSinceEpoch);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -890,7 +954,12 @@ ModelDefinition getObjectBoxModel() {
                     lazy: false)
                 .vTableGet(buffer, rootOffset, 16, [])
             ..values = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 18, '');
+                .vTableGet(buffer, rootOffset, 18, '')
+            ..timestamps =
+                const fb.ListReader<int>(fb.Int8Reader(), lazy: false)
+                    .vTableGet(buffer, rootOffset, 24, [])
+            ..createdAt = DateTime.fromMillisecondsSinceEpoch(
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0));
           object.dataPointName.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
           object.dataPointName.attach(store);
@@ -929,7 +998,7 @@ ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (DataPointName object, fb.Builder fbb) {
           final nameOffset = fbb.writeString(object.name);
-          fbb.startTable(7);
+          fbb.startTable(8);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.count);
           fbb.addOffset(2, nameOffset);
@@ -1486,6 +1555,56 @@ ModelDefinition getObjectBoxModel() {
               RelInfo<YearBucket>.toMany(8, object.id),
               store.box<YearBucket>());
           return object;
+        }),
+    DateTimeTest: EntityDefinition<DateTimeTest>(
+        model: _entities[16],
+        toOneRelations: (DateTimeTest object) => [],
+        toManyRelations: (DateTimeTest object) => {},
+        getId: (DateTimeTest object) => object.id,
+        setId: (DateTimeTest object, int id) {
+          object.id = id;
+        },
+        objectToFB: (DateTimeTest object, fb.Builder fbb) {
+          final int8listOffset = object.int8list == null
+              ? null
+              : fbb.writeListInt8(object.int8list!);
+          final uint8listOffset = object.uint8list == null
+              ? null
+              : fbb.writeListInt8(object.uint8list!);
+          final timestampsOffset = fbb.writeList(
+              object.timestamps.map(fbb.writeString).toList(growable: false));
+          fbb.startTable(8);
+          fbb.addInt64(0, object.id);
+          fbb.addInt64(1, object.timestamp.microsecondsSinceEpoch * 1000);
+          fbb.addOffset(3, int8listOffset);
+          fbb.addOffset(4, uint8listOffset);
+          fbb.addInt64(5, object.dbColor);
+          fbb.addOffset(6, timestampsOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = DateTimeTest(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0))
+            ..timestamp = DateTime.fromMicrosecondsSinceEpoch(
+                (const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0) /
+                        1000)
+                    .round())
+            ..int8list = const fb.Int8ListReader(lazy: false)
+                .vTableGetNullable(buffer, rootOffset, 10) as Int8List?
+            ..uint8list = const fb.Uint8ListReader(lazy: false)
+                .vTableGetNullable(buffer, rootOffset, 12) as Uint8List?
+            ..dbColor =
+                const fb.Int64Reader().vTableGetNullable(buffer, rootOffset, 14)
+            ..timestamps = const fb.ListReader<String>(
+                    fb.StringReader(asciiOptimization: true),
+                    lazy: false)
+                .vTableGet(buffer, rootOffset, 16, []);
+
+          return object;
         })
   };
 
@@ -1524,6 +1643,10 @@ class DataCategory_ {
   /// see [DataCategory.name]
   static final name =
       QueryStringProperty<DataCategory>(_entities[1].properties[4]);
+
+  /// see [DataCategory.dbColor]
+  static final dbColor =
+      QueryIntegerProperty<DataCategory>(_entities[1].properties[5]);
 }
 
 /// [DataPoint] entity fields to define ObjectBox queries.
@@ -1558,6 +1681,14 @@ class DataPoint_ {
   /// see [DataPoint.values]
   static final values =
       QueryStringProperty<DataPoint>(_entities[2].properties[7]);
+
+  /// see [DataPoint.timestamps]
+  static final timestamps =
+      QueryByteVectorProperty<DataPoint>(_entities[2].properties[8]);
+
+  /// see [DataPoint.createdAt]
+  static final createdAt =
+      QueryIntegerProperty<DataPoint>(_entities[2].properties[9]);
 
   /// see [DataPoint.images]
   static final images =
@@ -1929,4 +2060,31 @@ class YearBucket_ {
   /// see [YearBucket.months]
   static final months =
       QueryRelationToMany<YearBucket, MonthBucket>(_entities[15].relations[0]);
+}
+
+/// [DateTimeTest] entity fields to define ObjectBox queries.
+class DateTimeTest_ {
+  /// see [DateTimeTest.id]
+  static final id =
+      QueryIntegerProperty<DateTimeTest>(_entities[16].properties[0]);
+
+  /// see [DateTimeTest.timestamp]
+  static final timestamp =
+      QueryIntegerProperty<DateTimeTest>(_entities[16].properties[1]);
+
+  /// see [DateTimeTest.int8list]
+  static final int8list =
+      QueryByteVectorProperty<DateTimeTest>(_entities[16].properties[2]);
+
+  /// see [DateTimeTest.uint8list]
+  static final uint8list =
+      QueryByteVectorProperty<DateTimeTest>(_entities[16].properties[3]);
+
+  /// see [DateTimeTest.dbColor]
+  static final dbColor =
+      QueryIntegerProperty<DateTimeTest>(_entities[16].properties[4]);
+
+  /// see [DateTimeTest.timestamps]
+  static final timestamps =
+      QueryStringVectorProperty<DateTimeTest>(_entities[16].properties[5]);
 }

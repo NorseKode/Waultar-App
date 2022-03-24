@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
 import 'package:pretty_json/pretty_json.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
@@ -24,6 +25,7 @@ class DataPoint {
   final links = ToMany<LinkDocument>();
   final service = ToOne<ServiceDocument>();
 
+  @Property(type: PropertyType.byteVector)
   List<int> timestamps = [];
 
   List<String> searchStrings = [];
@@ -33,6 +35,8 @@ class DataPoint {
 
   @Transient()
   late Map<String, dynamic> valuesMap;
+  @Property(type: PropertyType.date)
+  late DateTime createdAt;
 
   DataPoint({
     this.id = 0,
@@ -63,7 +67,7 @@ class DataPoint {
     stringName = parentName.name;
     profile.target = targetProfile;
     values = jsonEncode(json);
-    
+
     _createRelations(basePathToMedia);
     if (searchStrings.isEmpty) {
       searchStrings.add(stringName);
@@ -71,11 +75,11 @@ class DataPoint {
   }
 
   void _createRelations(String basePathToMedia) {
+
     // the raw data as a map
     // the asMap getter will make sure it's always a map
     Map<String, dynamic> json = asMap;
 
-    // let's just use a nested funtion to recursively find our targets in the jsonMap
     recurse(dynamic json) {
       if (json is Map<String, dynamic>) {
         for (var entry in json.entries) {
@@ -199,6 +203,8 @@ class DataCategory {
   List<String> matchingFoldersFacebook;
   List<String> matchingFoldersInstagram;
 
+  CategoryColor color;
+
   @Index()
   @Unique()
   String name;
@@ -212,5 +218,64 @@ class DataCategory {
     required this.name,
     required this.matchingFoldersFacebook,
     required this.matchingFoldersInstagram,
+    this.color = CategoryColor.unknown,
   });
+
+  int get dbColor {
+    return color.index;
+  }
+
+  set dbColor(int index) {
+    color = index >= 0 && index < CategoryColor.values.length
+    ? CategoryColor.values[index]
+    : CategoryColor.unknown;
+  }
+}
+
+enum CategoryColor {
+  unknown,
+  interactions,
+  advertisement,
+  thirdPartyExchanges,
+  other,
+  reactions,
+  comments,
+  social,
+  gaming,
+  shopping,
+  location,
+  messaging,
+  preferences,
+  profile,
+  serach,
+  loggedData,
+  posts,
+  stories,
+  files,
+}
+
+extension ColorMapper on CategoryColor {
+  static const colors = {
+    CategoryColor.unknown: Colors.cyan,
+    CategoryColor.interactions: Colors.red,
+    CategoryColor.advertisement: Colors.blue,
+    CategoryColor.thirdPartyExchanges: Colors.orange,
+    CategoryColor.other: Colors.brown,
+    CategoryColor.reactions: Colors.green,
+    CategoryColor.comments: Colors.purple,
+    CategoryColor.social: Colors.purpleAccent,
+    CategoryColor.gaming: Colors.blueGrey,
+    CategoryColor.shopping: Colors.pink,
+    CategoryColor.location: Colors.indigo,
+    CategoryColor.messaging: Colors.blueAccent,
+    CategoryColor.preferences: Colors.cyanAccent,
+    CategoryColor.profile: Colors.lightBlueAccent,
+    CategoryColor.serach: Colors.limeAccent,
+    CategoryColor.loggedData: Colors.yellow,
+    CategoryColor.posts: Colors.amber,
+    CategoryColor.stories: Colors.deepPurple,
+    CategoryColor.files: Colors.black38,
+  };
+
+  Color get colorValue => colors[this] ?? Colors.cyan;
 }

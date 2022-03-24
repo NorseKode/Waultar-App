@@ -15,7 +15,10 @@ class DataCategoryRepository {
   int updateCategory(DataCategory category) => _categoryBox.put(category);
 
   DataCategory? getCategoryByName(String name) {
-    var category = _categoryBox.query(DataCategory_.name.equals(name)).build().findUnique();
+    var category = _categoryBox
+        .query(DataCategory_.name.equals(name))
+        .build()
+        .findUnique();
     return category;
   }
 
@@ -64,7 +67,10 @@ class DataCategoryRepository {
 
       // if still none are found, set category to "Other" (default)
       if (name == "Facebook" || name == "Instagram") {
-        return _categoryBox.query(DataCategory_.name.equals("Other")).build().findUnique()!;
+        return _categoryBox
+            .query(DataCategory_.name.equals("Other"))
+            .build()
+            .findUnique()!;
       }
 
       var category = service.serviceName == "Facebook"
@@ -79,28 +85,37 @@ class DataCategoryRepository {
 
       // if none is found :
       if (category == null) {
-        return getFromFolderName(folderName.substring(0, folderName.length - name.length), service);
+        return getFromFolderName(
+            folderName.substring(0, folderName.length - name.length), service);
       } else {
         return category;
       }
     } on Exception catch (e) {
       // ignore: avoid_print
       print(e);
-      return _categoryBox.query(DataCategory_.name.equals("Other")).build().findUnique()!;
+      return _categoryBox
+          .query(DataCategory_.name.equals("Other"))
+          .build()
+          .findUnique()!;
     }
   }
 
   int count() => _categoryBox.count();
 
-  int addCategory(
-      String name, List<String> matchingFoldersFacebook, List<String> matchingFoldersInstagram) {
-    var existing = _categoryBox.query(DataCategory_.name.equals(name)).build().findUnique();
+  int addCategory(String name, List<String> matchingFoldersFacebook,
+      List<String> matchingFoldersInstagram, CategoryColor color) {
+    var existing = _categoryBox
+        .query(DataCategory_.name.equals(name))
+        .build()
+        .findUnique();
 
     if (existing == null) {
       return _categoryBox.put(DataCategory(
-          name: name,
-          matchingFoldersFacebook: matchingFoldersFacebook,
-          matchingFoldersInstagram: matchingFoldersInstagram));
+        name: name,
+        matchingFoldersFacebook: matchingFoldersFacebook,
+        matchingFoldersInstagram: matchingFoldersInstagram,
+        color: color,
+      ));
     }
 
     return existing.id;

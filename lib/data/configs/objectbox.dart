@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:path/path.dart' as dart_path;
@@ -36,6 +37,7 @@ class ObjectBox {
           "ads_and_content",
           "saved"
         ],
+        color: CategoryColor.interactions,
       );
       listToAdd.add(interactions);
 
@@ -52,6 +54,7 @@ class ObjectBox {
           "monetization",
           "ads_interests.json"
         ],
+        color: CategoryColor.advertisement,
       );
       listToAdd.add(advertisement);
 
@@ -61,6 +64,7 @@ class ObjectBox {
           "apps_and_websites_off_of_facebook",
         ],
         matchingFoldersInstagram: [],
+        color: CategoryColor.thirdPartyExchanges,
       );
       listToAdd.add(thirdPartyExchanges);
 
@@ -86,6 +90,7 @@ class ObjectBox {
           "guides",
           "fundraisers",
         ],
+        color: CategoryColor.other,
       );
       listToAdd.add(other);
 
@@ -97,6 +102,7 @@ class ObjectBox {
         matchingFoldersInstagram: [
           "likes",
         ],
+        color: CategoryColor.reactions,
       );
       listToAdd.add(reactions);
 
@@ -109,6 +115,7 @@ class ObjectBox {
         matchingFoldersInstagram: [
           "comments",
         ],
+        color: CategoryColor.comments,
       );
       listToAdd.add(comments);
 
@@ -125,6 +132,7 @@ class ObjectBox {
           "events",
           "followers_and_following",
         ],
+        color: CategoryColor.social,
       );
       listToAdd.add(social);
 
@@ -134,6 +142,7 @@ class ObjectBox {
           "facebook_gaming",
         ],
         matchingFoldersInstagram: [],
+        color: CategoryColor.gaming,
       );
       listToAdd.add(gaming);
 
@@ -143,7 +152,10 @@ class ObjectBox {
           "facebook_marketplace",
           "facebook_payments",
         ],
-        matchingFoldersInstagram: ["recently_viewed_items"],
+        matchingFoldersInstagram: [
+          "recently_viewed_items",
+        ],
+        color: CategoryColor.shopping,
       );
       listToAdd.add(shopping);
 
@@ -154,6 +166,7 @@ class ObjectBox {
           "your_places",
         ],
         matchingFoldersInstagram: [],
+        color: CategoryColor.location,
       );
       listToAdd.add(location);
 
@@ -165,6 +178,7 @@ class ObjectBox {
         matchingFoldersInstagram: [
           "messages",
         ],
+        color: CategoryColor.messaging,
       );
       listToAdd.add(messaging);
 
@@ -178,6 +192,7 @@ class ObjectBox {
           "autofill_information",
           "comments_settings",
         ],
+        color: CategoryColor.preferences,
       );
       listToAdd.add(preferences);
 
@@ -191,6 +206,7 @@ class ObjectBox {
           "login_and_account_creation",
           "information_about_you",
         ],
+        color: CategoryColor.profile,
       );
       listToAdd.add(profile);
 
@@ -199,7 +215,10 @@ class ObjectBox {
         matchingFoldersFacebook: [
           "search",
         ],
-        matchingFoldersInstagram: ["recent_searches"],
+        matchingFoldersInstagram: [
+          "recent_searches",
+        ],
+        color: CategoryColor.serach,
       );
       listToAdd.add(serach);
 
@@ -212,6 +231,7 @@ class ObjectBox {
           "past_instagram_insights",
           "device_information",
         ],
+        color: CategoryColor.loggedData,
       );
       listToAdd.add(loggedData);
 
@@ -224,6 +244,7 @@ class ObjectBox {
         matchingFoldersInstagram: [
           "content",
         ],
+        color: CategoryColor.posts,
       );
       listToAdd.add(posts);
 
@@ -235,6 +256,7 @@ class ObjectBox {
         matchingFoldersInstagram: [
           "stories.json",
         ],
+        color: CategoryColor.stories,
       );
       listToAdd.add(stories);
 
@@ -246,6 +268,7 @@ class ObjectBox {
         matchingFoldersInstagram: [
           "profile_photos.json",
         ],
+        color: CategoryColor.files,
       );
       listToAdd.add(files);
 

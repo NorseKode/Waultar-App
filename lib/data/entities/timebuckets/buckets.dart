@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:objectbox/objectbox.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 
@@ -65,3 +67,48 @@ class DayBucket {
     required this.serviceCountMap,
   });
 }
+
+@Entity()
+class DateTimeTest {
+  int id;
+
+  @Property(type: PropertyType.dateNano)
+  late DateTime timestamp;
+
+  late List<String> timestamps;
+
+  Int8List? int8list;
+  Uint8List? uint8list;
+
+  ColorEnum? color;
+
+  DateTimeTest({
+    this.id = 0, 
+  }) {
+    timestamp = DateTime.now();
+    timestamps = [];
+
+  }
+
+  int? get dbColor {
+    return color?.index;
+  }
+
+  set dbColor(int? index) {
+    color = ColorEnum.values[index ?? 1];
+  }
+
+  @override
+  String toString() {
+    return timestamp.toString();
+  }
+}
+
+enum ColorEnum {
+  unknown,
+  black,
+  white,
+  grey,
+}
+
+

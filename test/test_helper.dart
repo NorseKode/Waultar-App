@@ -10,6 +10,7 @@ import 'package:waultar/core/inodes/tree_parser.dart';
 import 'package:waultar/core/models/misc/service_model.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
+import 'package:waultar/data/configs/objectbox.g.dart';
 import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 import 'package:waultar/startup.dart';
 
@@ -17,13 +18,17 @@ class TestHelper {
   static ProfileDocument profileDocument = ProfileDocument(
     name: 'Test Profile',
   );
-
   static final serviceDocument = ServiceDocument(
     serviceName: 'TestService',
     companyName: 'Company Name',
     image: "No Image",
   );
-
+  static ServiceDocument getFacebookService(ObjectBox context) {
+    return context.store.box<ServiceDocument>().query(ServiceDocument_.serviceName.equals('Facebook')).build().findUnique()!;
+  }
+  static ServiceDocument getInstagramService(ObjectBox context) {
+    return context.store.box<ServiceDocument>().query(ServiceDocument_.serviceName.equals('Instagram')).build().findUnique()!;
+  }
   static ProfileModel facebookProfile = ProfileModel(
     activities: [],
     createdTimestamp: DateTime.now(),
