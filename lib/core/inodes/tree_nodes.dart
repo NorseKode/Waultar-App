@@ -203,11 +203,13 @@ class DataCategory {
   List<String> matchingFoldersFacebook;
   List<String> matchingFoldersInstagram;
 
-  CategoryColor color;
-
   @Index()
   @Unique()
-  String name;
+  CategoryEnum category;
+
+  // @Index()
+  // @Unique()
+  // String name;
 
   @Backlink('dataCategory')
   final dataPointNames = ToMany<DataPointName>();
@@ -215,24 +217,23 @@ class DataCategory {
   DataCategory({
     this.id = 0,
     this.count = 0,
-    required this.name,
+    this.category = CategoryEnum.unknown,
     required this.matchingFoldersFacebook,
     required this.matchingFoldersInstagram,
-    this.color = CategoryColor.unknown,
   });
 
-  int get dbColor {
-    return color.index;
+  int get dbCategory {
+    return category.index;
   }
 
-  set dbColor(int index) {
-    color = index >= 0 && index < CategoryColor.values.length
-    ? CategoryColor.values[index]
-    : CategoryColor.unknown;
+  set dbCategory(int index) {
+    category = index >= 0 && index < CategoryEnum.values.length
+    ? CategoryEnum.values[index]
+    : CategoryEnum.unknown;
   }
 }
 
-enum CategoryColor {
+enum CategoryEnum {
   unknown,
   interactions,
   advertisement,
@@ -254,28 +255,51 @@ enum CategoryColor {
   files,
 }
 
-extension ColorMapper on CategoryColor {
+extension CategoryMapper on CategoryEnum {
   static const colors = {
-    CategoryColor.unknown: Colors.cyan,
-    CategoryColor.interactions: Colors.red,
-    CategoryColor.advertisement: Colors.blue,
-    CategoryColor.thirdPartyExchanges: Colors.orange,
-    CategoryColor.other: Colors.brown,
-    CategoryColor.reactions: Colors.green,
-    CategoryColor.comments: Colors.purple,
-    CategoryColor.social: Colors.purpleAccent,
-    CategoryColor.gaming: Colors.blueGrey,
-    CategoryColor.shopping: Colors.pink,
-    CategoryColor.location: Colors.indigo,
-    CategoryColor.messaging: Colors.blueAccent,
-    CategoryColor.preferences: Colors.cyanAccent,
-    CategoryColor.profile: Colors.lightBlueAccent,
-    CategoryColor.serach: Colors.limeAccent,
-    CategoryColor.loggedData: Colors.yellow,
-    CategoryColor.posts: Colors.amber,
-    CategoryColor.stories: Colors.deepPurple,
-    CategoryColor.files: Colors.black38,
+    CategoryEnum.unknown: Colors.cyan,
+    CategoryEnum.interactions: Colors.red,
+    CategoryEnum.advertisement: Colors.blue,
+    CategoryEnum.thirdPartyExchanges: Colors.orange,
+    CategoryEnum.other: Colors.brown,
+    CategoryEnum.reactions: Colors.green,
+    CategoryEnum.comments: Colors.purple,
+    CategoryEnum.social: Colors.purpleAccent,
+    CategoryEnum.gaming: Colors.blueGrey,
+    CategoryEnum.shopping: Colors.pink,
+    CategoryEnum.location: Colors.indigo,
+    CategoryEnum.messaging: Colors.blueAccent,
+    CategoryEnum.preferences: Colors.cyanAccent,
+    CategoryEnum.profile: Colors.lightBlueAccent,
+    CategoryEnum.serach: Colors.limeAccent,
+    CategoryEnum.loggedData: Colors.yellow,
+    CategoryEnum.posts: Colors.amber,
+    CategoryEnum.stories: Colors.deepPurple,
+    CategoryEnum.files: Colors.black38,
   };
 
-  Color get colorValue => colors[this] ?? Colors.cyan;
+  static const names = {
+    CategoryEnum.unknown: 'Unknown',
+    CategoryEnum.interactions: 'Interactions',
+    CategoryEnum.advertisement: 'Advertisement',
+    CategoryEnum.thirdPartyExchanges: 'Third Party Exchanges',
+    CategoryEnum.other: 'Other',
+    CategoryEnum.reactions: 'Reactions',
+    CategoryEnum.comments: 'Comments',
+    CategoryEnum.social: 'Social',
+    CategoryEnum.gaming: 'Gaming',
+    CategoryEnum.shopping: 'Shopping',
+    CategoryEnum.location: 'Location',
+    CategoryEnum.messaging: 'Messaging',
+    CategoryEnum.preferences: 'Preferences',
+    CategoryEnum.profile: 'Profile',
+    CategoryEnum.serach: 'Serach',
+    CategoryEnum.loggedData: 'Logged Data',
+    CategoryEnum.posts: 'Posts',
+    CategoryEnum.stories: 'Stories',
+    CategoryEnum.files: 'Files',
+  };
+
+  Color get color => colors[this] ?? Colors.cyan;
+  String get name => names[this] ?? 'Unknown';
 }

@@ -97,13 +97,13 @@ class _BrowseState extends State<Browse> {
           children: [
             InkWell(
               onTap: () {
-                print(_categories[index].name);
+                print(_categories[index].category.name);
                 setState(() {
                   _names = _collectionsService
                       .getAllNamesFromCategory(_categories[index]);
                 });
               },
-              child: Text(_categories[index].name +
+              child: Text(_categories[index].category.name +
                   "   " +
                   _categories[index].count.toString()),
             ),

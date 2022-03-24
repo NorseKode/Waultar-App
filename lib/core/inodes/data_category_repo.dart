@@ -102,24 +102,27 @@ class DataCategoryRepository {
 
   int count() => _categoryBox.count();
 
-  int addCategory(String name, List<String> matchingFoldersFacebook,
-      List<String> matchingFoldersInstagram, CategoryColor color) {
-    var existing = _categoryBox
-        .query(DataCategory_.name.equals(name))
-        .build()
-        .findUnique();
+  // int addCategory(
+  //   CategoryEnum category,
+  //   List<String> matchingFoldersFacebook,
+  //   List<String> matchingFoldersInstagram,
+  // ) {
+  //   var existing = _categoryBox
+  //       .query(DataCategory_.name.equals(name))
+  //       .build()
+  //       .findUnique();
 
-    if (existing == null) {
-      return _categoryBox.put(DataCategory(
-        name: name,
-        matchingFoldersFacebook: matchingFoldersFacebook,
-        matchingFoldersInstagram: matchingFoldersInstagram,
-        color: color,
-      ));
-    }
+  //   if (existing == null) {
+  //     return _categoryBox.put(DataCategory(
+  //       name: name,
+  //       matchingFoldersFacebook: matchingFoldersFacebook,
+  //       matchingFoldersInstagram: matchingFoldersInstagram,
+  //       color: color,
+  //     ));
+  //   }
 
-    return existing.id;
-  }
+  //   return existing.id;
+  // }
 
   void addMany(List<DataCategory> categories) {
     _categoryBox.putMany(categories);

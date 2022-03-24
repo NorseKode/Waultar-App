@@ -24,11 +24,21 @@ class TestHelper {
     image: "No Image",
   );
   static ServiceDocument getFacebookService(ObjectBox context) {
-    return context.store.box<ServiceDocument>().query(ServiceDocument_.serviceName.equals('Facebook')).build().findUnique()!;
+    return context.store
+        .box<ServiceDocument>()
+        .query(ServiceDocument_.serviceName.equals('Facebook'))
+        .build()
+        .findUnique()!;
   }
+
   static ServiceDocument getInstagramService(ObjectBox context) {
-    return context.store.box<ServiceDocument>().query(ServiceDocument_.serviceName.equals('Instagram')).build().findUnique()!;
+    return context.store
+        .box<ServiceDocument>()
+        .query(ServiceDocument_.serviceName.equals('Instagram'))
+        .build()
+        .findUnique()!;
   }
+
   static ProfileModel facebookProfile = ProfileModel(
     activities: [],
     createdTimestamp: DateTime.now(),
@@ -49,7 +59,7 @@ class TestHelper {
     basePathToFiles: "",
     service: instagram,
   );
-  
+
   static getTreeParser() async {
     await deleteTestDb();
     var _context = await createTestDb();
@@ -106,5 +116,23 @@ class TestHelper {
     } catch (e) {
       return;
     }
+  }
+
+  static void seedForTimeBuckets(ObjectBox context) {
+    var timestamps = <int>[
+      1647774619, // Sun Mar 20 2022 12:10:19 GMT
+      1647601819, // Fri Mar 18 2022 12:10:19 GMT
+      1642749019, // Fri Jan 21 2022 08:10:19 GMT
+      1628662219, // Wed Aug 11 2021 08:10:19 GMT
+      1623651019, // Mon Jun 14 2021 08:10:19 GMT
+      1623661819, // Mon Jun 14 2021 11:10:19 GMT
+      1623636799, // Mon Jun 14 2021 04:13:19 GMT
+      1609125199, // Mon Dec 28 2020 04:13:19 GMT
+      1411531879, // Wed Sep 24 2014 06:11:19 GMT
+      1448169079, // Sun Nov 22 2015 06:11:19 GMT
+    ];
+    // timestamps.shuffle();
+    // var postsCategory = 
+
   }
 }

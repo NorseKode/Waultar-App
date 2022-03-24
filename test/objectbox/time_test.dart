@@ -54,4 +54,8 @@ void main() {
     print(updatedbytevector.timestamps.toString());
     print(updatedbytevector.timestamp.toString());
   });
+
+  group(' - creation of buckets from parsed datapoints', () {
+    
+  });
 }

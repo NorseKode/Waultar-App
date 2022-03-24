@@ -70,7 +70,7 @@ Future<void> main() async {
     print('amount               -> ${name.count}');
     print('linked datapoints    -> ${name.dataPoints.length}');
     print('linked names         -> ${name.children.length}');
-    print('category             -> ${name.dataCategory.target!.name}');
+    print('category             -> ${name.dataCategory.target!.category.name}');
     print('');
     print('children names : ');
     if (name.children.isEmpty) {
@@ -100,7 +100,7 @@ Future<void> main() async {
       expect(result.children.length, 0);
       expect(result.dataPoints.length, 14);
       expect(result.dataCategory.hasValue, true);
-      expect(result.dataCategory.target!.name, 'Posts');
+      expect(result.dataCategory.target!.category.name, 'Posts');
     });
 
     test(' - facebook activity history in security and login information',
@@ -113,7 +113,7 @@ Future<void> main() async {
       expect(result.children.length, 3);
       expect(result.count, 3);
       expect(result.dataCategory.hasValue, true);
-      expect(result.dataCategory.target!.name, 'Logged Data');
+      expect(result.dataCategory.target!.category.name, 'Logged Data');
     });
 
     test(" - facebook messages autofillInformation", () async {
@@ -122,7 +122,7 @@ Future<void> main() async {
       expect(result.dataPoints.length, 1);
       expect(result.children.length, 0);
       expect(result.dataCategory.hasValue, true);
-      expect(result.dataCategory.target!.name, 'Messaging');
+      expect(result.dataCategory.target!.category.name, 'Messaging');
 
       var dataMap = result.dataPoints.first.asMap;
       expect(dataMap.length, 9);
@@ -135,7 +135,7 @@ Future<void> main() async {
       expect(result.dataPoints.length, 1);
       expect(result.children.length, 11);
       expect(result.dataCategory.hasValue, true);
-      expect(result.dataCategory.target!.name, 'Profile');
+      expect(result.dataCategory.target!.category.name, 'Profile');
 
       var names = result.children.map((element) => element.name).toList();
       expect(names.contains('name'), true);
@@ -161,7 +161,7 @@ Future<void> main() async {
       expect(result.name, 'Lukas Vinther Offenberg Larsen');
       expect(result.count, 3);
       expect(result.dataCategory.hasValue, true);
-      expect(result.dataCategory.target!.name, 'Messaging');
+      expect(result.dataCategory.target!.category.name, 'Messaging');
       expect(result.dataPoints.length, 1);
       expect(result.children.length, 2);
       expect(result.children.first.count, 2);
@@ -195,7 +195,7 @@ Future<void> main() async {
       expect(result.name, 'comments');
       expect(result.count, 6);
       expect(result.dataCategory.hasValue, true);
-      expect(result.dataCategory.target!.name, 'Reactions');
+      expect(result.dataCategory.target!.category.name, 'Reactions');
       expect(result.children.length, 0);
       expect(result.dataPoints.length, 6);
     });
@@ -206,7 +206,7 @@ Future<void> main() async {
       expect(result.children.length, 0);
       expect(result.dataPoints.length, 17);
       expect(result.dataCategory.hasValue, true);
-      expect(result.dataCategory.target!.name, 'Reactions');
+      expect(result.dataCategory.target!.category.name, 'Reactions');
     });
 
     test(" - facebook gaming", () async {
@@ -216,7 +216,7 @@ Future<void> main() async {
       expect(result.children.length, 0);
       expect(result.dataPoints.length, 14);
       expect(result.dataCategory.hasValue, true);
-      expect(result.dataCategory.target!.name, 'Gaming');
+      expect(result.dataCategory.target!.category.name, 'Gaming');
     });
 
     test(" - your topics", () async {
@@ -226,7 +226,7 @@ Future<void> main() async {
       expect(result.children.length, 0);
       expect(result.dataPoints.length, 1);
       expect(result.dataCategory.hasValue, true);
-      expect(result.dataCategory.target!.name, 'Advertisement');
+      expect(result.dataCategory.target!.category.name, 'Advertisement');
     });
   });
 }

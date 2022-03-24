@@ -20,7 +20,7 @@ class PresentationHelper {
     _appLogger.logger.info('Total links       -> ${_utilsRepo.getTotalCountLinks().toString()}');
     _appLogger.logger.info('Category names and counts:');
     for (var category in _utilsRepo.getAllCategories()) {
-      _appLogger.logger.info('${category.name} -> ${category.count}');
+      _appLogger.logger.info('${category.category.name} -> ${category.count}');
     }
   }
 

@@ -48,7 +48,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(2, 8521560814133505752),
       name: 'DataCategory',
-      lastPropertyId: const IdUid(6, 5146326500439392814),
+      lastPropertyId: const IdUid(7, 2736504185050087481),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -72,14 +72,8 @@ final _entities = <ModelEntity>[
             type: 30,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 1481045219983849224),
-            name: 'name',
-            type: 9,
-            flags: 2080,
-            indexId: const IdUid(1, 3225060361381272079)),
-        ModelProperty(
-            id: const IdUid(6, 5146326500439392814),
-            name: 'dbColor',
+            id: const IdUid(7, 2736504185050087481),
+            name: 'dbCategory',
             type: 6,
             flags: 0)
       ],
@@ -802,7 +796,7 @@ ModelDefinition getObjectBoxModel() {
       lastRelationId: const IdUid(8, 2590360741820126253),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
-      retiredIndexUids: const [],
+      retiredIndexUids: const [3225060361381272079],
       retiredPropertyUids: const [
         2035953540501364365,
         3577269985980726905,
@@ -810,7 +804,9 @@ ModelDefinition getObjectBoxModel() {
         8919670594220832819,
         5089136858942224688,
         2643806434806109173,
-        9018092681122822111
+        9018092681122822111,
+        1481045219983849224,
+        5146326500439392814
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -864,14 +860,12 @@ ModelDefinition getObjectBoxModel() {
               .matchingFoldersInstagram
               .map(fbb.writeString)
               .toList(growable: false));
-          final nameOffset = fbb.writeString(object.name);
-          fbb.startTable(7);
+          fbb.startTable(8);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.count);
           fbb.addOffset(2, matchingFoldersFacebookOffset);
           fbb.addOffset(3, matchingFoldersInstagramOffset);
-          fbb.addOffset(4, nameOffset);
-          fbb.addInt64(5, object.dbColor);
+          fbb.addInt64(6, object.dbCategory);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -882,8 +876,6 @@ ModelDefinition getObjectBoxModel() {
           final object = DataCategory(
               id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
               count: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0),
-              name: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 12, ''),
               matchingFoldersFacebook: const fb.ListReader<String>(
                       fb.StringReader(asciiOptimization: true),
                       lazy: false)
@@ -892,8 +884,8 @@ ModelDefinition getObjectBoxModel() {
                       fb.StringReader(asciiOptimization: true),
                       lazy: false)
                   .vTableGet(buffer, rootOffset, 10, []))
-            ..dbColor =
-                const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
+            ..dbCategory =
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
           InternalToManyAccess.setRelInfo(
               object.dataPointNames,
               store,
@@ -1640,13 +1632,9 @@ class DataCategory_ {
   static final matchingFoldersInstagram =
       QueryStringVectorProperty<DataCategory>(_entities[1].properties[3]);
 
-  /// see [DataCategory.name]
-  static final name =
-      QueryStringProperty<DataCategory>(_entities[1].properties[4]);
-
-  /// see [DataCategory.dbColor]
-  static final dbColor =
-      QueryIntegerProperty<DataCategory>(_entities[1].properties[5]);
+  /// see [DataCategory.dbCategory]
+  static final dbCategory =
+      QueryIntegerProperty<DataCategory>(_entities[1].properties[4]);
 }
 
 /// [DataPoint] entity fields to define ObjectBox queries.

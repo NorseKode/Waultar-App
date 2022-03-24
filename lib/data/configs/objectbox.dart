@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:path/path.dart' as dart_path;
@@ -22,7 +21,6 @@ class ObjectBox {
       var listToAdd = <DataCategory>[];
 
       var interactions = DataCategory(
-        name: "Interactions",
         matchingFoldersFacebook: [
           "activity_messages",
           "polls",
@@ -37,12 +35,11 @@ class ObjectBox {
           "ads_and_content",
           "saved"
         ],
-        color: CategoryColor.interactions,
+        category: CategoryEnum.interactions,
       );
       listToAdd.add(interactions);
 
       var advertisement = DataCategory(
-        name: "Advertisement",
         matchingFoldersFacebook: [
           "ads_information",
           "other_logged_information",
@@ -54,22 +51,20 @@ class ObjectBox {
           "monetization",
           "ads_interests.json"
         ],
-        color: CategoryColor.advertisement,
+        category: CategoryEnum.advertisement,
       );
       listToAdd.add(advertisement);
 
       var thirdPartyExchanges = DataCategory(
-        name: "Third Party Exchanges",
         matchingFoldersFacebook: [
           "apps_and_websites_off_of_facebook",
         ],
         matchingFoldersInstagram: [],
-        color: CategoryColor.thirdPartyExchanges,
+        category: CategoryEnum.thirdPartyExchanges,
       );
       listToAdd.add(thirdPartyExchanges);
 
       var other = DataCategory(
-        name: "Other",
         matchingFoldersFacebook: [
           "bug_bounty",
           "communities",
@@ -90,24 +85,22 @@ class ObjectBox {
           "guides",
           "fundraisers",
         ],
-        color: CategoryColor.other,
+        category: CategoryEnum.other,
       );
       listToAdd.add(other);
 
       var reactions = DataCategory(
-        name: "Reactions",
         matchingFoldersFacebook: [
           "posts_and_comments.json",
         ],
         matchingFoldersInstagram: [
           "likes",
         ],
-        color: CategoryColor.reactions,
+        category: CategoryEnum.reactions,
       );
       listToAdd.add(reactions);
 
       var comments = DataCategory(
-        name: 'Comments',
         matchingFoldersFacebook: [
           "comments.json",
           "your_comments_in_groups.json",
@@ -115,12 +108,11 @@ class ObjectBox {
         matchingFoldersInstagram: [
           "comments",
         ],
-        color: CategoryColor.comments,
+        category: CategoryEnum.comments,
       );
       listToAdd.add(comments);
 
       var social = DataCategory(
-        name: "Social",
         matchingFoldersFacebook: [
           "events",
           "friends_and_followers",
@@ -132,22 +124,20 @@ class ObjectBox {
           "events",
           "followers_and_following",
         ],
-        color: CategoryColor.social,
+        category: CategoryEnum.social,
       );
       listToAdd.add(social);
 
       var gaming = DataCategory(
-        name: "Gaming",
         matchingFoldersFacebook: [
           "facebook_gaming",
         ],
         matchingFoldersInstagram: [],
-        color: CategoryColor.gaming,
+        category: CategoryEnum.gaming,
       );
       listToAdd.add(gaming);
 
       var shopping = DataCategory(
-        name: "Shopping",
         matchingFoldersFacebook: [
           "facebook_marketplace",
           "facebook_payments",
@@ -155,35 +145,32 @@ class ObjectBox {
         matchingFoldersInstagram: [
           "recently_viewed_items",
         ],
-        color: CategoryColor.shopping,
+        category: CategoryEnum.shopping,
       );
       listToAdd.add(shopping);
 
       var location = DataCategory(
-        name: "Location",
         matchingFoldersFacebook: [
           "location",
           "your_places",
         ],
         matchingFoldersInstagram: [],
-        color: CategoryColor.location,
+        category: CategoryEnum.location,
       );
       listToAdd.add(location);
 
       var messaging = DataCategory(
-        name: "Messaging",
         matchingFoldersFacebook: [
           "messages",
         ],
         matchingFoldersInstagram: [
           "messages",
         ],
-        color: CategoryColor.messaging,
+        category: CategoryEnum.messaging,
       );
       listToAdd.add(messaging);
 
       var preferences = DataCategory(
-        name: "Preferences",
         matchingFoldersFacebook: [
           "news_feed",
           "preferences",
@@ -192,12 +179,11 @@ class ObjectBox {
           "autofill_information",
           "comments_settings",
         ],
-        color: CategoryColor.preferences,
+        category: CategoryEnum.preferences,
       );
       listToAdd.add(preferences);
 
       var profile = DataCategory(
-        name: "Profile",
         matchingFoldersFacebook: [
           "profile_information",
         ],
@@ -206,24 +192,22 @@ class ObjectBox {
           "login_and_account_creation",
           "information_about_you",
         ],
-        color: CategoryColor.profile,
+        category: CategoryEnum.profile,
       );
       listToAdd.add(profile);
 
       var serach = DataCategory(
-        name: "Serach",
         matchingFoldersFacebook: [
           "search",
         ],
         matchingFoldersInstagram: [
           "recent_searches",
         ],
-        color: CategoryColor.serach,
+        category: CategoryEnum.serach,
       );
       listToAdd.add(serach);
 
       var loggedData = DataCategory(
-        name: "Logged Data",
         matchingFoldersFacebook: [
           "security_and_login_information",
         ],
@@ -231,12 +215,11 @@ class ObjectBox {
           "past_instagram_insights",
           "device_information",
         ],
-        color: CategoryColor.loggedData,
+        category: CategoryEnum.loggedData,
       );
       listToAdd.add(loggedData);
 
       var posts = DataCategory(
-        name: "Posts",
         matchingFoldersFacebook: [
           "posts",
           "short_videos",
@@ -244,31 +227,29 @@ class ObjectBox {
         matchingFoldersInstagram: [
           "content",
         ],
-        color: CategoryColor.posts,
+        category: CategoryEnum.posts,
       );
       listToAdd.add(posts);
 
       var stories = DataCategory(
-        name: "Stories",
         matchingFoldersFacebook: [
           "stories",
         ],
         matchingFoldersInstagram: [
           "stories.json",
         ],
-        color: CategoryColor.stories,
+        category: CategoryEnum.stories,
       );
       listToAdd.add(stories);
 
       var files = DataCategory(
-        name: "Files",
         matchingFoldersFacebook: [
           "",
         ],
         matchingFoldersInstagram: [
           "profile_photos.json",
         ],
-        color: CategoryColor.files,
+        category: CategoryEnum.files,
       );
       listToAdd.add(files);
 

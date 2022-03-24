@@ -24,7 +24,7 @@
     },
     {
       "id": "2:8521560814133505752",
-      "lastPropertyId": "6:5146326500439392814",
+      "lastPropertyId": "7:2736504185050087481",
       "name": "DataCategory",
       "properties": [
         {
@@ -49,15 +49,8 @@
           "type": 30
         },
         {
-          "id": "5:1481045219983849224",
-          "name": "name",
-          "type": 9,
-          "flags": 2080,
-          "indexId": "1:3225060361381272079"
-        },
-        {
-          "id": "6:5146326500439392814",
-          "name": "dbColor",
+          "id": "7:2736504185050087481",
+          "name": "dbCategory",
           "type": 6
         }
       ],
@@ -788,7 +781,9 @@
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
-  "retiredIndexUids": [],
+  "retiredIndexUids": [
+    3225060361381272079
+  ],
   "retiredPropertyUids": [
     2035953540501364365,
     3577269985980726905,
@@ -796,7 +791,9 @@
     8919670594220832819,
     5089136858942224688,
     2643806434806109173,
-    9018092681122822111
+    9018092681122822111,
+    1481045219983849224,
+    5146326500439392814
   ],
   "retiredRelationUids": [],
   "version": 1
