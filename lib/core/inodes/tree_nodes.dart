@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
 import 'package:pretty_json/pretty_json.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
+import 'package:waultar/core/inodes/datapoint_repo.dart';
 import 'package:waultar/core/inodes/media_documents.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_parser.dart';
@@ -172,6 +173,9 @@ class DataPoint {
     sb.write("#####################################\n");
     return sb.toString();
   }
+
+  UIDTO get getUIDTO => UIDTO(stringName, category.target!, asMap);
+  
 }
 
 @Entity()

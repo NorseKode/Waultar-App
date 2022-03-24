@@ -2,6 +2,7 @@
 
 import 'package:tuple/tuple.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
+import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
 import 'package:waultar/data/entities/timebuckets/buckets.dart';
@@ -15,6 +16,10 @@ abstract class IBucketsRepository {
   List<DayBucket> getDaysFromMonth(MonthBucket month);
   List<DayBucket> getDaysFromMonthId(int monthId);
   List<DataPoint> getDataPointsFromDay(DayBucket day);
+  List<YearModel> getAllYearModels();
+  List<MonthModel> getMonthModelsFromYear(YearModel yearModel);
+  List<DayModel> getDayModelsFromMonth(MonthModel monthModel);
+  List<HourModel> getHourModelsFromDay(DayModel dayModel);
 }
 
 class IRepository {
@@ -28,11 +33,13 @@ class BucketsRepository extends IBucketsRepository {
   late final Box<YearBucket> _yearBox;
   late final Box<MonthBucket> _monthBox;
   late final Box<DayBucket> _dayBox;
+  late final Box<DataCategory> _categoryBox;
 
   BucketsRepository(this._context) {
     _yearBox = _context.store.box<YearBucket>();
     _monthBox = _context.store.box<MonthBucket>();
     _dayBox = _context.store.box<DayBucket>();
+    _categoryBox = _context.store.box<DataCategory>();
   }
 
   @override
@@ -90,7 +97,8 @@ class BucketsRepository extends IBucketsRepository {
                 bool hourExists =
                     dayBucket.hours.any((element) => element.hour == hour);
                 if (hourExists) {
-                  var hourBucket = dayBucket.hours.singleWhere((element) => element.hour == hour);
+                  var hourBucket = dayBucket.hours
+                      .singleWhere((element) => element.hour == hour);
                   hourBucket.updateCounts(categoryId, serviceId);
                   hourBucket.dataPoints.add(dataPoint);
                 } else {
@@ -264,5 +272,47 @@ class BucketsRepository extends IBucketsRepository {
   List<DataPoint> getDataPointsFromDay(DayBucket day) {
     var dayBucket = _dayBox.get(day.id);
     return dayBucket == null ? [] : dayBucket.dataPoints;
+  }
+
+  @override
+  List<YearModel> getAllYearModels() {
+    var years = _yearBox.getAll();
+    var listToReturn = <YearModel>[];
+    _context.store.runInTransaction(TxMode.read, () {
+      for (var year in years) {
+        var categoryMap = year.categoryMap;
+        var serviceMap = year.serviceMap;
+      }
+    });
+  }
+
+  @override
+  List<DayModel> getDayModelsFromMonth(MonthModel monthModel) {
+    // TODO: implement getDayModelsFromMonth
+    throw UnimplementedError();
+  }
+
+  @override
+  List<HourModel> getHourModelsFromDay(DayModel dayModel) {
+    // TODO: implement getHourModelsFromDay
+    throw UnimplementedError();
+  }
+
+  @override
+  List<MonthModel> getMonthModelsFromYear(YearModel yearModel) {
+    // TODO: implement getMonthModelsFromYear
+    throw UnimplementedError();
+  }
+
+  DataCategory _getCategory(int id) {
+    var category = _categoryBox.get(id);
+    if (category == null) {
+      return _categoryBox
+          .query(DataCategory_.dbCategory.equals(CategoryEnum.unknown.index))
+          .build()
+          .findUnique()!;
+    } else {
+      return category;
+    }
   }
 }

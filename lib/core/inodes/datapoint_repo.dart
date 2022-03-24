@@ -30,7 +30,7 @@ class DataPointRepository {
       ..limit = limit;
     return builder
         .find()
-        .map((e) => UIDTO(e.stringName, e.category.target!, e.asMap))
+        .map((e) => e.getUIDTO)
         .toList();
   }
 
@@ -47,7 +47,7 @@ class DataPointRepository {
 
     return query
         .find()
-        .map((e) => UIDTO(e.stringName, e.category.target!, e.asMap))
+        .map((e) => e.getUIDTO)
         .toList();
   }
 }
@@ -61,8 +61,7 @@ class UIDTO implements UIModel {
   late DateTime timeStamp;
 
   UIDTO(this.stringName, this.category, this.dataMap) {
-    associatedColor = Colors
-        .amberAccent; // keep this stored in the category instead, or embed in datapoint - depends on how often we will retrieve color together with datapoint
+    associatedColor = category.category.color;
   }
 
   @override
