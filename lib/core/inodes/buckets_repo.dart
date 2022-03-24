@@ -1,6 +1,7 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
 import 'package:tuple/tuple.dart';
+import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/data/configs/objectbox.dart';
@@ -34,12 +35,14 @@ class BucketsRepository extends IBucketsRepository {
   late final Box<MonthBucket> _monthBox;
   late final Box<DayBucket> _dayBox;
   late final Box<DataCategory> _categoryBox;
+  late final Box<ServiceDocument> _serviceBox;
 
   BucketsRepository(this._context) {
     _yearBox = _context.store.box<YearBucket>();
     _monthBox = _context.store.box<MonthBucket>();
     _dayBox = _context.store.box<DayBucket>();
     _categoryBox = _context.store.box<DataCategory>();
+    _serviceBox = _context.store.box<ServiceDocument>();
   }
 
   @override
@@ -276,14 +279,36 @@ class BucketsRepository extends IBucketsRepository {
 
   @override
   List<YearModel> getAllYearModels() {
-    var years = _yearBox.getAll();
     var listToReturn = <YearModel>[];
     _context.store.runInTransaction(TxMode.read, () {
+      var years = _yearBox.getAll();
       for (var year in years) {
+        var categoryTuples = <Tuple2<DataCategory, int>>[];
+        var serviceTuples = <Tuple2<ServiceDocument, int>>[];
         var categoryMap = year.categoryMap;
         var serviceMap = year.serviceMap;
+
+        for (var entry in categoryMap.entries) {
+          DataCategory category = _getCategory(entry.key);
+          categoryTuples.add(Tuple2(category, entry.value));
+        }
+        for (var entry in serviceMap.entries) {
+          ServiceDocument service = _getService(entry.key);
+          serviceTuples.add(Tuple2(service, entry.value));
+        }
+
+        var model = YearModel(
+          id: year.id,
+          year: year.year,
+          total: year.total,
+          categoryCount: categoryTuples,
+          serviceCount: serviceTuples,
+        );
+
+        listToReturn.add(model);
       }
     });
+    return listToReturn;
   }
 
   @override
@@ -315,4 +340,6 @@ class BucketsRepository extends IBucketsRepository {
       return category;
     }
   }
+
+  ServiceDocument _getService(int id) => _serviceBox.get(id)!;
 }
