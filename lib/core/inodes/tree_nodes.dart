@@ -42,6 +42,11 @@ class DataPoint {
     createdAt = DateTime.now();
   }
 
+  int get dbCreatedAt => createdAt.microsecondsSinceEpoch;
+  set dbCreatedAt(int value) {
+    createdAt = DateTime.fromMicrosecondsSinceEpoch(value, isUtc: false);
+  }
+
   Map<String, dynamic> get asMap {
     var decoded = jsonDecode(values);
     if (decoded is List<dynamic>) {

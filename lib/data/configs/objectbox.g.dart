@@ -87,7 +87,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(3, 747020510639630195),
       name: 'DataPoint',
-      lastPropertyId: const IdUid(12, 9119741286260688645),
+      lastPropertyId: const IdUid(13, 1103209797040482806),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -142,6 +142,11 @@ final _entities = <ModelEntity>[
             id: const IdUid(12, 9119741286260688645),
             name: 'createdAt',
             type: 12,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(13, 1103209797040482806),
+            name: 'dbCreatedAt',
+            type: 6,
             flags: 0)
       ],
       relations: <ModelRelation>[
@@ -914,7 +919,7 @@ ModelDefinition getObjectBoxModel() {
               .map(fbb.writeString)
               .toList(growable: false));
           final valuesOffset = fbb.writeString(object.values);
-          fbb.startTable(13);
+          fbb.startTable(14);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.dataPointName.targetId);
           fbb.addOffset(2, stringNameOffset);
@@ -924,6 +929,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(6, searchStringsOffset);
           fbb.addOffset(7, valuesOffset);
           fbb.addInt64(11, object.createdAt.microsecondsSinceEpoch * 1000);
+          fbb.addInt64(12, object.dbCreatedAt);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -944,7 +950,9 @@ ModelDefinition getObjectBoxModel() {
             ..createdAt = DateTime.fromMicrosecondsSinceEpoch(
                 (const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0) /
                         1000)
-                    .round());
+                    .round())
+            ..dbCreatedAt =
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 28, 0);
           object.dataPointName.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
           object.dataPointName.attach(store);
@@ -1666,6 +1674,10 @@ class DataPoint_ {
   /// see [DataPoint.createdAt]
   static final createdAt =
       QueryIntegerProperty<DataPoint>(_entities[2].properties[8]);
+
+  /// see [DataPoint.dbCreatedAt]
+  static final dbCreatedAt =
+      QueryIntegerProperty<DataPoint>(_entities[2].properties[9]);
 
   /// see [DataPoint.images]
   static final images =
