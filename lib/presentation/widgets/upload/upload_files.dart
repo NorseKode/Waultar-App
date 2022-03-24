@@ -102,6 +102,7 @@ class FileUploader {
 /// ```
 List<String> extractZip(Map<String, String> input) {
   PerformanceHelper? performance;
+  var fileCount = 0;
   var isPerformanceTracking = input["is_performance_tracking"] == "true";
 
   if (isPerformanceTracking) {
@@ -122,10 +123,11 @@ List<String> extractZip(Map<String, String> input) {
   for (var file in archive.files) {
     // only take the files and skip the optional .zip.enc file
     if (file.isFile && !file.name.endsWith('zip.enc')) {
-      // if (isPerformanceTracking) {
+      if (isPerformanceTracking) {
+        fileCount++;
       //   performance2!.reset();
       //   performance2.start();
-      // }
+      }
 
       var filePath = dart_path.normalize(destDirPath + '/' + file.name);
       final outputStream = OutputFileStream(filePath);
@@ -143,7 +145,7 @@ List<String> extractZip(Map<String, String> input) {
   list.sort();
 
   if (isPerformanceTracking) {
-    performance!.stopParentAndWriteToFile("zip-extract");
+    performance!.stopParentAndWriteToFile("zip-extract", metadata: "File count: $fileCount");
   }
 
   return list;

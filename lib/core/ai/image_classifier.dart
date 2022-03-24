@@ -105,7 +105,7 @@ class ImageClassifier extends IMLModel {
     PerformanceHelper? performance;
 
     // if (ISPERFORMANCETRACKING) {
-    //   performance = PerformanceHelper(_appLogger);
+    //   performance = PerformanceHelper(pathToPerformanceFile: locator.get<String>(instanceName: 'performance_folder'));
     //   performance.start();
     // }
 

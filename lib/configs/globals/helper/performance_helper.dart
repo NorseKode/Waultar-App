@@ -34,7 +34,7 @@ class PerformanceHelper {
   // Duration stopAndWriteToFile(String identifier) {
   // }
 
-  void stopParentAndWriteToFile(String fileName) {
+  void stopParentAndWriteToFile(String fileName, {String? metadata}) {
     _parentTimer.stop();
     var elapsed = _parentTimer.elapsed;
     _parentTimeSpent = elapsed.inMilliseconds;
@@ -42,7 +42,7 @@ class PerformanceHelper {
     _summary(fileName, parentKey);
   }
 
-  void _summary(String summaryFileName, String wholeIdentifier, {String? individualIdentifier}) {
+  void _summary(String summaryFileName, String wholeIdentifier, {String? individualIdentifier, String? metadata}) {
     var summaryFile = File(
       dart_path.normalize(
         dart_path.join(
@@ -74,6 +74,9 @@ class PerformanceHelper {
     //   summaryFile.writeAsStringSync("with $individualCount elements\n", mode: FileMode.append);
     //   summaryFile.writeAsStringSync("and a summed time of $individualSummedTimeMs\n", mode: FileMode.append);
     // }
+    if (metadata != null) {
+      summaryFile.writeAsStringSync("Metadata: $metadata", mode: FileMode.append);
+    }
   }
 
   // void dispose() {
@@ -81,9 +84,14 @@ class PerformanceHelper {
   // }
 }
 
-// class PerformanceJson {
-//   String parentKey;
+// class PerformanceDataPointBase {
+//   String key;
 //   Duration elapsedTime;
+//   List<PerformanceDataPointChild> childs;
 
-//   PerformanceJson({required this.parentKey, required this.elapsedTime});
+//   PerformanceDataPointBase({required this.key, required this.elapsedTime, required this.childs});
+// }
+
+// class PerformanceDataPointChild{
+
 // }
