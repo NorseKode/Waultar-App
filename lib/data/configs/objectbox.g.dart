@@ -227,7 +227,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(5, 3433188621516381457),
       name: 'DayBucket',
-      lastPropertyId: const IdUid(7, 3398435305510469048),
+      lastPropertyId: const IdUid(9, 8340614313205018388),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -253,13 +253,13 @@ final _entities = <ModelEntity>[
             indexId: const IdUid(10, 1078578364708494110),
             relationTarget: 'MonthBucket'),
         ModelProperty(
-            id: const IdUid(6, 3337823813404384037),
-            name: 'categoryCountMap',
+            id: const IdUid(8, 9104946020572187425),
+            name: 'dbCategoryMap',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(7, 3398435305510469048),
-            name: 'serviceCountMap',
+            id: const IdUid(9, 8340614313205018388),
+            name: 'dbServiceMap',
             type: 9,
             flags: 0)
       ],
@@ -463,7 +463,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(10, 8435003594428266350),
       name: 'MonthBucket',
-      lastPropertyId: const IdUid(7, 3498040681430748298),
+      lastPropertyId: const IdUid(9, 3207337310923630643),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -489,13 +489,13 @@ final _entities = <ModelEntity>[
             indexId: const IdUid(21, 7018994529609422724),
             relationTarget: 'YearBucket'),
         ModelProperty(
-            id: const IdUid(6, 2974902989043831979),
-            name: 'categoryCountMap',
+            id: const IdUid(8, 2359507812740817136),
+            name: 'dbCategoryMap',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(7, 3498040681430748298),
-            name: 'serviceCountMap',
+            id: const IdUid(9, 3207337310923630643),
+            name: 'dbServiceMap',
             type: 9,
             flags: 0)
       ],
@@ -809,7 +809,11 @@ ModelDefinition getObjectBoxModel() {
         5146326500439392814,
         5326578534447053821,
         8948132087986429371,
-        4553593271379210224
+        4553593271379210224,
+        3337823813404384037,
+        3398435305510469048,
+        2974902989043831979,
+        3498040681430748298
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -1044,16 +1048,15 @@ ModelDefinition getObjectBoxModel() {
           object.id = id;
         },
         objectToFB: (DayBucket object, fb.Builder fbb) {
-          final categoryCountMapOffset =
-              fbb.writeString(object.categoryCountMap);
-          final serviceCountMapOffset = fbb.writeString(object.serviceCountMap);
-          fbb.startTable(8);
+          final dbCategoryMapOffset = fbb.writeString(object.dbCategoryMap);
+          final dbServiceMapOffset = fbb.writeString(object.dbServiceMap);
+          fbb.startTable(10);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.day);
           fbb.addInt64(2, object.total);
           fbb.addInt64(4, object.month.targetId);
-          fbb.addOffset(5, categoryCountMapOffset);
-          fbb.addOffset(6, serviceCountMapOffset);
+          fbb.addOffset(7, dbCategoryMapOffset);
+          fbb.addOffset(8, dbServiceMapOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1064,11 +1067,11 @@ ModelDefinition getObjectBoxModel() {
           final object = DayBucket(
               id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
               total: const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0),
-              day: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0),
-              categoryCountMap: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 14, ''),
-              serviceCountMap: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 16, ''));
+              day: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0))
+            ..dbCategoryMap = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 18, '')
+            ..dbServiceMap = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 20, '');
           object.month.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
           object.month.attach(store);
@@ -1279,16 +1282,15 @@ ModelDefinition getObjectBoxModel() {
           object.id = id;
         },
         objectToFB: (MonthBucket object, fb.Builder fbb) {
-          final categoryCountMapOffset =
-              fbb.writeString(object.categoryCountMap);
-          final serviceCountMapOffset = fbb.writeString(object.serviceCountMap);
-          fbb.startTable(8);
+          final dbCategoryMapOffset = fbb.writeString(object.dbCategoryMap);
+          final dbServiceMapOffset = fbb.writeString(object.dbServiceMap);
+          fbb.startTable(10);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.month);
           fbb.addInt64(2, object.total);
           fbb.addInt64(4, object.year.targetId);
-          fbb.addOffset(5, categoryCountMapOffset);
-          fbb.addOffset(6, serviceCountMapOffset);
+          fbb.addOffset(7, dbCategoryMapOffset);
+          fbb.addOffset(8, dbServiceMapOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1299,11 +1301,11 @@ ModelDefinition getObjectBoxModel() {
           final object = MonthBucket(
               id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
               total: const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0),
-              month: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0),
-              categoryCountMap: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 14, ''),
-              serviceCountMap: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 16, ''));
+              month: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0))
+            ..dbCategoryMap = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 18, '')
+            ..dbServiceMap = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 20, '');
           object.year.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
           object.year.attach(store);
@@ -1745,12 +1747,12 @@ class DayBucket_ {
   static final month =
       QueryRelationToOne<DayBucket, MonthBucket>(_entities[4].properties[3]);
 
-  /// see [DayBucket.categoryCountMap]
-  static final categoryCountMap =
+  /// see [DayBucket.dbCategoryMap]
+  static final dbCategoryMap =
       QueryStringProperty<DayBucket>(_entities[4].properties[4]);
 
-  /// see [DayBucket.serviceCountMap]
-  static final serviceCountMap =
+  /// see [DayBucket.dbServiceMap]
+  static final dbServiceMap =
       QueryStringProperty<DayBucket>(_entities[4].properties[5]);
 
   /// see [DayBucket.dataPoints]
@@ -1896,12 +1898,12 @@ class MonthBucket_ {
   static final year =
       QueryRelationToOne<MonthBucket, YearBucket>(_entities[9].properties[3]);
 
-  /// see [MonthBucket.categoryCountMap]
-  static final categoryCountMap =
+  /// see [MonthBucket.dbCategoryMap]
+  static final dbCategoryMap =
       QueryStringProperty<MonthBucket>(_entities[9].properties[4]);
 
-  /// see [MonthBucket.serviceCountMap]
-  static final serviceCountMap =
+  /// see [MonthBucket.dbServiceMap]
+  static final dbServiceMap =
       QueryStringProperty<MonthBucket>(_entities[9].properties[5]);
 
   /// see [MonthBucket.days]

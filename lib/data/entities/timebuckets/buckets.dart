@@ -35,7 +35,6 @@ class YearBucket {
     categoryMap =
         Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
   }
-
   set dbServiceMap(String json) {
     serviceMap =
         Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
@@ -48,8 +47,8 @@ class MonthBucket {
   int month;
   int total;
 
-  String categoryCountMap;
-  String serviceCountMap;
+  late Map<int, int> categoryMap;
+  late Map<int, int> serviceMap;
 
   final year = ToOne<YearBucket>();
   final days = ToMany<DayBucket>();
@@ -58,9 +57,24 @@ class MonthBucket {
     this.id = 0,
     this.total = 0,
     required this.month,
-    required this.categoryCountMap,
-    required this.serviceCountMap,
-  });
+  }) {
+    categoryMap = {};
+    serviceMap = {};
+  }
+
+  String get dbCategoryMap => jsonEncode(
+      categoryMap.map((key, value) => MapEntry('$key', value)));
+  String get dbServiceMap => jsonEncode(
+      serviceMap.map((key, value) => MapEntry('$key', value)));
+  set dbCategoryMap(String json) {
+    categoryMap =
+        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
+  }
+  set dbServiceMap(String json) {
+    serviceMap =
+        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
+  }
+
 }
 
 @Entity()
@@ -69,8 +83,8 @@ class DayBucket {
   int day;
   int total;
 
-  String categoryCountMap;
-  String serviceCountMap;
+  late Map<int, int> categoryMap;
+  late Map<int, int> serviceMap;
 
   final month = ToOne<MonthBucket>();
   final dataPoints = ToMany<DataPoint>();
@@ -79,9 +93,23 @@ class DayBucket {
     this.id = 0,
     this.total = 0,
     required this.day,
-    required this.categoryCountMap,
-    required this.serviceCountMap,
-  });
+  }) {
+    categoryMap = {};
+    serviceMap = {};
+  }
+
+  String get dbCategoryMap => jsonEncode(
+      categoryMap.map((key, value) => MapEntry('$key', value)));
+  String get dbServiceMap => jsonEncode(
+      serviceMap.map((key, value) => MapEntry('$key', value)));
+  set dbCategoryMap(String json) {
+    categoryMap =
+        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
+  }
+  set dbServiceMap(String json) {
+    serviceMap =
+        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
+  }
 }
 
 @Entity()

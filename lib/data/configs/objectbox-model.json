@@ -206,7 +206,7 @@
     },
     {
       "id": "5:3433188621516381457",
-      "lastPropertyId": "7:3398435305510469048",
+      "lastPropertyId": "9:8340614313205018388",
       "name": "DayBucket",
       "properties": [
         {
@@ -234,13 +234,13 @@
           "relationTarget": "MonthBucket"
         },
         {
-          "id": "6:3337823813404384037",
-          "name": "categoryCountMap",
+          "id": "8:9104946020572187425",
+          "name": "dbCategoryMap",
           "type": 9
         },
         {
-          "id": "7:3398435305510469048",
-          "name": "serviceCountMap",
+          "id": "9:8340614313205018388",
+          "name": "dbServiceMap",
           "type": 9
         }
       ],
@@ -454,7 +454,7 @@
     },
     {
       "id": "10:8435003594428266350",
-      "lastPropertyId": "7:3498040681430748298",
+      "lastPropertyId": "9:3207337310923630643",
       "name": "MonthBucket",
       "properties": [
         {
@@ -482,13 +482,13 @@
           "relationTarget": "YearBucket"
         },
         {
-          "id": "6:2974902989043831979",
-          "name": "categoryCountMap",
+          "id": "8:2359507812740817136",
+          "name": "dbCategoryMap",
           "type": 9
         },
         {
-          "id": "7:3498040681430748298",
-          "name": "serviceCountMap",
+          "id": "9:3207337310923630643",
+          "name": "dbServiceMap",
           "type": 9
         }
       ],
@@ -796,7 +796,11 @@
     5146326500439392814,
     5326578534447053821,
     8948132087986429371,
-    4553593271379210224
+    4553593271379210224,
+    3337823813404384037,
+    3398435305510469048,
+    2974902989043831979,
+    3498040681430748298
   ],
   "retiredRelationUids": [],
   "version": 1
