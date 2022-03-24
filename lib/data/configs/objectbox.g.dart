@@ -693,7 +693,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(16, 1644285727565833936),
       name: 'YearBucket',
-      lastPropertyId: const IdUid(6, 4553593271379210224),
+      lastPropertyId: const IdUid(8, 1335020341720300023),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -713,13 +713,13 @@ final _entities = <ModelEntity>[
             type: 6,
             flags: 0),
         ModelProperty(
-            id: const IdUid(5, 8948132087986429371),
-            name: 'categoryCountMap',
+            id: const IdUid(7, 1597141059060206647),
+            name: 'dbCategoryMap',
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(6, 4553593271379210224),
-            name: 'serviceCountMap',
+            id: const IdUid(8, 1335020341720300023),
+            name: 'dbServiceMap',
             type: 9,
             flags: 0)
       ],
@@ -807,7 +807,9 @@ ModelDefinition getObjectBoxModel() {
         9018092681122822111,
         1481045219983849224,
         5146326500439392814,
-        5326578534447053821
+        5326578534447053821,
+        8948132087986429371,
+        4553593271379210224
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -1518,15 +1520,14 @@ ModelDefinition getObjectBoxModel() {
           object.id = id;
         },
         objectToFB: (YearBucket object, fb.Builder fbb) {
-          final categoryCountMapOffset =
-              fbb.writeString(object.categoryCountMap);
-          final serviceCountMapOffset = fbb.writeString(object.serviceCountMap);
-          fbb.startTable(7);
+          final dbCategoryMapOffset = fbb.writeString(object.dbCategoryMap);
+          final dbServiceMapOffset = fbb.writeString(object.dbServiceMap);
+          fbb.startTable(9);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.year);
           fbb.addInt64(2, object.total);
-          fbb.addOffset(4, categoryCountMapOffset);
-          fbb.addOffset(5, serviceCountMapOffset);
+          fbb.addOffset(6, dbCategoryMapOffset);
+          fbb.addOffset(7, dbServiceMapOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1537,11 +1538,11 @@ ModelDefinition getObjectBoxModel() {
           final object = YearBucket(
               id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
               total: const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0),
-              year: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0),
-              categoryCountMap: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 12, ''),
-              serviceCountMap: const fb.StringReader(asciiOptimization: true)
-                  .vTableGet(buffer, rootOffset, 14, ''));
+              year: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0))
+            ..dbCategoryMap = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 16, '')
+            ..dbServiceMap = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 18, '');
           InternalToManyAccess.setRelInfo(
               object.months,
               store,
@@ -2038,12 +2039,12 @@ class YearBucket_ {
   static final total =
       QueryIntegerProperty<YearBucket>(_entities[15].properties[2]);
 
-  /// see [YearBucket.categoryCountMap]
-  static final categoryCountMap =
+  /// see [YearBucket.dbCategoryMap]
+  static final dbCategoryMap =
       QueryStringProperty<YearBucket>(_entities[15].properties[3]);
 
-  /// see [YearBucket.serviceCountMap]
-  static final serviceCountMap =
+  /// see [YearBucket.dbServiceMap]
+  static final dbServiceMap =
       QueryStringProperty<YearBucket>(_entities[15].properties[4]);
 
   /// see [YearBucket.months]

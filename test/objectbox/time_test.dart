@@ -1,9 +1,11 @@
 // ignore_for_file: avoid_print
 
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pretty_json/pretty_json.dart';
 import 'package:waultar/core/inodes/buckets_repo.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/data/configs/objectbox.dart';
@@ -84,9 +86,39 @@ void main() {
       expect(greaterThenLaterTime, 0);
     });
 
-    test(' - test buckets creation throws', () {
+    test(' - test buckets creation', () {
       var now = DateTime.now();
-      expect(() => _bucketsRepo.createBuckets(now), throwsA(isA<UnimplementedError>()));
     });
+
+    test(' - test year buckets count', () {
+      var count = _bucketsRepo.getAllYears().length;
+      expect(count, 0);
+    });
+
+    test(' - test month buckets count', () {
+      var testMap = {'1': 13};
+      var encoded = jsonEncode(testMap);
+      var decoded = jsonDecode(encoded);
+      var pretty = prettyJson(decoded);
+      print(pretty);
+
+      var yearBucket = YearBucket(year: 2022);
+      yearBucket.categoryMap.addAll({1:30});
+      var _yearBox = _context.store.box<YearBucket>();
+      int createdId = _yearBox.put(yearBucket);
+      var created = _yearBox.get(createdId)!;
+
+      var map = created.categoryMap;
+      expect(map.length, 1);
+      expect(map.keys.first, 1);
+
+    });
+
+    test(' - test day bucket count', () {
+    });
+
+    test(' - test buckets creation throws', () {
+    });
+
   });
 }

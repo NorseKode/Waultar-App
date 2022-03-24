@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:objectbox/objectbox.dart';
@@ -12,8 +13,8 @@ class YearBucket {
 
   int total;
 
-  String categoryCountMap;
-  String serviceCountMap;
+  late Map<int, int> categoryMap;
+  late Map<int, int> serviceMap;
 
   final months = ToMany<MonthBucket>();
 
@@ -21,9 +22,24 @@ class YearBucket {
     this.id = 0,
     this.total = 0,
     required this.year,
-    required this.categoryCountMap,
-    required this.serviceCountMap,
-  });
+  }) {
+    categoryMap = {};
+    serviceMap = {};
+  }
+
+  String get dbCategoryMap => jsonEncode(
+      categoryMap.map((key, value) => MapEntry('$key', value)));
+  String get dbServiceMap => jsonEncode(
+      serviceMap.map((key, value) => MapEntry('$key', value)));
+  set dbCategoryMap(String json) {
+    categoryMap =
+        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
+  }
+
+  set dbServiceMap(String json) {
+    serviceMap =
+        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
+  }
 }
 
 @Entity()
@@ -83,11 +99,10 @@ class DateTimeTest {
   ColorEnum? color;
 
   DateTimeTest({
-    this.id = 0, 
+    this.id = 0,
   }) {
     timestamp = DateTime.now();
     timestamps = [];
-
   }
 
   int? get dbColor {
@@ -110,5 +125,3 @@ enum ColorEnum {
   white,
   grey,
 }
-
-

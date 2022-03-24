@@ -57,17 +57,39 @@ class BucketsRepository extends IBucketsRepository {
 
         for (var timestamp in timestamps) {
           var dissected = _dissectDateTime(timestamp);
+
+          // the values lie in the tuple
           int year = dissected.item1;
           int month = dissected.item2;
           int day = dissected.item3;
           int hour = dissected.item4;
 
-          var yearBucket = years.singleWhere((element) => element.year == year,
-              orElse: () => YearBucket(
-                  year: year, categoryCountMap: '{}', serviceCountMap: '{}'));
+          bool yearExists = years.any((element) => element.year == year);
+          if (yearExists) {
+            
+            var yearBucket = years.singleWhere((element) => element.year == year);
+            var categoryMap = yearBucket.categoryMap;
+
+          } else {
+
+            // if the year is not present we have to create a new bucket for each time entity
+            var yearBucket = YearBucket(year: year, total: 1);
+            yearBucket.categoryMap = {categoryId: 1};
+            yearBucket.serviceMap = {serviceId: 1};
+            var monthBucket = MonthBucket(month: month, categoryCountMap: '{"$categoryId":${1.toString()}}', serviceCountMap: '{"$serviceId":${1.toString()}}', total: 1);
+            var dayBucket = DayBucket(day: day, categoryCountMap: '{"$categoryId":${1.toString()}}', serviceCountMap: '{"$serviceId":${1.toString()}}', total: 1);
+            dayBucket.dataPoints.add(dataPoint);
+            monthBucket.days.add(dayBucket);
+            yearBucket.months.add(monthBucket);
+            years.add(yearBucket);
+          }
+          
         }
       }
     }
+
+    // when the stream has processed each element we update all the buckets via the root bucket in a single transaction
+    _yearBox.putMany(years);
   }
 
   List<DateTime> _scrapeUniqueTimestamps(DataPoint dataPoint) {
