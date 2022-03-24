@@ -39,6 +39,7 @@ class TestHelper {
         .build()
         .findUnique()!;
   }
+
   static ProfileDocument createTestProfile(ObjectBox context) {
     var box = context.store.box<ProfileDocument>();
     int created = box.put(ProfileDocument(name: 'Test Profile Name'));
@@ -152,15 +153,48 @@ class TestHelper {
         .query(ServiceDocument_.serviceName.equals('Facebook'))
         .build()
         .findUnique()!;
+    
     var yourPosts = DataPointName(name: 'your posts');
     yourPosts.service.target = fbService;
-    yourPosts.dataCategory.target = posts;
+
     int i = 0;
     for (; i < timestamps.length / 2; i++) {
-      var dataPoint = DataPoint.parse(posts, yourPosts, fbService, testProfile, json, "");
+      var data = {
+        'title': 'test title',
+        'attachments': [],
+        'data': {
+          'post': 'this is a post',
+          'data': {
+            'created_timestamp': timestamps[i]
+          }
+        },
+      };
+      var dataPoint =
+          DataPoint.parse(posts, yourPosts, fbService, testProfile, data, "");
+      yourPosts.dataPoints.add(dataPoint);
     }
+
+    var yourComments = DataPointName(name: 'your comments');
+    yourComments.service.target = fbService;
     for (; i < timestamps.length; i++) {
-      
+      var data = {
+        'title': 'test title',
+        'attachments': [],
+        'data': {
+          'post': 'this is a post',
+          'data': {
+            'created_timestamp': timestamps[i]
+          },
+          'timestamp': timestamps[i]
+        },
+        'updated_timestamp': timestamps[i-1]
+      };
+      var dataPoint =
+          DataPoint.parse(comments, yourComments, fbService, testProfile, data, "");
+      yourComments.dataPoints.add(dataPoint);    
     }
+    comments.dataPointNames.add(yourComments);
+    posts.dataPointNames.add(yourPosts);
+    _categoryBox.putMany([posts, comments]);
   }
 }

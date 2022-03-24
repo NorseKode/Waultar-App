@@ -1,7 +1,7 @@
 import 'package:waultar/data/entities/timebuckets/buckets.dart';
 
-class IBucketsRepository {
-
+abstract class IBucketsRepository {
+  void createBuckets(DateTime dataPointsCreatedAfter);
 }
 
 class IRepository {

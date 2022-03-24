@@ -141,7 +141,7 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(12, 9119741286260688645),
             name: 'createdAt',
-            type: 10,
+            type: 12,
             flags: 0)
       ],
       relations: <ModelRelation>[
@@ -923,7 +923,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addInt64(5, object.service.targetId);
           fbb.addOffset(6, searchStringsOffset);
           fbb.addOffset(7, valuesOffset);
-          fbb.addInt64(11, object.createdAt.millisecondsSinceEpoch);
+          fbb.addInt64(11, object.createdAt.microsecondsSinceEpoch * 1000);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -941,8 +941,10 @@ ModelDefinition getObjectBoxModel() {
                 .vTableGet(buffer, rootOffset, 16, [])
             ..values = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 18, '')
-            ..createdAt = DateTime.fromMillisecondsSinceEpoch(
-                const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0));
+            ..createdAt = DateTime.fromMicrosecondsSinceEpoch(
+                (const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0) /
+                        1000)
+                    .round());
           object.dataPointName.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
           object.dataPointName.attach(store);

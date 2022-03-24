@@ -33,7 +33,7 @@ class DataPoint {
   @Transient()
   late Map<String, dynamic> valuesMap;
 
-  @Property(type: PropertyType.date)
+  @Property(type: PropertyType.dateNano)
   late DateTime createdAt;
 
   DataPoint({
