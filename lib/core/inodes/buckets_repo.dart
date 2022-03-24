@@ -14,6 +14,7 @@ abstract class IBucketsRepository {
   List<MonthBucket> getMonthsFromYearId(int yearId);
   List<DayBucket> getDaysFromMonth(MonthBucket month);
   List<DayBucket> getDaysFromMonthId(int monthId);
+  List<DataPoint> getDataPointsFromDay(DayBucket day);
 }
 
 class IRepository {
@@ -257,5 +258,11 @@ class BucketsRepository extends IBucketsRepository {
   @override
   YearBucket? getYear(int year) {
     return _yearBox.query(YearBucket_.year.equals(year)).build().findUnique();
+  }
+
+  @override
+  List<DataPoint> getDataPointsFromDay(DayBucket day) {
+    var dayBucket = _dayBox.get(day.id);
+    return dayBucket == null ? [] : dayBucket.dataPoints;
   }
 }

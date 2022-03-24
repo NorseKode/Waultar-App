@@ -93,6 +93,20 @@ void main() {
 
       var yearBuckets = _bucketsRepo.getAllYears();
       expect(yearBuckets.length, 5);
+
+      var year2022 = _bucketsRepo.getYear(2022)!;
+      expect(year2022.months.length, 2);
+
+      var year2022Months = _bucketsRepo.getMonthsFromYearValue(2022);
+      expect(year2022Months.length, 2);
+      expect(year2022Months.first.month, 3);
+
+      var days = _bucketsRepo.getDaysFromMonth(year2022Months.first);
+      expect(days.length, 2);
+
+      var datapoints = _bucketsRepo.getDataPointsFromDay(days.first);
+      expect(datapoints.length, 1);
+      expect(days.first.dataPoints.first.id, datapoints.first.id);
     });
 
     test(' - test year buckets count', () {
