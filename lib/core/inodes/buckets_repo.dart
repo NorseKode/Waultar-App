@@ -73,12 +73,21 @@ class BucketsRepository extends IBucketsRepository {
           } else {
 
             // if the year is not present we have to create a new bucket for each time entity
+            // this also includes a new map for each bucket, as these are initiated to = {};
             var yearBucket = YearBucket(year: year, total: 1);
             yearBucket.categoryMap = {categoryId: 1};
             yearBucket.serviceMap = {serviceId: 1};
-            var monthBucket = MonthBucket(month: month, categoryCountMap: '{"$categoryId":${1.toString()}}', serviceCountMap: '{"$serviceId":${1.toString()}}', total: 1);
-            var dayBucket = DayBucket(day: day, categoryCountMap: '{"$categoryId":${1.toString()}}', serviceCountMap: '{"$serviceId":${1.toString()}}', total: 1);
+
+            var monthBucket = MonthBucket(month: month, total: 1);
+            monthBucket.categoryMap = {categoryId: 1};
+            monthBucket.serviceMap = {serviceId: 1};
+
+            var dayBucket = DayBucket(day: day, total: 1);
+            dayBucket.categoryMap = {categoryId:1};
+            dayBucket.serviceMap = {serviceId:1};
             dayBucket.dataPoints.add(dataPoint);
+
+            // create the relation in bottom-up order
             monthBucket.days.add(dayBucket);
             yearBucket.months.add(monthBucket);
             years.add(yearBucket);

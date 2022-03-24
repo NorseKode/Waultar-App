@@ -267,7 +267,11 @@ final _entities = <ModelEntity>[
         ModelRelation(
             id: const IdUid(6, 4635702940835296241),
             name: 'dataPoints',
-            targetId: const IdUid(3, 747020510639630195))
+            targetId: const IdUid(3, 747020510639630195)),
+        ModelRelation(
+            id: const IdUid(9, 7950081132448577931),
+            name: 'hours',
+            targetId: const IdUid(18, 1796282212521568090))
       ],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
@@ -768,6 +772,52 @@ final _entities = <ModelEntity>[
             flags: 0)
       ],
       relations: <ModelRelation>[],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(18, 1796282212521568090),
+      name: 'HourBucket',
+      lastPropertyId: const IdUid(6, 6174054054204034622),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 1767445788255568922),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 3303962203615805512),
+            name: 'hour',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 8036044082287469405),
+            name: 'total',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(4, 3087229148428901894),
+            name: 'dayId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(31, 6204178328890629676),
+            relationTarget: 'DayBucket'),
+        ModelProperty(
+            id: const IdUid(5, 3446037712089975120),
+            name: 'dbCategoryMap',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 6174054054204034622),
+            name: 'dbServiceMap',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[
+        ModelRelation(
+            id: const IdUid(10, 2470213979646526234),
+            name: 'dataPoints',
+            targetId: const IdUid(3, 747020510639630195))
+      ],
       backlinks: <ModelBacklink>[])
 ];
 
@@ -791,9 +841,9 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(17, 3692518023531825614),
-      lastIndexId: const IdUid(30, 3761383902872286368),
-      lastRelationId: const IdUid(8, 2590360741820126253),
+      lastEntityId: const IdUid(18, 1796282212521568090),
+      lastIndexId: const IdUid(31, 6204178328890629676),
+      lastRelationId: const IdUid(10, 2470213979646526234),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [3225060361381272079],
@@ -1041,8 +1091,10 @@ ModelDefinition getObjectBoxModel() {
     DayBucket: EntityDefinition<DayBucket>(
         model: _entities[4],
         toOneRelations: (DayBucket object) => [object.month],
-        toManyRelations: (DayBucket object) =>
-            {RelInfo<DayBucket>.toMany(6, object.id): object.dataPoints},
+        toManyRelations: (DayBucket object) => {
+              RelInfo<DayBucket>.toMany(6, object.id): object.dataPoints,
+              RelInfo<DayBucket>.toMany(9, object.id): object.hours
+            },
         getId: (DayBucket object) => object.id,
         setId: (DayBucket object, int id) {
           object.id = id;
@@ -1077,6 +1129,8 @@ ModelDefinition getObjectBoxModel() {
           object.month.attach(store);
           InternalToManyAccess.setRelInfo(object.dataPoints, store,
               RelInfo<DayBucket>.toMany(6, object.id), store.box<DayBucket>());
+          InternalToManyAccess.setRelInfo(object.hours, store,
+              RelInfo<DayBucket>.toMany(9, object.id), store.box<DayBucket>());
           return object;
         }),
     EmailObjectBox: EntityDefinition<EmailObjectBox>(
@@ -1601,6 +1655,50 @@ ModelDefinition getObjectBoxModel() {
                 .vTableGet(buffer, rootOffset, 16, []);
 
           return object;
+        }),
+    HourBucket: EntityDefinition<HourBucket>(
+        model: _entities[17],
+        toOneRelations: (HourBucket object) => [object.day],
+        toManyRelations: (HourBucket object) =>
+            {RelInfo<HourBucket>.toMany(10, object.id): object.dataPoints},
+        getId: (HourBucket object) => object.id,
+        setId: (HourBucket object, int id) {
+          object.id = id;
+        },
+        objectToFB: (HourBucket object, fb.Builder fbb) {
+          final dbCategoryMapOffset = fbb.writeString(object.dbCategoryMap);
+          final dbServiceMapOffset = fbb.writeString(object.dbServiceMap);
+          fbb.startTable(7);
+          fbb.addInt64(0, object.id);
+          fbb.addInt64(1, object.hour);
+          fbb.addInt64(2, object.total);
+          fbb.addInt64(3, object.day.targetId);
+          fbb.addOffset(4, dbCategoryMapOffset);
+          fbb.addOffset(5, dbServiceMapOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = HourBucket(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              total: const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0),
+              hour: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0))
+            ..dbCategoryMap = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 12, '')
+            ..dbServiceMap = const fb.StringReader(asciiOptimization: true)
+                .vTableGet(buffer, rootOffset, 14, '');
+          object.day.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
+          object.day.attach(store);
+          InternalToManyAccess.setRelInfo(
+              object.dataPoints,
+              store,
+              RelInfo<HourBucket>.toMany(10, object.id),
+              store.box<HourBucket>());
+          return object;
         })
   };
 
@@ -1758,6 +1856,10 @@ class DayBucket_ {
   /// see [DayBucket.dataPoints]
   static final dataPoints =
       QueryRelationToMany<DayBucket, DataPoint>(_entities[4].relations[0]);
+
+  /// see [DayBucket.hours]
+  static final hours =
+      QueryRelationToMany<DayBucket, HourBucket>(_entities[4].relations[1]);
 }
 
 /// [EmailObjectBox] entity fields to define ObjectBox queries.
@@ -2079,4 +2181,35 @@ class DateTimeTest_ {
   /// see [DateTimeTest.timestamps]
   static final timestamps =
       QueryStringVectorProperty<DateTimeTest>(_entities[16].properties[5]);
+}
+
+/// [HourBucket] entity fields to define ObjectBox queries.
+class HourBucket_ {
+  /// see [HourBucket.id]
+  static final id =
+      QueryIntegerProperty<HourBucket>(_entities[17].properties[0]);
+
+  /// see [HourBucket.hour]
+  static final hour =
+      QueryIntegerProperty<HourBucket>(_entities[17].properties[1]);
+
+  /// see [HourBucket.total]
+  static final total =
+      QueryIntegerProperty<HourBucket>(_entities[17].properties[2]);
+
+  /// see [HourBucket.day]
+  static final day =
+      QueryRelationToOne<HourBucket, DayBucket>(_entities[17].properties[3]);
+
+  /// see [HourBucket.dbCategoryMap]
+  static final dbCategoryMap =
+      QueryStringProperty<HourBucket>(_entities[17].properties[4]);
+
+  /// see [HourBucket.dbServiceMap]
+  static final dbServiceMap =
+      QueryStringProperty<HourBucket>(_entities[17].properties[5]);
+
+  /// see [HourBucket.dataPoints]
+  static final dataPoints =
+      QueryRelationToMany<HourBucket, DataPoint>(_entities[17].relations[0]);
 }

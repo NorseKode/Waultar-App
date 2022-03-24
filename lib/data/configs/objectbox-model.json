@@ -249,6 +249,11 @@
           "id": "6:4635702940835296241",
           "name": "dataPoints",
           "targetId": "3:747020510639630195"
+        },
+        {
+          "id": "9:7950081132448577931",
+          "name": "hours",
+          "targetId": "18:1796282212521568090"
         }
       ]
     },
@@ -772,11 +777,59 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "18:1796282212521568090",
+      "lastPropertyId": "6:6174054054204034622",
+      "name": "HourBucket",
+      "properties": [
+        {
+          "id": "1:1767445788255568922",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3303962203615805512",
+          "name": "hour",
+          "type": 6
+        },
+        {
+          "id": "3:8036044082287469405",
+          "name": "total",
+          "type": 6
+        },
+        {
+          "id": "4:3087229148428901894",
+          "name": "dayId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "31:6204178328890629676",
+          "relationTarget": "DayBucket"
+        },
+        {
+          "id": "5:3446037712089975120",
+          "name": "dbCategoryMap",
+          "type": 9
+        },
+        {
+          "id": "6:6174054054204034622",
+          "name": "dbServiceMap",
+          "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "10:2470213979646526234",
+          "name": "dataPoints",
+          "targetId": "3:747020510639630195"
+        }
+      ]
     }
   ],
-  "lastEntityId": "17:3692518023531825614",
-  "lastIndexId": "30:3761383902872286368",
-  "lastRelationId": "8:2590360741820126253",
+  "lastEntityId": "18:1796282212521568090",
+  "lastIndexId": "31:6204178328890629676",
+  "lastRelationId": "10:2470213979646526234",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
