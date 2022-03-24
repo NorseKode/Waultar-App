@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/configs/navigation/screen.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
@@ -21,6 +22,7 @@ class _SettingsViewState extends State<SettingsView> {
   late AppLocalizations localizer;
   final _activeScreen = ViewScreen.settings;
   final _appSettings = locator.get<IAppSettingsService>(instanceName: 'appSettingsService');
+  final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +49,10 @@ class _SettingsViewState extends State<SettingsView> {
                 value: ISPERFORMANCETRACKING,
                 onChanged: (value) async {
                   await _appSettings.toggleIsPerformanceTracking(value);
+
+                  if (!value) {
+                    _appLogger.changeLogLevel(LOGLEVEL);
+                  }
 
                   setState(() {});
                 },

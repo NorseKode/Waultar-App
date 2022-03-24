@@ -49,7 +49,7 @@ Future<void> setupServices() async {
     os = detectPlatform();
     locator.registerSingleton<OS>(os, instanceName: 'platform');
 
-    _logger = AppLogger(os);
+    _logger = AppLogger(os, _logFolderPath);
     locator.registerSingleton<AppLogger>(_logger, instanceName: 'logger');
 
     // create objectbox at startup

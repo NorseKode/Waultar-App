@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:logging/logging.dart';
+import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/startup.dart';
 import 'package:path/path.dart' as dart_path;
 
@@ -12,9 +13,13 @@ class AppLogger {
   String? _testPath;
   late File _logFile;
 
-  AppLogger(this.os) {
+  AppLogger(this.os, String logFolder, {Level? level}) {
     _logFile =
-        File(dart_path.normalize(locator.get<String>(instanceName: 'log_folder') + "/logs.txt"));
+        File(dart_path.normalize(logFolder + "/logs.txt"));
+
+    if (level != null) {
+      Logger.root.level = level;
+    }
 
     logger.onRecord.listen((event) {
       _logFile.writeAsStringSync(
@@ -28,6 +33,11 @@ class AppLogger {
   }
 
   setLogLevelRelease() {
+    LOGLEVEL = Level.SEVERE;
     Logger.root.level = Level.SEVERE;
+  }
+
+  changeLogLevel(Level level) {
+    Logger.root.level = level;
   }
 }

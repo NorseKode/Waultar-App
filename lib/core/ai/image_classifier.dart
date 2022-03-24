@@ -102,7 +102,12 @@ class ImageClassifier extends IMLModel {
   }
 
   List<Tuple2<String, double>> predict(String imagePath, int amountOfTopCategories) {
-    var startTime = DateTime.now();
+    PerformanceHelper? performance;
+
+    if (ISPERFORMANCETRACKING) {
+      performance = PerformanceHelper(_appLogger);
+      performance.start();
+    }
 
     var image = img.decodeImage(File(imagePath).readAsBytesSync());
     if (image == null) {
@@ -131,8 +136,7 @@ class ImageClassifier extends IMLModel {
     }
 
     if (ISPERFORMANCETRACKING) {
-      PerformanceHelper.logRunTime(
-          startTime, DateTime.now(), _appLogger, "Classifying of image with path $imagePath");
+      performance!.stopResetAndLog("Classifying of image with path $imagePath");
     }
 
     return results;

@@ -28,6 +28,13 @@ class MLService extends IMLService {
 
   @override
   int classifyImagesFromDB() {
+    PerformanceHelper? _performance;
+
+    if (ISPERFORMANCETRACKING) {
+      _performance = PerformanceHelper(_appLogger);
+      _performance.start();
+    }
+
     var startTime = DateTime.now();
 
     int updated = 0;
@@ -48,8 +55,7 @@ class MLService extends IMLService {
     }
 
     if (ISPERFORMANCETRACKING) {
-      PerformanceHelper.logRunTime(
-          startTime, DateTime.now(), _appLogger, "Classifying of all images from the database");
+      _performance!.stopAndLog("Classifying of all images from the database");
     }
 
     return updated;
