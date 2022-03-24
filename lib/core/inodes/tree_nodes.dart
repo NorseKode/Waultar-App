@@ -25,9 +25,6 @@ class DataPoint {
   final links = ToMany<LinkDocument>();
   final service = ToOne<ServiceDocument>();
 
-  @Property(type: PropertyType.byteVector)
-  List<int> timestamps = [];
-
   List<String> searchStrings = [];
 
   // the actual data stored in JSON format
@@ -35,12 +32,15 @@ class DataPoint {
 
   @Transient()
   late Map<String, dynamic> valuesMap;
+
   @Property(type: PropertyType.date)
   late DateTime createdAt;
 
   DataPoint({
     this.id = 0,
-  });
+  }) {
+    createdAt = DateTime.now();
+  }
 
   Map<String, dynamic> get asMap {
     var decoded = jsonDecode(values);
@@ -72,6 +72,7 @@ class DataPoint {
     if (searchStrings.isEmpty) {
       searchStrings.add(stringName);
     }
+    createdAt = DateTime.now();
   }
 
   void _createRelations(String basePathToMedia) {
@@ -128,8 +129,6 @@ class DataPoint {
             } else {
               searchStrings.add(value);
             }
-          } else if (value is int && value != 0) {
-            timestamps.add(value);
           } else {
             recurse(entry.value);
           }
@@ -206,10 +205,6 @@ class DataCategory {
   @Index()
   @Unique()
   CategoryEnum category;
-
-  // @Index()
-  // @Unique()
-  // String name;
 
   @Backlink('dataCategory')
   final dataPointNames = ToMany<DataPointName>();

@@ -139,11 +139,6 @@ final _entities = <ModelEntity>[
             type: 9,
             flags: 0),
         ModelProperty(
-            id: const IdUid(11, 5326578534447053821),
-            name: 'timestamps',
-            type: 23,
-            flags: 0),
-        ModelProperty(
             id: const IdUid(12, 9119741286260688645),
             name: 'createdAt',
             type: 10,
@@ -806,7 +801,8 @@ ModelDefinition getObjectBoxModel() {
         2643806434806109173,
         9018092681122822111,
         1481045219983849224,
-        5146326500439392814
+        5146326500439392814,
+        5326578534447053821
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -918,7 +914,6 @@ ModelDefinition getObjectBoxModel() {
               .map(fbb.writeString)
               .toList(growable: false));
           final valuesOffset = fbb.writeString(object.values);
-          final timestampsOffset = fbb.writeListInt8(object.timestamps);
           fbb.startTable(13);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.dataPointName.targetId);
@@ -928,7 +923,6 @@ ModelDefinition getObjectBoxModel() {
           fbb.addInt64(5, object.service.targetId);
           fbb.addOffset(6, searchStringsOffset);
           fbb.addOffset(7, valuesOffset);
-          fbb.addOffset(10, timestampsOffset);
           fbb.addInt64(11, object.createdAt.millisecondsSinceEpoch);
           fbb.finish(fbb.endTable());
           return object.id;
@@ -947,9 +941,6 @@ ModelDefinition getObjectBoxModel() {
                 .vTableGet(buffer, rootOffset, 16, [])
             ..values = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 18, '')
-            ..timestamps =
-                const fb.ListReader<int>(fb.Int8Reader(), lazy: false)
-                    .vTableGet(buffer, rootOffset, 24, [])
             ..createdAt = DateTime.fromMillisecondsSinceEpoch(
                 const fb.Int64Reader().vTableGet(buffer, rootOffset, 26, 0));
           object.dataPointName.targetId =
@@ -1670,13 +1661,9 @@ class DataPoint_ {
   static final values =
       QueryStringProperty<DataPoint>(_entities[2].properties[7]);
 
-  /// see [DataPoint.timestamps]
-  static final timestamps =
-      QueryByteVectorProperty<DataPoint>(_entities[2].properties[8]);
-
   /// see [DataPoint.createdAt]
   static final createdAt =
-      QueryIntegerProperty<DataPoint>(_entities[2].properties[9]);
+      QueryIntegerProperty<DataPoint>(_entities[2].properties[8]);
 
   /// see [DataPoint.images]
   static final images =

@@ -6,6 +6,7 @@ import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
 import 'package:waultar/core/inodes/service_document.dart';
+import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/core/inodes/tree_parser.dart';
 import 'package:waultar/core/models/misc/service_model.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
@@ -37,6 +38,11 @@ class TestHelper {
         .query(ServiceDocument_.serviceName.equals('Instagram'))
         .build()
         .findUnique()!;
+  }
+  static ProfileDocument createTestProfile(ObjectBox context) {
+    var box = context.store.box<ProfileDocument>();
+    int created = box.put(ProfileDocument(name: 'Test Profile Name'));
+    return box.get(created)!;
   }
 
   static ProfileModel facebookProfile = ProfileModel(
@@ -131,8 +137,30 @@ class TestHelper {
       1411531879, // Wed Sep 24 2014 06:11:19 GMT
       1448169079, // Sun Nov 22 2015 06:11:19 GMT
     ];
-    // timestamps.shuffle();
-    // var postsCategory = 
-
+    final testProfile = createTestProfile(context);
+    final _categoryBox = context.store.box<DataCategory>();
+    var posts = _categoryBox
+        .query(DataCategory_.dbCategory.equals(CategoryEnum.posts.index))
+        .build()
+        .findUnique()!;
+    var comments = _categoryBox
+        .query(DataCategory_.dbCategory.equals(CategoryEnum.comments.index))
+        .build()
+        .findUnique()!;
+    var fbService = context.store
+        .box<ServiceDocument>()
+        .query(ServiceDocument_.serviceName.equals('Facebook'))
+        .build()
+        .findUnique()!;
+    var yourPosts = DataPointName(name: 'your posts');
+    yourPosts.service.target = fbService;
+    yourPosts.dataCategory.target = posts;
+    int i = 0;
+    for (; i < timestamps.length / 2; i++) {
+      var dataPoint = DataPoint.parse(posts, yourPosts, fbService, testProfile, json, "");
+    }
+    for (; i < timestamps.length; i++) {
+      
+    }
   }
 }
