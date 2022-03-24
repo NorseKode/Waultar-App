@@ -14,12 +14,16 @@ class DataCategoryRepository {
 
   int updateCategory(DataCategory category) => _categoryBox.put(category);
 
-  DataCategory? getCategoryByName(String name) {
-    var category = _categoryBox
-        .query(DataCategory_.name.equals(name))
+  DataCategory getCategory(CategoryEnum category) {
+    var entity = _categoryBox
+        .query(DataCategory_.dbCategory.equals(category.index))
         .build()
         .findUnique();
-    return category;
+    return entity ??
+        _categoryBox
+            .query(DataCategory_.dbCategory.equals(CategoryEnum.unknown.index))
+            .build()
+            .findUnique()!;
   }
 
   List<DataCategory> getAllCategories() {
@@ -48,13 +52,9 @@ class DataCategoryRepository {
 
   DataCategory? getCategoryById(int id) => _categoryBox.get(id);
 
-  List<DataPointName>? getNamesByCategory(DataCategory category) {
-    var entity = _categoryBox.get(category.id);
-    if (entity != null) {
-      return entity.dataPointNames.toList();
-    }
-
-    return null;
+  List<DataPointName> getNamesByCategory(DataCategory category) {
+    var entity = _categoryBox.get(category.id)!;
+    return entity.dataPointNames.toList();
   }
 
   DataCategory getFromFolderName(String folderName, ServiceDocument service) {
@@ -68,7 +68,7 @@ class DataCategoryRepository {
       // if still none are found, set category to "Other" (default)
       if (name == "Facebook" || name == "Instagram") {
         return _categoryBox
-            .query(DataCategory_.name.equals("Other"))
+            .query(DataCategory_.dbCategory.equals(CategoryEnum.other.index))
             .build()
             .findUnique()!;
       }
@@ -94,7 +94,7 @@ class DataCategoryRepository {
       // ignore: avoid_print
       print(e);
       return _categoryBox
-          .query(DataCategory_.name.equals("Other"))
+          .query(DataCategory_.dbCategory.equals(CategoryEnum.other.index))
           .build()
           .findUnique()!;
     }
@@ -102,27 +102,26 @@ class DataCategoryRepository {
 
   int count() => _categoryBox.count();
 
-  // int addCategory(
-  //   CategoryEnum category,
-  //   List<String> matchingFoldersFacebook,
-  //   List<String> matchingFoldersInstagram,
-  // ) {
-  //   var existing = _categoryBox
-  //       .query(DataCategory_.name.equals(name))
-  //       .build()
-  //       .findUnique();
+  int addCategory(
+    CategoryEnum category,
+    List<String> matchingFoldersFacebook,
+    List<String> matchingFoldersInstagram,
+  ) {
+    var existing = _categoryBox
+        .query(DataCategory_.dbCategory.equals(category.index))
+        .build()
+        .findUnique();
 
-  //   if (existing == null) {
-  //     return _categoryBox.put(DataCategory(
-  //       name: name,
-  //       matchingFoldersFacebook: matchingFoldersFacebook,
-  //       matchingFoldersInstagram: matchingFoldersInstagram,
-  //       color: color,
-  //     ));
-  //   }
+    if (existing == null) {
+      return _categoryBox.put(DataCategory(
+        category: category,
+        matchingFoldersFacebook: matchingFoldersFacebook,
+        matchingFoldersInstagram: matchingFoldersInstagram,
+      ));
+    }
 
-  //   return existing.id;
-  // }
+    return existing.id;
+  }
 
   void addMany(List<DataCategory> categories) {
     _categoryBox.putMany(categories);
