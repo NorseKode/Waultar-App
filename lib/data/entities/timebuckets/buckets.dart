@@ -27,17 +27,29 @@ class YearBucket {
     serviceMap = {};
   }
 
-  String get dbCategoryMap => jsonEncode(
-      categoryMap.map((key, value) => MapEntry('$key', value)));
-  String get dbServiceMap => jsonEncode(
-      serviceMap.map((key, value) => MapEntry('$key', value)));
+  String get dbCategoryMap =>
+      jsonEncode(categoryMap.map((key, value) => MapEntry('$key', value)));
+  String get dbServiceMap =>
+      jsonEncode(serviceMap.map((key, value) => MapEntry('$key', value)));
   set dbCategoryMap(String json) {
-    categoryMap =
-        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
+    categoryMap = Map.from(jsonDecode(json)
+        .map((key, value) => MapEntry(int.parse(key), value as int)));
   }
+
   set dbServiceMap(String json) {
-    serviceMap =
-        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
+    serviceMap = Map.from(jsonDecode(json)
+        .map((key, value) => MapEntry(int.parse(key), value as int)));
+  }
+
+  void updateCounts(int categoryId, int serviceId) {
+    categoryMap.update(categoryId, (value) => value++, ifAbsent: () {
+      categoryMap.addAll({categoryId: 1});
+      return 1;
+    });
+    serviceMap.update(serviceId, (value) => value++, ifAbsent: () {
+      serviceMap.addAll({serviceId:1});
+      return 1;
+    });
   }
 }
 
@@ -62,17 +74,29 @@ class MonthBucket {
     serviceMap = {};
   }
 
-  String get dbCategoryMap => jsonEncode(
-      categoryMap.map((key, value) => MapEntry('$key', value)));
-  String get dbServiceMap => jsonEncode(
-      serviceMap.map((key, value) => MapEntry('$key', value)));
+  String get dbCategoryMap =>
+      jsonEncode(categoryMap.map((key, value) => MapEntry('$key', value)));
+  String get dbServiceMap =>
+      jsonEncode(serviceMap.map((key, value) => MapEntry('$key', value)));
   set dbCategoryMap(String json) {
-    categoryMap =
-        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
+    categoryMap = Map.from(jsonDecode(json)
+        .map((key, value) => MapEntry(int.parse(key), value as int)));
   }
+
   set dbServiceMap(String json) {
-    serviceMap =
-        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
+    serviceMap = Map.from(jsonDecode(json)
+        .map((key, value) => MapEntry(int.parse(key), value as int)));
+  }
+
+  void updateCounts(int categoryId, int serviceId) {
+    categoryMap.update(categoryId, (value) => value++, ifAbsent: () {
+      categoryMap.addAll({categoryId: 1});
+      return 1;
+    });
+    serviceMap.update(serviceId, (value) => value++, ifAbsent: () {
+      serviceMap.addAll({serviceId:1});
+      return 1;
+    });
   }
 }
 
@@ -98,17 +122,29 @@ class DayBucket {
     serviceMap = {};
   }
 
-  String get dbCategoryMap => jsonEncode(
-      categoryMap.map((key, value) => MapEntry('$key', value)));
-  String get dbServiceMap => jsonEncode(
-      serviceMap.map((key, value) => MapEntry('$key', value)));
+  String get dbCategoryMap =>
+      jsonEncode(categoryMap.map((key, value) => MapEntry('$key', value)));
+  String get dbServiceMap =>
+      jsonEncode(serviceMap.map((key, value) => MapEntry('$key', value)));
   set dbCategoryMap(String json) {
-    categoryMap =
-        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
+    categoryMap = Map.from(jsonDecode(json)
+        .map((key, value) => MapEntry(int.parse(key), value as int)));
   }
+
   set dbServiceMap(String json) {
-    serviceMap =
-        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
+    serviceMap = Map.from(jsonDecode(json)
+        .map((key, value) => MapEntry(int.parse(key), value as int)));
+  }
+
+  void updateCounts(int categoryId, int serviceId) {
+    categoryMap.update(categoryId, (value) => value++, ifAbsent: () {
+      categoryMap.addAll({categoryId: 1});
+      return 1;
+    });
+    serviceMap.update(serviceId, (value) => value++, ifAbsent: () {
+      serviceMap.addAll({serviceId:1});
+      return 1;
+    });
   }
 }
 
@@ -133,17 +169,29 @@ class HourBucket {
     serviceMap = {};
   }
 
-  String get dbCategoryMap => jsonEncode(
-      categoryMap.map((key, value) => MapEntry('$key', value)));
-  String get dbServiceMap => jsonEncode(
-      serviceMap.map((key, value) => MapEntry('$key', value)));
+  String get dbCategoryMap =>
+      jsonEncode(categoryMap.map((key, value) => MapEntry('$key', value)));
+  String get dbServiceMap =>
+      jsonEncode(serviceMap.map((key, value) => MapEntry('$key', value)));
   set dbCategoryMap(String json) {
-    categoryMap =
-        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
+    categoryMap = Map.from(jsonDecode(json)
+        .map((key, value) => MapEntry(int.parse(key), value as int)));
   }
+
   set dbServiceMap(String json) {
-    serviceMap =
-        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
+    serviceMap = Map.from(jsonDecode(json)
+        .map((key, value) => MapEntry(int.parse(key), value as int)));
+  }
+
+  void updateCounts(int categoryId, int serviceId) {
+    categoryMap.update(categoryId, (value) => value++, ifAbsent: () {
+      categoryMap.addAll({categoryId: 1});
+      return 1;
+    });
+    serviceMap.update(serviceId, (value) => value++, ifAbsent: () {
+      serviceMap.addAll({serviceId:1});
+      return 1;
+    });
   }
 }
 

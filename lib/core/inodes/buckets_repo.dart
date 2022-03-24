@@ -66,12 +66,76 @@ class BucketsRepository extends IBucketsRepository {
 
           bool yearExists = years.any((element) => element.year == year);
           if (yearExists) {
-            
-            var yearBucket = years.singleWhere((element) => element.year == year);
-            var categoryMap = yearBucket.categoryMap;
+            var yearBucket =
+                years.singleWhere((element) => element.year == year);
+            yearBucket.updateCounts(categoryId, serviceId);
 
+            bool monthExists =
+                yearBucket.months.any((element) => element.month == month);
+
+            if (monthExists) {
+              var monthBucket = yearBucket.months
+                  .singleWhere((element) => element.month == month);
+              monthBucket.updateCounts(categoryId, serviceId);
+
+              bool dayExists =
+                  monthBucket.days.any((element) => element.day == day);
+              if (dayExists) {
+                var dayBucket = monthBucket.days
+                    .singleWhere((element) => element.day == day);
+                dayBucket.updateCounts(categoryId, serviceId);
+                dayBucket.dataPoints.add(dataPoint);
+
+                bool hourExists =
+                    dayBucket.hours.any((element) => element.hour == hour);
+                if (hourExists) {
+                  var hourBucket = dayBucket.hours.singleWhere((element) => element.hour == hour);
+                  hourBucket.updateCounts(categoryId, serviceId);
+                  hourBucket.dataPoints.add(dataPoint);
+                } else {
+                  var hourBucket = HourBucket(hour: hour, total: 1);
+                  hourBucket.categoryMap = {categoryId: 1};
+                  hourBucket.serviceMap = {serviceId: 1};
+                  hourBucket.dataPoints.add(dataPoint);
+
+                  dayBucket.hours.add(hourBucket);
+                }
+              } else {
+                var dayBucket = DayBucket(day: day, total: 1);
+                dayBucket.categoryMap = {categoryId: 1};
+                dayBucket.serviceMap = {serviceId: 1};
+                dayBucket.dataPoints.add(dataPoint);
+
+                var hourBucket = HourBucket(hour: hour, total: 1);
+                hourBucket.categoryMap = {categoryId: 1};
+                hourBucket.serviceMap = {serviceId: 1};
+                hourBucket.dataPoints.add(dataPoint);
+
+                // create the relation in bottom-up order
+                dayBucket.hours.add(hourBucket);
+                monthBucket.days.add(dayBucket);
+              }
+            } else {
+              var monthBucket = MonthBucket(month: month, total: 1);
+              monthBucket.categoryMap = {categoryId: 1};
+              monthBucket.serviceMap = {serviceId: 1};
+
+              var dayBucket = DayBucket(day: day, total: 1);
+              dayBucket.categoryMap = {categoryId: 1};
+              dayBucket.serviceMap = {serviceId: 1};
+              dayBucket.dataPoints.add(dataPoint);
+
+              var hourBucket = HourBucket(hour: hour, total: 1);
+              hourBucket.categoryMap = {categoryId: 1};
+              hourBucket.serviceMap = {serviceId: 1};
+              hourBucket.dataPoints.add(dataPoint);
+
+              // create the relation in bottom-up order
+              dayBucket.hours.add(hourBucket);
+              monthBucket.days.add(dayBucket);
+              yearBucket.months.add(monthBucket);
+            }
           } else {
-
             // if the year is not present we have to create a new bucket for each time entity
             // this also includes a new map for each bucket, as these are initiated to = {};
             var yearBucket = YearBucket(year: year, total: 1);
@@ -83,16 +147,21 @@ class BucketsRepository extends IBucketsRepository {
             monthBucket.serviceMap = {serviceId: 1};
 
             var dayBucket = DayBucket(day: day, total: 1);
-            dayBucket.categoryMap = {categoryId:1};
-            dayBucket.serviceMap = {serviceId:1};
+            dayBucket.categoryMap = {categoryId: 1};
+            dayBucket.serviceMap = {serviceId: 1};
             dayBucket.dataPoints.add(dataPoint);
 
+            var hourBucket = HourBucket(hour: hour, total: 1);
+            hourBucket.categoryMap = {categoryId: 1};
+            hourBucket.serviceMap = {serviceId: 1};
+            hourBucket.dataPoints.add(dataPoint);
+
             // create the relation in bottom-up order
+            dayBucket.hours.add(hourBucket);
             monthBucket.days.add(dayBucket);
             yearBucket.months.add(monthBucket);
             years.add(yearBucket);
           }
-          
         }
       }
     }

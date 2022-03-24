@@ -86,8 +86,13 @@ void main() {
       expect(greaterThenLaterTime, 0);
     });
 
-    test(' - test buckets creation', () {
-      var now = DateTime.now();
+    test(' - test buckets creation', () async {
+      var parsedAt = DateTime.now();
+      TestHelper.seedForTimeBuckets(_context);
+      await _bucketsRepo.createBuckets(parsedAt);
+
+      var yearBuckets = _bucketsRepo.getAllYears();
+      expect(yearBuckets.length, 5);
     });
 
     test(' - test year buckets count', () {
@@ -95,13 +100,7 @@ void main() {
       expect(count, 0);
     });
 
-    test(' - test month buckets count', () {
-      var testMap = {'1': 13};
-      var encoded = jsonEncode(testMap);
-      var decoded = jsonDecode(encoded);
-      var pretty = prettyJson(decoded);
-      print(pretty);
-
+    test(' - test bucket mapping from db property to Map<int, int>', () {
       var yearBucket = YearBucket(year: 2022);
       yearBucket.categoryMap.addAll({1:30});
       var _yearBox = _context.store.box<YearBucket>();
