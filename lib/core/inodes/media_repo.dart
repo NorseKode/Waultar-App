@@ -27,6 +27,9 @@ class MediaRepository {
   List<int> updateImages(List<ImageDocument> images) {
     return _imageBox.putMany(images);
   }
+  int getAmountOfUnTaggedImages() {
+    return _imageBox.query(ImageDocument_.mediaTags.isNull()).build().count();
+  }
 
   List<VideoDocument> getAllVideos() => _videoBox.getAll();
   List<FileDocument> getAllFiles() => _fileBox.getAll();

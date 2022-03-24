@@ -1,6 +1,5 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
-import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:collection/collection.dart';
 
 enum Decision {

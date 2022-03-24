@@ -2,15 +2,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_timebuckets_repository.dart';
-import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/core/models/timeline/time_models.dart';
-import 'package:waultar/core/models/ui_model.dart';
-import 'package:waultar/domain/services/timeline_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget_box.dart';
-import 'package:waultar/startup.dart';
 
 class TimelineWidget extends StatefulWidget {
   List<TimeModel> blocks;
@@ -147,7 +141,9 @@ class _TimelineWidgetState extends State<TimelineWidget> {
 
   int _maxListLength(List<TimeModel> blocks) {
     List<int> listLengths = [];
-    blocks.forEach((model) => listLengths.add(model.total));
+    for (var model in blocks) {
+      listLengths.add(model.total);
+    }
     return listLengths.isNotEmpty
         ? (listLengths.reduce(max) / 10000).ceil() * 10000
         : 0;
@@ -165,7 +161,7 @@ class _TimelineWidgetState extends State<TimelineWidget> {
     return DefaultWidgetBox(
         child: Container(
       child: blocks.isEmpty
-          ? Expanded(child: Container(child: Center(child: Text("No data"))))
+          ? Expanded(child: Container(child: const Center(child: Text("No data"))))
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -208,7 +204,7 @@ class _TimelineWidgetState extends State<TimelineWidget> {
                 ),
                 Row(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 50,
                     ),
                     Expanded(

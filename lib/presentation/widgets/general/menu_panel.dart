@@ -61,7 +61,7 @@ class _MenuPanelState extends State<MenuPanel> {
                         padding: EdgeInsets.fromLTRB(2, 2, 8, 2),
                         child: Text("Feb 2. 2022",
                             style: TextStyle(
-                                color: const Color(0xFF4FB376),
+                                color: Color(0xFF4FB376),
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600)),
                       ),
@@ -104,7 +104,7 @@ class _MenuPanelState extends State<MenuPanel> {
                 icon,
                 color: widget.active == screen
                     ? Colors.white
-                    : Color(0xFF7A80A9), //const Color(0xFFABAAB8),
+                    : const Color(0xFF7A80A9), //const Color(0xFFABAAB8),
                 size: 12,
               ),
               const SizedBox(width: 12),
@@ -114,7 +114,7 @@ class _MenuPanelState extends State<MenuPanel> {
                       fontSize: 12,
                       color: widget.active == screen
                           ? Colors.white
-                          : Color(0xFF7A80A9))) //const Color(0xFFABAAB8)))
+                          : const Color(0xFF7A80A9))) //const Color(0xFFABAAB8)))
             ],
           ),
         ),
@@ -130,7 +130,7 @@ class _MenuPanelState extends State<MenuPanel> {
     return Container(
         width: menuWidth,
         height: MediaQuery.of(context).size.height,
-        color: Color(0xFF202442),
+        color: const Color(0xFF202442),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(

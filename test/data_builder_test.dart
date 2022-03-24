@@ -2,14 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pretty_json/pretty_json.dart';
 import 'package:waultar/core/inodes/data_builder.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:path/path.dart' as dart_path;
 import 'package:waultar/data/configs/objectbox.dart';
 
-import 'objectbox/test_utils.dart';
 
 Future<void> main() async {
   late final ObjectBox _context;

@@ -1,11 +1,5 @@
-import 'dart:io';
 
-import 'package:flutter_test/flutter_test.dart';
-import 'package:path/path.dart' as path_dart;
-import 'package:waultar/core/models/index.dart';
-import 'package:waultar/core/parsers/facebook_parser.dart';
 
-import '../test_helper.dart';
 
 main() {
   // var facebookProfilev2 = File(path_dart.join(
