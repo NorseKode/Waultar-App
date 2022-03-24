@@ -101,16 +101,12 @@ class FileUploader {
 /// 'log_folder': path to the log folder
 /// ```
 List<String> extractZip(Map<String, String> input) {
-  PerformanceHelper? performance1;
-  PerformanceHelper? performance2;
-  AppLogger? appLogger;
+  PerformanceHelper? performance;
   var isPerformanceTracking = input["is_performance_tracking"] == "true";
 
   if (isPerformanceTracking) {
-    appLogger = AppLogger(detectPlatform(), input["log_folder"]!, level: Level.SEVERE);
-    performance1 = PerformanceHelper(appLogger);
-    performance2 = PerformanceHelper(appLogger);
-    performance1.start();
+    performance = PerformanceHelper(pathToPerformanceFile: input['log_folder']!, parentKey: "Extract zip");
+    performance.start();
   }
    
   // using inputFileStream to access zip without storing it in memory
@@ -126,10 +122,10 @@ List<String> extractZip(Map<String, String> input) {
   for (var file in archive.files) {
     // only take the files and skip the optional .zip.enc file
     if (file.isFile && !file.name.endsWith('zip.enc')) {
-      if (isPerformanceTracking) {
-        performance2!.reset();
-        performance2.start();
-      }
+      // if (isPerformanceTracking) {
+      //   performance2!.reset();
+      //   performance2.start();
+      // }
 
       var filePath = dart_path.normalize(destDirPath + '/' + file.name);
       final outputStream = OutputFileStream(filePath);
@@ -137,9 +133,9 @@ List<String> extractZip(Map<String, String> input) {
       list.add(outputStream.path);
       outputStream.close();
 
-      if (isPerformanceTracking) {
-        performance2!.stopAndLog("Copied file with name $filePath from zip");
-      }
+      // if (isPerformanceTracking) {
+      //   performance2!.stopAndWriteToFile("Individual file");
+      // }
     }
   }
 
@@ -147,7 +143,7 @@ List<String> extractZip(Map<String, String> input) {
   list.sort();
 
   if (isPerformanceTracking) {
-    performance1!.stopAndLog("Extracted and sorted entire zip folder");
+    performance!.stopParentAndWriteToFile("zip-extract");
   }
 
   return list;

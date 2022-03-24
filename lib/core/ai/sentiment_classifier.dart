@@ -57,10 +57,10 @@ class SentimentClassifier extends IMLModel {
   List<double> classify(String rawText) {
     PerformanceHelper? performance;
 
-    if (ISPERFORMANCETRACKING) {
-      performance = PerformanceHelper(_appLogger);
-      performance.start();
-    }
+    // if (ISPERFORMANCETRACKING) {
+    //   performance = PerformanceHelper(_appLogger);
+    //   performance.start();
+    // }
 
     var startTime = DateTime.now();
     // tokenizeInputText returns List<List<double>>
@@ -74,10 +74,11 @@ class SentimentClassifier extends IMLModel {
     // store the resulting values in output.
     _interpreter.run(input, output);
 
-    if (ISPERFORMANCETRACKING) {
-      performance!.stopResetAndLog("Classifying of text: $rawText");
+    // if (ISPERFORMANCETRACKING) {
+    //   performance!.stopResetAndLog("Classifying of text: $rawText");
 
-    }
+    // }
+    
     return [output[0][0], output[0][1]];
   }
 

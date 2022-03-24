@@ -1,52 +1,89 @@
+import 'dart:io';
+
 import 'package:waultar/configs/globals/app_logger.dart';
+import 'package:path/path.dart' as dart_path;
 
 class PerformanceHelper {
-  final AppLogger appLogger;
-  final _timer = Stopwatch();
+  String pathToPerformanceFile;
+  // late File _file;
+  final _parentTimer = Stopwatch();
+  String parentKey;
+  int _parentTimeSpent = 0;
 
-  PerformanceHelper(this.appLogger);
+  PerformanceHelper({required this.pathToPerformanceFile, required this.parentKey}) {
+    // _file = File(pathToPerformanceFile + "/temp.txt");
+
+    // if (!_file.existsSync()) {
+    //   _file.createSync(recursive: true);
+    // }
+  }
 
   void start() {
-    _timer.start();
+    _parentTimer.start();
   }
 
   Duration stop() {
-    _timer.stop();
-    return _timer.elapsed;
+    _parentTimer.stop();
+    return _parentTimer.elapsed;
   }
 
   void reset() {
-    _timer.reset();
+    _parentTimer.reset();
   }
 
-  Duration stopAndReset() {
-    _timer.stop();
-    var elapsed = _timer.elapsed;
-    _timer.reset();
-    return elapsed;
+  // Duration stopAndWriteToFile(String identifier) {
+  // }
+
+  void stopParentAndWriteToFile(String fileName) {
+    _parentTimer.stop();
+    var elapsed = _parentTimer.elapsed;
+    _parentTimeSpent = elapsed.inMilliseconds;
+    // _file.writeAsStringSync("$parentKey;${elapsed.inMilliseconds}\n", mode: FileMode.append);
+    _summary(fileName, parentKey);
   }
 
-  Duration stopAndLog(String message, {String? identifier}) {
-    _timer.stop();
-    var elapsed = _timer.elapsed;
-    logRunTime(elapsed, message, identifier: identifier);
-    return elapsed;
-  }
-  
-  Duration stopResetAndLog(String message, {String? identifier}) {
-    _timer.stop();
-    _timer.reset();
-    var elapsed = _timer.elapsed;
-    logRunTime(elapsed, message, identifier: identifier);
-    return elapsed;
+  void _summary(String summaryFileName, String wholeIdentifier, {String? individualIdentifier}) {
+    var summaryFile = File(
+      dart_path.normalize(
+        dart_path.join(
+          pathToPerformanceFile,
+          "${DateTime.now().millisecondsSinceEpoch.toString()}-$summaryFileName.txt",
+        ),
+      ),
+    );
+    var individualCount = 0;
+    var individualSummedTimeMs = 0;
+    var wholeTimeSpent = "";
+
+    summaryFile.createSync();
+
+    // for (var line in _file.readAsLinesSync()) {
+    //   if (individualIdentifier != null) {
+    //     if (line.startsWith(individualIdentifier)) {
+    //       individualCount++;
+    //       individualSummedTimeMs += int.parse(line.split(";")[1]);
+    //     }
+    //   } else if (line.startsWith(wholeIdentifier)) {
+    //     wholeTimeSpent = line.split(";")[1];
+    //   }
+    // }
+
+    summaryFile.writeAsStringSync("Summary of $parentKey\n", mode: FileMode.append);
+    summaryFile.writeAsStringSync("Finished in $_parentTimeSpent milliseconds\n", mode: FileMode.append);
+    // if (individualIdentifier != null) {
+    //   summaryFile.writeAsStringSync("with $individualCount elements\n", mode: FileMode.append);
+    //   summaryFile.writeAsStringSync("and a summed time of $individualSummedTimeMs\n", mode: FileMode.append);
+    // }
   }
 
-  void logRunTime(Duration elapsed, String message, {String? identifier}) {
-    var runTime = elapsed.inMilliseconds;
-    appLogger.logger.shout("${identifier != null ? identifier + " " : ""}$message, took $runTime milliseconds");
-  }
-
-  void logTimeSummary(String messageToLookFor) {
-    // appLogger.
-  }
+  // void dispose() {
+  //   _file.writeAsStringSync("");
+  // }
 }
+
+// class PerformanceJson {
+//   String parentKey;
+//   Duration elapsedTime;
+
+//   PerformanceJson({required this.parentKey, required this.elapsedTime});
+// }

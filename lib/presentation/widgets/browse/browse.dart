@@ -71,7 +71,7 @@ class _BrowseState extends State<Browse> {
                   locator.get<String>(instanceName: 'extracts_folder'),
               'service_name': service.serviceName,
               'is_performance_tracking': ISPERFORMANCETRACKING.toString(),
-              'log_folder': locator.get<String>(instanceName: 'log_folder'),
+              'log_folder': locator.get<String>(instanceName: 'performance_folder'),
 
             };
             var uploadedFiles = await compute(extractZip, inputMap);

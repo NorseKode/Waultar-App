@@ -38,6 +38,7 @@ late final String _waultarPath;
 late final String _dbFolderPath;
 late final String _extractsFolderPath;
 late final String _logFolderPath;
+late final String _performanceFolderPath;
 
 Future<void> setupServices() async {
   await initApplicationPaths().whenComplete(() async {
@@ -45,6 +46,7 @@ Future<void> setupServices() async {
     locator.registerSingleton<String>(_dbFolderPath, instanceName: 'db_folder');
     locator.registerSingleton<String>(_extractsFolderPath, instanceName: 'extracts_folder');
     locator.registerSingleton<String>(_logFolderPath, instanceName: 'log_folder');
+    locator.registerSingleton<String>(_performanceFolderPath, instanceName: 'performance_folder');
 
     os = detectPlatform();
     locator.registerSingleton<OS>(os, instanceName: 'platform');
@@ -149,6 +151,7 @@ Future initApplicationPaths() async {
   _dbFolderPath = dart_path.normalize(_waultarPath + '/objectbox/');
   _extractsFolderPath = dart_path.normalize(_waultarPath + '/extracts/');
   _logFolderPath = dart_path.normalize(_waultarPath + '/logs/');
+  _performanceFolderPath = dart_path.normalize(_waultarPath + '/performance/');
 
   var dbFolderDir = Directory(_dbFolderPath);
   var extractsFolderDir = Directory(_extractsFolderPath);

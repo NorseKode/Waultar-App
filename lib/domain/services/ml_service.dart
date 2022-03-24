@@ -30,10 +30,10 @@ class MLService extends IMLService {
   int classifyImagesFromDB() {
     PerformanceHelper? _performance;
 
-    if (ISPERFORMANCETRACKING) {
-      _performance = PerformanceHelper(_appLogger);
-      _performance.start();
-    }
+    // if (ISPERFORMANCETRACKING) {
+    //   _performance = PerformanceHelper(_appLogger);
+    //   _performance.start();
+    // }
 
     var startTime = DateTime.now();
 
@@ -54,9 +54,9 @@ class MLService extends IMLService {
       images = _mediaRepo.getImagesPagination(offset, limit);
     }
 
-    if (ISPERFORMANCETRACKING) {
-      _performance!.stopAndLog("Classifying of all images from the database");
-    }
+    // if (ISPERFORMANCETRACKING) {
+    //   _performance!.stopAndLog("Classifying of all images from the database");
+    // }
 
     return updated;
   }

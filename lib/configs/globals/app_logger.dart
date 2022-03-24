@@ -40,4 +40,8 @@ class AppLogger {
   changeLogLevel(Level level) {
     Logger.root.level = level;
   }
+
+  // readLogFile() {
+  //   _logFile.
+  // }
 }
