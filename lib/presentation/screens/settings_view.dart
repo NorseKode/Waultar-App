@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/configs/navigation/screen.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
 import 'package:waultar/presentation/presentation_helper.dart';
 import 'package:waultar/presentation/screens/shared/waultar_desktop_main.dart';
@@ -43,7 +42,7 @@ class _SettingsViewState extends State<SettingsView> {
           const Divider(),
           Row(
             children: [
-              Text("Enable performance mode"),
+              const Text("Enable performance mode"),
               Switch(
                 value: ISPERFORMANCETRACKING,
                 onChanged: (value) async {

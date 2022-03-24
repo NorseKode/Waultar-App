@@ -1,5 +1,4 @@
 import 'package:waultar/core/models/timeline/time_models.dart';
-import 'package:waultar/data/entities/timebuckets/buckets.dart';
 
 abstract class ITimeBucketsRepository {
   List<YearModel> getAllYears();

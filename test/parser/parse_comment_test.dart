@@ -1,10 +1,4 @@
 
-import 'package:flutter_test/flutter_test.dart';
-import 'package:path/path.dart' as path_dart;
-import 'package:waultar/core/inodes/tree_nodes.dart';
-import 'package:waultar/core/inodes/tree_parser.dart';
-import 'package:waultar/core/models/model_helper.dart';
-import '../test_helper.dart';
 
 main() {
   // var facebookProfile = TestHelper.facebookProfile;

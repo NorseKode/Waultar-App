@@ -55,7 +55,7 @@ class ThemeProvider with ChangeNotifier {
             fontFamily: "Poppins",
             fontSize: 20,
             fontWeight: FontWeight.w500),
-        headline4: TextStyle(
+        headline4: const TextStyle(
             color: Color(0xFF7A80A9),
             fontFamily: "Poppins",
             fontSize: 12,

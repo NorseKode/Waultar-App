@@ -48,7 +48,7 @@ class CommentModel extends BaseModel {
         super(0, profile, json.toString());
 
   CommentModel.fromFacebook(Map<String, dynamic> json, ProfileModel profile)
-      : timestamp = ModelHelper.intToTimestamp(json["timestamp"])!,
+      : timestamp = ModelHelper.intToTimestamp(json["timestamp"]),
         super(0, profile, json.toString()) {
     var temp = (json["data"]);
     if (temp is List<dynamic> && temp.length > 1) {
