@@ -1,22 +1,24 @@
-// ignore_for_file: avoid_print
-
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:waultar/core/inodes/buckets_repo.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
-import 'package:waultar/data/entities/timebuckets/buckets.dart';
 
 import '../test_helper.dart';
 
 void main() async {
   late final ObjectBox _context;
   late final IBucketsRepository _bucketsRepo;
+  late final DateTime parsedAt;
 
   setUpAll(() async {
     await TestHelper.deleteTestDb();
     _context = await TestHelper.createTestDb();
     _bucketsRepo = BucketsRepository(_context);
+    parsedAt = DateTime.now();
+    TestHelper.seedForTimeBuckets(_context);
+    await _bucketsRepo.createBuckets(parsedAt);
   });
 
   tearDownAll(() async {
@@ -25,19 +27,14 @@ void main() async {
   });
 
   group('Creation of buckets from parsed datapoints', () {
-
     test(' - test setup', () async {
-      var now = DateTime.now();
-
-      TestHelper.seedForTimeBuckets(_context);
       var dataBox = _context.store.box<DataPoint>();
 
       var dataCount = dataBox.count();
       expect(dataCount, 10);
 
       var greaterThenParsedTime = dataBox
-          .query(
-              DataPoint_.dbCreatedAt.greaterThan(now.microsecondsSinceEpoch))
+          .query(DataPoint_.dbCreatedAt.greaterThan(parsedAt.microsecondsSinceEpoch))
           .build()
           .count();
       expect(greaterThenParsedTime, 10);
@@ -46,20 +43,19 @@ void main() async {
       var greaterThenLaterTime = dataBox
           .query(
               DataPoint_.dbCreatedAt.greaterThan(later.microsecondsSinceEpoch))
-          .build().count();
+          .build()
+          .count();
       expect(greaterThenLaterTime, 0);
     });
 
     test(' - test buckets creation', () async {
-      var parsedAt = DateTime.now();
-      TestHelper.seedForTimeBuckets(_context);
-      await _bucketsRepo.createBuckets(parsedAt);
 
       var yearBuckets = _bucketsRepo.getAllYears();
       expect(yearBuckets.length, 5);
 
       var year2022 = _bucketsRepo.getYear(2022)!;
       expect(year2022.months.length, 2);
+      expect(year2022.total, 3);
 
       var year2022Months = _bucketsRepo.getMonthsFromYearValue(2022);
       expect(year2022Months.length, 2);
@@ -78,26 +74,54 @@ void main() async {
       expect(count, 5);
     });
 
-    test(' - test bucket mapping from db property to Map<int, int>', () async {
-      var yearBucket = YearBucket(year: 2023);
-      yearBucket.categoryMap.addAll({1:30});
-      var _yearBox = _context.store.box<YearBucket>();
-      int createdId = _yearBox.put(yearBucket);
-      var created = _yearBox.get(createdId)!;
-
-      var map = created.categoryMap;
-      expect(map.length, 1);
-      expect(map.keys.first, 1);
-    });
-
     test(' - test bucket repo returning yearModels', () async {
-      var parsedAt = DateTime.now();
-      TestHelper.seedForTimeBuckets(_context);
-      await _bucketsRepo.createBuckets(parsedAt);
       var yearModels = _bucketsRepo.getAllYearModels();
-      expect(yearModels.length, 6);
+      expect(yearModels.length, 5);
+      var year2022 = yearModels.last;
+      expect(year2022.timeValue, 2022);
+      expect(year2022.total, 3);
+      expect(year2022.categoryCount.length, 1);
+      expect(year2022.categoryCount.first.item1.category.name, 'Posts');
+      expect(year2022.categoryCount.first.item2, 3);
+      expect(year2022.serviceCount.length, 1);
     });
 
+    test(' - test bucket repo returning monthModels', () async {
+      var yearModels = _bucketsRepo.getAllYearModels();
+      var year2022 = yearModels.last;
+      var months = _bucketsRepo.getMonthModelsFromYear(year2022);
+      expect(months.length, 2); // jan, mar, mar
 
+      expect(months.first.total, 1);
+      expect(months.first.serviceCount.length, 1);
+      expect(months.first.timeValue, 1);
+      expect(months.last.total, 2);
+    });
+
+    test(' - test bucket repo returning dayModels', () async {
+      var yearModels = _bucketsRepo.getAllYearModels();
+      var year2022 = yearModels.last;
+      var months = _bucketsRepo.getMonthModelsFromYear(year2022);
+
+      expect(months.length, 2); // mar, mar, jan
+      var march = months.last;
+
+      var days = _bucketsRepo.getDayModelsFromMonth(march);
+      expect(days.length, 2);
+      expect(days.first.total, 1);
+      expect(days.first.timeValue, 18);
+      expect(days.last.timeValue, 20);
+
+      var fridayMarch = days.first;
+      expect(fridayMarch.dataPoints.length, 1);
+      expect(fridayMarch.dataPoints.first.getAssociatedColor(), Colors.amber);
+      expect(fridayMarch.serviceCount.length, 1);
+      expect(fridayMarch.categoryCount.length, 1);
+      expect(fridayMarch.categoryCount.first.item1.category.name, 'Posts');
+
+      var hour12_10 = _bucketsRepo.getHourModelsFromDay(fridayMarch);
+      expect(hour12_10.length, 1);
+      expect(hour12_10.first.timeValue, 12);
+    });
   });
 }

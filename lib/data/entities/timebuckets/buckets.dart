@@ -42,14 +42,15 @@ class YearBucket {
   }
 
   void updateCounts(int categoryId, int serviceId) {
-    categoryMap.update(categoryId, (value) => value++, ifAbsent: () {
+    categoryMap.update(categoryId, (value) => value + 1, ifAbsent: () {
       categoryMap.addAll({categoryId: 1});
       return 1;
     });
-    serviceMap.update(serviceId, (value) => value++, ifAbsent: () {
+    serviceMap.update(serviceId, (value) => value + 1, ifAbsent: () {
       serviceMap.addAll({serviceId:1});
       return 1;
     });
+    total = total + 1;
   }
 }
 
@@ -89,15 +90,17 @@ class MonthBucket {
   }
 
   void updateCounts(int categoryId, int serviceId) {
-    categoryMap.update(categoryId, (value) => value++, ifAbsent: () {
+    categoryMap.update(categoryId, (value) => value + 1, ifAbsent: () {
       categoryMap.addAll({categoryId: 1});
       return 1;
     });
-    serviceMap.update(serviceId, (value) => value++, ifAbsent: () {
+    serviceMap.update(serviceId, (value) => value + 1, ifAbsent: () {
       serviceMap.addAll({serviceId:1});
       return 1;
     });
+    total = total + 1;
   }
+  
 }
 
 @Entity()
@@ -137,14 +140,15 @@ class DayBucket {
   }
 
   void updateCounts(int categoryId, int serviceId) {
-    categoryMap.update(categoryId, (value) => value++, ifAbsent: () {
+    categoryMap.update(categoryId, (value) => value + 1, ifAbsent: () {
       categoryMap.addAll({categoryId: 1});
       return 1;
     });
-    serviceMap.update(serviceId, (value) => value++, ifAbsent: () {
+    serviceMap.update(serviceId, (value) => value + 1, ifAbsent: () {
       serviceMap.addAll({serviceId:1});
       return 1;
     });
+    total = total + 1;
   }
 }
 
@@ -184,14 +188,15 @@ class HourBucket {
   }
 
   void updateCounts(int categoryId, int serviceId) {
-    categoryMap.update(categoryId, (value) => value++, ifAbsent: () {
+    categoryMap.update(categoryId, (value) => value + 1, ifAbsent: () {
       categoryMap.addAll({categoryId: 1});
       return 1;
     });
-    serviceMap.update(serviceId, (value) => value++, ifAbsent: () {
+    serviceMap.update(serviceId, (value) => value + 1, ifAbsent: () {
       serviceMap.addAll({serviceId:1});
       return 1;
     });
+    total = total + 1;
   }
 }
 

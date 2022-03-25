@@ -23,12 +23,6 @@ abstract class IBucketsRepository {
   List<HourModel> getHourModelsFromDay(DayModel dayModel);
 }
 
-class IRepository {
-  /*
-  T get(int id);
-  */
-}
-
 class BucketsRepository extends IBucketsRepository {
   final ObjectBox _context;
   late final Box<YearBucket> _yearBox;
@@ -59,7 +53,7 @@ class BucketsRepository extends IBucketsRepository {
 
     var toBeProcessed = toBeProcessedQuery.stream();
     // process each datapoint from the stream
-    await for (final dataPoint in toBeProcessed) {
+    await for (final dataPoint in toBeProcessed.distinct()) {
       var timestamps = _scrapeUniqueTimestamps(dataPoint);
 
       if (timestamps.isNotEmpty) {
@@ -309,25 +303,124 @@ class BucketsRepository extends IBucketsRepository {
         listToReturn.add(model);
       }
     });
+    listToReturn.sort((a, b) => a.timeValue.compareTo(b.timeValue));
     return listToReturn;
   }
 
   @override
   List<DayModel> getDayModelsFromMonth(MonthModel monthModel) {
-    // TODO: implement getDayModelsFromMonth
-    throw UnimplementedError();
+    var listToReturn = <DayModel>[];
+    _context.store.runInTransaction(TxMode.read, () {
+      var monthBucket = _monthBox.get(monthModel.id);
+      if (monthBucket == null) return [];
+
+      var days = monthBucket.days.toList();
+      for (var day in days) {
+        var categoryTuples = <Tuple2<DataCategory, int>>[];
+        var serviceTuples = <Tuple2<ServiceDocument, int>>[];
+        var categoryMap = day.categoryMap;
+        var serviceMap = day.serviceMap;
+
+        for (var entry in categoryMap.entries) {
+          DataCategory category = _getCategory(entry.key);
+          categoryTuples.add(Tuple2(category, entry.value));
+        }
+        for (var entry in serviceMap.entries) {
+          ServiceDocument service = _getService(entry.key);
+          serviceTuples.add(Tuple2(service, entry.value));
+        }
+
+        var model = DayModel(
+          id: day.id,
+          day: day.day,
+          total: day.total,
+          categoryCount: categoryTuples,
+          serviceCount: serviceTuples,
+          dataPoints: day.dataPoints.map((d) => d.getUIDTO).toList(),
+        );
+        listToReturn.add(model);
+      }
+    });
+
+    listToReturn.sort((a, b) => a.timeValue.compareTo(b.timeValue));
+    return listToReturn;
   }
 
   @override
   List<HourModel> getHourModelsFromDay(DayModel dayModel) {
-    // TODO: implement getHourModelsFromDay
-    throw UnimplementedError();
+    var listToReturn = <HourModel>[];
+    _context.store.runInTransaction(TxMode.read, () {
+      var dayBucket = _dayBox.get(dayModel.id);
+      if (dayBucket == null) return [];
+
+      var hours = dayBucket.hours.toList();
+      for (var hour in hours) {
+        var categoryTuples = <Tuple2<DataCategory, int>>[];
+        var serviceTuples = <Tuple2<ServiceDocument, int>>[];
+        var categoryMap = hour.categoryMap;
+        var serviceMap = hour.serviceMap;
+
+        for (var entry in categoryMap.entries) {
+          DataCategory category = _getCategory(entry.key);
+          categoryTuples.add(Tuple2(category, entry.value));
+        }
+        for (var entry in serviceMap.entries) {
+          ServiceDocument service = _getService(entry.key);
+          serviceTuples.add(Tuple2(service, entry.value));
+        }
+
+        var model = HourModel(
+          id: hour.id,
+          hour: hour.hour,
+          total: hour.total,
+          categoryCount: categoryTuples,
+          serviceCount: serviceTuples,
+          dataPoints: hour.dataPoints.map((d) => d.getUIDTO).toList(),
+        );
+        listToReturn.add(model);
+      }
+    });
+
+    listToReturn.sort((a, b) => a.timeValue.compareTo(b.timeValue));
+    return listToReturn;
   }
 
   @override
   List<MonthModel> getMonthModelsFromYear(YearModel yearModel) {
-    // TODO: implement getMonthModelsFromYear
-    throw UnimplementedError();
+    var listToReturn = <MonthModel>[];
+    _context.store.runInTransaction(TxMode.read, () {
+      var yearBucket = _yearBox.get(yearModel.id);
+      if (yearBucket == null) return [];
+
+      var months = yearBucket.months.toList();
+      for (var month in months) {
+        var categoryTuples = <Tuple2<DataCategory, int>>[];
+        var serviceTuples = <Tuple2<ServiceDocument, int>>[];
+        var categoryMap = month.categoryMap;
+        var serviceMap = month.serviceMap;
+
+        for (var entry in categoryMap.entries) {
+          DataCategory category = _getCategory(entry.key);
+          categoryTuples.add(Tuple2(category, entry.value));
+        }
+        for (var entry in serviceMap.entries) {
+          ServiceDocument service = _getService(entry.key);
+          serviceTuples.add(Tuple2(service, entry.value));
+        }
+
+        var model = MonthModel(
+          id: month.id,
+          month: month.month,
+          total: month.total,
+          categoryCount: categoryTuples,
+          serviceCount: serviceTuples,
+        );
+        listToReturn.add(model);
+      }
+    });
+
+    listToReturn.sort((a, b) => a.timeValue.compareTo(b.timeValue));
+    return listToReturn;
   }
 
   DataCategory _getCategory(int id) {

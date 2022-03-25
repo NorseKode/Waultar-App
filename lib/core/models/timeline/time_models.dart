@@ -70,14 +70,14 @@ class DayModel extends TimeModel {
 class HourModel extends TimeModel {
   HourModel({
     required int id,
-    required int day,
+    required int hour,
     required int total,
     required List<Tuple2<DataCategory, int>> categoryCount,
     required List<Tuple2<ServiceDocument, int>> serviceCount,
     required List<UIModel> dataPoints,
   }) : super(
           id,
-          day,
+          hour,
           total,
           categoryCount,
           serviceCount,
