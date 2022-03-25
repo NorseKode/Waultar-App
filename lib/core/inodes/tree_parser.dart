@@ -8,31 +8,36 @@ import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
+import 'package:waultar/core/inodes/profile_document.dart';
 import 'package:waultar/core/inodes/profile_repo.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:path/path.dart' as path_dart;
 import 'package:waultar/core/inodes/json_decider.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
-import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 import 'package:waultar/startup.dart';
 
 class TreeParser {
   final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
-  final _profileRepo = locator.get<ProfileRepository>(instanceName: 'profileRepo');
+  final _profileRepo =
+      locator.get<ProfileRepository>(instanceName: 'profileRepo');
   final DataCategoryRepository _categoryRepo;
   final DataPointNameRepository _nameRepo;
   final DataPointRepository _dataRepo;
 
-  TreeParser(this._categoryRepo, this._nameRepo, this._dataRepo);
+  TreeParser(
+    this._categoryRepo,
+    this._nameRepo,
+    this._dataRepo,
+  );
 
   late String formerFileName;
   late String formerFileParentName;
 
   late String basePathToFiles;
 
-  Future<void> parseManyPaths(List<String> paths,
-      ServiceDocument service) async {
+  Future<void> parseManyPaths(
+      List<String> paths, ServiceDocument service) async {
     if (paths.length > 1) {
       var basePathToFiles = StringBuffer();
       var path1 = paths.first;
@@ -59,18 +64,20 @@ class TreeParser {
     _categoryRepo.updateCounts();
   }
 
-  Future<ProfileDocument> getProfile(List<String> paths, ServiceDocument service) async {
+  Future<ProfileDocument> getProfile(
+      List<String> paths, ServiceDocument service) async {
     _appLogger.logger.info("Started Parsing Profile Document");
 
     var profilePath = "";
     if (service.serviceName == "Facebook") {
-      profilePath = paths.firstWhere((element) => element.contains('profile_information.json'));
+      profilePath = paths.firstWhere(
+          (element) => element.contains('profile_information.json'));
     } else if (service.serviceName == "Instagram") {
-      profilePath = paths.firstWhere((element) => element.contains('personal_information.json'));
+      profilePath = paths.firstWhere(
+          (element) => element.contains('personal_information.json'));
     } else {
       // TODO: error
     }
-
 
     var name = "Couldn't find username";
 
@@ -95,14 +102,15 @@ class TreeParser {
 
     _appLogger.logger.info("Finished Parsing Profile Document");
 
-    return profile; 
+    return profile;
   }
 
   Future<DataPointName> parsePath(
       String path, ProfileDocument profile, ServiceDocument service) async {
     if (Extensions.isJson(path)) {
       var category = _categoryRepo.getFromFolderName(path, service);
-      _appLogger.logger.info("Started Parsing Path: $path, Profile: ${profile.toString()}, Service: ${service.toString()}, Category: $category");
+      _appLogger.logger.info(
+          "Started Parsing Path: $path, Profile: ${profile.toString()}, Service: ${service.toString()}, Category: $category");
       var file = File(path);
       var json = await getJson(file);
       var dirtyInitialName = path_dart.basename(path);
@@ -167,9 +175,10 @@ class TreeParser {
             entry.value,
             basePathToFiles,
           );
-          
-          _appLogger.logger.info("Parsed Decision: Direct Data Point: ${directDataPoint.toString()}");
-          
+
+          _appLogger.logger.info(
+              "Parsed Decision: Direct Data Point: ${directDataPoint.toString()}");
+
           parent.dataPoints.add(directDataPoint);
         }
       }
@@ -185,8 +194,8 @@ class TreeParser {
         }
 
         if (decision == Decision.linkAsDataPoint) {
-          var directDataPoint = DataPoint.parse(category, parent, service,
-              profile, item, basePathToFiles);
+          var directDataPoint = DataPoint.parse(
+              category, parent, service, profile, item, basePathToFiles);
 
           parent.dataPoints.add(directDataPoint);
         }
@@ -219,13 +228,13 @@ class TreeParser {
     // handle the embedded direct datapoint via the embedded map
     if (mapToEmbedWith.isNotEmpty) {
       var directDataPoint = DataPoint.parse(
-            category,
-            parent,
-            service,
-            profile,
-            mapToEmbedWith,
-            basePathToFiles,
-          );
+        category,
+        parent,
+        service,
+        profile,
+        mapToEmbedWith,
+        basePathToFiles,
+      );
 
       var nameBasedOnTitle = mapToEmbedWith['title'];
       if (nameBasedOnTitle != null && nameBasedOnTitle is String) {
@@ -240,13 +249,13 @@ class TreeParser {
     // handle the embedded direct datapoint via the embedded list
     if (listToEmbed.isNotEmpty) {
       var directDataPoint = DataPoint.parse(
-            category,
-            parent,
-            service,
-            profile,
-            listToEmbed,
-            basePathToFiles,
-          );
+        category,
+        parent,
+        service,
+        profile,
+        listToEmbed,
+        basePathToFiles,
+      );
       parent.dataPoints.add(directDataPoint);
     }
 

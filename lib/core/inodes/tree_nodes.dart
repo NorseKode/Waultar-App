@@ -6,9 +6,9 @@ import 'package:pretty_json/pretty_json.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
 import 'package:waultar/core/inodes/media_documents.dart';
+import 'package:waultar/core/inodes/profile_document.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_parser.dart';
-import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 import 'package:path/path.dart' as dart_path;
 
 @Entity()
@@ -214,6 +214,9 @@ class DataCategory {
   @Index()
   @Unique()
   CategoryEnum category;
+
+  
+  final profile = ToOne<ProfileDocument>();
 
   @Backlink('dataCategory')
   final dataPointNames = ToMany<DataPointName>();

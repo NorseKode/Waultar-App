@@ -9,7 +9,6 @@ import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
-import 'package:waultar/presentation/widgets/general/default_widgets/default_widget_box.dart';
 import 'package:waultar/presentation/widgets/timeline/datapoint_widget.dart';
 import 'package:waultar/presentation/widgets/timeline/filter_widget.dart';
 import 'package:waultar/presentation/widgets/timeline/timeline_widget.dart';

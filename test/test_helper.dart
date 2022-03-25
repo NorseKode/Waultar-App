@@ -5,6 +5,7 @@ import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
+import 'package:waultar/core/inodes/profile_document.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/core/inodes/tree_parser.dart';
@@ -12,7 +13,6 @@ import 'package:waultar/core/models/misc/service_model.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
-import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 import 'package:waultar/startup.dart';
 
 class TestHelper {

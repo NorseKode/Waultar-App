@@ -14,13 +14,13 @@ import 'package:objectbox/objectbox.dart';
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import '../../core/inodes/media_documents.dart';
+import '../../core/inodes/profile_document.dart';
 import '../../core/inodes/service_document.dart';
 import '../../core/inodes/tree_nodes.dart';
 import '../../data/entities/misc/appsettings_objectbox.dart';
 import '../../data/entities/misc/email_objectbox.dart';
 import '../../data/entities/misc/reaction_objectbox.dart';
 import '../../data/entities/misc/service_objectbox.dart';
-import '../../data/entities/profile/profile_objectbox.dart';
 import '../../data/entities/timebuckets/buckets.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
@@ -48,7 +48,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(2, 8521560814133505752),
       name: 'DataCategory',
-      lastPropertyId: const IdUid(7, 2736504185050087481),
+      lastPropertyId: const IdUid(8, 114290100640519225),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -75,7 +75,14 @@ final _entities = <ModelEntity>[
             id: const IdUid(7, 2736504185050087481),
             name: 'dbCategory',
             type: 6,
-            flags: 0)
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(8, 114290100640519225),
+            name: 'profileId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(32, 5258471626172855891),
+            relationTarget: 'ProfileDocument')
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[
@@ -548,7 +555,12 @@ final _entities = <ModelEntity>[
             indexId: const IdUid(24, 4677889170425021669),
             relationTarget: 'ImageDocument')
       ],
-      relations: <ModelRelation>[],
+      relations: <ModelRelation>[
+        ModelRelation(
+            id: const IdUid(11, 1153118920999659961),
+            name: 'categories',
+            targetId: const IdUid(2, 8521560814133505752))
+      ],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
       id: const IdUid(12, 5885738635657717466),
@@ -842,8 +854,8 @@ ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
       lastEntityId: const IdUid(18, 1796282212521568090),
-      lastIndexId: const IdUid(31, 6204178328890629676),
-      lastRelationId: const IdUid(10, 2470213979646526234),
+      lastIndexId: const IdUid(32, 5258471626172855891),
+      lastRelationId: const IdUid(11, 1153118920999659961),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [3225060361381272079],
@@ -898,7 +910,7 @@ ModelDefinition getObjectBoxModel() {
         }),
     DataCategory: EntityDefinition<DataCategory>(
         model: _entities[1],
-        toOneRelations: (DataCategory object) => [],
+        toOneRelations: (DataCategory object) => [object.profile],
         toManyRelations: (DataCategory object) => {
               RelInfo<DataPointName>.toOneBacklink(4, object.id,
                       (DataPointName srcObject) => srcObject.dataCategory):
@@ -917,12 +929,13 @@ ModelDefinition getObjectBoxModel() {
               .matchingFoldersInstagram
               .map(fbb.writeString)
               .toList(growable: false));
-          fbb.startTable(8);
+          fbb.startTable(9);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.count);
           fbb.addOffset(2, matchingFoldersFacebookOffset);
           fbb.addOffset(3, matchingFoldersInstagramOffset);
           fbb.addInt64(6, object.dbCategory);
+          fbb.addInt64(7, object.profile.targetId);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -943,6 +956,9 @@ ModelDefinition getObjectBoxModel() {
                   .vTableGet(buffer, rootOffset, 10, []))
             ..dbCategory =
                 const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
+          object.profile.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0);
+          object.profile.attach(store);
           InternalToManyAccess.setRelInfo(
               object.dataPointNames,
               store,
@@ -1374,7 +1390,8 @@ ModelDefinition getObjectBoxModel() {
         model: _entities[10],
         toOneRelations: (ProfileDocument object) =>
             [object.service, object.dataPoint, object.profilePicture],
-        toManyRelations: (ProfileDocument object) => {},
+        toManyRelations: (ProfileDocument object) =>
+            {RelInfo<ProfileDocument>.toMany(11, object.id): object.categories},
         getId: (ProfileDocument object) => object.id,
         setId: (ProfileDocument object, int id) {
           object.id = id;
@@ -1407,6 +1424,11 @@ ModelDefinition getObjectBoxModel() {
           object.profilePicture.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
           object.profilePicture.attach(store);
+          InternalToManyAccess.setRelInfo(
+              object.categories,
+              store,
+              RelInfo<ProfileDocument>.toMany(11, object.id),
+              store.box<ProfileDocument>());
           return object;
         }),
     ReactionObjectBox: EntityDefinition<ReactionObjectBox>(
@@ -1737,6 +1759,10 @@ class DataCategory_ {
   /// see [DataCategory.dbCategory]
   static final dbCategory =
       QueryIntegerProperty<DataCategory>(_entities[1].properties[4]);
+
+  /// see [DataCategory.profile]
+  static final profile = QueryRelationToOne<DataCategory, ProfileDocument>(
+      _entities[1].properties[5]);
 }
 
 /// [DataPoint] entity fields to define ObjectBox queries.
@@ -2035,6 +2061,10 @@ class ProfileDocument_ {
   static final profilePicture =
       QueryRelationToOne<ProfileDocument, ImageDocument>(
           _entities[10].properties[4]);
+
+  /// see [ProfileDocument.categories]
+  static final categories = QueryRelationToMany<ProfileDocument, DataCategory>(
+      _entities[10].relations[0]);
 }
 
 /// [ReactionObjectBox] entity fields to define ObjectBox queries.

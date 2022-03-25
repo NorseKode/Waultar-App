@@ -1,6 +1,6 @@
+import 'package:waultar/core/inodes/profile_document.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
-import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 
 class ProfileRepository {
   final ObjectBox _context;

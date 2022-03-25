@@ -24,7 +24,7 @@
     },
     {
       "id": "2:8521560814133505752",
-      "lastPropertyId": "7:2736504185050087481",
+      "lastPropertyId": "8:114290100640519225",
       "name": "DataCategory",
       "properties": [
         {
@@ -52,6 +52,14 @@
           "id": "7:2736504185050087481",
           "name": "dbCategory",
           "type": 6
+        },
+        {
+          "id": "8:114290100640519225",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "32:5258471626172855891",
+          "relationTarget": "ProfileDocument"
         }
       ],
       "relations": []
@@ -546,7 +554,13 @@
           "relationTarget": "ImageDocument"
         }
       ],
-      "relations": []
+      "relations": [
+        {
+          "id": "11:1153118920999659961",
+          "name": "categories",
+          "targetId": "2:8521560814133505752"
+        }
+      ]
     },
     {
       "id": "12:5885738635657717466",
@@ -828,8 +842,8 @@
     }
   ],
   "lastEntityId": "18:1796282212521568090",
-  "lastIndexId": "31:6204178328890629676",
-  "lastRelationId": "10:2470213979646526234",
+  "lastIndexId": "32:5258471626172855891",
+  "lastRelationId": "11:1153118920999659961",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
