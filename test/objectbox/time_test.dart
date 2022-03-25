@@ -1,7 +1,5 @@
 // ignore_for_file: avoid_print
 
-import 'dart:async';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:waultar/core/inodes/buckets_repo.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
@@ -23,13 +21,12 @@ void main() async {
 
   tearDownAll(() async {
     _context.store.close();
-    await Timer(const Duration(seconds: 2), () {});
     await TestHelper.deleteTestDb();
   });
 
   group('Creation of buckets from parsed datapoints', () {
 
-    test(' - test setup', () {
+    test(' - test setup', () async {
       var now = DateTime.now();
 
       TestHelper.seedForTimeBuckets(_context);
@@ -78,7 +75,7 @@ void main() async {
 
     test(' - test year buckets count', () async {
       var count = _bucketsRepo.getAllYears().length;
-      expect(count, 0);
+      expect(count, 5);
     });
 
     test(' - test bucket mapping from db property to Map<int, int>', () async {
@@ -98,7 +95,7 @@ void main() async {
       TestHelper.seedForTimeBuckets(_context);
       await _bucketsRepo.createBuckets(parsedAt);
       var yearModels = _bucketsRepo.getAllYearModels();
-      expect(yearModels.length, 5);
+      expect(yearModels.length, 6);
     });
 
 

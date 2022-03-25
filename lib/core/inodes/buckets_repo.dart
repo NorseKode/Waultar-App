@@ -52,14 +52,14 @@ class BucketsRepository extends IBucketsRepository {
     var years = _yearBox.getAll();
 
     // streams all datapoints that have been created after createdSince
-    var toBeProcessed = _context.store
+    var toBeProcessedQuery = _context.store
         .box<DataPoint>()
         .query(DataPoint_.dbCreatedAt.greaterThan(createdSince))
-        .build()
-        .stream();
+        .build();
 
+    var toBeProcessed = toBeProcessedQuery.stream();
     // process each datapoint from the stream
-    await for (var dataPoint in toBeProcessed) {
+    await for (final dataPoint in toBeProcessed) {
       var timestamps = _scrapeUniqueTimestamps(dataPoint);
 
       if (timestamps.isNotEmpty) {
@@ -179,6 +179,7 @@ class BucketsRepository extends IBucketsRepository {
     }
 
     // when the stream has processed each element we update all the buckets via the root bucket in a single transaction
+    toBeProcessedQuery.close();
     _yearBox.putMany(years);
   }
 
