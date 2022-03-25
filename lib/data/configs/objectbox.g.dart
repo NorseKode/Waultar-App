@@ -178,7 +178,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(4, 7429836309845956029),
       name: 'DataPointName',
-      lastPropertyId: const IdUid(7, 8919670594220832819),
+      lastPropertyId: const IdUid(8, 5812959911927181422),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -205,19 +205,19 @@ final _entities = <ModelEntity>[
             indexId: const IdUid(7, 3830023691291834350),
             relationTarget: 'DataCategory'),
         ModelProperty(
-            id: const IdUid(5, 8124650304235719159),
-            name: 'serviceId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(8, 4409273576786250994),
-            relationTarget: 'ServiceDocument'),
-        ModelProperty(
             id: const IdUid(6, 6374307156085070498),
             name: 'parentId',
             type: 11,
             flags: 520,
             indexId: const IdUid(9, 224994566744800025),
-            relationTarget: 'DataPointName')
+            relationTarget: 'DataPointName'),
+        ModelProperty(
+            id: const IdUid(8, 5812959911927181422),
+            name: 'profileId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(33, 4236494817836762197),
+            relationTarget: 'ProfileDocument')
       ],
       relations: <ModelRelation>[
         ModelRelation(
@@ -854,11 +854,11 @@ ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
       lastEntityId: const IdUid(18, 1796282212521568090),
-      lastIndexId: const IdUid(32, 5258471626172855891),
+      lastIndexId: const IdUid(33, 4236494817836762197),
       lastRelationId: const IdUid(11, 1153118920999659961),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
-      retiredIndexUids: const [3225060361381272079],
+      retiredIndexUids: const [3225060361381272079, 4409273576786250994],
       retiredPropertyUids: const [
         2035953540501364365,
         3577269985980726905,
@@ -875,7 +875,8 @@ ModelDefinition getObjectBoxModel() {
         3337823813404384037,
         3398435305510469048,
         2974902989043831979,
-        3498040681430748298
+        3498040681430748298,
+        8124650304235719159
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -1050,7 +1051,7 @@ ModelDefinition getObjectBoxModel() {
     DataPointName: EntityDefinition<DataPointName>(
         model: _entities[3],
         toOneRelations: (DataPointName object) =>
-            [object.dataCategory, object.service, object.parent],
+            [object.dataCategory, object.parent, object.profile],
         toManyRelations: (DataPointName object) => {
               RelInfo<DataPointName>.toMany(5, object.id): object.children,
               RelInfo<DataPoint>.toOneBacklink(2, object.id,
@@ -1063,13 +1064,13 @@ ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (DataPointName object, fb.Builder fbb) {
           final nameOffset = fbb.writeString(object.name);
-          fbb.startTable(8);
+          fbb.startTable(9);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.count);
           fbb.addOffset(2, nameOffset);
           fbb.addInt64(3, object.dataCategory.targetId);
-          fbb.addInt64(4, object.service.targetId);
           fbb.addInt64(5, object.parent.targetId);
+          fbb.addInt64(7, object.profile.targetId);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1085,12 +1086,12 @@ ModelDefinition getObjectBoxModel() {
           object.dataCategory.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
           object.dataCategory.attach(store);
-          object.service.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
-          object.service.attach(store);
           object.parent.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
           object.parent.attach(store);
+          object.profile.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0);
+          object.profile.attach(store);
           InternalToManyAccess.setRelInfo(
               object.children,
               store,
@@ -1841,12 +1842,12 @@ class DataPointName_ {
   static final dataCategory = QueryRelationToOne<DataPointName, DataCategory>(
       _entities[3].properties[3]);
 
-  /// see [DataPointName.service]
-  static final service = QueryRelationToOne<DataPointName, ServiceDocument>(
-      _entities[3].properties[4]);
-
   /// see [DataPointName.parent]
   static final parent = QueryRelationToOne<DataPointName, DataPointName>(
+      _entities[3].properties[4]);
+
+  /// see [DataPointName.profile]
+  static final profile = QueryRelationToOne<DataPointName, ProfileDocument>(
       _entities[3].properties[5]);
 
   /// see [DataPointName.children]

@@ -155,7 +155,7 @@ class TestHelper {
         .findUnique()!;
     
     var yourPosts = DataPointName(name: 'your posts');
-    yourPosts.service.target = fbService;
+    yourPosts.profile.target = testProfile;
 
     int i = 0;
     for (; i < timestamps.length / 2; i++) {
@@ -175,7 +175,7 @@ class TestHelper {
     }
 
     var yourComments = DataPointName(name: 'your comments');
-    yourComments.service.target = fbService;
+    yourComments.profile.target = testProfile;
     for (; i < timestamps.length; i++) {
       var data = {
         'title': 'test title',

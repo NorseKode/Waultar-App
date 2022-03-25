@@ -158,7 +158,7 @@
     },
     {
       "id": "4:7429836309845956029",
-      "lastPropertyId": "7:8919670594220832819",
+      "lastPropertyId": "8:5812959911927181422",
       "name": "DataPointName",
       "properties": [
         {
@@ -188,20 +188,20 @@
           "relationTarget": "DataCategory"
         },
         {
-          "id": "5:8124650304235719159",
-          "name": "serviceId",
-          "type": 11,
-          "flags": 520,
-          "indexId": "8:4409273576786250994",
-          "relationTarget": "ServiceDocument"
-        },
-        {
           "id": "6:6374307156085070498",
           "name": "parentId",
           "type": 11,
           "flags": 520,
           "indexId": "9:224994566744800025",
           "relationTarget": "DataPointName"
+        },
+        {
+          "id": "8:5812959911927181422",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "33:4236494817836762197",
+          "relationTarget": "ProfileDocument"
         }
       ],
       "relations": [
@@ -842,14 +842,15 @@
     }
   ],
   "lastEntityId": "18:1796282212521568090",
-  "lastIndexId": "32:5258471626172855891",
+  "lastIndexId": "33:4236494817836762197",
   "lastRelationId": "11:1153118920999659961",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [
-    3225060361381272079
+    3225060361381272079,
+    4409273576786250994
   ],
   "retiredPropertyUids": [
     2035953540501364365,
@@ -867,7 +868,8 @@
     3337823813404384037,
     3398435305510469048,
     2974902989043831979,
-    3498040681430748298
+    3498040681430748298,
+    8124650304235719159
   ],
   "retiredRelationUids": [],
   "version": 1

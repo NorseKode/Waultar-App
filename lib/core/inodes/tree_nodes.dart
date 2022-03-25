@@ -187,7 +187,7 @@ class DataPointName {
   String name;
 
   final dataCategory = ToOne<DataCategory>();
-  final service = ToOne<ServiceDocument>();
+  final profile = ToOne<ProfileDocument>();
 
   @Backlink('dataPointName')
   final dataPoints = ToMany<DataPoint>();

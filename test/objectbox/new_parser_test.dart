@@ -61,6 +61,7 @@ Future<void> main() async {
     _categoryRepo = DataCategoryRepository(_context);
     _nameRepo = DataPointNameRepository(_context);
     _parser = TreeParser(_categoryRepo, _nameRepo, _dataRepo);
+    _parser.basePathToFiles = '';
     service = TestHelper.serviceDocument;
     profile = TestHelper.profileDocument;
   });

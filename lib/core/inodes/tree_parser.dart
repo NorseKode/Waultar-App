@@ -259,7 +259,7 @@ class TreeParser {
       parent.dataPoints.add(directDataPoint);
     }
 
-    parent.service.target = service;
+    parent.profile.target = profile;
     parent.count = parent.children.length + parent.dataPoints.length;
     return parent;
   }
