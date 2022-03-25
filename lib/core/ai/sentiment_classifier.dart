@@ -1,10 +1,11 @@
+// ignore_for_file: unused_field
+
 import 'dart:io';
 
 
 // Import tflite_flutter
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
-import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/core/ai/i_ml_model.dart';
 import 'package:waultar/startup.dart';
 
@@ -54,7 +55,6 @@ class SentimentClassifier extends IMLModel {
   }
 
   List<double> classify(String rawText) {
-    var startTime = DateTime.now();
     // tokenizeInputText returns List<List<double>>
     // of shape [1, 256].
     List<List<double>> input = tokenizeInputText(rawText);
@@ -65,8 +65,7 @@ class SentimentClassifier extends IMLModel {
     // The run method will run inference and
     // store the resulting values in output.
     _interpreter.run(input, output);
-    PerformanceHelper.logRunTime(
-        startTime, DateTime.now(), _appLogger, "Classifying of text: $rawText");
+
     return [output[0][0], output[0][1]];
   }
 

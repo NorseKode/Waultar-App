@@ -1,18 +1,17 @@
-import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/ai/image_classifier.dart';
 import 'package:waultar/core/inodes/media_repo.dart';
 import 'package:waultar/core/models/index.dart';
-import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/startup.dart';
 
 class MLService extends IMLService {
-  final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
+  // final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
   final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
   final _classifier = locator.get<ImageClassifier>(instanceName: 'imageClassifier');
-  final _context = locator.get<ObjectBox>(instanceName: 'context');
+  // final _context = locator.get<ObjectBox>(instanceName: 'context');
+  final _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
 
   @override
   Future<void> classifyAllImagesSeparateThreadFromDB() {
@@ -28,6 +27,11 @@ class MLService extends IMLService {
 
   @override
   int classifyImagesFromDB() {
+    if (ISPERFORMANCETRACKING) {
+      _performance.reInit(newParentKey: "imageTagging", newChildKey: "image");
+      _performance.start();
+    }
+
     var startTime = DateTime.now();
 
     int updated = 0;
@@ -48,8 +52,10 @@ class MLService extends IMLService {
     }
 
     if (ISPERFORMANCETRACKING) {
-      PerformanceHelper.logRunTime(
-          startTime, DateTime.now(), _appLogger, "Classifying of all images from the database");
+      _performance.stopParentAndWriteToFile(
+        "image-tagging",
+        metadata: {"Image count": updated},
+      );
     }
 
     return updated;

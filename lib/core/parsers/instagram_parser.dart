@@ -5,7 +5,6 @@ import 'package:waultar/configs/exceptions/parse_exception.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/abstracts/abstract_parsers/base_parser.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/models/model_helper.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
@@ -16,7 +15,7 @@ class InstagramParser extends BaseParser {
   final appLogger = locator.get<AppLogger>(instanceName: 'logger');
   static const _profileFiles = ["personal_information", "signup_information"];
   // final _imageClassifier = locator.get<ImageClassifier>(instanceName: 'imageClassifier');
-  final _profileRepo = locator.get<IProfileRepository>(instanceName: 'profileRepo');
+  // final _profileRepo = locator.get<IProfileRepository>(instanceName: 'profileRepo');
 
   @override
   Stream<dynamic> parseFile(File file, {ProfileModel? profile}) async* {

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
@@ -68,7 +69,10 @@ class _BrowseState extends State<Browse> {
               'path': dart_path.normalize(zipFiles.first),
               'extracts_folder':
                   locator.get<String>(instanceName: 'extracts_folder'),
-              'service_name': service.serviceName
+              'service_name': service.serviceName,
+              'is_performance_tracking': ISPERFORMANCETRACKING.toString(),
+              'log_folder': locator.get<String>(instanceName: 'performance_folder'),
+
             };
             var uploadedFiles = await compute(extractZip, inputMap);
             await parser

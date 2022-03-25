@@ -3,6 +3,7 @@ import 'package:path/path.dart' as dart_path;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_utility_repostitory.dart';
@@ -38,6 +39,7 @@ late final String _waultarPath;
 late final String _dbFolderPath;
 late final String _extractsFolderPath;
 late final String _logFolderPath;
+late final String _performanceFolderPath;
 
 Future<void> setupServices() async {
   await initApplicationPaths().whenComplete(() async {
@@ -45,12 +47,21 @@ Future<void> setupServices() async {
     locator.registerSingleton<String>(_dbFolderPath, instanceName: 'db_folder');
     locator.registerSingleton<String>(_extractsFolderPath, instanceName: 'extracts_folder');
     locator.registerSingleton<String>(_logFolderPath, instanceName: 'log_folder');
+    locator.registerSingleton<String>(_performanceFolderPath, instanceName: 'performance_folder');
 
     os = detectPlatform();
     locator.registerSingleton<OS>(os, instanceName: 'platform');
 
-    _logger = AppLogger(os);
+    _logger = AppLogger(os, _logFolderPath);
     locator.registerSingleton<AppLogger>(_logger, instanceName: 'logger');
+
+    locator.registerSingleton<PerformanceHelper>(
+      PerformanceHelper(
+        pathToPerformanceFile: _performanceFolderPath,
+        parentKey: "",
+      ),
+      instanceName: 'performance',
+    );
 
     // create objectbox at startup
     // this MUST be the only context throughout runtime
@@ -149,6 +160,7 @@ Future initApplicationPaths() async {
   _dbFolderPath = dart_path.normalize(_waultarPath + '/objectbox/');
   _extractsFolderPath = dart_path.normalize(_waultarPath + '/extracts/');
   _logFolderPath = dart_path.normalize(_waultarPath + '/logs/');
+  _performanceFolderPath = dart_path.normalize(_waultarPath + '/performance/');
 
   var dbFolderDir = Directory(_dbFolderPath);
   var extractsFolderDir = Directory(_extractsFolderPath);
