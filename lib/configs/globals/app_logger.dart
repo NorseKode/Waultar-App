@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:logging/logging.dart';
 import 'package:waultar/configs/globals/globals.dart';
-import 'package:waultar/startup.dart';
 import 'package:path/path.dart' as dart_path;
 
 import 'os_enum.dart';

@@ -3,6 +3,7 @@ import 'package:path/path.dart' as dart_path;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_utility_repostitory.dart';
@@ -53,6 +54,14 @@ Future<void> setupServices() async {
 
     _logger = AppLogger(os, _logFolderPath);
     locator.registerSingleton<AppLogger>(_logger, instanceName: 'logger');
+
+    locator.registerSingleton<PerformanceHelper>(
+      PerformanceHelper(
+        pathToPerformanceFile: _performanceFolderPath,
+        parentKey: "",
+      ),
+      instanceName: 'performance',
+    );
 
     // create objectbox at startup
     // this MUST be the only context throughout runtime

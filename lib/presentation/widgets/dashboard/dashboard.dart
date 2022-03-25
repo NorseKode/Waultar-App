@@ -3,8 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:waultar/configs/globals/globals.dart';
-import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/inodes/media_repo.dart';
@@ -43,27 +41,11 @@ class _DashboardState extends State<Dashboard> {
           DefaultButton(
             text: "Tag Images",
             onPressed: () {
-              PerformanceHelper? performance;
               setState(() {
                 _isLoading = true;
               });
 
-              if (ISPERFORMANCETRACKING) {
-                performance = PerformanceHelper(
-                  pathToPerformanceFile: locator.get<String>(instanceName: 'performance_folder'),
-                  parentKey: "Image tagging",
-                );
-                performance.start();
-              }
-
               _mlService.classifyImagesFromDB();
-
-              if (ISPERFORMANCETRACKING) {
-                performance!.stopParentAndWriteToFile(
-                  "image-tagging",
-                  metadata: "Image count: $_imagesToTagCount",
-                );
-              }
 
               setState(() {
                 _isLoading = false;

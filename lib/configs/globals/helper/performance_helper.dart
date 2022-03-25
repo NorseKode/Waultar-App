@@ -1,21 +1,36 @@
+import 'dart:convert';
 import 'dart:io';
 
-import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:path/path.dart' as dart_path;
 
 class PerformanceHelper {
   String pathToPerformanceFile;
-  // late File _file;
-  final _parentTimer = Stopwatch();
   String parentKey;
-  int _parentTimeSpent = 0;
+  late PerformanceDataPoint _parentDataPoint;
+  final _parentTimer = Stopwatch();
+  String? childKey;
+  final _childTimer = Stopwatch();
 
-  PerformanceHelper({required this.pathToPerformanceFile, required this.parentKey}) {
-    // _file = File(pathToPerformanceFile + "/temp.txt");
+  PerformanceHelper({
+    required this.pathToPerformanceFile,
+    required this.parentKey,
+    this.childKey,
+  }) {
+    _parentDataPoint = PerformanceDataPoint(
+      key: parentKey,
+      timeFormat: "milliseconds",
+    );
+  }
 
-    // if (!_file.existsSync()) {
-    //   _file.createSync(recursive: true);
-    // }
+  void reInit({required String newParentKey, String? newChildKey}) {
+    parentKey = newParentKey;
+    if (newChildKey != null) {
+      childKey = newChildKey;
+    }
+    _parentDataPoint = PerformanceDataPoint(
+      key: parentKey,
+      timeFormat: "milliseconds",
+    );
   }
 
   void start() {
@@ -27,71 +42,111 @@ class PerformanceHelper {
     return _parentTimer.elapsed;
   }
 
-  void reset() {
-    _parentTimer.reset();
+  void startChild() {
+    _childTimer.start();
   }
 
-  // Duration stopAndWriteToFile(String identifier) {
-  // }
+  void stopChild() {
+    _childTimer.stop();
+  }
 
-  void stopParentAndWriteToFile(String fileName, {String? metadata}) {
-    _parentTimer.stop();
+  resetChild() {
+    _childTimer.reset();
+  }
+
+  void addChildReading({Map<String, dynamic>? metadata}) {
+    _parentDataPoint.childs.add(PerformanceDataPoint(
+      key: childKey!,
+      timeFormat: "milliseconds",
+      inputTime: _childTimer.elapsed,
+      metaData: metadata,
+    ));
+  }
+
+  /// Stops the parent timer, write results to a json file with [fileName]
+  /// with optional [metadata]
+  ///
+  /// This also disposes the performance helper, and when it should be used
+  /// again, a call to reInit should be made
+  void stopParentAndWriteToFile(String fileName, {Map<String, dynamic>? metadata}) {
+    stop();
     var elapsed = _parentTimer.elapsed;
-    _parentTimeSpent = elapsed.inMilliseconds;
-    // _file.writeAsStringSync("$parentKey;${elapsed.inMilliseconds}\n", mode: FileMode.append);
+    _parentDataPoint.elapsedTime = elapsed;
+
+    if (metadata != null) {
+      _parentDataPoint.metadata.addAll(metadata);
+    }
+
     _summary(fileName, parentKey);
   }
 
-  void _summary(String summaryFileName, String wholeIdentifier, {String? individualIdentifier, String? metadata}) {
+  void _summary(
+    String summaryFileName,
+    String wholeIdentifier,
+  ) {
     var summaryFile = File(
       dart_path.normalize(
         dart_path.join(
           pathToPerformanceFile,
-          "${DateTime.now().millisecondsSinceEpoch.toString()}-$summaryFileName.txt",
+          "${DateTime.now().millisecondsSinceEpoch.toString()}-$summaryFileName.json",
         ),
       ),
     );
-    var individualCount = 0;
-    var individualSummedTimeMs = 0;
-    var wholeTimeSpent = "";
 
-    summaryFile.createSync();
+    summaryFile.createSync(recursive: true);
+    summaryFile.writeAsStringSync(jsonEncode(_parentDataPoint.toMap()));
 
-    // for (var line in _file.readAsLinesSync()) {
-    //   if (individualIdentifier != null) {
-    //     if (line.startsWith(individualIdentifier)) {
-    //       individualCount++;
-    //       individualSummedTimeMs += int.parse(line.split(";")[1]);
-    //     }
-    //   } else if (line.startsWith(wholeIdentifier)) {
-    //     wholeTimeSpent = line.split(";")[1];
-    //   }
-    // }
+    dispose();
+  }
 
-    summaryFile.writeAsStringSync("Summary of $parentKey\n", mode: FileMode.append);
-    summaryFile.writeAsStringSync("Finished in $_parentTimeSpent milliseconds\n", mode: FileMode.append);
-    // if (individualIdentifier != null) {
-    //   summaryFile.writeAsStringSync("with $individualCount elements\n", mode: FileMode.append);
-    //   summaryFile.writeAsStringSync("and a summed time of $individualSummedTimeMs\n", mode: FileMode.append);
-    // }
-    if (metadata != null) {
-      summaryFile.writeAsStringSync("Metadata: $metadata", mode: FileMode.append);
+  void dispose() {
+    parentKey = "";
+    childKey = "";
+    _parentTimer.reset();
+    _childTimer.reset();
+    _parentDataPoint.childs = <PerformanceDataPoint>[];
+  }
+}
+
+class PerformanceDataPoint {
+  String key;
+  String timeFormat;
+  late Duration elapsedTime;
+  late Map<String, dynamic> metadata;
+  late List<PerformanceDataPoint> childs;
+
+  PerformanceDataPoint(
+      {required this.key,
+      required this.timeFormat,
+      Duration? inputTime,
+      Map<String, dynamic>? metaData,
+      List<PerformanceDataPoint>? inputChilds}) {
+    if (inputTime != null) {
+      elapsedTime = inputTime;
+    } else {
+      elapsedTime = const Duration(seconds: 0);
+    }
+
+    if (metaData != null) {
+      metadata = metaData;
+    } else {
+      metadata = <String, dynamic>{};
+    }
+
+    if (inputChilds != null) {
+      childs = inputChilds;
+    } else {
+      childs = <PerformanceDataPoint>[];
     }
   }
 
-  // void dispose() {
-  //   _file.writeAsStringSync("");
-  // }
+  Map<String, dynamic> toMap() {
+    return {
+      'key': key,
+      'elapsedTime': elapsedTime.inMilliseconds,
+      'timeFormat': timeFormat,
+      'metadata': metadata,
+      'childs': childs.map((e) => e.toMap()).toList(),
+    };
+  }
 }
-
-// class PerformanceDataPointBase {
-//   String key;
-//   Duration elapsedTime;
-//   List<PerformanceDataPointChild> childs;
-
-//   PerformanceDataPointBase({required this.key, required this.elapsedTime, required this.childs});
-// }
-
-// class PerformanceDataPointChild{
-
-// }

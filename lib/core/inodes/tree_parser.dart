@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:waultar/configs/globals/app_logger.dart';
+import 'package:waultar/configs/globals/globals.dart';
+import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
@@ -21,8 +23,11 @@ class TreeParser {
   final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
   final _profileRepo = locator.get<ProfileRepository>(instanceName: 'profileRepo');
   final DataCategoryRepository _categoryRepo;
+  // ignore: unused_field
   final DataPointNameRepository _nameRepo;
+  // ignore: unused_field
   final DataPointRepository _dataRepo;
+  late PerformanceHelper _performance;
 
   TreeParser(this._categoryRepo, this._nameRepo, this._dataRepo);
 
@@ -31,8 +36,14 @@ class TreeParser {
 
   late String basePathToFiles;
 
-  Future<void> parseManyPaths(List<String> paths,
-      ServiceDocument service) async {
+  Future<void> parseManyPaths(List<String> paths, ServiceDocument service) async {
+    if (ISPERFORMANCETRACKING) {
+      _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
+
+      _performance.reInit(newParentKey: "Parse all");
+      _performance.start();
+    }
+
     if (paths.length > 1) {
       var basePathToFiles = StringBuffer();
       var path1 = paths.first;
@@ -57,6 +68,13 @@ class TreeParser {
       }
     }
     _categoryRepo.updateCounts();
+
+    if (ISPERFORMANCETRACKING) {
+      _performance.stopParentAndWriteToFile(
+        "parse-all",
+        metadata: {"filecount": paths.length},
+      );
+    }
   }
 
   Future<ProfileDocument> getProfile(List<String> paths, ServiceDocument service) async {
@@ -70,7 +88,6 @@ class TreeParser {
     } else {
       // TODO: error
     }
-
 
     var name = "Couldn't find username";
 
@@ -95,23 +112,34 @@ class TreeParser {
 
     _appLogger.logger.info("Finished Parsing Profile Document");
 
-    return profile; 
+    return profile;
   }
 
   Future<DataPointName> parsePath(
       String path, ProfileDocument profile, ServiceDocument service) async {
     if (Extensions.isJson(path)) {
+      if (ISPERFORMANCETRACKING) {
+        _performance.childKey = "parseSingleFile";
+        _performance.resetChild();
+        _performance.startChild();
+      }
+
       var category = _categoryRepo.getFromFolderName(path, service);
-      _appLogger.logger.info("Started Parsing Path: $path, Profile: ${profile.toString()}, Service: ${service.toString()}, Category: $category");
+      _appLogger.logger.info(
+          "Started Parsing Path: $path, Profile: ${profile.toString()}, Service: ${service.toString()}, Category: $category");
       var file = File(path);
       var json = await getJson(file);
       var dirtyInitialName = path_dart.basename(path);
       var cleanInitialName = dirtyInitialName.replaceAll(".json", "");
 
-      var name =
-          parseName(json, category, cleanInitialName, profile, service, null);
+      var name = parseName(json, category, cleanInitialName, profile, service, null);
       category.dataPointNames.add(name);
       _categoryRepo.updateCategory(category);
+
+      if (ISPERFORMANCETRACKING) {
+        _performance.addChildReading();
+      }
+
       return name;
     } else {
       throw Exception("File extension not supported");
@@ -119,18 +147,13 @@ class TreeParser {
   }
 
   // ! when this method returns, make sure to add the returned datapointname as child to the category parameter
-  DataPointName parseName(
-      dynamic json,
-      DataCategory category,
-      String initialName,
-      ProfileDocument profile,
-      ServiceDocument service,
-      DataPointName? parent) {
+  DataPointName parseName(dynamic json, DataCategory category, String initialName,
+      ProfileDocument profile, ServiceDocument service, DataPointName? parent) {
     parent ??= DataPointName(name: _cleanName(initialName));
 
     if (json is Map<String, dynamic> && json.length == 1) {
-      return parseName(json.values.first, category, _cleanName(json.keys.first),
-          profile, service, null);
+      return parseName(
+          json.values.first, category, _cleanName(json.keys.first), profile, service, null);
     }
 
     // it's a map with several entries and each entry should either be embedded as direct datapoint leaf
@@ -154,8 +177,8 @@ class TreeParser {
 
         // if the key-value pair is {string:complex} - the decider saw, that the value was map or list
         if (decision == Decision.linkAsNewName) {
-          parent.children.add(parseName(entry.value, category,
-              _cleanName(entry.key), profile, service, null));
+          parent.children
+              .add(parseName(entry.value, category, _cleanName(entry.key), profile, service, null));
         }
 
         if (decision == Decision.linkAsDataPoint) {
@@ -167,9 +190,10 @@ class TreeParser {
             entry.value,
             basePathToFiles,
           );
-          
-          _appLogger.logger.info("Parsed Decision: Direct Data Point: ${directDataPoint.toString()}");
-          
+
+          _appLogger.logger
+              .info("Parsed Decision: Direct Data Point: ${directDataPoint.toString()}");
+
           parent.dataPoints.add(directDataPoint);
         }
       }
@@ -185,8 +209,8 @@ class TreeParser {
         }
 
         if (decision == Decision.linkAsDataPoint) {
-          var directDataPoint = DataPoint.parse(category, parent, service,
-              profile, item, basePathToFiles);
+          var directDataPoint =
+              DataPoint.parse(category, parent, service, profile, item, basePathToFiles);
 
           parent.dataPoints.add(directDataPoint);
         }
@@ -199,16 +223,15 @@ class TreeParser {
           if (item is Map<String, dynamic>) {
             var nameBasedOnTitle = item['title'];
             if (nameBasedOnTitle != null && nameBasedOnTitle is String) {
-              parent.children.add(parseName(
-                  item, category, nameBasedOnTitle, profile, service, null));
+              parent.children
+                  .add(parseName(item, category, nameBasedOnTitle, profile, service, null));
             }
             var nameBasedOnName = item['name'];
             if (nameBasedOnName != null && nameBasedOnName is String) {
-              parent.children.add(parseName(
-                  item, category, nameBasedOnName, profile, service, null));
+              parent.children
+                  .add(parseName(item, category, nameBasedOnName, profile, service, null));
             } else {
-              parent.children.add(parseName(
-                  item, category, initialName, profile, service, null));
+              parent.children.add(parseName(item, category, initialName, profile, service, null));
             }
           }
         }
@@ -219,13 +242,13 @@ class TreeParser {
     // handle the embedded direct datapoint via the embedded map
     if (mapToEmbedWith.isNotEmpty) {
       var directDataPoint = DataPoint.parse(
-            category,
-            parent,
-            service,
-            profile,
-            mapToEmbedWith,
-            basePathToFiles,
-          );
+        category,
+        parent,
+        service,
+        profile,
+        mapToEmbedWith,
+        basePathToFiles,
+      );
 
       var nameBasedOnTitle = mapToEmbedWith['title'];
       if (nameBasedOnTitle != null && nameBasedOnTitle is String) {
@@ -240,13 +263,13 @@ class TreeParser {
     // handle the embedded direct datapoint via the embedded list
     if (listToEmbed.isNotEmpty) {
       var directDataPoint = DataPoint.parse(
-            category,
-            parent,
-            service,
-            profile,
-            listToEmbed,
-            basePathToFiles,
-          );
+        category,
+        parent,
+        service,
+        profile,
+        listToEmbed,
+        basePathToFiles,
+      );
       parent.dataPoints.add(directDataPoint);
     }
 
@@ -267,9 +290,8 @@ class TreeParser {
   String _cleanName(String filename) {
     String temp = filename.split("_").fold(
         "",
-        (previousValue, element) => _isNumeric(element)
-            ? previousValue + " "
-            : previousValue + element + " ");
+        (previousValue, element) =>
+            _isNumeric(element) ? previousValue + " " : previousValue + element + " ");
 
     if (temp.trim().endsWith("v2")) return temp.replaceAll("v2", "").trim();
 

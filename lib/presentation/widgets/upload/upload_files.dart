@@ -3,11 +3,7 @@ import 'dart:io';
 import 'package:archive/archive_io.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as dart_path;
-import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/helper/performance_helper.dart';
-import 'package:waultar/configs/globals/os_enum.dart';
-import 'package:logging/logging.dart';
-import 'package:waultar/startup.dart';
 
 class FileUploader {
   /// Returns file with if user picks a file, otherwise it returns `null`
@@ -23,8 +19,7 @@ class FileUploader {
 
   /// Returns a list of files if users picks any file, returns `null` otherwise
   static Future<List<File>?> uploadMultiple() async {
-    FilePickerResult? result =
-        await FilePicker.platform.pickFiles(allowMultiple: true);
+    FilePickerResult? result = await FilePicker.platform.pickFiles(allowMultiple: true);
 
     if (result != null) {
       return result.paths.map((path) => File(path!)).toList();
@@ -54,9 +49,7 @@ class FileUploader {
     var dir = Directory(path);
     List<File> files = [];
 
-    await dir
-        .list(recursive: true, followLinks: false)
-        .forEach((element) async {
+    await dir.list(recursive: true, followLinks: false).forEach((element) async {
       var stat = await element.stat();
       var isFile = stat.type == FileSystemEntityType.file;
 
@@ -72,9 +65,7 @@ class FileUploader {
     var dir = Directory(path);
     List<String> files = [];
 
-    await dir
-        .list(recursive: true, followLinks: false)
-        .forEach((element) async {
+    await dir.list(recursive: true, followLinks: false).forEach((element) async {
       var stat = await element.stat();
       var isFile = stat.type == FileSystemEntityType.file;
 
@@ -89,10 +80,10 @@ class FileUploader {
 
 /// Extract a zip folder to a given location and returns a list of strings as
 /// the pats to the extracted files
-/// 
-/// In order to run on a separate thread the [input] are strings from a 
+///
+/// In order to run on a separate thread the [input] are strings from a
 /// `Map<String, String>`. The map expects the following keys
-/// 
+///
 /// ```
 /// 'path': path to zip file,
 /// 'extracts_folder': path to folder where files should be extracted to
@@ -106,10 +97,13 @@ List<String> extractZip(Map<String, String> input) {
   var isPerformanceTracking = input["is_performance_tracking"] == "true";
 
   if (isPerformanceTracking) {
-    performance = PerformanceHelper(pathToPerformanceFile: input['log_folder']!, parentKey: "Extract zip");
+    performance = PerformanceHelper(
+        pathToPerformanceFile: input['log_folder']!,
+        parentKey: "Extract zip",
+        childKey: "Single file");
     performance.start();
   }
-   
+
   // using inputFileStream to access zip without storing it in memory
   final inputStream = InputFileStream(input['path'] as String);
   final serviceName = input['service_name'] as String;
@@ -125,8 +119,8 @@ List<String> extractZip(Map<String, String> input) {
     if (file.isFile && !file.name.endsWith('zip.enc')) {
       if (isPerformanceTracking) {
         fileCount++;
-      //   performance2!.reset();
-      //   performance2.start();
+        performance!.resetChild();
+        performance.startChild();
       }
 
       var filePath = dart_path.normalize(destDirPath + '/' + file.name);
@@ -135,9 +129,9 @@ List<String> extractZip(Map<String, String> input) {
       list.add(outputStream.path);
       outputStream.close();
 
-      // if (isPerformanceTracking) {
-      //   performance2!.stopAndWriteToFile("Individual file");
-      // }
+      if (isPerformanceTracking) {
+        performance!.addChildReading();
+      }
     }
   }
 
@@ -145,7 +139,10 @@ List<String> extractZip(Map<String, String> input) {
   list.sort();
 
   if (isPerformanceTracking) {
-    performance!.stopParentAndWriteToFile("zip-extract", metadata: "File count: $fileCount");
+    performance!.stopParentAndWriteToFile(
+      "zip-extract",
+      metadata: {"filecount": fileCount},
+    );
   }
 
   return list;
