@@ -36,14 +36,14 @@ import 'configs/globals/os_enum.dart';
 final locator = GetIt.instance;
 late final OS os;
 late final ObjectBox _context;
-late final AppLogger _logger;
+late final BaseLogger _logger;
 
 late final String _waultarPath;
 late final String _dbFolderPath;
 late final String _extractsFolderPath;
 late final String _logFolderPath;
 
-Future<void> setupServices({bool testing = false}) async {
+Future<void> setupServices({bool testing = false, bool isolate = false, SendPort? sendPort}) async {
   await initApplicationPaths(testing: testing).whenComplete(() async {
     locator.registerSingleton<String>(_waultarPath,
         instanceName: 'waultar_root_directory');
@@ -53,15 +53,24 @@ Future<void> setupServices({bool testing = false}) async {
     locator.registerSingleton<String>(_logFolderPath,
         instanceName: 'log_folder');
 
+
     os = detectPlatform();
     locator.registerSingleton<OS>(os, instanceName: 'platform');
 
-    _logger = AppLogger(os);
-    locator.registerSingleton<AppLogger>(_logger, instanceName: 'logger');
+    if (isolate) {
+      _logger = IsolateLogger(sendPort!);
+    } else {
+      _logger = AppLogger(os);
+    }
+    locator.registerSingleton<BaseLogger>(_logger, instanceName: 'logger');
 
     // create objectbox at startup
     // this MUST be the only context throughout runtime
-    _context = await ObjectBox.create(_dbFolderPath);
+    if (isolate) {
+      _context = await ObjectBox.fromIsolate(_dbFolderPath);
+    } else {
+      _context = await ObjectBox.create(_dbFolderPath);
+    }
     locator.registerSingleton<ObjectBox>(_context, instanceName: 'context');
 
     // register all abstract repositories with their concrete implementations

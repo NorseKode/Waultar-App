@@ -12,7 +12,7 @@ import 'package:waultar/presentation/widgets/upload/upload_util.dart';
 import 'package:waultar/startup.dart';
 
 class InstagramParser extends BaseParser {
-  final appLogger = locator.get<AppLogger>(instanceName: 'logger');
+  final appLogger = locator.get<BaseLogger>(instanceName: 'logger');
   static const _profileFiles = ["personal_information", "signup_information"];
   // final _imageClassifier = locator.get<ImageClassifier>(instanceName: 'imageClassifier');
 

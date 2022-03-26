@@ -58,7 +58,7 @@ class _WaultarApp extends State<WaultarApp> {
     }
 
     if (!kDebugMode) {
-      locator.get<AppLogger>(instanceName: 'logger').setLogLevelRelease();
+      locator.get<BaseLogger>(instanceName: 'logger').setLogLevelRelease();
     }
 
     super.initState();

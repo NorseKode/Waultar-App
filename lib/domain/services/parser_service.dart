@@ -9,7 +9,7 @@ class ParserService implements IParserService {
   
   
   final ObjectBox _context;
-  final AppLogger _logger;
+  final BaseLogger _logger;
   ParserService(
     this._context,
     this._logger,

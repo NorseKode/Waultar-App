@@ -29,7 +29,7 @@ class PostPollModel {
         timestamp = json.containsKey("timestamp")
             ? ModelHelper.intToTimestamp(json["timestamp"])
             : DateTime.fromMicrosecondsSinceEpoch(0) {
-    var appLogger = locator.get<AppLogger>(instanceName: 'logger');
+    var appLogger = locator.get<BaseLogger>(instanceName: 'logger');
     post = PostModel(
         profile: profile, raw: json.toString(), timestamp: timestamp!, title: json["title"]);
     
