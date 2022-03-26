@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:waultar/configs/globals/file_type_enum.dart';
 import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/models/misc/service_model.dart';
 import 'package:waultar/core/models/profile/profile_model.dart';

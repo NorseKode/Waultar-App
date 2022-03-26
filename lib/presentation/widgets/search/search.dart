@@ -12,7 +12,6 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  // final _postRepo = locator.get<IPostRepository>(instanceName: 'postRepo');
   final _controller = TextEditingController();
   final _textSearchService = TextSearchService();
   final _scrollController = ScrollController();

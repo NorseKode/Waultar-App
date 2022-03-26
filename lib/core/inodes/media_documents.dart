@@ -9,7 +9,8 @@ class ImageDocument {
   String uri;
   String data;
   String searchString;
-  List<String>? mediaTags;
+  late String mediaTags;
+  late List<String> mediaTagScores;
 
   final service = ToOne<ServiceDocument>();
   final relatedDatapoint = ToOne<DataPoint>();
@@ -20,7 +21,21 @@ class ImageDocument {
     required this.uri,
     required this.data,
     this.searchString = "",
-  });
+    String? mediatags,
+    List<String>? mediatagscore,
+  }) {
+    if (mediatags != null) {
+      mediaTags = mediatags;
+    } else {
+      mediaTags = "";
+    }
+
+    if (mediatagscore != null) {
+      mediaTagScores = mediaTagScores;
+    } else {
+      mediaTagScores = <String>[];
+    }
+  }
 }
 
 @Entity()

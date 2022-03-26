@@ -35,19 +35,31 @@ class MLService extends IMLService {
     var startTime = DateTime.now();
 
     int updated = 0;
+    int step = 100;
     int offset = 0;
-    int limit = 100;
+    int limit = step;
     var images = _mediaRepo.getImagesPagination(offset, limit);
 
     while (images.isNotEmpty) {
       for (var image in images) {
+        var mediaTags = 
+          _classifier
+            .predict(image.uri, 5);
+        
+        image.mediaTagScores = 
+          mediaTags
+            .map((e) => ",(${e.item1},${e.item2})")
+            .toList();
+        
         image.mediaTags =
-            _classifier.predict(image.uri, 5).map((e) => "(${e.item1},${e.item2});").toList();
+          mediaTags
+            .fold<String>("", (previous, next) => previous += ",${next.item1}");
+        
         updated++;
       }
 
       _mediaRepo.updateImages(images);
-      offset += 100;
+      offset += step;
       images = _mediaRepo.getImagesPagination(offset, limit);
     }
 

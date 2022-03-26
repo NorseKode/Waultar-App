@@ -28,7 +28,31 @@ class MediaRepository {
     return _imageBox.putMany(images);
   }
   int getAmountOfUnTaggedImages() {
-    return _imageBox.query(ImageDocument_.mediaTags.isNull()).build().count();
+    return _imageBox
+      .query(ImageDocument_.mediaTags.lessOrEqual(""))
+      .build()
+      .count();
+  }
+  List<ImageDocument> searchImagesPagination(String searchText, int offset, int limit) {
+    var query = _imageBox
+      .query(ImageDocument_.mediaTags.contains(searchText, caseSensitive: false))
+      .build();
+    query
+      ..offset = offset
+      ..limit = limit;
+    
+    return query.find();
+  }
+  int deleteAllImageTags() {
+    var res = 0;
+
+    for (var image in _imageBox.getAll()) {
+      image.mediaTagScores = <String>[];
+      image.mediaTags = "";
+      res += _imageBox.put(image);
+    }
+
+    return res;
   }
 
   List<VideoDocument> getAllVideos() => _videoBox.getAll();

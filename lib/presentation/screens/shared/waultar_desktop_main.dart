@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:waultar/configs/globals/scaffold_main.dart';
 
-getWaultarDesktopMainBody(BuildContext context, Widget menuPanel, Widget topPanel, Widget body) {
+getWaultarDesktopMainBody(
+  BuildContext context,
+  Widget menuPanel,
+  Widget topPanel,
+  Widget body, {
+  MainAxisAlignment? mainAxisAlignment,
+  CrossAxisAlignment? crossAxisAlignment,
+}) {
   return getScaffoldMain(
     context,
     Row(
@@ -11,8 +18,8 @@ getWaultarDesktopMainBody(BuildContext context, Widget menuPanel, Widget topPane
           child: SizedBox(
             height: MediaQuery.of(context).size.height,
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: crossAxisAlignment ?? CrossAxisAlignment.start,
+                mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.start,
                 children: [
                   topPanel,
                   Expanded(
