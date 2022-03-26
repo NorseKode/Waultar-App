@@ -4,8 +4,6 @@ import 'dart:isolate';
 
 import 'package:easy_isolate/easy_isolate.dart';
 import 'package:logging/logging.dart';
-import 'package:waultar/configs/globals/app_logger.dart';
-import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/startup.dart';
 import 'package:path/path.dart' as dart_path;
 
@@ -61,27 +59,29 @@ class IsolateInitiator {
 }
 
 class BaseWorker {
+  BaseWorker({
+    required this.mainHandler,
+    required this.initiator,
+  });
+
   final BaseLogger _logger = locator.get<BaseLogger>(instanceName: 'logger');
   final worker = Worker();
-
-  WorkerListenerTask mainHandler;
-  bool testing;
-  // IsolateBody workerTask;
-  BaseWorker(this.mainHandler, {this.testing = false});
+  Function mainHandler;
+  IsolateInitiator initiator;
 
   /// Initiate the worker (new thread) and start listen from messages between the two
-  Future<void> init() async {
+  Future<void> init(IsolateMessageHandler workerBody) async {
     await worker.init(
-      mainMessageHandler,
-      isolateMessageHandler,
+      _mainMessageHandler,
+      workerBody,
       errorHandler: print,
-      initialMessage: IsolateInitiator(testing: testing),
+      initialMessage: initiator,
       queueMode: true,
     );
   }
 
   /// Handle the messages coming from the isolate
-  void mainMessageHandler(dynamic data, SendPort isolateSendPort) {
+  void _mainMessageHandler(dynamic data, SendPort isolateSendPort) {
     if (data is LogRecordIsolate) {
       _logger.logger.info(data.value);
     } else {
@@ -93,42 +93,3 @@ class BaseWorker {
     worker.sendMessage(package);
   }
 }
-
-Future<void> setupIsolate(SendPort sendPort, IsolateInitiator setupData) async {
-  await setupServices(
-      testing: setupData.testing, isolate: true, sendPort: sendPort);
-}
-
-Future testIsolateMethod(String message) async {
-  final BaseLogger _logger = locator.get<BaseLogger>(instanceName: 'logger');
-  _logger.logger.info(message);
-}
-
-// Handle the messages coming from the main
-Future isolateMessageHandler(
-    dynamic data, SendPort mainSendPort, Function onError) async {
-  if (data is IsolateInitiator) {
-    await setupIsolate(mainSendPort, data);
-    var _logger = locator.get<BaseLogger>(instanceName: 'logger');
-    
-    try {
-    
-      _logger.logger.info('dummy package log');
-
-      await testIsolateMethod('bum');
-    } catch (e) {
-      _logger.logger.severe(e);
-    } finally {
-      var _context = locator.get<ObjectBox>(instanceName: 'context');
-      _context.store.close();
-    }
-  }
-}
-
-class TestInsider {
-  String value;
-  TestInsider(this.value);
-  String call() => value;
-}
-
-typedef WorkerListenerTask = FutureOr Function(dynamic eventFromCreatedIsolate);
