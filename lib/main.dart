@@ -47,7 +47,8 @@ class _WaultarApp extends State<WaultarApp> {
   @override
   void initState() {
     if (kDebugMode) {
-      File(locator.get<String>(instanceName: 'log_folder') + "/logs.txt").writeAsString("");
+      File(locator.get<String>(instanceName: 'log_folder') + "/logs.txt")
+          .writeAsString("");
     }
 
     if (kIsWeb) {
@@ -63,7 +64,8 @@ class _WaultarApp extends State<WaultarApp> {
     super.initState();
   }
 
-  final AppRouteInformationParser _routeInformationParser = AppRouteInformationParser();
+  final AppRouteInformationParser _routeInformationParser =
+      AppRouteInformationParser();
 
   @override
   Widget build(BuildContext context) {

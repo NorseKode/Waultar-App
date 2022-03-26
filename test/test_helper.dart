@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:path/path.dart' as path_dart;
-import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
@@ -83,30 +82,6 @@ class TestHelper {
   static ServiceModel instagram = ServiceModel(
       id: 2, name: "instagram", company: "meta", image: Uri(path: ""));
 
-  // static final _locator = GetIt.instance;
-  static final _logFilePath = path_dart
-      .normalize(path_dart.join(
-              path_dart.dirname(Platform.script.path), "test", "parser") +
-          "/logs.txt")
-      .substring(1);
-  static final _appLogger = AppLogger.test(detectPlatform(), _logFilePath);
-
-  static String pathToCurrentFile({String folder = 'parser'}) {
-    return path_dart
-        .normalize(path_dart.join(
-            path_dart.dirname(Platform.script.path), "test", folder))
-        .substring(1);
-  }
-
-  static void createTestLogger() {
-    locator.registerSingleton<AppLogger>(_appLogger, instanceName: 'logger');
-  }
-
-  static void clearTestLogger() {
-    var file = File(_logFilePath);
-    file.writeAsStringSync("");
-  }
-
   static Future<ObjectBox> createTestDb() async {
     return ObjectBox.create('test/objectbox');
   }
@@ -114,15 +89,39 @@ class TestHelper {
   static Future<void> deleteTestDb() async {
     final scriptDir = File(Platform.script.toFilePath()).parent;
     final datafile =
-        File(path_dart.normalize('${scriptDir.path}/test/objectbox/data.mdb'));
+        File(path_dart.normalize('${scriptDir.path}/test/waultar/objectbox/data.mdb'));
     final lockfile =
-        File(path_dart.normalize('${scriptDir.path}/test/objectbox/lock.mdb'));
+        File(path_dart.normalize('${scriptDir.path}/test/waultar/objectbox/lock.mdb'));
     try {
       await datafile.delete();
       await lockfile.delete();
     } catch (e) {
       return;
     }
+  }
+
+  /// deletes the test folders but not the logs file
+  static Future<void> deleteTestFolders() async {
+    final scriptDir = File(Platform.script.toFilePath()).parent;
+    final dbDir = Directory(path_dart.normalize('${scriptDir.path}/test/waultar/objectbox/'));
+    final extractsDir = Directory(path_dart.normalize('${scriptDir.path}/test/waultar/extracts/'));
+    try {
+      await dbDir.delete(recursive: true);
+      await extractsDir.delete(recursive: true);
+    } catch (e) {
+      return;
+    }
+  }
+
+  static Future<void> runStartupScript() async {
+    await deleteTestFolders();
+    await setupServices(testing: true);
+  }
+
+  static Future<void> tearDownServices() async {
+    var context = locator.get<ObjectBox>(instanceName: 'context');
+    context.store.close();
+    await deleteTestFolders();
   }
 
   static void seedForTimeBuckets(ObjectBox context) {

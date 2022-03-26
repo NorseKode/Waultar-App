@@ -14,7 +14,10 @@ import 'package:path/path.dart' as dart_path;
 @Entity()
 class DataPoint {
   int id;
+  
   final dataPointName = ToOne<DataPointName>();
+  
+  // ui most important info field about the datapoint  
   late String stringName;
 
   final category = ToOne<DataCategory>();
@@ -183,7 +186,6 @@ class DataPointName {
   int id;
   int count;
 
-  @Index()
   String name;
 
   final dataCategory = ToOne<DataCategory>();
@@ -212,7 +214,6 @@ class DataCategory {
   List<String> matchingFoldersInstagram;
 
   @Index()
-  @Unique()
   CategoryEnum category;
 
   
