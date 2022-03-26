@@ -2,15 +2,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_timebuckets_repository.dart';
-import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
+import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/core/models/timeline/time_models.dart';
-import 'package:waultar/core/models/ui_model.dart';
-import 'package:waultar/domain/services/timeline_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget_box.dart';
-import 'package:waultar/startup.dart';
 
 class TimelineWidget extends StatefulWidget {
   List<TimeModel> blocks;
@@ -112,14 +107,15 @@ class _TimelineWidgetState extends State<TimelineWidget> {
           flex: blockHeight,
           child: Column(
             children: List.generate(
-                model.entries.length,
+                model.categoryCount.length,
                 (index) => Expanded(
-                      flex: model.entries[index].item1,
+                      flex: model.categoryCount[index].item1.count,
                       child: Padding(
                         padding: const EdgeInsets.only(
                             left: 10.0, right: 10, top: 3),
                         child: Container(
-                          color: model.entries[index].item3,
+                          color:
+                              model.categoryCount[index].item1.category.color,
                         ),
                       ),
                     )),

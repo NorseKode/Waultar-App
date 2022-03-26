@@ -1,7 +1,6 @@
+// ignore_for_file: unused_field
+
 import 'package:waultar/configs/globals/app_logger.dart';
-import 'package:waultar/configs/globals/globals.dart';
-import 'package:waultar/configs/globals/helper/performance_helper.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_image_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/ai/image_classifier.dart';
 import 'package:waultar/core/inodes/media_repo.dart';

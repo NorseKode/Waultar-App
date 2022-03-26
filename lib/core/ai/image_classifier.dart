@@ -68,6 +68,7 @@ class ImageClassifier extends IMLModel {
     var outputTensors = _interpreter.getOutputTensors();
     _outputShapes = [];
     _outputTypes = [];
+    // ignore: avoid_function_literals_in_foreach_calls
     outputTensors.forEach((tensor) {
       _outputShapes.add(tensor.shape);
       _outputTypes.add(tensor.type);

@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget_box.dart';
 
+// ignore: must_be_immutable
 class DataPointWidget extends StatefulWidget {
   List<UIModel> dpList;
   DataPointWidget({required this.dpList, Key? key}) : super(key: key);

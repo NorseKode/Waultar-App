@@ -78,8 +78,7 @@ class ProfileModel {
         // TODO
         isPhoneConfirmed = false,
         createdTimestamp =
-            ModelHelper.intToTimestamp(json["registration_timestamp"]) ??
-                DateTime.fromMicrosecondsSinceEpoch(0),
+            ModelHelper.intToTimestamp(json["registration_timestamp"]),
         // TODO
         isPrivate = false,
         // TODO

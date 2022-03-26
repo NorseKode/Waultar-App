@@ -8,6 +8,7 @@ class CollectionsService implements ICollectionsService {
 
   final DataCategoryRepository _categoryRepository;
   final DataPointNameRepository _dataPointNameRepository;
+  // ignore: unused_field
   final DataPointRepository _dataPointRepository;
 
   CollectionsService(this._categoryRepository, this._dataPointNameRepository, this._dataPointRepository);

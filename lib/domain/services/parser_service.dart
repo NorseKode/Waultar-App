@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
 import 'package:waultar/core/inodes/profile_document.dart';

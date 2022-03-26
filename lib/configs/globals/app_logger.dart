@@ -36,11 +36,11 @@ class AppLogger {
 
 class IsolateLogger {
   final Logger logger = Logger("Logger");
-  String? _testPath;
 
   IsolateLogger() {
 
     logger.onRecord.listen((event) {
+      // ignore: avoid_print
       print(event);
       // _logFile.writeAsStringSync(
       //     "time: ${event.time}, level: ${event.level.name}, message: ${event.message}, exception: ${event.error}, stackTrace: ${event.stackTrace}\n",
@@ -84,7 +84,7 @@ class FilesDownloadWorker {
   void mainMessageHandler(dynamic data, SendPort isolateSendPort) {
     // if (data is dynamic) {
       if (data is LogRecordIsolate) {
-        _logger.logger.info('${data.value}');
+        _logger.logger.info(data.value);
       }
     }
   // }
@@ -100,6 +100,7 @@ class FilesDownloadWorker {
 
 // use the sendport when creating an isolate logger
 // static builders for needed dependencies - these can vary from the kind of worker that gets spawn
+// ignore: unused_element
 late final IsolateLogger _isoLogger;
 Future<void> setupIsolate() async {
   _isoLogger = IsolateLogger();
