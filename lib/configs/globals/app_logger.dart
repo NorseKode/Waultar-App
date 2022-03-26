@@ -8,15 +8,21 @@ import 'package:path/path.dart' as dart_path;
 
 import 'os_enum.dart';
 
-class AppLogger {
+abstract class BaseLogger {
   final Logger logger = Logger("Logger");
+  setLogLevelRelease() {
+    Logger.root.level = Level.SEVERE;
+  }
+}
+
+class AppLogger extends BaseLogger {
   final OS os;
   String? _testPath;
   late File _logFile;
 
   AppLogger(this.os) {
-    _logFile =
-        File(dart_path.normalize(locator.get<String>(instanceName: 'log_folder') + "/logs.txt"));
+    _logFile = File(dart_path.normalize(
+        locator.get<String>(instanceName: 'log_folder') + "/logs.txt"));
 
     logger.onRecord.listen((event) {
       _logFile.writeAsStringSync(
@@ -28,32 +34,21 @@ class AppLogger {
   AppLogger.test(this.os, this._testPath) {
     _logFile = _logFile = File(_testPath!);
   }
-
-  setLogLevelRelease() {
-    Logger.root.level = Level.SEVERE;
-  }
 }
 
-class IsolateLogger {
-  final Logger logger = Logger("Logger");
+class IsolateLogger extends BaseLogger {
+  final SendPort sendPort;
 
-  IsolateLogger() {
-
+  IsolateLogger(this.sendPort) {
     logger.onRecord.listen((event) {
       // ignore: avoid_print
       print(event);
-      // _logFile.writeAsStringSync(
-      //     "time: ${event.time}, level: ${event.level.name}, message: ${event.message}, exception: ${event.error}, stackTrace: ${event.stackTrace}\n",
-      //     mode: FileMode.append);
-      
+      final message =
+          "time: ${event.time}, level: ${event.level.name}, message: ${event.message}, exception: ${event.error}, stackTrace: ${event.stackTrace}\n";
+      final logRecord = LogRecordIsolate(message);
+      sendPort.send(logRecord);
     });
   }
-
-  setLogLevelRelease() {
-    Logger.root.level = Level.SEVERE;
-  }
-
-  
 }
 
 class LogRecordIsolate {
@@ -83,19 +78,19 @@ class FilesDownloadWorker {
   /// Handle the messages coming from the isolate
   void mainMessageHandler(dynamic data, SendPort isolateSendPort) {
     // if (data is dynamic) {
-      if (data is LogRecordIsolate) {
-        _logger.logger.info(data.value);
-      }
+    if (data is LogRecordIsolate) {
+      _logger.logger.info(data.value);
     }
+  }
   // }
 
   /// Handle the messages coming from the main
   static isolateMessageHandler(
       dynamic data, SendPort mainSendPort, SendErrorFunction sendError) async {
-        // define the algorithm to be used inside the isolate
-        //! must be static or top level
-        await setupIsolate(); 
-    }
+    // define the algorithm to be used inside the isolate
+    //! must be static or top level
+    await setupIsolate();
+  }
 }
 
 // use the sendport when creating an isolate logger
@@ -103,7 +98,5 @@ class FilesDownloadWorker {
 // ignore: unused_element
 late final IsolateLogger _isoLogger;
 Future<void> setupIsolate() async {
-  _isoLogger = IsolateLogger();
 } 
 
-// static parser

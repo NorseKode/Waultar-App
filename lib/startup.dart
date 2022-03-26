@@ -36,14 +36,14 @@ import 'configs/globals/os_enum.dart';
 final locator = GetIt.instance;
 late final OS os;
 late final ObjectBox _context;
-late final AppLogger _logger;
+late final BaseLogger _logger;
 
 late final String _waultarPath;
 late final String _dbFolderPath;
 late final String _extractsFolderPath;
 late final String _logFolderPath;
 
-Future<void> setupServices({bool testing = false}) async {
+Future<void> setupServices({bool testing = false, bool isolate = false, SendPort? sendPort}) async {
   await initApplicationPaths(testing: testing).whenComplete(() async {
     locator.registerSingleton<String>(_waultarPath,
         instanceName: 'waultar_root_directory');
@@ -57,7 +57,7 @@ Future<void> setupServices({bool testing = false}) async {
     locator.registerSingleton<OS>(os, instanceName: 'platform');
 
     _logger = AppLogger(os);
-    locator.registerSingleton<AppLogger>(_logger, instanceName: 'logger');
+    locator.registerSingleton<BaseLogger>(_logger, instanceName: 'logger');
 
     // create objectbox at startup
     // this MUST be the only context throughout runtime

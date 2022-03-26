@@ -5,8 +5,8 @@ import 'package:waultar/startup.dart';
 class PresentationHelper {
   static final IUtilityRepository _utilsRepo =
       locator.get<IUtilityRepository>(instanceName: 'utilsRepo');
-  static final AppLogger _appLogger =
-      locator.get<AppLogger>(instanceName: 'logger');
+  static final BaseLogger _appLogger =
+      locator.get<BaseLogger>(instanceName: 'logger');
 
   static void logDatabase() {
 

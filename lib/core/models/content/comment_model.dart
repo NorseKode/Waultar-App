@@ -19,7 +19,7 @@ class CommentModel extends BaseModel {
   GroupModel? group;
   EventModel? event;
   // ReactionModel? reaction;
-  final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
+  final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
 
   CommentModel(
       {int id = 0,

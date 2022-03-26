@@ -13,7 +13,7 @@ import '../abstracts/abstract_parsers/base_parser.dart';
 import 'package:path/path.dart' as path_dart;
 
 class FacebookParser extends BaseParser {
-  final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
+  final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
 
   @override
   Stream<dynamic> parseFile(File file, {ProfileModel? profile}) async* {

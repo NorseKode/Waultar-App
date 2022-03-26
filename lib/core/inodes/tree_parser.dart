@@ -18,7 +18,7 @@ import 'package:waultar/core/parsers/parse_helper.dart';
 import 'package:waultar/startup.dart';
 
 class TreeParser {
-  final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
+  final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
   final _profileRepo =
       locator.get<ProfileRepository>(instanceName: 'profileRepo');
   final DataCategoryRepository _categoryRepo;

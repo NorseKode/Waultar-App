@@ -8,7 +8,7 @@ import 'package:waultar/core/models/index.dart';
 import 'package:waultar/startup.dart';
 
 class MLService extends IMLService {
-  final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
+  final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
   final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
   final _classifier = locator.get<ImageClassifier>(instanceName: 'imageClassifier');
 
