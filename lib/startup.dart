@@ -53,10 +53,6 @@ Future<void> setupServices({bool testing = false, bool isolate = false, SendPort
     locator.registerSingleton<String>(_logFolderPath,
         instanceName: 'log_folder');
 
-    print('testing -> ${testing.toString()}');
-    print('isolate -> ${isolate.toString()}');
-    print(_dbFolderPath);
-    print(_logFolderPath);
 
     os = detectPlatform();
     locator.registerSingleton<OS>(os, instanceName: 'platform');

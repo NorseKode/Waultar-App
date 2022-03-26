@@ -1,9 +1,8 @@
-import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
 
-import 'package:easy_isolate/easy_isolate.dart';
 import 'package:logging/logging.dart';
+import 'package:waultar/core/base_worker/package_models.dart';
 import 'package:waultar/startup.dart';
 import 'package:path/path.dart' as dart_path;
 
@@ -42,54 +41,8 @@ class IsolateLogger extends BaseLogger {
 
   IsolateLogger(this.sendPort) {
     logger.onRecord.listen((event) {
-      final logRecord = LogRecordIsolate(event.toString());
+      final logRecord = LogRecordPackage(event.toString());
       sendPort.send(logRecord);
     });
-  }
-}
-
-class LogRecordIsolate {
-  String value;
-  LogRecordIsolate(this.value);
-}
-
-class IsolateInitiator {
-  bool testing;
-  IsolateInitiator({this.testing = false});
-}
-
-class BaseWorker {
-  BaseWorker({
-    required this.mainHandler,
-    required this.initiator,
-  });
-
-  final BaseLogger _logger = locator.get<BaseLogger>(instanceName: 'logger');
-  final worker = Worker();
-  Function mainHandler;
-  IsolateInitiator initiator;
-
-  /// Initiate the worker (new thread) and start listen from messages between the two
-  Future<void> init(IsolateMessageHandler workerBody) async {
-    await worker.init(
-      _mainMessageHandler,
-      workerBody,
-      errorHandler: print,
-      initialMessage: initiator,
-      queueMode: true,
-    );
-  }
-
-  /// Handle the messages coming from the isolate
-  void _mainMessageHandler(dynamic data, SendPort isolateSendPort) {
-    if (data is LogRecordIsolate) {
-      _logger.logger.info(data.value);
-    } else {
-      mainHandler(data);
-    }
-  }
-
-  dynamic sendMessage(dynamic package) {
-    worker.sendMessage(package);
   }
 }
