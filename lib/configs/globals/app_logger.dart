@@ -1,14 +1,17 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
 
 import 'package:easy_isolate/easy_isolate.dart';
 import 'package:logging/logging.dart';
+import 'package:waultar/configs/globals/app_logger.dart';
+import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/startup.dart';
 import 'package:path/path.dart' as dart_path;
 
 import 'os_enum.dart';
 
-abstract class BaseLogger {
+class BaseLogger {
   final Logger logger = Logger("Logger");
   setLogLevelRelease() {
     Logger.root.level = Level.SEVERE;
@@ -37,15 +40,11 @@ class AppLogger extends BaseLogger {
 }
 
 class IsolateLogger extends BaseLogger {
-  final SendPort sendPort;
+  SendPort sendPort;
 
   IsolateLogger(this.sendPort) {
     logger.onRecord.listen((event) {
-      // ignore: avoid_print
-      print(event);
-      final message =
-          "time: ${event.time}, level: ${event.level.name}, message: ${event.message}, exception: ${event.error}, stackTrace: ${event.stackTrace}\n";
-      final logRecord = LogRecordIsolate(message);
+      final logRecord = LogRecordIsolate(event.toString());
       sendPort.send(logRecord);
     });
   }
@@ -56,47 +55,80 @@ class LogRecordIsolate {
   LogRecordIsolate(this.value);
 }
 
-class FilesDownloadWorker {
-  FilesDownloadWorker(this.callback, this._logger);
+class IsolateInitiator {
+  bool testing;
+  IsolateInitiator({this.testing = false});
+}
 
-  final Function(dynamic event) callback;
-  final IsolateLogger _logger;
-
+class BaseWorker {
+  final BaseLogger _logger = locator.get<BaseLogger>(instanceName: 'logger');
   final worker = Worker();
 
-  /// Initiate the worker (new thread) and start listen from messages between
-  /// the threads
+  WorkerListenerTask mainHandler;
+  bool testing;
+  // IsolateBody workerTask;
+  BaseWorker(this.mainHandler, {this.testing = false});
+
+  /// Initiate the worker (new thread) and start listen from messages between the two
   Future<void> init() async {
     await worker.init(
       mainMessageHandler,
       isolateMessageHandler,
       errorHandler: print,
+      initialMessage: IsolateInitiator(testing: testing),
+      queueMode: true,
     );
-    // worker.sendMessage(DownloadItemEvent(item));
   }
 
   /// Handle the messages coming from the isolate
   void mainMessageHandler(dynamic data, SendPort isolateSendPort) {
-    // if (data is dynamic) {
     if (data is LogRecordIsolate) {
       _logger.logger.info(data.value);
+    } else {
+      mainHandler(data);
     }
   }
-  // }
 
-  /// Handle the messages coming from the main
-  static isolateMessageHandler(
-      dynamic data, SendPort mainSendPort, SendErrorFunction sendError) async {
-    // define the algorithm to be used inside the isolate
-    //! must be static or top level
-    await setupIsolate();
+  dynamic sendMessage(dynamic package) {
+    worker.sendMessage(package);
   }
 }
 
-// use the sendport when creating an isolate logger
-// static builders for needed dependencies - these can vary from the kind of worker that gets spawn
-// ignore: unused_element
-late final IsolateLogger _isoLogger;
-Future<void> setupIsolate() async {
-} 
+Future<void> setupIsolate(SendPort sendPort, IsolateInitiator setupData) async {
+  await setupServices(
+      testing: setupData.testing, isolate: true, sendPort: sendPort);
+}
 
+Future testIsolateMethod(String message) async {
+  final BaseLogger _logger = locator.get<BaseLogger>(instanceName: 'logger');
+  _logger.logger.info(message);
+}
+
+// Handle the messages coming from the main
+Future isolateMessageHandler(
+    dynamic data, SendPort mainSendPort, Function onError) async {
+  if (data is IsolateInitiator) {
+    await setupIsolate(mainSendPort, data);
+    var _logger = locator.get<BaseLogger>(instanceName: 'logger');
+    
+    try {
+    
+      _logger.logger.info('dummy package log');
+
+      await testIsolateMethod('bum');
+    } catch (e) {
+      _logger.logger.severe(e);
+    } finally {
+      var _context = locator.get<ObjectBox>(instanceName: 'context');
+      _context.store.close();
+    }
+  }
+}
+
+class TestInsider {
+  String value;
+  TestInsider(this.value);
+  String call() => value;
+}
+
+typedef WorkerListenerTask = FutureOr Function(dynamic eventFromCreatedIsolate);

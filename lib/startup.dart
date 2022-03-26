@@ -53,15 +53,28 @@ Future<void> setupServices({bool testing = false, bool isolate = false, SendPort
     locator.registerSingleton<String>(_logFolderPath,
         instanceName: 'log_folder');
 
+    print('testing -> ${testing.toString()}');
+    print('isolate -> ${isolate.toString()}');
+    print(_dbFolderPath);
+    print(_logFolderPath);
+
     os = detectPlatform();
     locator.registerSingleton<OS>(os, instanceName: 'platform');
 
-    _logger = AppLogger(os);
+    if (isolate) {
+      _logger = IsolateLogger(sendPort!);
+    } else {
+      _logger = AppLogger(os);
+    }
     locator.registerSingleton<BaseLogger>(_logger, instanceName: 'logger');
 
     // create objectbox at startup
     // this MUST be the only context throughout runtime
-    _context = await ObjectBox.create(_dbFolderPath);
+    if (isolate) {
+      _context = await ObjectBox.fromIsolate(_dbFolderPath);
+    } else {
+      _context = await ObjectBox.create(_dbFolderPath);
+    }
     locator.registerSingleton<ObjectBox>(_context, instanceName: 'context');
 
     // register all abstract repositories with their concrete implementations

@@ -103,12 +103,13 @@ class TestHelper {
   /// deletes the test folders but not the logs file
   static Future<void> deleteTestFolders() async {
     final scriptDir = File(Platform.script.toFilePath()).parent;
-    final dbDir = Directory(path_dart.normalize('${scriptDir.path}/test/waultar/objectbox/'));
-    final extractsDir = Directory(path_dart.normalize('${scriptDir.path}/test/waultar/extracts/'));
+    final dbDir = Directory(path_dart.normalize('${scriptDir.path}/test/waultar/objectbox'));
+    final extractsDir = Directory(path_dart. normalize('${scriptDir.path}/test/waultar/extracts'));
     try {
       await dbDir.delete(recursive: true);
       await extractsDir.delete(recursive: true);
     } catch (e) {
+      // print(e);
       return;
     }
   }

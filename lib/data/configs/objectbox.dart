@@ -1,3 +1,4 @@
+import 'package:objectbox/internal.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:path/path.dart' as dart_path;
@@ -286,5 +287,12 @@ class ObjectBox {
   static Future<ObjectBox> create(String path) async {
     final store = await openStore(directory: path);
     return ObjectBox._create(store);
+  }
+
+  ObjectBox._fromIsolate(this.store);
+
+  static Future<ObjectBox> fromIsolate(String path) async {
+    final store = Store.attach(getObjectBoxModel(), path);
+    return ObjectBox._fromIsolate(store);
   }
 }
