@@ -3,24 +3,16 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:waultar/core/inodes/data_category_repo.dart';
-import 'package:waultar/core/inodes/datapoint_name_repo.dart';
-import 'package:waultar/core/inodes/datapoint_repo.dart';
 import 'package:waultar/core/inodes/profile_document.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:path/path.dart' as dart_path;
 import 'package:waultar/core/inodes/tree_parser.dart';
-import 'package:waultar/data/configs/objectbox.dart';
+import 'package:waultar/startup.dart';
 
 import '../test_helper.dart';
-import 'test_utils.dart';
 
 Future<void> main() async {
-  late final ObjectBox _context;
-  late final DataPointRepository _dataRepo;
-  late final DataCategoryRepository _categoryRepo;
-  late final DataPointNameRepository _nameRepo;
   late final TreeParser _parser;
   late final ServiceDocument service;
   late final ProfileDocument profile;
@@ -50,17 +42,12 @@ Future<void> main() async {
       '${scriptDir.path}/test/objectbox/data/Facebook/security_and_login_information/your_facebook_activity_history.json');
 
   tearDownAll(() async {
-    _context.store.close();
-    await TestUtils.deleteTestDb();
+    await TestHelper.tearDownServices();
   });
 
   setUpAll(() async {
-    await TestUtils.deleteTestDb();
-    _context = await TestUtils.createTestDb();
-    _dataRepo = DataPointRepository(_context);
-    _categoryRepo = DataCategoryRepository(_context);
-    _nameRepo = DataPointNameRepository(_context);
-    _parser = TreeParser(_categoryRepo, _nameRepo, _dataRepo);
+    await TestHelper.runStartupScript();
+    _parser = locator.get<TreeParser>(instanceName: 'parser');
     _parser.basePathToFiles = '';
     service = TestHelper.serviceDocument;
     profile = TestHelper.profileDocument;
@@ -101,7 +88,6 @@ Future<void> main() async {
       expect(result.children.length, 0);
       expect(result.dataPoints.length, 14);
       expect(result.dataCategory.hasValue, true);
-      expect(result.dataCategory.target!.category.name, 'Posts');
     });
 
     test(' - facebook activity history in security and login information',
@@ -114,7 +100,6 @@ Future<void> main() async {
       expect(result.children.length, 3);
       expect(result.count, 3);
       expect(result.dataCategory.hasValue, true);
-      expect(result.dataCategory.target!.category.name, 'Logged Data');
     });
 
     test(" - facebook messages autofillInformation", () async {
@@ -123,7 +108,6 @@ Future<void> main() async {
       expect(result.dataPoints.length, 1);
       expect(result.children.length, 0);
       expect(result.dataCategory.hasValue, true);
-      expect(result.dataCategory.target!.category.name, 'Messaging');
 
       var dataMap = result.dataPoints.first.asMap;
       expect(dataMap.length, 9);
@@ -136,7 +120,6 @@ Future<void> main() async {
       expect(result.dataPoints.length, 1);
       expect(result.children.length, 11);
       expect(result.dataCategory.hasValue, true);
-      expect(result.dataCategory.target!.category.name, 'Profile');
 
       var names = result.children.map((element) => element.name).toList();
       expect(names.contains('name'), true);
@@ -162,7 +145,6 @@ Future<void> main() async {
       expect(result.name, 'Lukas Vinther Offenberg Larsen');
       expect(result.count, 3);
       expect(result.dataCategory.hasValue, true);
-      expect(result.dataCategory.target!.category.name, 'Messaging');
       expect(result.dataPoints.length, 1);
       expect(result.children.length, 2);
       expect(result.children.first.count, 2);
@@ -176,27 +158,11 @@ Future<void> main() async {
       expect(dataMap.containsValue('no data'), true);
     });
 
-    // test(" - recently_viewed stupid bitch", () async {
-    //   var result = await _parser.parsePath(recentlyViewed);
-    //   printResultName(result);
-
-    //   var dataPoints = _dataRepo.readAll();
-    //   for (var item in dataPoints) {
-    //     print(item.toString());
-    //   }
-
-    //   var names = _nameRepo.getAllNames();
-    //   for (var name in names) {
-    //     print(name);
-    //   }
-    // });
-
     test(" - facebook comments", () async {
       var result = await _parser.parsePath(comments, profile, service);
       expect(result.name, 'comments');
       expect(result.count, 6);
       expect(result.dataCategory.hasValue, true);
-      expect(result.dataCategory.target!.category.name, 'Reactions');
       expect(result.children.length, 0);
       expect(result.dataPoints.length, 6);
     });
@@ -207,7 +173,6 @@ Future<void> main() async {
       expect(result.children.length, 0);
       expect(result.dataPoints.length, 17);
       expect(result.dataCategory.hasValue, true);
-      expect(result.dataCategory.target!.category.name, 'Reactions');
     });
 
     test(" - facebook gaming", () async {
@@ -217,7 +182,6 @@ Future<void> main() async {
       expect(result.children.length, 0);
       expect(result.dataPoints.length, 14);
       expect(result.dataCategory.hasValue, true);
-      expect(result.dataCategory.target!.category.name, 'Gaming');
     });
 
     test(" - your topics", () async {
@@ -227,7 +191,6 @@ Future<void> main() async {
       expect(result.children.length, 0);
       expect(result.dataPoints.length, 1);
       expect(result.dataCategory.hasValue, true);
-      expect(result.dataCategory.target!.category.name, 'Advertisement');
     });
   });
 }

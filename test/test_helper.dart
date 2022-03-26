@@ -124,7 +124,8 @@ class TestHelper {
     await deleteTestFolders();
   }
 
-  static void seedForTimeBuckets(ObjectBox context) {
+  static void seedForTimeBuckets() {
+    var context = locator.get<ObjectBox>(instanceName: 'context');
     var timestamps = <int>[
       1647774619, // Sun Mar 20 2022 12:10:19 GMT
       1647601819, // Fri Mar 18 2022 12:10:19 GMT

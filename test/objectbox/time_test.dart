@@ -2,51 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:waultar/core/inodes/buckets_repo.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
-import 'package:waultar/data/configs/objectbox.dart';
-import 'package:waultar/data/configs/objectbox.g.dart';
+import 'package:waultar/startup.dart';
 
 import '../test_helper.dart';
 
-void main() async {
-  late final ObjectBox _context;
+Future<void> main() async {
   late final IBucketsRepository _bucketsRepo;
   late final DateTime parsedAt;
 
+  tearDownAll(() async {
+    await TestHelper.tearDownServices();
+  });
+  
   setUpAll(() async {
-    await TestHelper.deleteTestDb();
-    _context = await TestHelper.createTestDb();
-    _bucketsRepo = BucketsRepository(_context);
+    await TestHelper.runStartupScript();
+    _bucketsRepo = locator.get<IBucketsRepository>(instanceName: 'bucketsRepo');
     parsedAt = DateTime.now();
-    TestHelper.seedForTimeBuckets(_context);
+    TestHelper.seedForTimeBuckets();
     await _bucketsRepo.createBuckets(parsedAt);
   });
 
-  tearDownAll(() async {
-    _context.store.close();
-    await TestHelper.deleteTestDb();
-  });
 
   group('Creation of buckets from parsed datapoints', () {
-    test(' - test setup', () async {
-      var dataBox = _context.store.box<DataPoint>();
-
-      var dataCount = dataBox.count();
-      expect(dataCount, 10);
-
-      var greaterThenParsedTime = dataBox
-          .query(DataPoint_.dbCreatedAt.greaterThan(parsedAt.microsecondsSinceEpoch))
-          .build()
-          .count();
-      expect(greaterThenParsedTime, 10);
-
-      var later = DateTime.now();
-      var greaterThenLaterTime = dataBox
-          .query(
-              DataPoint_.dbCreatedAt.greaterThan(later.microsecondsSinceEpoch))
-          .build()
-          .count();
-      expect(greaterThenLaterTime, 0);
-    });
 
     test(' - test buckets creation', () async {
 
