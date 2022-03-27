@@ -8,6 +8,7 @@ import 'package:waultar/core/inodes/media_documents.dart';
 import 'package:waultar/core/inodes/media_repo.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
+import 'package:waultar/presentation/widgets/general/infinite_scroll.dart';
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 
 import 'package:waultar/startup.dart';
@@ -24,7 +25,6 @@ class _GalleryState extends State<Gallery> {
   late ThemeProvider themeProvider;
   var _isSearch = false;
   var _images = <ImageDocument>[];
-  var _videos = <VideoDocument>[];
   final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
   final _imageListScrollController = ScrollController();
   final _textSearchController = TextEditingController();
@@ -38,7 +38,7 @@ class _GalleryState extends State<Gallery> {
     super.initState();
     _imageListScrollController.addListener(_onScrollEnd);
 
-    scrollInit();
+    _images = _mediaRepo.getImagesPagination(_offset, _limit);
   }
 
   @override
@@ -50,7 +50,7 @@ class _GalleryState extends State<Gallery> {
   void _scrollReset() {
     _offset = 0;
     _limit = _step;
-    _imageListScrollController.jumpTo(0);
+    // _imageListScrollController.jumpTo(0);
   }
 
   void _searchImagesInit(String searchText) {
@@ -63,15 +63,7 @@ class _GalleryState extends State<Gallery> {
   }
 
   void scrollInit() {
-    switch (_selectedMediaType) {
-      case FileType.image:
-        _images = _mediaRepo.getImagesPagination(_offset, _limit);
-        break;
-      case FileType.video:
-        
-        break;
-      default:
-    }
+    _images = _mediaRepo.getImagesPagination(_offset, _limit);
   }
 
   void _onScrollEnd() {
@@ -90,24 +82,22 @@ class _GalleryState extends State<Gallery> {
   }
 
   _searchField() {
-    return Wrap(
-      spacing: 10.0,
-      children: [
-        TextField(
-          controller: _textSearchController,
-          onChanged: (change) {
-            setState(() {
-              _searchImagesInit(change);
-            });
-          },
-        ),
-      ],
+    return TextField(
+      controller: _textSearchController,
+      onChanged: (change) {
+        setState(() {
+          _searchImagesInit(change);
+        });
+      },
     );
   }
 
   Widget _contentSelectionRadio() {
     return Container(
       child: Wrap(
+        spacing: 0,
+        runSpacing: 0,
+        runAlignment: WrapAlignment.spaceEvenly,
         direction: Axis.horizontal,
         children: [
           // ListTile(
@@ -176,34 +166,75 @@ class _GalleryState extends State<Gallery> {
   }
 
   _imageList() {
-    return Expanded(
-      child: ListView.builder(
-        controller: _imageListScrollController,
-        itemCount: _images.length,
-        itemBuilder: (_, index) => Padding(
-          padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-          child: DefaultWidget(
-            title: "Image",
-            child: Column(
-              children: [
-                Image.file(
-                  File(Uri.decodeFull(_images[index].uri)),
-                  fit: BoxFit.fill,
+    switch (_selectedMediaType) {
+      case FileType.image:
+        return Expanded(
+          child: ListView.builder(
+            controller: _imageListScrollController,
+            itemCount: _images.length,
+            itemBuilder: (_, index) => Padding(
+              padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+              child: DefaultWidget(
+                title: "Image",
+                child: Column(
+                  children: [
+                    Image.file(
+                      File(Uri.decodeFull(_images[index].uri)),
+                      fit: BoxFit.fill,
+                    ),
+                    Text(
+                      _images[index].mediaTags != ""
+                          ? _images[index]
+                              .mediaTags
+                              .split(",")
+                              .fold("", (previousValue, element) => previousValue += element + "\n")
+                          : "No tags found",
+                    )
+                  ],
                 ),
-                Text(
-                  _images[index].mediaTags != ""
-                      ? _images[index]
-                          .mediaTags
-                          .split(",")
-                          .fold("", (previousValue, element) => previousValue += element + "\n")
-                      : "No tags found",
-                )
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-    );
+        );
+
+      case FileType.video:
+        return InfiniteScroll(
+          step: 5,
+          paginationFunction: _mediaRepo.getVideosPagination,
+          builderWidgetGenerator: (List elements, int index) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: DefaultWidget(
+                title: "Video",
+                child: Text(
+                  elements[index].uri,
+                ),
+              ),
+            );
+          },
+        );
+
+        case FileType.file:
+          return InfiniteScroll(
+            step: 5,
+            paginationFunction: _mediaRepo.getFilesPagination,
+            builderWidgetGenerator: (List elements, int index) {
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: DefaultWidget(
+                  title: "Files",
+                  child: Text(
+                    elements[index].uri,
+                  ),
+                ),
+              );
+            },
+          );
+          
+
+      default:
+        return Container();
+    }
   }
 
   @override
@@ -221,38 +252,3 @@ class _GalleryState extends State<Gallery> {
     );
   }
 }
-
-// Wdiget getScrollView(int itemLength, Function createItemWidget) {
-//   var _scrollController = ScrollController();
-
-
-
-//  return ListView.builder(
-//         controller: _scrollController,
-//         itemCount: itemLength,
-//         itemBuilder: (_, index) => createItemWidget(index)
-        
-//         // Padding(
-//         //   padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-//         //   child: DefaultWidget(
-//         //     title: "Image",
-//         //     child: Column(
-//         //       children: [
-//         //         Image.file(
-//         //           File(Uri.decodeFull(_images[index].uri)),
-//         //           fit: BoxFit.fill,
-//         //         ),
-//         //         Text(
-//         //           _images[index].mediaTags != ""
-//         //               ? _images[index]
-//         //                   .mediaTags
-//         //                   .split(",")
-//         //                   .fold("", (previousValue, element) => previousValue += element + "\n")
-//         //               : "No tags found",
-//         //         )
-//         //       ],
-//         //     ),
-//         //   ),
-//         // ),
-//       );
-// }

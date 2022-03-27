@@ -17,7 +17,7 @@ class _GalleryViewState extends State<GalleryView> {
 
   @override
   Widget build(BuildContext context) {
-    return getWaultarDesktopMainBody(
+    return getWaultarDesktopMainBodyNotExpanded(
       context,
       MenuPanel(active: _activeScreen),
       const TopPanel(),
