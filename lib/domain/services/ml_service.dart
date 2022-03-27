@@ -4,13 +4,17 @@ import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/ai/image_classifier.dart';
 import 'package:waultar/core/ai/sentiment_classifier.dart';
+import 'package:waultar/core/inodes/datapoint_repo.dart';
 import 'package:waultar/core/inodes/media_repo.dart';
+import 'package:waultar/core/inodes/profile_document.dart';
+import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/startup.dart';
 
 class MLService extends IMLService {
   // final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
   final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
+  final _dataRepo = locator.get<DataPointRepository>(instanceName: 'dataRepo');
   final _classifier =
       locator.get<ImageClassifier>(instanceName: 'imageClassifier');
   // final _context = locator.get<ObjectBox>(instanceName: 'context');
@@ -94,16 +98,20 @@ class MLService extends IMLService {
   }
 
   @override
-  List<Tuple2<String, double>> connotateTextsFromList(List<String> list) {
-    List<Tuple2<String, double>> classifiedText = [];
+  int connotateTextsFromCategory(List<DataCategory> categories) {
+    var updated = 0;
+    for (var category in categories) {
+      List<DataPoint> dataPoints = _dataRepo.readAllFromCategory(category);
 
-    if (list != null || list.isNotEmpty) {
-      for (var text in list) {
-        classifiedText.add(Tuple2(text, connotateText(text)));
+      for (var point in dataPoints) {
+        var sentimentScore = _textClassifier.classify(point.stringName);
+        point.sentimentScore = sentimentScore.last; //0-1
+        _dataRepo.updateDataPoint(point);
+        updated++;
       }
     }
 
-    return classifiedText;
+    return updated;
   }
   // final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
   // final _imageRepo = locator.get<IImageRepository>(instanceName: 'imageRepo');

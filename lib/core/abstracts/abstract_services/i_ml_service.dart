@@ -1,4 +1,6 @@
 import 'package:tuple/tuple.dart';
+import 'package:waultar/core/inodes/profile_document.dart';
+import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/core/models/media/image_model.dart';
 
 abstract class IMLService {
@@ -6,6 +8,6 @@ abstract class IMLService {
   int classifyImagesFromDB();
   Future<void> classifyAllImagesSeparateThreadFromDB();
   double connotateText(String text);
-  List<Tuple2<String, double>> connotateTextsFromList(List<String> list);
+  int connotateTextsFromCategory(List<DataCategory> categories);
   Future<void> connotateAllTextSeparateThreadFromDB();
 }
