@@ -89,7 +89,6 @@ class TreeParser {
       var name = parseName(json, category, cleanInitialName, profile, service, null);
       category.dataPointNames.add(name);
       _categoryRepo.updateCategory(category);
-      profile.categories.add(category);
       _profileRepo.add(profile);
 
       if (ISPERFORMANCETRACKING) {

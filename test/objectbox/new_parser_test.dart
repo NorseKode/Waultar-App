@@ -51,7 +51,6 @@ Future<void> main() async {
     _parser = locator.get<TreeParser>(instanceName: 'parser');
     var _context = locator.get<ObjectBox>(instanceName: 'context');
     _parser.basePathToFiles = '';
-    // service = TestHelper.serviceDocument;
     profile = TestHelper.createTestProfile(_context);
   });
 

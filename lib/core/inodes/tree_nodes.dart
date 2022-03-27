@@ -39,10 +39,7 @@ class DataPoint {
   @Property(type: PropertyType.dateNano)
   late DateTime createdAt;
 
-  DataPoint({
-    this.id = 0,
-    this.sentimentScore = 0.0
-  }) {
+  DataPoint({this.id = 0, this.sentimentScore = 0.0}) {
     createdAt = DateTime.now();
   }
 
@@ -303,3 +300,159 @@ extension CategoryMapper on CategoryEnum {
   Color get color => colors[this] ?? Colors.cyan;
   String get name => names[this] ?? 'Unknown';
 }
+
+CategoryEnum getFromPath(String path) {
+  var name = dart_path.basename(path);
+  if (name == 'extracts' || name == 'test') {
+    return CategoryEnum.unknown;
+  }
+  switch (name) {
+    case 'activity_messages':
+    case 'polls':
+    case 'interactions':
+    case 'reviews':
+    case 'saved_items_and_collections':
+    case 'your_interactions_on_facebook':
+    case 'story_sticker_interactions':
+    case 'ads_and_content':
+    case 'saved':
+      return CategoryEnum.interactions;
+
+    case 'ads_information':
+    case 'other_logged_information':
+    case 'your_topics':
+    case 'ads_and_businesses':
+    case 'monetization':
+    case 'ads_interests.json':
+      return CategoryEnum.advertisement;
+
+    case 'apps_and_websites_off_of_facebook':
+      return CategoryEnum.thirdPartyExchanges;
+
+    case 'bug_bounty':
+    case "communities":
+    case "facebook_accounts_center":
+    case "facebook_assistant":
+    case "facebook_portal":
+    case "fundraisers":
+    case "journalist_registration":
+    case "live_audio_rooms":
+    case "music_recommendations":
+    case "spark_ar":
+    case "your_problem_reports":
+    case "apps_and_websites":
+    case "contacts":
+    case "loyalty_accounts":
+    case "guides":
+      return CategoryEnum.other;
+
+    case 'likes':
+    case 'posts_and_comments.json':
+      return CategoryEnum.reactions;
+    
+    case 'comments.json':
+    case 'your_comments_in_groups.json':
+    case 'comments':
+      return CategoryEnum.comments;
+
+    case 'events':
+    case 'friends_and_followers':
+    case 'groups':
+    case 'other_activity':
+    case 'pages':
+    case 'followers_and_following':
+      return CategoryEnum.social;
+
+    case 'facebook_gaming':
+      return CategoryEnum.gaming;
+
+    case 'facebook_marketplace':
+    case 'facebook_payments':
+    case 'recently_viewed_items':
+      return CategoryEnum.shopping;
+
+    case 'location':
+    case 'your_places':
+      return CategoryEnum.location;
+
+    case 'messages':
+      return CategoryEnum.messaging;
+
+    case 'news_feed':
+    case 'preferences':
+    case 'autofill_information':
+    case 'comments_settings':
+      return CategoryEnum.preferences;
+
+    case 'profile_information':
+    case 'account_information':
+    case 'login_and_account_creation':
+    case 'information_about_you':
+      return CategoryEnum.profile;
+
+    case 'search':
+    case 'recent_searches':
+      return CategoryEnum.serach;
+
+    case 'security_and_login_information':
+    case 'past_instagram_insights':
+    case 'device_information':
+      return CategoryEnum.loggedData;
+
+    case 'posts':
+    case 'short_videos':
+    case 'content':
+      return CategoryEnum.posts;
+
+    case 'stories':
+    case 'stories.json':
+      return CategoryEnum.stories;
+
+    case 'profile_photos.json':
+      return CategoryEnum.files;
+
+    default:
+      var newPath = dart_path.dirname(path);
+      return getFromPath(newPath);
+  }
+}
+
+ // might result in stackOverflow if root folder is not Facebook or Instagram
+    // try {
+    //   var name = path_dart.basename(folderName);
+
+    //   // if still none are found, set category to "Other" (default)
+
+    //   if (name == 'extracts') {
+    //     return _categoryBox
+    //         .query(DataCategory_.dbCategory.equals(CategoryEnum.other.index))
+    //         .build()
+    //         .findUnique()!;
+    //   }
+    //   var service = profile.service.target!;
+
+    //   var category = service.serviceName == "Facebook"
+    //       ? _categoryBox
+    //           .query(DataCategory_.matchingFoldersFacebook.contains(name))
+    //           .build()
+    //           .findFirst()
+    //       : _categoryBox
+    //           .query(DataCategory_.matchingFoldersInstagram.contains(name))
+    //           .build()
+    //           .findFirst();
+
+    //   // if none is found :
+    //   if (category == null) {
+    //     return getFromFolderName(
+    //         folderName.substring(0, folderName.length - name.length), profile);
+    //   } else {
+    //     return category;
+    //   }
+    // } on Exception catch (e) {
+    //   // ignore: avoid_print
+    //   print(e);
+    //   return _categoryBox
+    //       .query(DataCategory_.dbCategory.equals(CategoryEnum.other.index))
+    //       .build()
+    //       .findUnique()!;
+    // }
