@@ -24,14 +24,57 @@ class MediaRepository {
       ..limit = limit;
     return query.find();
   }
+
   List<int> updateImages(List<ImageDocument> images) {
     return _imageBox.putMany(images);
   }
+
   int getAmountOfUnTaggedImages() {
-    return _imageBox.query(ImageDocument_.mediaTags.isNull()).build().count();
+    return _imageBox.query(ImageDocument_.mediaTags.lessThan("")).build().count();
+  }
+
+  List<ImageDocument> searchImagesPagination(String searchText, int offset, int limit) {
+    var query = _imageBox
+        .query(ImageDocument_.mediaTags.contains(searchText, caseSensitive: false))
+        .build();
+    query
+      ..offset = offset
+      ..limit = limit;
+
+    return query.find();
+  }
+
+  int deleteAllImageTags() {
+    var res = 0;
+
+    for (var image in _imageBox.getAll()) {
+      image.mediaTagScores = <String>[];
+      image.mediaTags = "";
+      res += _imageBox.put(image);
+    }
+
+    return res;
   }
 
   List<VideoDocument> getAllVideos() => _videoBox.getAll();
+  List<VideoDocument> getVideosPagination(int offset, int limit) {
+    var query = _videoBox.query().build();
+    query
+      ..offset = offset
+      ..limit = limit;
+
+    return query.find();
+  }
+
   List<FileDocument> getAllFiles() => _fileBox.getAll();
+  List<FileDocument> getFilesPagination(int offset, int limit) {
+    var query = _fileBox.query().build();
+    query
+      ..offset = offset
+      ..limit = limit;
+
+    return query.find();
+  }
+
   List<LinkDocument> getAllLinks() => _linkBox.getAll();
 }

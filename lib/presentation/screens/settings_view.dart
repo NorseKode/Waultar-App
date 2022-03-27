@@ -4,6 +4,7 @@ import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/configs/navigation/screen.dart';
 import 'package:logging/logging.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
+import 'package:waultar/core/inodes/media_repo.dart';
 import 'package:waultar/presentation/presentation_helper.dart';
 import 'package:waultar/presentation/screens/shared/waultar_desktop_main.dart';
 import 'package:waultar/presentation/widgets/general/menu_panel.dart';
@@ -36,6 +37,8 @@ class _SettingsViewState extends State<SettingsView> {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text("Developer Tools"),
+          const Divider(),
           DefaultButton(
             text: localizer.nukeDatabase,
             onPressed: () {
@@ -61,6 +64,13 @@ class _SettingsViewState extends State<SettingsView> {
                 },
               ),
             ],
+          ),
+          const Divider(),
+          DefaultButton(
+            text: "Delete Image Tags",
+            onPressed: () {
+              locator.get<MediaRepository>(instanceName: 'mediaRepo').deleteAllImageTags();
+            },
           ),
         ],
       ),

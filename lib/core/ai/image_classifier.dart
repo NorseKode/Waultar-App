@@ -131,7 +131,9 @@ class ImageClassifier extends IMLModel {
     var results = <Tuple2<String, double>>[];
 
     for (var i = 0; i < amountOfTopCategories; i++) {
-      results.add(Tuple2(pred[i].key, pred[i].value));
+      if (pred[i].value > 0.75) {
+        results.add(Tuple2(pred[i].key, pred[i].value));
+      }
     }
 
     if (ISPERFORMANCETRACKING) {

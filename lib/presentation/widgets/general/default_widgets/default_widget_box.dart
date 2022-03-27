@@ -5,7 +5,8 @@ import 'package:waultar/presentation/providers/theme_provider.dart';
 // ignore: must_be_immutable
 class DefaultWidgetBox extends StatefulWidget {
   Widget child;
-  DefaultWidgetBox({Key? key, required this.child}) : super(key: key);
+  final BoxConstraints? constraints;
+  DefaultWidgetBox({Key? key, required this.child, this.constraints}) : super(key: key);
 
   @override
   State<DefaultWidgetBox> createState() => _DefaultWidgetBoxState();
@@ -17,9 +18,9 @@ class _DefaultWidgetBoxState extends State<DefaultWidgetBox> {
   Widget build(BuildContext context) {
     themeProvider = Provider.of<ThemeProvider>(context);
     return Container(
+        constraints: widget.constraints ?? BoxConstraints(),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: themeProvider.themeData().primaryColor),
+            borderRadius: BorderRadius.circular(10), color: themeProvider.themeData().primaryColor),
         child: Padding(padding: const EdgeInsets.all(20), child: widget.child));
   }
 }
