@@ -63,51 +63,24 @@ class DataCategoryRepository {
   DataCategory getFromFolderName(String folderName, ProfileDocument profile) {
     // get category from service based on parent directory for the file
     // keep looking backwards in the path until we reach root folder
-
-    return _categoryBox
-          .query(DataCategory_.dbCategory.equals(CategoryEnum.other.index))
-          .build()
-          .findUnique()!;
-
-    // might result in stackOverflow if root folder is not Facebook or Instagram
-    // try {
-    //   var name = path_dart.basename(folderName);
-
-    //   // if still none are found, set category to "Other" (default)
-
-    //   if (name == 'extracts') {
-    //     return _categoryBox
-    //         .query(DataCategory_.dbCategory.equals(CategoryEnum.other.index))
-    //         .build()
-    //         .findUnique()!;
-    //   }
-    //   var service = profile.service.target!;
-
-    //   var category = service.serviceName == "Facebook"
-    //       ? _categoryBox
-    //           .query(DataCategory_.matchingFoldersFacebook.contains(name))
-    //           .build()
-    //           .findFirst()
-    //       : _categoryBox
-    //           .query(DataCategory_.matchingFoldersInstagram.contains(name))
-    //           .build()
-    //           .findFirst();
-
-    //   // if none is found :
-    //   if (category == null) {
-    //     return getFromFolderName(
-    //         folderName.substring(0, folderName.length - name.length), profile);
-    //   } else {
-    //     return category;
-    //   }
-    // } on Exception catch (e) {
-    //   // ignore: avoid_print
-    //   print(e);
-    //   return _categoryBox
-    //       .query(DataCategory_.dbCategory.equals(CategoryEnum.other.index))
-    //       .build()
-    //       .findUnique()!;
-    // }
+    var categoryEnum = getFromPath(folderName);
+    var existing = profile.categories
+        .any((element) => element.dbCategory == categoryEnum.index);
+    if (existing) {
+      var category = profile.categories
+          .singleWhere((element) => element.dbCategory == categoryEnum.index);
+      return category;
+    } else {
+      var newCategory = DataCategory(
+        matchingFoldersFacebook: [],
+        matchingFoldersInstagram: [],
+        category: categoryEnum,
+      );
+      int createdId = _categoryBox.put(newCategory);
+      var createdCategory = _categoryBox.get(createdId)!;
+      profile.categories.add(createdCategory);
+      return createdCategory;
+    }
   }
 
   int count() => _categoryBox.count();

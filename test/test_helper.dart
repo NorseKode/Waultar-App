@@ -54,10 +54,10 @@ class TestHelper {
 
   static Future<void> deleteTestDb() async {
     final scriptDir = File(Platform.script.toFilePath()).parent;
-    final datafile =
-        File(path_dart.normalize('${scriptDir.path}/test/waultar/objectbox/data.mdb'));
-    final lockfile =
-        File(path_dart.normalize('${scriptDir.path}/test/waultar/objectbox/lock.mdb'));
+    final datafile = File(path_dart
+        .normalize('${scriptDir.path}/test/waultar/objectbox/data.mdb'));
+    final lockfile = File(path_dart
+        .normalize('${scriptDir.path}/test/waultar/objectbox/lock.mdb'));
     try {
       await datafile.delete();
       await lockfile.delete();
@@ -69,8 +69,10 @@ class TestHelper {
   /// deletes the test folders but not the logs file
   static Future<void> deleteTestFolders() async {
     final scriptDir = File(Platform.script.toFilePath()).parent;
-    final dbDir = Directory(path_dart.normalize('${scriptDir.path}/test/waultar/objectbox'));
-    final extractsDir = Directory(path_dart. normalize('${scriptDir.path}/test/waultar/extracts'));
+    final dbDir = Directory(
+        path_dart.normalize('${scriptDir.path}/test/waultar/objectbox'));
+    final extractsDir = Directory(
+        path_dart.normalize('${scriptDir.path}/test/waultar/extracts'));
     try {
       await dbDir.delete(recursive: true);
       await extractsDir.delete(recursive: true);
@@ -106,21 +108,19 @@ class TestHelper {
       1448169079, // Sun Nov 22 2015 06:11:19 GMT
     ];
     final testProfile = createTestProfile(context);
+    var posts = DataCategory(
+      matchingFoldersFacebook: [],
+      matchingFoldersInstagram: [],
+      category: CategoryEnum.posts,
+    );
+
+    var comments = DataCategory(
+      matchingFoldersFacebook: [],
+      matchingFoldersInstagram: [],
+      category: CategoryEnum.comments,
+    );
+
     final _categoryBox = context.store.box<DataCategory>();
-    var posts = _categoryBox
-        .query(DataCategory_.dbCategory.equals(CategoryEnum.posts.index))
-        .build()
-        .findUnique()!;
-    var comments = _categoryBox
-        .query(DataCategory_.dbCategory.equals(CategoryEnum.comments.index))
-        .build()
-        .findUnique()!;
-    var fbService = context.store
-        .box<ServiceDocument>()
-        .query(ServiceDocument_.serviceName.equals('Facebook'))
-        .build()
-        .findUnique()!;
-    
     var yourPosts = DataPointName(name: 'your posts');
     yourPosts.profile.target = testProfile;
 
@@ -131,13 +131,10 @@ class TestHelper {
         'attachments': [],
         'data': {
           'post': 'this is a post',
-          'data': {
-            'created_timestamp': timestamps[i]
-          }
+          'data': {'created_timestamp': timestamps[i]}
         },
       };
-      var dataPoint =
-          DataPoint.parse(posts, yourPosts, testProfile, data, "");
+      var dataPoint = DataPoint.parse(posts, yourPosts, testProfile, data, "");
       yourPosts.dataPoints.add(dataPoint);
     }
 
@@ -149,16 +146,14 @@ class TestHelper {
         'attachments': [],
         'data': {
           'post': 'this is a post',
-          'data': {
-            'created_timestamp': timestamps[i]
-          },
+          'data': {'created_timestamp': timestamps[i]},
           'timestamp': timestamps[i]
         },
-        'updated_timestamp': timestamps[i-1]
+        'updated_timestamp': timestamps[i - 1]
       };
       var dataPoint =
           DataPoint.parse(comments, yourComments, testProfile, data, "");
-      yourComments.dataPoints.add(dataPoint);    
+      yourComments.dataPoints.add(dataPoint);
     }
     comments.dataPointNames.add(yourComments);
     posts.dataPointNames.add(yourPosts);
