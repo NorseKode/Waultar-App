@@ -33,7 +33,8 @@ class _BrowseState extends State<Browse> {
   final TreeParser parser = locator.get<TreeParser>(instanceName: 'parser');
   final IServiceRepository _serviceRepo =
       locator.get<IServiceRepository>(instanceName: 'serviceRepo');
-  final _parserService = locator.get<IParserService>(instanceName: 'parserService');
+  final _parserService =
+      locator.get<IParserService>(instanceName: 'parserService');
 
   bool isLoading = false;
   var _progressMessage = "Initializing";
@@ -48,13 +49,20 @@ class _BrowseState extends State<Browse> {
   void initState() {
     super.initState();
     _categories = _collectionsService.getAllCategories();
-    _names = _collectionsService.getAllNamesFromCategory(_categories.first);
+    if (_categories.isEmpty) {
+      _names = [];
+    } else {
+      _names = _collectionsService.getAllNamesFromCategory(_categories.first);
+    }
   }
 
   _onUploadProgress(String message, bool isDone) {
     setState(() {
       _progressMessage = message;
       isLoading = !isDone;
+      if (!isLoading) {
+        _categories = _collectionsService.getAllCategories();
+      }
     });
   }
 
@@ -64,16 +72,18 @@ class _BrowseState extends State<Browse> {
         var files = await Uploader.uploadDialogue(context);
 
         if (files != null) {
-          SnackBarCustom.useSnackbarOfContext(context, localizer.startedLoadingOfData);
+          SnackBarCustom.useSnackbarOfContext(
+              context, localizer.startedLoadingOfData);
 
           setState(() {
             isLoading = true;
           });
 
-          var zipFile =
-              files.item1.singleWhere((element) => dart_path.extension(element) == ".zip");
+          var zipFile = files.item1
+              .singleWhere((element) => dart_path.extension(element) == ".zip");
 
-          await _parserService.parseIsolates(zipFile, _onUploadProgress, files.item2);
+          await _parserService.parseIsolates(
+              zipFile, _onUploadProgress, files.item2);
           // await _parserService.parseMain(zipFile, files.item2);
 
         }
@@ -95,11 +105,13 @@ class _BrowseState extends State<Browse> {
               onTap: () {
                 print(_categories[index].category.name);
                 setState(() {
-                  _names = _collectionsService.getAllNamesFromCategory(_categories[index]);
+                  _names = _collectionsService
+                      .getAllNamesFromCategory(_categories[index]);
                 });
               },
-              child: Text(
-                  _categories[index].category.name + "   " + _categories[index].count.toString()),
+              child: Text(_categories[index].category.name +
+                  "   " +
+                  _categories[index].count.toString()),
             ),
             const Divider(
               thickness: 2.0,
@@ -123,7 +135,8 @@ class _BrowseState extends State<Browse> {
               onTap: () {
                 print(_names[index].name);
               },
-              child: Text(_names[index].name + "   " + _names[index].count.toString()),
+              child: Text(
+                  _names[index].name + "   " + _names[index].count.toString()),
             ),
             const Divider(
               thickness: 2.0,
@@ -165,19 +178,23 @@ class _BrowseState extends State<Browse> {
               const SizedBox(
                 height: 20,
               ),
-              Flexible(
-                child: GridView.count(
-                  physics: const NeverScrollableScrollPhysics(),
-                  childAspectRatio: 0.7,
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 10,
-                  // shrinkWrap: true,
-                  children: [
-                    categoriesColumn(),
-                    namesColumn(),
-                  ],
-                ),
-              ),
+              _categories.length < 2
+                  ? Container(
+                      child: const Text("You haven't uploaded any data yet "),
+                    )
+                  : Flexible(
+                      child: GridView.count(
+                        physics: const NeverScrollableScrollPhysics(),
+                        childAspectRatio: 0.7,
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 10,
+                        // shrinkWrap: true,
+                        children: [
+                          categoriesColumn(),
+                          namesColumn(),
+                        ],
+                      ),
+                    ),
             ],
           );
   }
