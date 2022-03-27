@@ -1,18 +1,22 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:objectbox/objectbox.dart';
 import 'package:pretty_json/pretty_json.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
+import 'package:waultar/core/inodes/datapoint_repo.dart';
 import 'package:waultar/core/inodes/media_documents.dart';
-import 'package:waultar/core/inodes/service_document.dart';
+import 'package:waultar/core/inodes/profile_document.dart';
 import 'package:waultar/core/inodes/tree_parser.dart';
-import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 import 'package:path/path.dart' as dart_path;
 
 @Entity()
 class DataPoint {
   int id;
+  
   final dataPointName = ToOne<DataPointName>();
+  
+  // ui most important info field about the datapoint  
   late String stringName;
 
   final category = ToOne<DataCategory>();
@@ -22,9 +26,6 @@ class DataPoint {
   final videos = ToMany<VideoDocument>();
   final files = ToMany<FileDocument>();
   final links = ToMany<LinkDocument>();
-  final service = ToOne<ServiceDocument>();
-
-  List<int> timestamps = [];
 
   List<String> searchStrings = [];
 
@@ -34,9 +35,19 @@ class DataPoint {
   @Transient()
   late Map<String, dynamic> valuesMap;
 
+  @Property(type: PropertyType.dateNano)
+  late DateTime createdAt;
+
   DataPoint({
     this.id = 0,
-  });
+  }) {
+    createdAt = DateTime.now();
+  }
+
+  int get dbCreatedAt => createdAt.microsecondsSinceEpoch;
+  set dbCreatedAt(int value) {
+    createdAt = DateTime.fromMicrosecondsSinceEpoch(value, isUtc: false);
+  }
 
   Map<String, dynamic> get asMap {
     var decoded = jsonDecode(values);
@@ -52,30 +63,29 @@ class DataPoint {
   DataPoint.parse(
     DataCategory dataCategory,
     DataPointName parentName,
-    ServiceDocument dataService,
     ProfileDocument targetProfile,
     dynamic json,
     String basePathToMedia,
   ) : id = 0 {
     category.target = dataCategory;
     dataPointName.target = parentName;
-    service.target = dataService;
     stringName = parentName.name;
     profile.target = targetProfile;
     values = jsonEncode(json);
-    
+
     _createRelations(basePathToMedia);
     if (searchStrings.isEmpty) {
       searchStrings.add(stringName);
     }
+    createdAt = DateTime.now();
   }
 
   void _createRelations(String basePathToMedia) {
+
     // the raw data as a map
     // the asMap getter will make sure it's always a map
     Map<String, dynamic> json = asMap;
 
-    // let's just use a nested funtion to recursively find our targets in the jsonMap
     recurse(dynamic json) {
       if (json is Map<String, dynamic>) {
         for (var entry in json.entries) {
@@ -88,7 +98,6 @@ class DataPoint {
               );
 
               image.relatedDatapoint.target = this;
-              image.service.target = service.target;
               image.profile.target = profile.target;
               images.add(image);
             } else if (Extensions.isVideo(value)) {
@@ -98,7 +107,6 @@ class DataPoint {
               );
 
               video.relatedDatapoint.target = this;
-              video.service.target = service.target;
               video.profile.target = profile.target;
               videos.add(video);
             } else if (Extensions.isFile(value)) {
@@ -108,7 +116,6 @@ class DataPoint {
               );
 
               file.relatedDatapoint.target = this;
-              file.service.target = service.target;
               file.profile.target = profile.target;
               files.add(file);
             } else if (Extensions.isLink(value)) {
@@ -118,14 +125,11 @@ class DataPoint {
               );
 
               link.relatedDatapoint.target = this;
-              link.service.target = service.target;
               link.profile.target = profile.target;
               links.add(link);
             } else {
               searchStrings.add(value);
             }
-          } else if (value is int && value != 0) {
-            timestamps.add(value);
           } else {
             recurse(entry.value);
           }
@@ -164,6 +168,9 @@ class DataPoint {
     sb.write("#####################################\n");
     return sb.toString();
   }
+
+  UIDTO get getUIDTO => UIDTO(stringName, category.target!, asMap);
+  
 }
 
 @Entity()
@@ -171,11 +178,10 @@ class DataPointName {
   int id;
   int count;
 
-  @Index()
   String name;
 
   final dataCategory = ToOne<DataCategory>();
-  final service = ToOne<ServiceDocument>();
+  final profile = ToOne<ProfileDocument>();
 
   @Backlink('dataPointName')
   final dataPoints = ToMany<DataPoint>();
@@ -200,8 +206,10 @@ class DataCategory {
   List<String> matchingFoldersInstagram;
 
   @Index()
-  @Unique()
-  String name;
+  CategoryEnum category;
+
+  
+  final profile = ToOne<ProfileDocument>();
 
   @Backlink('dataCategory')
   final dataPointNames = ToMany<DataPointName>();
@@ -209,8 +217,89 @@ class DataCategory {
   DataCategory({
     this.id = 0,
     this.count = 0,
-    required this.name,
+    this.category = CategoryEnum.unknown,
     required this.matchingFoldersFacebook,
     required this.matchingFoldersInstagram,
   });
+
+  int get dbCategory {
+    return category.index;
+  }
+
+  set dbCategory(int index) {
+    category = index >= 0 && index < CategoryEnum.values.length
+    ? CategoryEnum.values[index]
+    : CategoryEnum.unknown;
+  }
+}
+
+enum CategoryEnum {
+  unknown,
+  interactions,
+  advertisement,
+  thirdPartyExchanges,
+  other,
+  reactions,
+  comments,
+  social,
+  gaming,
+  shopping,
+  location,
+  messaging,
+  preferences,
+  profile,
+  serach,
+  loggedData,
+  posts,
+  stories,
+  files,
+}
+
+extension CategoryMapper on CategoryEnum {
+  static const colors = {
+    CategoryEnum.unknown: Colors.cyan,
+    CategoryEnum.interactions: Colors.red,
+    CategoryEnum.advertisement: Colors.blue,
+    CategoryEnum.thirdPartyExchanges: Colors.orange,
+    CategoryEnum.other: Colors.brown,
+    CategoryEnum.reactions: Colors.green,
+    CategoryEnum.comments: Colors.purple,
+    CategoryEnum.social: Colors.purpleAccent,
+    CategoryEnum.gaming: Colors.blueGrey,
+    CategoryEnum.shopping: Colors.pink,
+    CategoryEnum.location: Colors.indigo,
+    CategoryEnum.messaging: Colors.blueAccent,
+    CategoryEnum.preferences: Colors.cyanAccent,
+    CategoryEnum.profile: Colors.lightBlueAccent,
+    CategoryEnum.serach: Colors.limeAccent,
+    CategoryEnum.loggedData: Colors.yellow,
+    CategoryEnum.posts: Colors.amber,
+    CategoryEnum.stories: Colors.deepPurple,
+    CategoryEnum.files: Colors.black38,
+  };
+
+  static const names = {
+    CategoryEnum.unknown: 'Unknown',
+    CategoryEnum.interactions: 'Interactions',
+    CategoryEnum.advertisement: 'Advertisement',
+    CategoryEnum.thirdPartyExchanges: 'Third Party Exchanges',
+    CategoryEnum.other: 'Other',
+    CategoryEnum.reactions: 'Reactions',
+    CategoryEnum.comments: 'Comments',
+    CategoryEnum.social: 'Social',
+    CategoryEnum.gaming: 'Gaming',
+    CategoryEnum.shopping: 'Shopping',
+    CategoryEnum.location: 'Location',
+    CategoryEnum.messaging: 'Messaging',
+    CategoryEnum.preferences: 'Preferences',
+    CategoryEnum.profile: 'Profile',
+    CategoryEnum.serach: 'Serach',
+    CategoryEnum.loggedData: 'Logged Data',
+    CategoryEnum.posts: 'Posts',
+    CategoryEnum.stories: 'Stories',
+    CategoryEnum.files: 'Files',
+  };
+
+  Color get color => colors[this] ?? Colors.cyan;
+  String get name => names[this] ?? 'Unknown';
 }

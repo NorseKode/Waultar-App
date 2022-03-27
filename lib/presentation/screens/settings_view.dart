@@ -23,7 +23,7 @@ class _SettingsViewState extends State<SettingsView> {
   late AppLocalizations localizer;
   final _activeScreen = ViewScreen.settings;
   final _appSettings = locator.get<IAppSettingsService>(instanceName: 'appSettingsService');
-  final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
+  final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
 
   @override
   Widget build(BuildContext context) {

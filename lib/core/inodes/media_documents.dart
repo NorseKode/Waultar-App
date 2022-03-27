@@ -1,7 +1,7 @@
 import 'package:objectbox/objectbox.dart';
+import 'package:waultar/core/inodes/profile_document.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
-import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 
 @Entity()
 class ImageDocument {

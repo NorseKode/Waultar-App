@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,8 +34,6 @@ class _BrowseState extends State<Browse> {
 
   bool isLoading = false;
 
-  // final InodeParserService _inodeParserService =
-  //     locator.get<InodeParserService>(instanceName: 'inodeParser');
   final ICollectionsService _collectionsService =
       locator.get<ICollectionsService>(instanceName: 'collectionsService');
   
@@ -101,13 +101,13 @@ class _BrowseState extends State<Browse> {
           children: [
             InkWell(
               onTap: () {
-                print(_categories[index].name);
+                print(_categories[index].category.name);
                 setState(() {
                   _names = _collectionsService
                       .getAllNamesFromCategory(_categories[index]);
                 });
               },
-              child: Text(_categories[index].name +
+              child: Text(_categories[index].category.name +
                   "   " +
                   _categories[index].count.toString()),
             ),

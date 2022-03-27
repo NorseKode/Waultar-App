@@ -1,28 +1,29 @@
-import 'package:waultar/core/abstracts/abstract_repositories/i_timebuckets_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
-import 'package:waultar/core/models/ui_model.dart';
+import 'package:waultar/core/inodes/buckets_repo.dart';
 import 'package:waultar/core/models/timeline/time_models.dart';
 
 class TimeLineService implements ITimelineService {
-  final ITimeBucketsRepository _timeRepo;
-  TimeLineService(this._timeRepo);
+  final IBucketsRepository _bucketsRepo;
+  TimeLineService(this._bucketsRepo);
+  
   @override
   List<YearModel> getAllYears() {
-    return _timeRepo.getAllYears();
+    return _bucketsRepo.getAllYearModels();
   }
 
   @override
   List<DayModel> getDaysFromMonth(MonthModel month) {
-    return _timeRepo.getAllDaysFromMonth(month);
-  }
-
-  @override
-  List<UIModel> getModelsFromDay(DayModel day) {
-    throw UnimplementedError();
+    return _bucketsRepo.getDayModelsFromMonth(month);
   }
 
   @override
   List<MonthModel> getMonthsFromYear(YearModel year) {
-    return _timeRepo.getAllMonthsFromYear(year);
+    return _bucketsRepo.getMonthModelsFromYear(year);
   }
+
+  @override
+  List<HourModel> getHoursFromDay(DayModel day) {
+    return _bucketsRepo.getHourModelsFromDay(day);
+  }
+
 }
