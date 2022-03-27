@@ -1,11 +1,13 @@
-// ignore_for_file: unused_field
-
 import 'dart:io';
 
+import 'package:flutter/services.dart';
+import 'package:path/path.dart' as path_dart;
 
 // Import tflite_flutter
 import 'package:tflite_flutter/tflite_flutter.dart';
+import 'package:waultar/assets/assets_helper.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
+import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/core/ai/i_ml_model.dart';
 import 'package:waultar/startup.dart';
 
@@ -40,7 +42,7 @@ class SentimentClassifier extends IMLModel {
 
   _loadModel() async {
     // Creating the interpreter using Interpreter.fromAsset
-    _interpreter = Interpreter.fromFile(File(modelPath));
+    _interpreter = await Interpreter.fromFile(File(modelPath));
   }
 
   _loadDictionary() async {
@@ -55,16 +57,21 @@ class SentimentClassifier extends IMLModel {
   }
 
   List<double> classify(String rawText) {
+    var startTime = DateTime.now();
     // tokenizeInputText returns List<List<double>>
     // of shape [1, 256].
+    //List<List<int>> input = tokenizeInputText(rawText);
     List<List<double>> input = tokenizeInputText(rawText);
 
     // output of shape [1,2].
-    var output = List<double>.filled(2, 0).reshape([1, 2]);
+    var output = List<int>.filled(2, 0).reshape([1, 2]);
+    //var output = List<int>.filled(384, 0).reshape([1, 384]);
 
     // The run method will run inference and
     // store the resulting values in output.
+    //print(_interpreter.getOutputTensors());
     _interpreter.run(input, output);
+    //_interpreter.runForMultipleInputs(input, {0: output, 1: output});
 
     return [output[0][0], output[0][1]];
   }

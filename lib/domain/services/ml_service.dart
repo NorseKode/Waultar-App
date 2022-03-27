@@ -1,7 +1,9 @@
+import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/ai/image_classifier.dart';
+import 'package:waultar/core/ai/sentiment_classifier.dart';
 import 'package:waultar/core/inodes/media_repo.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/startup.dart';
@@ -9,9 +11,13 @@ import 'package:waultar/startup.dart';
 class MLService extends IMLService {
   // final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
   final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
-  final _classifier = locator.get<ImageClassifier>(instanceName: 'imageClassifier');
+  final _classifier =
+      locator.get<ImageClassifier>(instanceName: 'imageClassifier');
   // final _context = locator.get<ObjectBox>(instanceName: 'context');
-  final _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
+  final _performance =
+      locator.get<PerformanceHelper>(instanceName: 'performance');
+  final _textClassifier =
+      locator.get<SentimentClassifier>(instanceName: 'sentimentClassifier');
 
   @override
   Future<void> classifyAllImagesSeparateThreadFromDB() {
@@ -42,24 +48,19 @@ class MLService extends IMLService {
 
     while (images.isNotEmpty) {
       for (var image in images) {
-        var mediaTags = 
-          _classifier
-            .predict(image.uri, 5);
+        var mediaTags = _classifier.predict(image.uri, 5);
 
         if (mediaTags.length == 0) {
           image.mediaTagScores = ["No Tag Found"];
           image.mediaTags = "No Tag Found";
         }
-        
-        image.mediaTagScores = 
-          mediaTags
-            .map((e) => ",(${e.item1},${e.item2})")
-            .toList();
-        
-        image.mediaTags =
-          mediaTags
-            .fold<String>("", (previous, next) => previous += ",${next.item1}");
-        
+
+        image.mediaTagScores =
+            mediaTags.map((e) => ",(${e.item1},${e.item2})").toList();
+
+        image.mediaTags = mediaTags.fold<String>(
+            "", (previous, next) => previous += ",${next.item1}");
+
         updated++;
       }
 
@@ -85,15 +86,24 @@ class MLService extends IMLService {
   }
 
   @override
-  int connotateText() {
-    // TODO: implement connotateText
-    throw UnimplementedError();
+  double connotateText(String text) {
+    return double.parse(_textClassifier
+        .classify(text)
+        .last
+        .toStringAsFixed(2)); //percent positive text
   }
 
   @override
-  int connotateTextsFromDB() {
-    // TODO: implement connotateTextsFromDB
-    throw UnimplementedError();
+  List<Tuple2<String, double>> connotateTextsFromList(List<String> list) {
+    List<Tuple2<String, double>> classifiedText = [];
+
+    if (list != null || list.isNotEmpty) {
+      for (var text in list) {
+        classifiedText.add(Tuple2(text, connotateText(text)));
+      }
+    }
+
+    return classifiedText;
   }
   // final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
   // final _imageRepo = locator.get<IImageRepository>(instanceName: 'imageRepo');
