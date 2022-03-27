@@ -66,16 +66,6 @@ class TestHelper {
     service: instagram,
   );
 
-  static getTreeParser() async {
-    await deleteTestDb();
-    var _context = await createTestDb();
-    var _dataRepo = DataPointRepository(_context);
-    var _categoryRepo = DataCategoryRepository(_context);
-    var _nameRepo = DataPointNameRepository(_context);
-    var _parser = TreeParser(_categoryRepo, _nameRepo, _dataRepo);
-    _parser.basePathToFiles = "";
-    return _parser;
-  }
 
   static ServiceModel facebook = ServiceModel(
       id: 1, name: "facebook", company: "meta", image: Uri(path: ""));

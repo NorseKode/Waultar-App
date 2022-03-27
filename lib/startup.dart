@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:isolate';
+import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart' as dart_path;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get_it/get_it.dart';
@@ -10,6 +11,7 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_service_repositor
 import 'package:waultar/core/abstracts/abstract_repositories/i_utility_repostitory.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/core/inodes/buckets_repo.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';
@@ -30,6 +32,7 @@ import 'package:waultar/data/repositories/appsettings_repo.dart';
 import 'package:waultar/domain/services/appsettings_service.dart';
 import 'package:waultar/domain/services/collections_service.dart';
 import 'package:waultar/domain/services/ml_service.dart';
+import 'package:waultar/domain/services/parser_service.dart';
 import 'package:waultar/domain/services/timeline_service.dart';
 import 'configs/globals/app_logger.dart';
 import 'configs/globals/os_enum.dart';
@@ -45,16 +48,18 @@ late final String _extractsFolderPath;
 late final String _logFolderPath;
 late final String _performanceFolderPath;
 
-Future<void> setupServices({bool testing = false, bool isolate = false, SendPort? sendPort}) async {
-  await initApplicationPaths(testing: testing).whenComplete(() async {
-    locator.registerSingleton<String>(_waultarPath,
-        instanceName: 'waultar_root_directory');
+Future<void> setupServices({
+  bool testing = false,
+  bool isolate = false,
+  SendPort? sendPort,
+  String? waultarPath,
+}) async {
+  await initApplicationPaths(testing: testing, waultarPath: waultarPath).whenComplete(() async {
+    locator.registerSingleton<String>(_waultarPath, instanceName: 'waultar_root_directory');
     locator.registerSingleton<String>(_dbFolderPath, instanceName: 'db_folder');
-    locator.registerSingleton<String>(_extractsFolderPath,
-        instanceName: 'extracts_folder');
-    locator.registerSingleton<String>(_logFolderPath,
-        instanceName: 'log_folder');
-
+    locator.registerSingleton<String>(_extractsFolderPath, instanceName: 'extracts_folder');
+    locator.registerSingleton<String>(_logFolderPath, instanceName: 'log_folder');
+    locator.registerSingleton<String>(_performanceFolderPath, instanceName: 'performance_folder');
 
     os = detectPlatform();
     locator.registerSingleton<OS>(os, instanceName: 'platform');
@@ -69,7 +74,6 @@ Future<void> setupServices({bool testing = false, bool isolate = false, SendPort
     locator.registerSingleton<PerformanceHelper>(
       PerformanceHelper(
         pathToPerformanceFile: _performanceFolderPath,
-        parentKey: "",
       ),
       instanceName: 'performance',
     );
@@ -86,8 +90,7 @@ Future<void> setupServices({bool testing = false, bool isolate = false, SendPort
     // register all abstract repositories with their concrete implementations
     // each repo gets injected the context (to access the relevant store)
     // and the objectboxDirector to map from models to entities
-    locator.registerSingleton<IAppSettingsRepository>(
-        AppSettingsRepository(_context),
+    locator.registerSingleton<IAppSettingsRepository>(AppSettingsRepository(_context),
         instanceName: 'appSettingsRepo');
     locator.registerSingleton<IServiceRepository>(ServiceRepository(_context),
         instanceName: 'serviceRepo');
@@ -101,29 +104,25 @@ Future<void> setupServices({bool testing = false, bool isolate = false, SendPort
     final _nameRepo = DataPointNameRepository(_context);
     final _dataRepo = DataPointRepository(_context);
 
-    locator.registerSingleton<DataCategoryRepository>(_categoryRepo,
-        instanceName: "categoryRepo");
-    locator.registerSingleton<DataPointNameRepository>(_nameRepo,
-        instanceName: "nameRepo");
-    locator.registerSingleton<DataPointRepository>(_dataRepo,
-        instanceName: "dataRepo");
+    locator.registerSingleton<DataCategoryRepository>(_categoryRepo, instanceName: "categoryRepo");
+    locator.registerSingleton<DataPointNameRepository>(_nameRepo, instanceName: "nameRepo");
+    locator.registerSingleton<DataPointRepository>(_dataRepo, instanceName: "dataRepo");
     locator.registerSingleton<MediaRepository>(
       MediaRepository(_context),
       instanceName: 'mediaRepo',
     );
-    locator.registerSingleton<IBucketsRepository>(_bucketsRepo,
-        instanceName: 'bucketsRepo');
+    locator.registerSingleton<IBucketsRepository>(_bucketsRepo, instanceName: 'bucketsRepo');
 
     // AI Models
-    locator.registerSingleton<ImageClassifier>(
-      ImageClassifierMobileNetV3(),
-      instanceName: 'imageClassifier',
-    );
+    // locator.registerSingleton<ImageClassifier>(
+    //   ImageClassifierMobileNetV3(),
+    //   instanceName: 'imageClassifier',
+    // );
 
-    locator.registerSingleton<SentimentClassifier>(
-      SentimentClassifierTextClassifierTFLite(),
-      instanceName: 'sentimentClassifier',
-    );
+    // locator.registerSingleton<SentimentClassifier>(
+    //   SentimentClassifierTextClassifierTFLite(),
+    //   instanceName: 'sentimentClassifier',
+    // );
 
     // register all services and inject their dependencies
     locator.registerSingleton<IAppSettingsService>(
@@ -135,16 +134,20 @@ Future<void> setupServices({bool testing = false, bool isolate = false, SendPort
       instanceName: 'collectionsService',
     );
     locator.registerSingleton<TreeParser>(
-      TreeParser(_categoryRepo, _nameRepo, _dataRepo),
+      TreeParser(),
       instanceName: 'parser',
     );
-    locator.registerSingleton<IMLService>(
-      MLService(),
-      instanceName: 'mlService',
-    );
+    // locator.registerSingleton<IMLService>(
+    //   MLService(),
+    //   instanceName: 'mlService',
+    // );
     locator.registerSingleton<ITimelineService>(
       TimeLineService(_bucketsRepo),
       instanceName: 'timeService',
+    );
+    locator.registerSingleton<IParserService>(
+      ParserService(),
+      instanceName: 'parserService',
     );
   });
 }
@@ -177,12 +180,18 @@ OS detectPlatform() {
   throw Exception('Could not detect platform');
 }
 
-Future initApplicationPaths({bool testing = false}) async {
-  final _documentsDirectory = testing
-      ? File(Platform.script.toFilePath()).parent.path + '/test/'
-      : await getApplicationDocumentsDirectory().then((value) => value.path);
+Future initApplicationPaths({bool testing = false, String? waultarPath}) async {
+  if (waultarPath != null) {
+    _waultarPath = waultarPath;
+  } else {
+    final _documentsDirectory = waultarPath ??
+        (testing
+            ? File(Platform.script.toFilePath()).parent.path + '/test/'
+            : (await getApplicationDocumentsDirectory()).path);
 
-  _waultarPath = dart_path.normalize(_documentsDirectory + '/waultar/');
+    _waultarPath = dart_path.normalize(_documentsDirectory + '/waultar/');
+  }
+
   _dbFolderPath = dart_path.normalize(_waultarPath + '/objectbox/');
   _extractsFolderPath = dart_path.normalize(_waultarPath + '/extracts/');
   _logFolderPath = dart_path.normalize(_waultarPath + '/logs/');

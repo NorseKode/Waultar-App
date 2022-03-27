@@ -49,7 +49,7 @@ class IsolateLogger extends BaseLogger {
 
   IsolateLogger(this.sendPort) {
     logger.onRecord.listen((event) {
-      final logRecord = LogRecordPackage(event.toString());
+      final logRecord = LogRecordPackage(event.toString(), event.error.toString());
       sendPort.send(logRecord);
     });
   }

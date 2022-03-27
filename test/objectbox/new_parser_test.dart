@@ -82,7 +82,7 @@ Future<void> main() async {
 
   group('Test parsing of actual facebook data', () {
     test(" - facebook posts", () async {
-      var result = await _parser.parsePath(fbPosts, profile, service);
+      var result = await _parser.parsePath(fbPosts, profile);
       expect(result.name, 'your posts');
       expect(result.count, 14);
       expect(result.children.length, 0);
@@ -93,7 +93,7 @@ Future<void> main() async {
     test(' - facebook activity history in security and login information',
         () async {
       var result = await _parser.parsePath(
-          yourFacebookActivityHistory, profile, service);
+          yourFacebookActivityHistory, profile);
 
       expect(result.name, 'last activity time');
       expect(result.dataPoints.length, 0);
@@ -103,7 +103,7 @@ Future<void> main() async {
     });
 
     test(" - facebook messages autofillInformation", () async {
-      var result = await _parser.parsePath(autofillInformation, profile, service);
+      var result = await _parser.parsePath(autofillInformation, profile);
       expect(result.name, 'autofill information');
       expect(result.dataPoints.length, 1);
       expect(result.children.length, 0);
@@ -114,7 +114,7 @@ Future<void> main() async {
     });
 
     test(" - facebook profile information", () async {
-      var result = await _parser.parsePath(profileInformationV2, profile, service);
+      var result = await _parser.parsePath(profileInformationV2, profile);
       expect(result.name, 'profile');
       expect(result.count, 12);
       expect(result.dataPoints.length, 1);
@@ -141,7 +141,7 @@ Future<void> main() async {
     });
 
     test(" - facebook messages", () async {
-      var result = await _parser.parsePath(message, profile, service);
+      var result = await _parser.parsePath(message, profile);
       expect(result.name, 'Lukas Vinther Offenberg Larsen');
       expect(result.count, 3);
       expect(result.dataCategory.hasValue, true);
@@ -159,7 +159,7 @@ Future<void> main() async {
     });
 
     test(" - facebook comments", () async {
-      var result = await _parser.parsePath(comments, profile, service);
+      var result = await _parser.parsePath(comments, profile);
       expect(result.name, 'comments');
       expect(result.count, 6);
       expect(result.dataCategory.hasValue, true);
@@ -168,7 +168,7 @@ Future<void> main() async {
     });
 
     test(" - facebook reactions", () async {
-      var result = await _parser.parsePath(reactions, profile, service);
+      var result = await _parser.parsePath(reactions, profile);
       expect(result.count, 17);
       expect(result.children.length, 0);
       expect(result.dataPoints.length, 17);
@@ -176,7 +176,7 @@ Future<void> main() async {
     });
 
     test(" - facebook gaming", () async {
-      var result = await _parser.parsePath(instantGames, profile, service);
+      var result = await _parser.parsePath(instantGames, profile);
       expect(result.count, 14);
       expect(result.name, 'instant games played');
       expect(result.children.length, 0);
@@ -185,7 +185,7 @@ Future<void> main() async {
     });
 
     test(" - your topics", () async {
-      var result = await _parser.parsePath(yourTopics, profile, service);
+      var result = await _parser.parsePath(yourTopics, profile);
       expect(result.count, 1);
       expect(result.name, 'inferred topics');
       expect(result.children.length, 0);

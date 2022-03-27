@@ -5,22 +5,17 @@ import 'package:path/path.dart' as dart_path;
 
 class PerformanceHelper {
   String pathToPerformanceFile;
-  String parentKey;
+  late String parentKey;
   late PerformanceDataPoint _parentDataPoint;
   final _parentTimer = Stopwatch();
   String? childKey;
   final _childTimer = Stopwatch();
+  List<Stopwatch> _watches = <Stopwatch>[];
 
   PerformanceHelper({
     required this.pathToPerformanceFile,
-    required this.parentKey,
     this.childKey,
-  }) {
-    _parentDataPoint = PerformanceDataPoint(
-      key: parentKey,
-      timeFormat: "milliseconds",
-    );
-  }
+  });
 
   void reInit({required String newParentKey, String? newChildKey}) {
     parentKey = newParentKey;
@@ -61,6 +56,25 @@ class PerformanceHelper {
       inputTime: _childTimer.elapsed,
       metaData: metadata,
     ));
+  }
+
+  void addChildDataPointTimer() {
+    _watches.add(Stopwatch());
+    _watches[0].start();
+  }
+
+  void addChildToDataPointReading(int index, String key, {Map<String, dynamic>? metadata}) {
+    _watches[index].stop();
+    var elapsed = _watches[index].elapsed;
+
+    _parentDataPoint.childs.add(
+      PerformanceDataPoint(
+        key: key,
+        timeFormat: "milliseconds",
+        inputTime: elapsed,
+        metaData: metadata,
+      ),
+    );
   }
 
   /// Stops the parent timer, write results to a json file with [fileName]
@@ -105,6 +119,7 @@ class PerformanceHelper {
     _parentTimer.reset();
     _childTimer.reset();
     _parentDataPoint.childs = <PerformanceDataPoint>[];
+    _watches = <Stopwatch>[];
   }
 }
 

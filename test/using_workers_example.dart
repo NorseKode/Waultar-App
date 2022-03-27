@@ -81,10 +81,10 @@ Future workerBody(dynamic data, SendPort mainSendPort, Function onError) async {
       // as well as calling other methods or creating normal classes
       await testIsolateMethod('I was logged inside a method invoked from the workerBody');
 
-    } catch (e) {
+    } catch (e, stacktrace) {
 
       // we cannot yet guarentee that the logger is ready, so we just send the message directly with the sendport 
-      mainSendPort.send(LogRecordPackage(e.toString()));
+      mainSendPort.send(LogRecordPackage(e.toString(), stacktrace.toString()));
 
     } finally { // ! <== always close the store in the isolate with a finally block 
       var _context = locator.get<ObjectBox>(instanceName: 'context');

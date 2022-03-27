@@ -30,7 +30,7 @@ class BaseWorker {
   /// Handle the messages coming from the isolate
   void _mainMessageHandler(dynamic data, SendPort isolateSendPort) {
     if (data is LogRecordPackage) {
-      _logger.logger.info(data.value);
+      _logger.logger.info(data.value, data.error);
     } else {
       mainHandler(data);
     }

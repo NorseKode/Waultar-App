@@ -24,4 +24,8 @@ class ProfileRepository {
     _logger.logger.info(profile.name);
     return profile;
   }
+
+  ProfileDocument? get(int id) {
+    return _profileBox.get(id);
+  }
 }

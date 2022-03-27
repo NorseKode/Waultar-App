@@ -5,7 +5,8 @@
 
 class LogRecordPackage {
   String value;
-  LogRecordPackage(this.value);
+  String error;
+  LogRecordPackage(this.value, this.error);
 }
 
 class InitiatorPackage {

@@ -11,11 +11,11 @@ class ServiceRepository implements IServiceRepository {
   }
 
   @override
-  ServiceDocument? get(String name) {
+  ServiceDocument get(String name) {
     return _serviceBox
         .query(ServiceDocument_.serviceName.equals(name))
         .build()
-        .findUnique();
+        .findUnique()!;
   }
 
   @override

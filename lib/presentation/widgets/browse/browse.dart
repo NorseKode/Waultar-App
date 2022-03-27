@@ -6,8 +6,10 @@ import 'package:provider/provider.dart';
 import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/core/inodes/tree_parser.dart';
+import 'package:waultar/domain/services/parser_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
@@ -31,12 +33,14 @@ class _BrowseState extends State<Browse> {
   final TreeParser parser = locator.get<TreeParser>(instanceName: 'parser');
   final IServiceRepository _serviceRepo =
       locator.get<IServiceRepository>(instanceName: 'serviceRepo');
+  final _parserService = locator.get<IParserService>(instanceName: 'parserService');
 
   bool isLoading = false;
+  var _progressMessage = "Initializing";
 
   final ICollectionsService _collectionsService =
       locator.get<ICollectionsService>(instanceName: 'collectionsService');
-  
+
   late List<DataCategory> _categories;
   late List<DataPointName> _names;
 
@@ -47,43 +51,31 @@ class _BrowseState extends State<Browse> {
     _names = _collectionsService.getAllNamesFromCategory(_categories.first);
   }
 
+  _onUploadProgress(String message, bool isDone) {
+    setState(() {
+      _progressMessage = message;
+      isLoading = !isDone;
+    });
+  }
+
   uploadButton() {
     return DefaultButton(
       onPressed: () async {
         var files = await Uploader.uploadDialogue(context);
 
         if (files != null) {
-          SnackBarCustom.useSnackbarOfContext(
-              context, localizer.startedLoadingOfData);
-          var service = _serviceRepo.get(files.item2);
+          SnackBarCustom.useSnackbarOfContext(context, localizer.startedLoadingOfData);
 
-          if (service != null) {
-            setState(() {
-              isLoading = true;
-            });
-            var zipFiles = files.item1
-                .where((element) => dart_path.extension(element) == ".zip")
-                .toList();
+          setState(() {
+            isLoading = true;
+          });
 
-            var inputMap = {
-              'path': dart_path.normalize(zipFiles.first),
-              'extracts_folder':
-                  locator.get<String>(instanceName: 'extracts_folder'),
-              'service_name': service.serviceName,
-              'is_performance_tracking': ISPERFORMANCETRACKING.toString(),
-              'log_folder': locator.get<String>(instanceName: 'performance_folder'),
+          var zipFile =
+              files.item1.singleWhere((element) => dart_path.extension(element) == ".zip");
 
-            };
-            var uploadedFiles = await compute(extractZip, inputMap);
-            await parser
-                .parseManyPaths(uploadedFiles, service)
-                .whenComplete(() => setState(() {
-                      _categories = _collectionsService.getAllCategories();
-                      isLoading = false;
-                      SnackBarCustom.useSnackbarOfContext(
-                          context, localizer.doneLoadingData);
-                    }));
-          }
+          await _parserService.parseIsolates(zipFile, _onUploadProgress, files.item2);
+          // await _parserService.parseMain(zipFile, files.item2);
+
         }
       },
       text: localizer.upload,
@@ -103,13 +95,11 @@ class _BrowseState extends State<Browse> {
               onTap: () {
                 print(_categories[index].category.name);
                 setState(() {
-                  _names = _collectionsService
-                      .getAllNamesFromCategory(_categories[index]);
+                  _names = _collectionsService.getAllNamesFromCategory(_categories[index]);
                 });
               },
-              child: Text(_categories[index].category.name +
-                  "   " +
-                  _categories[index].count.toString()),
+              child: Text(
+                  _categories[index].category.name + "   " + _categories[index].count.toString()),
             ),
             const Divider(
               thickness: 2.0,
@@ -133,8 +123,7 @@ class _BrowseState extends State<Browse> {
               onTap: () {
                 print(_names[index].name);
               },
-              child: Text(
-                  _names[index].name + "   " + _names[index].count.toString()),
+              child: Text(_names[index].name + "   " + _names[index].count.toString()),
             ),
             const Divider(
               thickness: 2.0,
@@ -151,7 +140,13 @@ class _BrowseState extends State<Browse> {
     themeProvider = Provider.of<ThemeProvider>(context);
 
     return isLoading
-        ? const Center(child: CircularProgressIndicator())
+        ? Center(
+            child: Column(
+            children: [
+              Text(_progressMessage),
+              const CircularProgressIndicator(),
+            ],
+          ))
         : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

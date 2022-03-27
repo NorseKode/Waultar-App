@@ -7,6 +7,7 @@ import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
+import 'package:waultar/core/helpers/PathHelper.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
@@ -23,49 +24,37 @@ class TreeParser {
   final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
   final _profileRepo =
       locator.get<ProfileRepository>(instanceName: 'profileRepo');
-  final DataCategoryRepository _categoryRepo;
-  final DataPointNameRepository _nameRepo;
-  final DataPointRepository _dataRepo;
+  final DataCategoryRepository _categoryRepo = locator.get<DataCategoryRepository>(instanceName: 'categoryRepo');
+  final DataPointNameRepository _nameRepo = locator.get<DataPointNameRepository>(instanceName: 'nameRepo');
+  final DataPointRepository _dataRepo = locator.get<DataPointRepository>(instanceName: 'dataRepo');
   final PerformanceHelper _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
 
-  TreeParser(
-    this._categoryRepo,
-    this._nameRepo,
-    this._dataRepo,
-  );
+  TreeParser();
 
   late String formerFileName;
   late String formerFileParentName;
 
   late String basePathToFiles;
 
-  Future<void> parseManyPaths(List<String> paths, ServiceDocument service) async {
+  Stream<int> parseManyPaths(List<String> paths, ProfileDocument profile) async* {
     if (ISPERFORMANCETRACKING) {
       _performance.reInit(newParentKey: "Parse all");
       _performance.start();
     }
 
     if (paths.length > 1) {
-      var basePathToFiles = StringBuffer();
       var path1 = paths.first;
       var path2 = paths.last;
 
-      for (var i = 0; i < path1.length; i++) {
-        if (path1[i] == path2[i]) {
-          basePathToFiles.write(path1[i]);
-        } else {
-          break;
-        }
-      }
-      this.basePathToFiles = basePathToFiles.toString();
+      basePathToFiles = PathHelper.getCommonPath(path1, path2);
     }
 
-    var profile = await getProfile(paths, service);
-    var profileRepo = _profileRepo.add(profile);
-
+    int progress = 0;
     for (var path in paths) {
       if (Extensions.isJson(path)) {
-        await parsePath(path, profileRepo, service);
+        await parsePath(path, profile);
+        progress = progress + 1;
+        yield progress;
       }
     }
     _categoryRepo.updateCounts();
@@ -78,57 +67,18 @@ class TreeParser {
     }
   }
 
-  Future<ProfileDocument> getProfile(
-      List<String> paths, ServiceDocument service) async {
-    _appLogger.logger.info("Started Parsing Profile Document");
-
-    var profilePath = "";
-    if (service.serviceName == "Facebook") {
-      profilePath = paths.firstWhere(
-          (element) => element.contains('profile_information.json'));
-    } else if (service.serviceName == "Instagram") {
-      profilePath = paths.firstWhere(
-          (element) => element.contains('personal_information.json'));
-    } else {
-      // TODO: error
-    }
-
-    var name = "Couldn't find username";
-
-    var jsonData = await getJson(File(profilePath));
-    await for (var object in ParseHelper.returnEveryJsonObject(jsonData)) {
-      if (object is Map<String, dynamic>) {
-        if (object.containsKey("username")) {
-          name = object["username"];
-          break;
-        } else if (object.containsKey("full_name")) {
-          name = object["full_name"];
-          break;
-        } else if (object.containsKey("Username")) {
-          name = (object["Username"])["value"];
-          break;
-        }
-      }
-    }
-
-    var profile = ProfileDocument(name: name);
-    profile.service.target = service;
-
-    _appLogger.logger.info("Finished Parsing Profile Document");
-
-    return profile;
-  }
-
   Future<DataPointName> parsePath(
-      String path, ProfileDocument profile, ServiceDocument service) async {
+      String path, ProfileDocument profile) async {
     if (Extensions.isJson(path)) {
+      var service = profile.service.target!;
+
       if (ISPERFORMANCETRACKING) {
         _performance.childKey = "parseSingleFile";
         _performance.resetChild();
         _performance.startChild();
       }
 
-      var category = _categoryRepo.getFromFolderName(path, service);
+      var category = _categoryRepo.getFromFolderName(path, profile);
       _appLogger.logger.info(
           "Started Parsing Path: $path, Profile: ${profile.toString()}, Service: ${service.toString()}, Category: $category");
       var file = File(path);
