@@ -30,7 +30,7 @@ class MediaRepository {
   }
 
   int getAmountOfUnTaggedImages() {
-    return _imageBox.query(ImageDocument_.mediaTags.lessOrEqual("")).build().count();
+    return _imageBox.query(ImageDocument_.mediaTags.lessThan("")).build().count();
   }
 
   List<ImageDocument> searchImagesPagination(String searchText, int offset, int limit) {

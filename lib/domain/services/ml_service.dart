@@ -45,6 +45,11 @@ class MLService extends IMLService {
         var mediaTags = 
           _classifier
             .predict(image.uri, 5);
+
+        if (mediaTags.length == 0) {
+          image.mediaTagScores = ["No Tag Found"];
+          image.mediaTags = "No Tag Found";
+        }
         
         image.mediaTagScores = 
           mediaTags

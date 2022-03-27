@@ -2,14 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/file_type_enum.dart';
 import 'package:waultar/core/inodes/media_documents.dart';
 import 'package:waultar/core/inodes/media_repo.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 import 'package:waultar/presentation/widgets/general/infinite_scroll.dart';
-import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 
 import 'package:waultar/startup.dart';
 
@@ -50,7 +48,6 @@ class _GalleryState extends State<Gallery> {
   void _scrollReset() {
     _offset = 0;
     _limit = _step;
-    // _imageListScrollController.jumpTo(0);
   }
 
   void _searchImagesInit(String searchText) {
@@ -112,43 +109,52 @@ class _GalleryState extends State<Gallery> {
           //     },
           //   ),
           // ),
-          ListTile(
-            title: Text("Images"),
-            leading: Radio<FileType>(
-              value: FileType.image,
-              groupValue: _selectedMediaType,
-              onChanged: (value) {
-                setState(() {
-                  _selectedMediaType = value;
-                  _scrollReset();
-                });
-              },
+          SizedBox(
+            width: 150,
+            child: ListTile(
+              title: Text("Images"),
+              leading: Radio<FileType>(
+                value: FileType.image,
+                groupValue: _selectedMediaType,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedMediaType = value;
+                    _scrollReset();
+                  });
+                },
+              ),
             ),
           ),
-          ListTile(
-            title: Text("Videoes"),
-            leading: Radio<FileType>(
-              value: FileType.video,
-              groupValue: _selectedMediaType,
-              onChanged: (value) {
-                setState(() {
-                  _selectedMediaType = value;
-                  _scrollReset();
-                });
-              },
+          SizedBox(
+            width: 150,
+            child: ListTile(
+              title: Text("Videos"),
+              leading: Radio<FileType>(
+                value: FileType.video,
+                groupValue: _selectedMediaType,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedMediaType = value;
+                    _scrollReset();
+                  });
+                },
+              ),
             ),
           ),
-          ListTile(
-            title: Text("Files"),
-            leading: Radio<FileType>(
-              value: FileType.file,
-              groupValue: _selectedMediaType,
-              onChanged: (value) {
-                setState(() {
-                  _selectedMediaType = value;
-                  _scrollReset();
-                });
-              },
+          SizedBox(
+            width: 150,
+            child: ListTile(
+              title: Text("Files"),
+              leading: Radio<FileType>(
+                value: FileType.file,
+                groupValue: _selectedMediaType,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedMediaType = value;
+                    _scrollReset();
+                  });
+                },
+              ),
             ),
           ),
         ],
@@ -170,6 +176,7 @@ class _GalleryState extends State<Gallery> {
       case FileType.image:
         return Expanded(
           child: ListView.builder(
+            shrinkWrap: true,
             controller: _imageListScrollController,
             itemCount: _images.length,
             itemBuilder: (_, index) => Padding(
@@ -184,10 +191,8 @@ class _GalleryState extends State<Gallery> {
                     ),
                     Text(
                       _images[index].mediaTags != ""
-                          ? _images[index]
-                              .mediaTags
-                              .split(",")
-                              .fold("", (previousValue, element) => previousValue += element + "\n")
+                          ? _images[index].mediaTags.split(",").fold(
+                              "", (previousValue, element) => previousValue += element + "\n")
                           : "No tags found",
                     )
                   ],
@@ -214,23 +219,22 @@ class _GalleryState extends State<Gallery> {
           },
         );
 
-        case FileType.file:
-          return InfiniteScroll(
-            step: 5,
-            paginationFunction: _mediaRepo.getFilesPagination,
-            builderWidgetGenerator: (List elements, int index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: DefaultWidget(
-                  title: "Files",
-                  child: Text(
-                    elements[index].uri,
-                  ),
+      case FileType.file:
+        return InfiniteScroll(
+          step: 5,
+          paginationFunction: _mediaRepo.getFilesPagination,
+          builderWidgetGenerator: (List elements, int index) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: DefaultWidget(
+                title: "Files",
+                child: Text(
+                  elements[index].uri,
                 ),
-              );
-            },
-          );
-          
+              ),
+            );
+          },
+        );
 
       default:
         return Container();
@@ -239,16 +243,20 @@ class _GalleryState extends State<Gallery> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: BoxConstraints(maxWidth: 600),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _topBar(),
-          _imageList(),
-        ],
-      ),
+    return Column(
+      children: [
+        _topBar(),
+        _imageList(),
+      ],
     );
   }
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.center,
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: [
+  //       _topBar(),
+  //       _imageList(),
+  //     ],
+  //   );
+  // }
 }
