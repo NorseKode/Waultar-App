@@ -1,4 +1,4 @@
-import 'package:waultar/core/models/index.dart';
+import 'package:waultar/core/models/misc/appsettings_model.dart';
 
 abstract class IAppSettingsRepository {
   Stream<AppSettingsModel> watchSettings();

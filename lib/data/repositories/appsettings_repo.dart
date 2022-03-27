@@ -26,7 +26,7 @@ class AppSettingsRepository implements IAppSettingsRepository {
     settings.darkmode = appSettings.darkmode;
 
     int id = await _appSettingsBox.putAsync(settings);
-    
+
     if (id != 1) {
       throw ObjectBoxException(
           'AppSettings did not update, but instead created a new entry');

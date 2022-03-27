@@ -256,37 +256,6 @@
       ]
     },
     {
-      "id": "6:2968827979678991018",
-      "lastPropertyId": "4:6950870894584641828",
-      "name": "EmailObjectBox",
-      "properties": [
-        {
-          "id": "1:8289340852690278689",
-          "name": "id",
-          "type": 6,
-          "flags": 1
-        },
-        {
-          "id": "2:6969786400679355867",
-          "name": "raw",
-          "type": 9
-        },
-        {
-          "id": "3:8859919663104674450",
-          "name": "email",
-          "type": 9,
-          "flags": 2080,
-          "indexId": "9:8202025192070052702"
-        },
-        {
-          "id": "4:6950870894584641828",
-          "name": "isCurrent",
-          "type": 1
-        }
-      ],
-      "relations": []
-    },
-    {
       "id": "7:790888452052915577",
       "lastPropertyId": "8:2802038950038300032",
       "name": "FileDocument",
@@ -603,30 +572,6 @@
       ]
     },
     {
-      "id": "13:8946347283783028411",
-      "lastPropertyId": "3:2376697415178331561",
-      "name": "ReactionObjectBox",
-      "properties": [
-        {
-          "id": "1:8603936577011061575",
-          "name": "id",
-          "type": 6,
-          "flags": 1
-        },
-        {
-          "id": "2:5557532709808797900",
-          "name": "raw",
-          "type": 9
-        },
-        {
-          "id": "3:2376697415178331561",
-          "name": "reaction",
-          "type": 9
-        }
-      ],
-      "relations": []
-    },
-    {
       "id": "14:137864366780455198",
       "lastPropertyId": "5:4043672162511044090",
       "name": "ServiceDocument",
@@ -800,9 +745,20 @@
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
-  "retiredEntityUids": [],
+  "retiredEntityUids": [
+    2968827979678991018,
+    8946347283783028411
+  ],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    8289340852690278689,
+    6969786400679355867,
+    8859919663104674450,
+    6950870894584641828,
+    8603936577011061575,
+    5557532709808797900,
+    2376697415178331561
+  ],
   "retiredRelationUids": [],
   "version": 1
 }
