@@ -42,4 +42,4 @@ jobs:
       
       # Run unit and widget tests
       - name: Run tests
-        run: flutter test --coverage --concurrency=1
+        run: flutter test --coverage
