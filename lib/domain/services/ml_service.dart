@@ -83,36 +83,6 @@ class MLService extends IMLService {
     return updated;
   }
 
-  @override
-  Future<void> connotateAllTextSeparateThreadFromDB() {
-    // TODO: implement connotateAllTextSeparateThreadFromDB
-    throw UnimplementedError();
-  }
-
-  @override
-  double connotateText(String text) {
-    return double.parse(_textClassifier
-        .classify(text)
-        .last
-        .toStringAsFixed(2)); //percent positive text
-  }
-
-  @override
-  int connotateTextsFromCategory(List<DataCategory> categories) {
-    var updated = 0;
-    for (var category in categories) {
-      List<DataPoint> dataPoints = _dataRepo.readAllFromCategory(category);
-
-      for (var point in dataPoints) {
-        var sentimentScore = _textClassifier.classify(point.stringName);
-        point.sentimentScore = sentimentScore.last; //0-1
-        _dataRepo.updateDataPoint(point);
-        updated++;
-      }
-    }
-
-    return updated;
-  }
   // final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
   // final _imageRepo = locator.get<IImageRepository>(instanceName: 'imageRepo');
   // final _classifier = locator.get<ImageClassifier>(instanceName: 'imageClassifier');

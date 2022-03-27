@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/core/inodes/profile_document.dart';
 import 'package:waultar/core/inodes/profile_repo.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
@@ -19,8 +20,9 @@ class _SentimentWidgetState extends State<SentimentWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final mlService = locator.get<IMLService>(instanceName: 'mlService');
-    List<ProfileDocument> profiles = [];...
+    final sentimentService =
+        locator.get<ISentimentService>(instanceName: 'sentimentService');
+    List<ProfileDocument> profiles = sentimentService.getAllProfiles();
     int connotated = 0;
 
     return DefaultWidget(
@@ -30,7 +32,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
             DefaultButton(
                 onPressed: () => {
                       setState(() => {
-                            connotated = mlService
+                            connotated = sentimentService
                                 .connotateTextsFromCategory(chosenCategories)
                           })
                     }),
@@ -46,7 +48,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
         (index) => Container(
               child: Column(
                 children: [
-                  Text(profiles[index].service.toString()),
+                  Text(profiles[index].service.target!.serviceName),
                   _categoryList(profiles[index]),
                 ],
               ),
@@ -54,30 +56,28 @@ class _SentimentWidgetState extends State<SentimentWidget> {
   }
 
   Widget _categoryList(ProfileDocument profile) {
-    return Container(
-      child: Column(
-          children: List.generate(
-              profile.categories.length,
-              (index) => Row(
-                    children: [
-                      Checkbox(
-                          value: chosenCategories
-                              .contains(profile.categories[index]),
-                          onChanged: (value) => {
-                                setState(
-                                  () {
-                                    chosenCategories
-                                            .contains(profile.categories[index])
-                                        ? chosenCategories
-                                            .remove(profile.categories[index])
-                                        : chosenCategories
-                                            .add(profile.categories[index]);
-                                  },
-                                )
-                              }),
-                      Text(profile.categories[index].category.name)
-                    ],
-                  ))),
-    );
+    return Column(
+        children: List.generate(
+            profile.categories.length,
+            (index) => Row(
+                  children: [
+                    Checkbox(
+                        value: chosenCategories
+                            .contains(profile.categories[index]),
+                        onChanged: (value) => {
+                              setState(
+                                () {
+                                  chosenCategories
+                                          .contains(profile.categories[index])
+                                      ? chosenCategories
+                                          .remove(profile.categories[index])
+                                      : chosenCategories
+                                          .add(profile.categories[index]);
+                                },
+                              )
+                            }),
+                    Text(profile.categories[index].category.name + "hello")
+                  ],
+                )));
   }
 }
