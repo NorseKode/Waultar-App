@@ -54,6 +54,8 @@ Future<void> setupServices({bool testing = false, bool isolate = false, SendPort
         instanceName: 'extracts_folder');
     locator.registerSingleton<String>(_logFolderPath,
         instanceName: 'log_folder');
+    locator.registerSingleton<String>(_logFolderPath,
+        instanceName: 'performance_folder');
 
 
     os = detectPlatform();
