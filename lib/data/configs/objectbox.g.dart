@@ -129,13 +129,6 @@ final _entities = <ModelEntity>[
             indexId: const IdUid(4, 2770261404647769162),
             relationTarget: 'ProfileDocument'),
         ModelProperty(
-            id: const IdUid(6, 7235269531755654073),
-            name: 'serviceId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(5, 1391717991247072791),
-            relationTarget: 'ServiceDocument'),
-        ModelProperty(
             id: const IdUid(7, 4442456282481845387),
             name: 'searchStrings',
             type: 30,
@@ -230,45 +223,6 @@ final _entities = <ModelEntity>[
             srcEntity: 'DataPoint',
             srcField: 'dataPointName')
       ]),
-  ModelEntity(
-      id: const IdUid(5, 2136910632507853953),
-      name: 'DateTimeTest',
-      lastPropertyId: const IdUid(6, 1954013800691655327),
-      flags: 0,
-      properties: <ModelProperty>[
-        ModelProperty(
-            id: const IdUid(1, 4655828135116097749),
-            name: 'id',
-            type: 6,
-            flags: 1),
-        ModelProperty(
-            id: const IdUid(2, 7299945182700000877),
-            name: 'timestamp',
-            type: 12,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(3, 7872174616413914830),
-            name: 'timestamps',
-            type: 30,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 2968127248289865272),
-            name: 'int8list',
-            type: 23,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(5, 3851440345415531181),
-            name: 'uint8list',
-            type: 23,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(6, 1954013800691655327),
-            name: 'dbColor',
-            type: 6,
-            flags: 0)
-      ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[]),
   ModelEntity(
       id: const IdUid(6, 7635894661546948956),
       name: 'DayBucket',
@@ -625,13 +579,6 @@ final _entities = <ModelEntity>[
             indexId: const IdUid(22, 7765846021051336421),
             relationTarget: 'ServiceDocument'),
         ModelProperty(
-            id: const IdUid(4, 8777228519675099754),
-            name: 'dataPointId',
-            type: 11,
-            flags: 520,
-            indexId: const IdUid(23, 1896398591841004714),
-            relationTarget: 'DataPoint'),
-        ModelProperty(
             id: const IdUid(5, 1546547442376161896),
             name: 'profilePictureId',
             type: 11,
@@ -643,7 +590,11 @@ final _entities = <ModelEntity>[
         ModelRelation(
             id: const IdUid(10, 6789925268906442258),
             name: 'categories',
-            targetId: const IdUid(2, 1763848440461678366))
+            targetId: const IdUid(2, 1763848440461678366)),
+        ModelRelation(
+            id: const IdUid(12, 5414413555058727098),
+            name: 'dataPoints',
+            targetId: const IdUid(3, 2731175254480702483))
       ],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
@@ -854,11 +805,20 @@ ModelDefinition getObjectBoxModel() {
       entities: _entities,
       lastEntityId: const IdUid(18, 8442129445965994389),
       lastIndexId: const IdUid(30, 1487675423554621830),
-      lastRelationId: const IdUid(11, 3430155006526485248),
+      lastRelationId: const IdUid(12, 5414413555058727098),
       lastSequenceId: const IdUid(0, 0),
-      retiredEntityUids: const [],
-      retiredIndexUids: const [],
-      retiredPropertyUids: const [],
+      retiredEntityUids: const [2136910632507853953],
+      retiredIndexUids: const [1391717991247072791, 1896398591841004714],
+      retiredPropertyUids: const [
+        7235269531755654073,
+        8777228519675099754,
+        4655828135116097749,
+        7299945182700000877,
+        7872174616413914830,
+        2968127248289865272,
+        3851440345415531181,
+        1954013800691655327
+      ],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -951,12 +911,8 @@ ModelDefinition getObjectBoxModel() {
         }),
     DataPoint: EntityDefinition<DataPoint>(
         model: _entities[2],
-        toOneRelations: (DataPoint object) => [
-              object.dataPointName,
-              object.category,
-              object.profile,
-              object.service
-            ],
+        toOneRelations: (DataPoint object) =>
+            [object.dataPointName, object.category, object.profile],
         toManyRelations: (DataPoint object) => {
               RelInfo<DataPoint>.toMany(1, object.id): object.images,
               RelInfo<DataPoint>.toMany(2, object.id): object.videos,
@@ -979,7 +935,6 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(2, stringNameOffset);
           fbb.addInt64(3, object.category.targetId);
           fbb.addInt64(4, object.profile.targetId);
-          fbb.addInt64(5, object.service.targetId);
           fbb.addOffset(6, searchStringsOffset);
           fbb.addOffset(7, valuesOffset);
           fbb.addInt64(8, object.createdAt.microsecondsSinceEpoch * 1000);
@@ -1016,9 +971,6 @@ ModelDefinition getObjectBoxModel() {
           object.profile.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
           object.profile.attach(store);
-          object.service.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
-          object.service.attach(store);
           InternalToManyAccess.setRelInfo(object.images, store,
               RelInfo<DataPoint>.toMany(1, object.id), store.box<DataPoint>());
           InternalToManyAccess.setRelInfo(object.videos, store,
@@ -1086,58 +1038,8 @@ ModelDefinition getObjectBoxModel() {
               store.box<DataPointName>());
           return object;
         }),
-    DateTimeTest: EntityDefinition<DateTimeTest>(
-        model: _entities[4],
-        toOneRelations: (DateTimeTest object) => [],
-        toManyRelations: (DateTimeTest object) => {},
-        getId: (DateTimeTest object) => object.id,
-        setId: (DateTimeTest object, int id) {
-          object.id = id;
-        },
-        objectToFB: (DateTimeTest object, fb.Builder fbb) {
-          final timestampsOffset = fbb.writeList(
-              object.timestamps.map(fbb.writeString).toList(growable: false));
-          final int8listOffset = object.int8list == null
-              ? null
-              : fbb.writeListInt8(object.int8list!);
-          final uint8listOffset = object.uint8list == null
-              ? null
-              : fbb.writeListInt8(object.uint8list!);
-          fbb.startTable(7);
-          fbb.addInt64(0, object.id);
-          fbb.addInt64(1, object.timestamp.microsecondsSinceEpoch * 1000);
-          fbb.addOffset(2, timestampsOffset);
-          fbb.addOffset(3, int8listOffset);
-          fbb.addOffset(4, uint8listOffset);
-          fbb.addInt64(5, object.dbColor);
-          fbb.finish(fbb.endTable());
-          return object.id;
-        },
-        objectFromFB: (Store store, ByteData fbData) {
-          final buffer = fb.BufferContext(fbData);
-          final rootOffset = buffer.derefObject(0);
-
-          final object = DateTimeTest(
-              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0))
-            ..timestamp = DateTime.fromMicrosecondsSinceEpoch(
-                (const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0) /
-                        1000)
-                    .round())
-            ..timestamps = const fb.ListReader<String>(
-                    fb.StringReader(asciiOptimization: true),
-                    lazy: false)
-                .vTableGet(buffer, rootOffset, 8, [])
-            ..int8list = const fb.Int8ListReader(lazy: false)
-                .vTableGetNullable(buffer, rootOffset, 10) as Int8List?
-            ..uint8list = const fb.Uint8ListReader(lazy: false)
-                .vTableGetNullable(buffer, rootOffset, 12) as Uint8List?
-            ..dbColor = const fb.Int64Reader()
-                .vTableGetNullable(buffer, rootOffset, 14);
-
-          return object;
-        }),
     DayBucket: EntityDefinition<DayBucket>(
-        model: _entities[5],
+        model: _entities[4],
         toOneRelations: (DayBucket object) => [object.month],
         toManyRelations: (DayBucket object) => {
               RelInfo<DayBucket>.toMany(6, object.id): object.hours,
@@ -1182,7 +1084,7 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     EmailObjectBox: EntityDefinition<EmailObjectBox>(
-        model: _entities[6],
+        model: _entities[5],
         toOneRelations: (EmailObjectBox object) => [],
         toManyRelations: (EmailObjectBox object) => {},
         getId: (EmailObjectBox object) => object.id,
@@ -1216,7 +1118,7 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     FileDocument: EntityDefinition<FileDocument>(
-        model: _entities[7],
+        model: _entities[6],
         toOneRelations: (FileDocument object) =>
             [object.service, object.relatedDatapoint, object.profile],
         toManyRelations: (FileDocument object) => {},
@@ -1269,7 +1171,7 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     HourBucket: EntityDefinition<HourBucket>(
-        model: _entities[8],
+        model: _entities[7],
         toOneRelations: (HourBucket object) => [object.day],
         toManyRelations: (HourBucket object) =>
             {RelInfo<HourBucket>.toMany(8, object.id): object.dataPoints},
@@ -1313,7 +1215,7 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     ImageDocument: EntityDefinition<ImageDocument>(
-        model: _entities[9],
+        model: _entities[8],
         toOneRelations: (ImageDocument object) =>
             [object.service, object.relatedDatapoint, object.profile],
         toManyRelations: (ImageDocument object) => {},
@@ -1370,7 +1272,7 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     LinkDocument: EntityDefinition<LinkDocument>(
-        model: _entities[10],
+        model: _entities[9],
         toOneRelations: (LinkDocument object) =>
             [object.service, object.relatedDatapoint, object.profile],
         toManyRelations: (LinkDocument object) => {},
@@ -1419,7 +1321,7 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     MonthBucket: EntityDefinition<MonthBucket>(
-        model: _entities[11],
+        model: _entities[10],
         toOneRelations: (MonthBucket object) => [object.year],
         toManyRelations: (MonthBucket object) =>
             {RelInfo<MonthBucket>.toMany(9, object.id): object.days},
@@ -1463,11 +1365,13 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     ProfileDocument: EntityDefinition<ProfileDocument>(
-        model: _entities[12],
+        model: _entities[11],
         toOneRelations: (ProfileDocument object) =>
-            [object.service, object.dataPoint, object.profilePicture],
-        toManyRelations: (ProfileDocument object) =>
-            {RelInfo<ProfileDocument>.toMany(10, object.id): object.categories},
+            [object.service, object.profilePicture],
+        toManyRelations: (ProfileDocument object) => {
+              RelInfo<ProfileDocument>.toMany(10, object.id): object.categories,
+              RelInfo<ProfileDocument>.toMany(12, object.id): object.dataPoints
+            },
         getId: (ProfileDocument object) => object.id,
         setId: (ProfileDocument object, int id) {
           object.id = id;
@@ -1478,7 +1382,6 @@ ModelDefinition getObjectBoxModel() {
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, nameOffset);
           fbb.addInt64(2, object.service.targetId);
-          fbb.addInt64(3, object.dataPoint.targetId);
           fbb.addInt64(4, object.profilePicture.targetId);
           fbb.finish(fbb.endTable());
           return object.id;
@@ -1494,9 +1397,6 @@ ModelDefinition getObjectBoxModel() {
           object.service.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0);
           object.service.attach(store);
-          object.dataPoint.targetId =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
-          object.dataPoint.attach(store);
           object.profilePicture.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
           object.profilePicture.attach(store);
@@ -1505,10 +1405,15 @@ ModelDefinition getObjectBoxModel() {
               store,
               RelInfo<ProfileDocument>.toMany(10, object.id),
               store.box<ProfileDocument>());
+          InternalToManyAccess.setRelInfo(
+              object.dataPoints,
+              store,
+              RelInfo<ProfileDocument>.toMany(12, object.id),
+              store.box<ProfileDocument>());
           return object;
         }),
     ReactionObjectBox: EntityDefinition<ReactionObjectBox>(
-        model: _entities[13],
+        model: _entities[12],
         toOneRelations: (ReactionObjectBox object) => [],
         toManyRelations: (ReactionObjectBox object) => {},
         getId: (ReactionObjectBox object) => object.id,
@@ -1539,7 +1444,7 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     ServiceDocument: EntityDefinition<ServiceDocument>(
-        model: _entities[14],
+        model: _entities[13],
         toOneRelations: (ServiceDocument object) => [],
         toManyRelations: (ServiceDocument object) => {},
         getId: (ServiceDocument object) => object.id,
@@ -1577,7 +1482,7 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     ServiceObjectBox: EntityDefinition<ServiceObjectBox>(
-        model: _entities[15],
+        model: _entities[14],
         toOneRelations: (ServiceObjectBox object) => [],
         toManyRelations: (ServiceObjectBox object) => {},
         getId: (ServiceObjectBox object) => object.id,
@@ -1612,7 +1517,7 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     VideoDocument: EntityDefinition<VideoDocument>(
-        model: _entities[16],
+        model: _entities[15],
         toOneRelations: (VideoDocument object) =>
             [object.service, object.relatedDatapoint, object.profile],
         toManyRelations: (VideoDocument object) => {},
@@ -1665,7 +1570,7 @@ ModelDefinition getObjectBoxModel() {
           return object;
         }),
     YearBucket: EntityDefinition<YearBucket>(
-        model: _entities[17],
+        model: _entities[16],
         toOneRelations: (YearBucket object) => [],
         toManyRelations: (YearBucket object) =>
             {RelInfo<YearBucket>.toMany(11, object.id): object.months},
@@ -1768,25 +1673,21 @@ class DataPoint_ {
   static final profile = QueryRelationToOne<DataPoint, ProfileDocument>(
       _entities[2].properties[4]);
 
-  /// see [DataPoint.service]
-  static final service = QueryRelationToOne<DataPoint, ServiceDocument>(
-      _entities[2].properties[5]);
-
   /// see [DataPoint.searchStrings]
   static final searchStrings =
-      QueryStringVectorProperty<DataPoint>(_entities[2].properties[6]);
+      QueryStringVectorProperty<DataPoint>(_entities[2].properties[5]);
 
   /// see [DataPoint.values]
   static final values =
-      QueryStringProperty<DataPoint>(_entities[2].properties[7]);
+      QueryStringProperty<DataPoint>(_entities[2].properties[6]);
 
   /// see [DataPoint.createdAt]
   static final createdAt =
-      QueryIntegerProperty<DataPoint>(_entities[2].properties[8]);
+      QueryIntegerProperty<DataPoint>(_entities[2].properties[7]);
 
   /// see [DataPoint.dbCreatedAt]
   static final dbCreatedAt =
-      QueryIntegerProperty<DataPoint>(_entities[2].properties[9]);
+      QueryIntegerProperty<DataPoint>(_entities[2].properties[8]);
 
   /// see [DataPoint.images]
   static final images =
@@ -1836,392 +1737,365 @@ class DataPointName_ {
       _entities[3].relations[0]);
 }
 
-/// [DateTimeTest] entity fields to define ObjectBox queries.
-class DateTimeTest_ {
-  /// see [DateTimeTest.id]
-  static final id =
-      QueryIntegerProperty<DateTimeTest>(_entities[4].properties[0]);
-
-  /// see [DateTimeTest.timestamp]
-  static final timestamp =
-      QueryIntegerProperty<DateTimeTest>(_entities[4].properties[1]);
-
-  /// see [DateTimeTest.timestamps]
-  static final timestamps =
-      QueryStringVectorProperty<DateTimeTest>(_entities[4].properties[2]);
-
-  /// see [DateTimeTest.int8list]
-  static final int8list =
-      QueryByteVectorProperty<DateTimeTest>(_entities[4].properties[3]);
-
-  /// see [DateTimeTest.uint8list]
-  static final uint8list =
-      QueryByteVectorProperty<DateTimeTest>(_entities[4].properties[4]);
-
-  /// see [DateTimeTest.dbColor]
-  static final dbColor =
-      QueryIntegerProperty<DateTimeTest>(_entities[4].properties[5]);
-}
-
 /// [DayBucket] entity fields to define ObjectBox queries.
 class DayBucket_ {
   /// see [DayBucket.id]
-  static final id = QueryIntegerProperty<DayBucket>(_entities[5].properties[0]);
+  static final id = QueryIntegerProperty<DayBucket>(_entities[4].properties[0]);
 
   /// see [DayBucket.day]
   static final day =
-      QueryIntegerProperty<DayBucket>(_entities[5].properties[1]);
+      QueryIntegerProperty<DayBucket>(_entities[4].properties[1]);
 
   /// see [DayBucket.total]
   static final total =
-      QueryIntegerProperty<DayBucket>(_entities[5].properties[2]);
+      QueryIntegerProperty<DayBucket>(_entities[4].properties[2]);
 
   /// see [DayBucket.month]
   static final month =
-      QueryRelationToOne<DayBucket, MonthBucket>(_entities[5].properties[3]);
+      QueryRelationToOne<DayBucket, MonthBucket>(_entities[4].properties[3]);
 
   /// see [DayBucket.dbCategoryMap]
   static final dbCategoryMap =
-      QueryStringProperty<DayBucket>(_entities[5].properties[4]);
+      QueryStringProperty<DayBucket>(_entities[4].properties[4]);
 
   /// see [DayBucket.dbServiceMap]
   static final dbServiceMap =
-      QueryStringProperty<DayBucket>(_entities[5].properties[5]);
+      QueryStringProperty<DayBucket>(_entities[4].properties[5]);
 
   /// see [DayBucket.hours]
   static final hours =
-      QueryRelationToMany<DayBucket, HourBucket>(_entities[5].relations[0]);
+      QueryRelationToMany<DayBucket, HourBucket>(_entities[4].relations[0]);
 
   /// see [DayBucket.dataPoints]
   static final dataPoints =
-      QueryRelationToMany<DayBucket, DataPoint>(_entities[5].relations[1]);
+      QueryRelationToMany<DayBucket, DataPoint>(_entities[4].relations[1]);
 }
 
 /// [EmailObjectBox] entity fields to define ObjectBox queries.
 class EmailObjectBox_ {
   /// see [EmailObjectBox.id]
   static final id =
-      QueryIntegerProperty<EmailObjectBox>(_entities[6].properties[0]);
+      QueryIntegerProperty<EmailObjectBox>(_entities[5].properties[0]);
 
   /// see [EmailObjectBox.raw]
   static final raw =
-      QueryStringProperty<EmailObjectBox>(_entities[6].properties[1]);
+      QueryStringProperty<EmailObjectBox>(_entities[5].properties[1]);
 
   /// see [EmailObjectBox.email]
   static final email =
-      QueryStringProperty<EmailObjectBox>(_entities[6].properties[2]);
+      QueryStringProperty<EmailObjectBox>(_entities[5].properties[2]);
 
   /// see [EmailObjectBox.isCurrent]
   static final isCurrent =
-      QueryBooleanProperty<EmailObjectBox>(_entities[6].properties[3]);
+      QueryBooleanProperty<EmailObjectBox>(_entities[5].properties[3]);
 }
 
 /// [FileDocument] entity fields to define ObjectBox queries.
 class FileDocument_ {
   /// see [FileDocument.id]
   static final id =
-      QueryIntegerProperty<FileDocument>(_entities[7].properties[0]);
+      QueryIntegerProperty<FileDocument>(_entities[6].properties[0]);
 
   /// see [FileDocument.uri]
   static final uri =
-      QueryStringProperty<FileDocument>(_entities[7].properties[1]);
+      QueryStringProperty<FileDocument>(_entities[6].properties[1]);
 
   /// see [FileDocument.data]
   static final data =
-      QueryStringProperty<FileDocument>(_entities[7].properties[2]);
+      QueryStringProperty<FileDocument>(_entities[6].properties[2]);
 
   /// see [FileDocument.searchString]
   static final searchString =
-      QueryStringProperty<FileDocument>(_entities[7].properties[3]);
+      QueryStringProperty<FileDocument>(_entities[6].properties[3]);
 
   /// see [FileDocument.thumbnail]
   static final thumbnail =
-      QueryStringProperty<FileDocument>(_entities[7].properties[4]);
+      QueryStringProperty<FileDocument>(_entities[6].properties[4]);
 
   /// see [FileDocument.service]
   static final service = QueryRelationToOne<FileDocument, ServiceDocument>(
-      _entities[7].properties[5]);
+      _entities[6].properties[5]);
 
   /// see [FileDocument.relatedDatapoint]
   static final relatedDatapoint =
-      QueryRelationToOne<FileDocument, DataPoint>(_entities[7].properties[6]);
+      QueryRelationToOne<FileDocument, DataPoint>(_entities[6].properties[6]);
 
   /// see [FileDocument.profile]
   static final profile = QueryRelationToOne<FileDocument, ProfileDocument>(
-      _entities[7].properties[7]);
+      _entities[6].properties[7]);
 }
 
 /// [HourBucket] entity fields to define ObjectBox queries.
 class HourBucket_ {
   /// see [HourBucket.id]
   static final id =
-      QueryIntegerProperty<HourBucket>(_entities[8].properties[0]);
+      QueryIntegerProperty<HourBucket>(_entities[7].properties[0]);
 
   /// see [HourBucket.hour]
   static final hour =
-      QueryIntegerProperty<HourBucket>(_entities[8].properties[1]);
+      QueryIntegerProperty<HourBucket>(_entities[7].properties[1]);
 
   /// see [HourBucket.total]
   static final total =
-      QueryIntegerProperty<HourBucket>(_entities[8].properties[2]);
+      QueryIntegerProperty<HourBucket>(_entities[7].properties[2]);
 
   /// see [HourBucket.day]
   static final day =
-      QueryRelationToOne<HourBucket, DayBucket>(_entities[8].properties[3]);
+      QueryRelationToOne<HourBucket, DayBucket>(_entities[7].properties[3]);
 
   /// see [HourBucket.dbCategoryMap]
   static final dbCategoryMap =
-      QueryStringProperty<HourBucket>(_entities[8].properties[4]);
+      QueryStringProperty<HourBucket>(_entities[7].properties[4]);
 
   /// see [HourBucket.dbServiceMap]
   static final dbServiceMap =
-      QueryStringProperty<HourBucket>(_entities[8].properties[5]);
+      QueryStringProperty<HourBucket>(_entities[7].properties[5]);
 
   /// see [HourBucket.dataPoints]
   static final dataPoints =
-      QueryRelationToMany<HourBucket, DataPoint>(_entities[8].relations[0]);
+      QueryRelationToMany<HourBucket, DataPoint>(_entities[7].relations[0]);
 }
 
 /// [ImageDocument] entity fields to define ObjectBox queries.
 class ImageDocument_ {
   /// see [ImageDocument.id]
   static final id =
-      QueryIntegerProperty<ImageDocument>(_entities[9].properties[0]);
+      QueryIntegerProperty<ImageDocument>(_entities[8].properties[0]);
 
   /// see [ImageDocument.uri]
   static final uri =
-      QueryStringProperty<ImageDocument>(_entities[9].properties[1]);
+      QueryStringProperty<ImageDocument>(_entities[8].properties[1]);
 
   /// see [ImageDocument.data]
   static final data =
-      QueryStringProperty<ImageDocument>(_entities[9].properties[2]);
+      QueryStringProperty<ImageDocument>(_entities[8].properties[2]);
 
   /// see [ImageDocument.searchString]
   static final searchString =
-      QueryStringProperty<ImageDocument>(_entities[9].properties[3]);
+      QueryStringProperty<ImageDocument>(_entities[8].properties[3]);
 
   /// see [ImageDocument.mediaTags]
   static final mediaTags =
-      QueryStringVectorProperty<ImageDocument>(_entities[9].properties[4]);
+      QueryStringVectorProperty<ImageDocument>(_entities[8].properties[4]);
 
   /// see [ImageDocument.service]
   static final service = QueryRelationToOne<ImageDocument, ServiceDocument>(
-      _entities[9].properties[5]);
+      _entities[8].properties[5]);
 
   /// see [ImageDocument.relatedDatapoint]
   static final relatedDatapoint =
-      QueryRelationToOne<ImageDocument, DataPoint>(_entities[9].properties[6]);
+      QueryRelationToOne<ImageDocument, DataPoint>(_entities[8].properties[6]);
 
   /// see [ImageDocument.profile]
   static final profile = QueryRelationToOne<ImageDocument, ProfileDocument>(
-      _entities[9].properties[7]);
+      _entities[8].properties[7]);
 }
 
 /// [LinkDocument] entity fields to define ObjectBox queries.
 class LinkDocument_ {
   /// see [LinkDocument.id]
   static final id =
-      QueryIntegerProperty<LinkDocument>(_entities[10].properties[0]);
+      QueryIntegerProperty<LinkDocument>(_entities[9].properties[0]);
 
   /// see [LinkDocument.uri]
   static final uri =
-      QueryStringProperty<LinkDocument>(_entities[10].properties[1]);
+      QueryStringProperty<LinkDocument>(_entities[9].properties[1]);
 
   /// see [LinkDocument.data]
   static final data =
-      QueryStringProperty<LinkDocument>(_entities[10].properties[2]);
+      QueryStringProperty<LinkDocument>(_entities[9].properties[2]);
 
   /// see [LinkDocument.searchString]
   static final searchString =
-      QueryStringProperty<LinkDocument>(_entities[10].properties[3]);
+      QueryStringProperty<LinkDocument>(_entities[9].properties[3]);
 
   /// see [LinkDocument.service]
   static final service = QueryRelationToOne<LinkDocument, ServiceDocument>(
-      _entities[10].properties[4]);
+      _entities[9].properties[4]);
 
   /// see [LinkDocument.relatedDatapoint]
   static final relatedDatapoint =
-      QueryRelationToOne<LinkDocument, DataPoint>(_entities[10].properties[5]);
+      QueryRelationToOne<LinkDocument, DataPoint>(_entities[9].properties[5]);
 
   /// see [LinkDocument.profile]
   static final profile = QueryRelationToOne<LinkDocument, ProfileDocument>(
-      _entities[10].properties[6]);
+      _entities[9].properties[6]);
 }
 
 /// [MonthBucket] entity fields to define ObjectBox queries.
 class MonthBucket_ {
   /// see [MonthBucket.id]
   static final id =
-      QueryIntegerProperty<MonthBucket>(_entities[11].properties[0]);
+      QueryIntegerProperty<MonthBucket>(_entities[10].properties[0]);
 
   /// see [MonthBucket.month]
   static final month =
-      QueryIntegerProperty<MonthBucket>(_entities[11].properties[1]);
+      QueryIntegerProperty<MonthBucket>(_entities[10].properties[1]);
 
   /// see [MonthBucket.total]
   static final total =
-      QueryIntegerProperty<MonthBucket>(_entities[11].properties[2]);
+      QueryIntegerProperty<MonthBucket>(_entities[10].properties[2]);
 
   /// see [MonthBucket.year]
   static final year =
-      QueryRelationToOne<MonthBucket, YearBucket>(_entities[11].properties[3]);
+      QueryRelationToOne<MonthBucket, YearBucket>(_entities[10].properties[3]);
 
   /// see [MonthBucket.dbCategoryMap]
   static final dbCategoryMap =
-      QueryStringProperty<MonthBucket>(_entities[11].properties[4]);
+      QueryStringProperty<MonthBucket>(_entities[10].properties[4]);
 
   /// see [MonthBucket.dbServiceMap]
   static final dbServiceMap =
-      QueryStringProperty<MonthBucket>(_entities[11].properties[5]);
+      QueryStringProperty<MonthBucket>(_entities[10].properties[5]);
 
   /// see [MonthBucket.days]
   static final days =
-      QueryRelationToMany<MonthBucket, DayBucket>(_entities[11].relations[0]);
+      QueryRelationToMany<MonthBucket, DayBucket>(_entities[10].relations[0]);
 }
 
 /// [ProfileDocument] entity fields to define ObjectBox queries.
 class ProfileDocument_ {
   /// see [ProfileDocument.id]
   static final id =
-      QueryIntegerProperty<ProfileDocument>(_entities[12].properties[0]);
+      QueryIntegerProperty<ProfileDocument>(_entities[11].properties[0]);
 
   /// see [ProfileDocument.name]
   static final name =
-      QueryStringProperty<ProfileDocument>(_entities[12].properties[1]);
+      QueryStringProperty<ProfileDocument>(_entities[11].properties[1]);
 
   /// see [ProfileDocument.service]
   static final service = QueryRelationToOne<ProfileDocument, ServiceDocument>(
-      _entities[12].properties[2]);
-
-  /// see [ProfileDocument.dataPoint]
-  static final dataPoint = QueryRelationToOne<ProfileDocument, DataPoint>(
-      _entities[12].properties[3]);
+      _entities[11].properties[2]);
 
   /// see [ProfileDocument.profilePicture]
   static final profilePicture =
       QueryRelationToOne<ProfileDocument, ImageDocument>(
-          _entities[12].properties[4]);
+          _entities[11].properties[3]);
 
   /// see [ProfileDocument.categories]
   static final categories = QueryRelationToMany<ProfileDocument, DataCategory>(
-      _entities[12].relations[0]);
+      _entities[11].relations[0]);
+
+  /// see [ProfileDocument.dataPoints]
+  static final dataPoints = QueryRelationToMany<ProfileDocument, DataPoint>(
+      _entities[11].relations[1]);
 }
 
 /// [ReactionObjectBox] entity fields to define ObjectBox queries.
 class ReactionObjectBox_ {
   /// see [ReactionObjectBox.id]
   static final id =
-      QueryIntegerProperty<ReactionObjectBox>(_entities[13].properties[0]);
+      QueryIntegerProperty<ReactionObjectBox>(_entities[12].properties[0]);
 
   /// see [ReactionObjectBox.raw]
   static final raw =
-      QueryStringProperty<ReactionObjectBox>(_entities[13].properties[1]);
+      QueryStringProperty<ReactionObjectBox>(_entities[12].properties[1]);
 
   /// see [ReactionObjectBox.reaction]
   static final reaction =
-      QueryStringProperty<ReactionObjectBox>(_entities[13].properties[2]);
+      QueryStringProperty<ReactionObjectBox>(_entities[12].properties[2]);
 }
 
 /// [ServiceDocument] entity fields to define ObjectBox queries.
 class ServiceDocument_ {
   /// see [ServiceDocument.id]
   static final id =
-      QueryIntegerProperty<ServiceDocument>(_entities[14].properties[0]);
+      QueryIntegerProperty<ServiceDocument>(_entities[13].properties[0]);
 
   /// see [ServiceDocument.serviceName]
   static final serviceName =
-      QueryStringProperty<ServiceDocument>(_entities[14].properties[1]);
+      QueryStringProperty<ServiceDocument>(_entities[13].properties[1]);
 
   /// see [ServiceDocument.companyName]
   static final companyName =
-      QueryStringProperty<ServiceDocument>(_entities[14].properties[2]);
+      QueryStringProperty<ServiceDocument>(_entities[13].properties[2]);
 
   /// see [ServiceDocument.image]
   static final image =
-      QueryStringProperty<ServiceDocument>(_entities[14].properties[3]);
+      QueryStringProperty<ServiceDocument>(_entities[13].properties[3]);
 
   /// see [ServiceDocument.totalDatapoints]
   static final totalDatapoints =
-      QueryIntegerProperty<ServiceDocument>(_entities[14].properties[4]);
+      QueryIntegerProperty<ServiceDocument>(_entities[13].properties[4]);
 }
 
 /// [ServiceObjectBox] entity fields to define ObjectBox queries.
 class ServiceObjectBox_ {
   /// see [ServiceObjectBox.id]
   static final id =
-      QueryIntegerProperty<ServiceObjectBox>(_entities[15].properties[0]);
+      QueryIntegerProperty<ServiceObjectBox>(_entities[14].properties[0]);
 
   /// see [ServiceObjectBox.name]
   static final name =
-      QueryStringProperty<ServiceObjectBox>(_entities[15].properties[1]);
+      QueryStringProperty<ServiceObjectBox>(_entities[14].properties[1]);
 
   /// see [ServiceObjectBox.company]
   static final company =
-      QueryStringProperty<ServiceObjectBox>(_entities[15].properties[2]);
+      QueryStringProperty<ServiceObjectBox>(_entities[14].properties[2]);
 
   /// see [ServiceObjectBox.image]
   static final image =
-      QueryStringProperty<ServiceObjectBox>(_entities[15].properties[3]);
+      QueryStringProperty<ServiceObjectBox>(_entities[14].properties[3]);
 }
 
 /// [VideoDocument] entity fields to define ObjectBox queries.
 class VideoDocument_ {
   /// see [VideoDocument.id]
   static final id =
-      QueryIntegerProperty<VideoDocument>(_entities[16].properties[0]);
+      QueryIntegerProperty<VideoDocument>(_entities[15].properties[0]);
 
   /// see [VideoDocument.uri]
   static final uri =
-      QueryStringProperty<VideoDocument>(_entities[16].properties[1]);
+      QueryStringProperty<VideoDocument>(_entities[15].properties[1]);
 
   /// see [VideoDocument.data]
   static final data =
-      QueryStringProperty<VideoDocument>(_entities[16].properties[2]);
+      QueryStringProperty<VideoDocument>(_entities[15].properties[2]);
 
   /// see [VideoDocument.searchString]
   static final searchString =
-      QueryStringProperty<VideoDocument>(_entities[16].properties[3]);
+      QueryStringProperty<VideoDocument>(_entities[15].properties[3]);
 
   /// see [VideoDocument.thumbnail]
   static final thumbnail =
-      QueryStringProperty<VideoDocument>(_entities[16].properties[4]);
+      QueryStringProperty<VideoDocument>(_entities[15].properties[4]);
 
   /// see [VideoDocument.service]
   static final service = QueryRelationToOne<VideoDocument, ServiceDocument>(
-      _entities[16].properties[5]);
+      _entities[15].properties[5]);
 
   /// see [VideoDocument.relatedDatapoint]
   static final relatedDatapoint =
-      QueryRelationToOne<VideoDocument, DataPoint>(_entities[16].properties[6]);
+      QueryRelationToOne<VideoDocument, DataPoint>(_entities[15].properties[6]);
 
   /// see [VideoDocument.profile]
   static final profile = QueryRelationToOne<VideoDocument, ProfileDocument>(
-      _entities[16].properties[7]);
+      _entities[15].properties[7]);
 }
 
 /// [YearBucket] entity fields to define ObjectBox queries.
 class YearBucket_ {
   /// see [YearBucket.id]
   static final id =
-      QueryIntegerProperty<YearBucket>(_entities[17].properties[0]);
+      QueryIntegerProperty<YearBucket>(_entities[16].properties[0]);
 
   /// see [YearBucket.year]
   static final year =
-      QueryIntegerProperty<YearBucket>(_entities[17].properties[1]);
+      QueryIntegerProperty<YearBucket>(_entities[16].properties[1]);
 
   /// see [YearBucket.total]
   static final total =
-      QueryIntegerProperty<YearBucket>(_entities[17].properties[2]);
+      QueryIntegerProperty<YearBucket>(_entities[16].properties[2]);
 
   /// see [YearBucket.dbCategoryMap]
   static final dbCategoryMap =
-      QueryStringProperty<YearBucket>(_entities[17].properties[3]);
+      QueryStringProperty<YearBucket>(_entities[16].properties[3]);
 
   /// see [YearBucket.dbServiceMap]
   static final dbServiceMap =
-      QueryStringProperty<YearBucket>(_entities[17].properties[4]);
+      QueryStringProperty<YearBucket>(_entities[16].properties[4]);
 
   /// see [YearBucket.months]
   static final months =
-      QueryRelationToMany<YearBucket, MonthBucket>(_entities[17].relations[0]);
+      QueryRelationToMany<YearBucket, MonthBucket>(_entities[16].relations[0]);
 }

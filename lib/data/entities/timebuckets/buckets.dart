@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:objectbox/objectbox.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
@@ -14,7 +13,7 @@ class YearBucket {
   int total;
 
   late Map<int, int> categoryMap;
-  late Map<int, int> serviceMap;
+  late Map<int, int> profileMap;
 
   final months = ToMany<MonthBucket>();
 
@@ -24,20 +23,20 @@ class YearBucket {
     required this.year,
   }) {
     categoryMap = {};
-    serviceMap = {};
+    profileMap = {};
   }
 
   String get dbCategoryMap =>
       jsonEncode(categoryMap.map((key, value) => MapEntry('$key', value)));
   String get dbServiceMap =>
-      jsonEncode(serviceMap.map((key, value) => MapEntry('$key', value)));
+      jsonEncode(profileMap.map((key, value) => MapEntry('$key', value)));
   set dbCategoryMap(String json) {
     categoryMap = Map.from(jsonDecode(json)
         .map((key, value) => MapEntry(int.parse(key), value as int)));
   }
 
   set dbServiceMap(String json) {
-    serviceMap = Map.from(jsonDecode(json)
+    profileMap = Map.from(jsonDecode(json)
         .map((key, value) => MapEntry(int.parse(key), value as int)));
   }
 
@@ -46,8 +45,8 @@ class YearBucket {
       categoryMap.addAll({categoryId: 1});
       return 1;
     });
-    serviceMap.update(serviceId, (value) => value + 1, ifAbsent: () {
-      serviceMap.addAll({serviceId:1});
+    profileMap.update(serviceId, (value) => value + 1, ifAbsent: () {
+      profileMap.addAll({serviceId:1});
       return 1;
     });
     total = total + 1;
@@ -61,7 +60,7 @@ class MonthBucket {
   int total;
 
   late Map<int, int> categoryMap;
-  late Map<int, int> serviceMap;
+  late Map<int, int> profileMap;
 
   final year = ToOne<YearBucket>();
   final days = ToMany<DayBucket>();
@@ -72,20 +71,20 @@ class MonthBucket {
     required this.month,
   }) {
     categoryMap = {};
-    serviceMap = {};
+    profileMap = {};
   }
 
   String get dbCategoryMap =>
       jsonEncode(categoryMap.map((key, value) => MapEntry('$key', value)));
   String get dbServiceMap =>
-      jsonEncode(serviceMap.map((key, value) => MapEntry('$key', value)));
+      jsonEncode(profileMap.map((key, value) => MapEntry('$key', value)));
   set dbCategoryMap(String json) {
     categoryMap = Map.from(jsonDecode(json)
         .map((key, value) => MapEntry(int.parse(key), value as int)));
   }
 
   set dbServiceMap(String json) {
-    serviceMap = Map.from(jsonDecode(json)
+    profileMap = Map.from(jsonDecode(json)
         .map((key, value) => MapEntry(int.parse(key), value as int)));
   }
 
@@ -94,8 +93,8 @@ class MonthBucket {
       categoryMap.addAll({categoryId: 1});
       return 1;
     });
-    serviceMap.update(serviceId, (value) => value + 1, ifAbsent: () {
-      serviceMap.addAll({serviceId:1});
+    profileMap.update(serviceId, (value) => value + 1, ifAbsent: () {
+      profileMap.addAll({serviceId:1});
       return 1;
     });
     total = total + 1;
@@ -110,7 +109,7 @@ class DayBucket {
   int total;
 
   late Map<int, int> categoryMap;
-  late Map<int, int> serviceMap;
+  late Map<int, int> profileMap;
 
   final month = ToOne<MonthBucket>();
   final hours = ToMany<HourBucket>();
@@ -122,20 +121,20 @@ class DayBucket {
     required this.day,
   }) {
     categoryMap = {};
-    serviceMap = {};
+    profileMap = {};
   }
 
   String get dbCategoryMap =>
       jsonEncode(categoryMap.map((key, value) => MapEntry('$key', value)));
   String get dbServiceMap =>
-      jsonEncode(serviceMap.map((key, value) => MapEntry('$key', value)));
+      jsonEncode(profileMap.map((key, value) => MapEntry('$key', value)));
   set dbCategoryMap(String json) {
     categoryMap = Map.from(jsonDecode(json)
         .map((key, value) => MapEntry(int.parse(key), value as int)));
   }
 
   set dbServiceMap(String json) {
-    serviceMap = Map.from(jsonDecode(json)
+    profileMap = Map.from(jsonDecode(json)
         .map((key, value) => MapEntry(int.parse(key), value as int)));
   }
 
@@ -144,8 +143,8 @@ class DayBucket {
       categoryMap.addAll({categoryId: 1});
       return 1;
     });
-    serviceMap.update(serviceId, (value) => value + 1, ifAbsent: () {
-      serviceMap.addAll({serviceId:1});
+    profileMap.update(serviceId, (value) => value + 1, ifAbsent: () {
+      profileMap.addAll({serviceId:1});
       return 1;
     });
     total = total + 1;
@@ -159,7 +158,7 @@ class HourBucket {
   int total;
 
   late Map<int, int> categoryMap;
-  late Map<int, int> serviceMap;
+  late Map<int, int> profileMap;
 
   final day = ToOne<DayBucket>();
   final dataPoints = ToMany<DataPoint>();
@@ -170,20 +169,20 @@ class HourBucket {
     required this.hour,
   }) {
     categoryMap = {};
-    serviceMap = {};
+    profileMap = {};
   }
 
   String get dbCategoryMap =>
       jsonEncode(categoryMap.map((key, value) => MapEntry('$key', value)));
   String get dbServiceMap =>
-      jsonEncode(serviceMap.map((key, value) => MapEntry('$key', value)));
+      jsonEncode(profileMap.map((key, value) => MapEntry('$key', value)));
   set dbCategoryMap(String json) {
     categoryMap = Map.from(jsonDecode(json)
         .map((key, value) => MapEntry(int.parse(key), value as int)));
   }
 
   set dbServiceMap(String json) {
-    serviceMap = Map.from(jsonDecode(json)
+    profileMap = Map.from(jsonDecode(json)
         .map((key, value) => MapEntry(int.parse(key), value as int)));
   }
 
@@ -192,52 +191,10 @@ class HourBucket {
       categoryMap.addAll({categoryId: 1});
       return 1;
     });
-    serviceMap.update(serviceId, (value) => value + 1, ifAbsent: () {
-      serviceMap.addAll({serviceId:1});
+    profileMap.update(serviceId, (value) => value + 1, ifAbsent: () {
+      profileMap.addAll({serviceId:1});
       return 1;
     });
     total = total + 1;
   }
-}
-
-@Entity()
-class DateTimeTest {
-  int id;
-
-  @Property(type: PropertyType.dateNano)
-  late DateTime timestamp;
-
-  late List<String> timestamps;
-
-  Int8List? int8list;
-  Uint8List? uint8list;
-
-  ColorEnum? color;
-
-  DateTimeTest({
-    this.id = 0,
-  }) {
-    timestamp = DateTime.now();
-    timestamps = [];
-  }
-
-  int? get dbColor {
-    return color?.index;
-  }
-
-  set dbColor(int? index) {
-    color = ColorEnum.values[index ?? 1];
-  }
-
-  @override
-  String toString() {
-    return timestamp.toString();
-  }
-}
-
-enum ColorEnum {
-  unknown,
-  black,
-  white,
-  grey,
 }

@@ -1,6 +1,7 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
 import 'package:tuple/tuple.dart';
+import 'package:waultar/core/inodes/profile_document.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/core/models/timeline/time_models.dart';
@@ -29,14 +30,14 @@ class BucketsRepository extends IBucketsRepository {
   late final Box<MonthBucket> _monthBox;
   late final Box<DayBucket> _dayBox;
   late final Box<DataCategory> _categoryBox;
-  late final Box<ServiceDocument> _serviceBox;
+  late final Box<ProfileDocument> _profileBox;
 
   BucketsRepository(this._context) {
     _yearBox = _context.store.box<YearBucket>();
     _monthBox = _context.store.box<MonthBucket>();
     _dayBox = _context.store.box<DayBucket>();
     _categoryBox = _context.store.box<DataCategory>();
-    _serviceBox = _context.store.box<ServiceDocument>();
+    _profileBox = _context.store.box<ProfileDocument>();
   }
 
   @override
@@ -58,7 +59,7 @@ class BucketsRepository extends IBucketsRepository {
 
       if (timestamps.isNotEmpty) {
         int categoryId = dataPoint.category.targetId;
-        int serviceId = dataPoint.service.targetId;
+        int profileId = dataPoint.profile.targetId;
 
         for (var timestamp in timestamps) {
           var dissected = _dissectDateTime(timestamp);
@@ -73,7 +74,7 @@ class BucketsRepository extends IBucketsRepository {
           if (yearExists) {
             var yearBucket =
                 years.singleWhere((element) => element.year == year);
-            yearBucket.updateCounts(categoryId, serviceId);
+            yearBucket.updateCounts(categoryId, profileId);
 
             bool monthExists =
                 yearBucket.months.any((element) => element.month == month);
@@ -81,14 +82,14 @@ class BucketsRepository extends IBucketsRepository {
             if (monthExists) {
               var monthBucket = yearBucket.months
                   .singleWhere((element) => element.month == month);
-              monthBucket.updateCounts(categoryId, serviceId);
+              monthBucket.updateCounts(categoryId, profileId);
 
               bool dayExists =
                   monthBucket.days.any((element) => element.day == day);
               if (dayExists) {
                 var dayBucket = monthBucket.days
                     .singleWhere((element) => element.day == day);
-                dayBucket.updateCounts(categoryId, serviceId);
+                dayBucket.updateCounts(categoryId, profileId);
                 dayBucket.dataPoints.add(dataPoint);
 
                 bool hourExists =
@@ -96,12 +97,12 @@ class BucketsRepository extends IBucketsRepository {
                 if (hourExists) {
                   var hourBucket = dayBucket.hours
                       .singleWhere((element) => element.hour == hour);
-                  hourBucket.updateCounts(categoryId, serviceId);
+                  hourBucket.updateCounts(categoryId, profileId);
                   hourBucket.dataPoints.add(dataPoint);
                 } else {
                   var hourBucket = HourBucket(hour: hour, total: 1);
                   hourBucket.categoryMap = {categoryId: 1};
-                  hourBucket.serviceMap = {serviceId: 1};
+                  hourBucket.profileMap = {profileId: 1};
                   hourBucket.dataPoints.add(dataPoint);
 
                   dayBucket.hours.add(hourBucket);
@@ -109,12 +110,12 @@ class BucketsRepository extends IBucketsRepository {
               } else {
                 var dayBucket = DayBucket(day: day, total: 1);
                 dayBucket.categoryMap = {categoryId: 1};
-                dayBucket.serviceMap = {serviceId: 1};
+                dayBucket.profileMap = {profileId: 1};
                 dayBucket.dataPoints.add(dataPoint);
 
                 var hourBucket = HourBucket(hour: hour, total: 1);
                 hourBucket.categoryMap = {categoryId: 1};
-                hourBucket.serviceMap = {serviceId: 1};
+                hourBucket.profileMap = {profileId: 1};
                 hourBucket.dataPoints.add(dataPoint);
 
                 // create the relation in bottom-up order
@@ -124,16 +125,16 @@ class BucketsRepository extends IBucketsRepository {
             } else {
               var monthBucket = MonthBucket(month: month, total: 1);
               monthBucket.categoryMap = {categoryId: 1};
-              monthBucket.serviceMap = {serviceId: 1};
+              monthBucket.profileMap = {profileId: 1};
 
               var dayBucket = DayBucket(day: day, total: 1);
               dayBucket.categoryMap = {categoryId: 1};
-              dayBucket.serviceMap = {serviceId: 1};
+              dayBucket.profileMap = {profileId: 1};
               dayBucket.dataPoints.add(dataPoint);
 
               var hourBucket = HourBucket(hour: hour, total: 1);
               hourBucket.categoryMap = {categoryId: 1};
-              hourBucket.serviceMap = {serviceId: 1};
+              hourBucket.profileMap = {profileId: 1};
               hourBucket.dataPoints.add(dataPoint);
 
               // create the relation in bottom-up order
@@ -146,20 +147,20 @@ class BucketsRepository extends IBucketsRepository {
             // this also includes a new map for each bucket, as these are initiated to = {};
             var yearBucket = YearBucket(year: year, total: 1);
             yearBucket.categoryMap = {categoryId: 1};
-            yearBucket.serviceMap = {serviceId: 1};
+            yearBucket.profileMap = {profileId: 1};
 
             var monthBucket = MonthBucket(month: month, total: 1);
             monthBucket.categoryMap = {categoryId: 1};
-            monthBucket.serviceMap = {serviceId: 1};
+            monthBucket.profileMap = {profileId: 1};
 
             var dayBucket = DayBucket(day: day, total: 1);
             dayBucket.categoryMap = {categoryId: 1};
-            dayBucket.serviceMap = {serviceId: 1};
+            dayBucket.profileMap = {profileId: 1};
             dayBucket.dataPoints.add(dataPoint);
 
             var hourBucket = HourBucket(hour: hour, total: 1);
             hourBucket.categoryMap = {categoryId: 1};
-            hourBucket.serviceMap = {serviceId: 1};
+            hourBucket.profileMap = {profileId: 1};
             hourBucket.dataPoints.add(dataPoint);
 
             // create the relation in bottom-up order
@@ -279,17 +280,17 @@ class BucketsRepository extends IBucketsRepository {
       var years = _yearBox.getAll();
       for (var year in years) {
         var categoryTuples = <Tuple2<DataCategory, int>>[];
-        var serviceTuples = <Tuple2<ServiceDocument, int>>[];
+        var profileTuples = <Tuple2<ProfileDocument, int>>[];
         var categoryMap = year.categoryMap;
-        var serviceMap = year.serviceMap;
+        var profileMap = year.profileMap;
 
         for (var entry in categoryMap.entries) {
           DataCategory category = _getCategory(entry.key);
           categoryTuples.add(Tuple2(category, entry.value));
         }
-        for (var entry in serviceMap.entries) {
-          ServiceDocument service = _getService(entry.key);
-          serviceTuples.add(Tuple2(service, entry.value));
+        for (var entry in profileMap.entries) {
+          ProfileDocument profile = _getProfile(entry.key);
+          profileTuples.add(Tuple2(profile, entry.value));
         }
 
         var model = YearModel(
@@ -297,7 +298,7 @@ class BucketsRepository extends IBucketsRepository {
           year: year.year,
           total: year.total,
           categoryCount: categoryTuples,
-          serviceCount: serviceTuples,
+          profileCount: profileTuples,
         );
 
         listToReturn.add(model);
@@ -317,17 +318,17 @@ class BucketsRepository extends IBucketsRepository {
       var days = monthBucket.days.toList();
       for (var day in days) {
         var categoryTuples = <Tuple2<DataCategory, int>>[];
-        var serviceTuples = <Tuple2<ServiceDocument, int>>[];
+        var profileTuples = <Tuple2<ProfileDocument, int>>[];
         var categoryMap = day.categoryMap;
-        var serviceMap = day.serviceMap;
+        var profileMap = day.profileMap;
 
         for (var entry in categoryMap.entries) {
           DataCategory category = _getCategory(entry.key);
           categoryTuples.add(Tuple2(category, entry.value));
         }
-        for (var entry in serviceMap.entries) {
-          ServiceDocument service = _getService(entry.key);
-          serviceTuples.add(Tuple2(service, entry.value));
+        for (var entry in profileMap.entries) {
+          ProfileDocument profile = _getProfile(entry.key);
+          profileTuples.add(Tuple2(profile, entry.value));
         }
 
         var model = DayModel(
@@ -335,7 +336,7 @@ class BucketsRepository extends IBucketsRepository {
           day: day.day,
           total: day.total,
           categoryCount: categoryTuples,
-          serviceCount: serviceTuples,
+          profileCount: profileTuples,
           dataPoints: day.dataPoints.map((d) => d.getUIDTO).toList(),
         );
         listToReturn.add(model);
@@ -356,17 +357,17 @@ class BucketsRepository extends IBucketsRepository {
       var hours = dayBucket.hours.toList();
       for (var hour in hours) {
         var categoryTuples = <Tuple2<DataCategory, int>>[];
-        var serviceTuples = <Tuple2<ServiceDocument, int>>[];
+        var profileTuples = <Tuple2<ProfileDocument, int>>[];
         var categoryMap = hour.categoryMap;
-        var serviceMap = hour.serviceMap;
+        var profileMap = hour.profileMap;
 
         for (var entry in categoryMap.entries) {
           DataCategory category = _getCategory(entry.key);
           categoryTuples.add(Tuple2(category, entry.value));
         }
-        for (var entry in serviceMap.entries) {
-          ServiceDocument service = _getService(entry.key);
-          serviceTuples.add(Tuple2(service, entry.value));
+        for (var entry in profileMap.entries) {
+          ProfileDocument profile = _getProfile(entry.key);
+          profileTuples.add(Tuple2(profile, entry.value));
         }
 
         var model = HourModel(
@@ -374,7 +375,7 @@ class BucketsRepository extends IBucketsRepository {
           hour: hour.hour,
           total: hour.total,
           categoryCount: categoryTuples,
-          serviceCount: serviceTuples,
+          profileCount: profileTuples,
           dataPoints: hour.dataPoints.map((d) => d.getUIDTO).toList(),
         );
         listToReturn.add(model);
@@ -395,17 +396,17 @@ class BucketsRepository extends IBucketsRepository {
       var months = yearBucket.months.toList();
       for (var month in months) {
         var categoryTuples = <Tuple2<DataCategory, int>>[];
-        var serviceTuples = <Tuple2<ServiceDocument, int>>[];
+        var profileTuples = <Tuple2<ProfileDocument, int>>[];
         var categoryMap = month.categoryMap;
-        var serviceMap = month.serviceMap;
+        var profileMap = month.profileMap;
 
         for (var entry in categoryMap.entries) {
           DataCategory category = _getCategory(entry.key);
           categoryTuples.add(Tuple2(category, entry.value));
         }
-        for (var entry in serviceMap.entries) {
-          ServiceDocument service = _getService(entry.key);
-          serviceTuples.add(Tuple2(service, entry.value));
+        for (var entry in profileMap.entries) {
+          ProfileDocument service = _getProfile(entry.key);
+          profileTuples.add(Tuple2(service, entry.value));
         }
 
         var model = MonthModel(
@@ -413,7 +414,7 @@ class BucketsRepository extends IBucketsRepository {
           month: month.month,
           total: month.total,
           categoryCount: categoryTuples,
-          serviceCount: serviceTuples,
+          profileCount: profileTuples,
         );
         listToReturn.add(model);
       }
@@ -435,5 +436,5 @@ class BucketsRepository extends IBucketsRepository {
     }
   }
 
-  ServiceDocument _getService(int id) => _serviceBox.get(id)!;
+  ProfileDocument _getProfile(int id) => _profileBox.get(id)!;
 }

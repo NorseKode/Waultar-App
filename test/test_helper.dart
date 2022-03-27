@@ -171,7 +171,7 @@ class TestHelper {
         },
       };
       var dataPoint =
-          DataPoint.parse(posts, yourPosts, fbService, testProfile, data, "");
+          DataPoint.parse(posts, yourPosts, testProfile, data, "");
       yourPosts.dataPoints.add(dataPoint);
     }
 
@@ -191,7 +191,7 @@ class TestHelper {
         'updated_timestamp': timestamps[i-1]
       };
       var dataPoint =
-          DataPoint.parse(comments, yourComments, fbService, testProfile, data, "");
+          DataPoint.parse(comments, yourComments, testProfile, data, "");
       yourComments.dataPoints.add(dataPoint);    
     }
     comments.dataPointNames.add(yourComments);

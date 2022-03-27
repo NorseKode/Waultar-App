@@ -7,7 +7,6 @@ import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
 import 'package:waultar/core/inodes/media_documents.dart';
 import 'package:waultar/core/inodes/profile_document.dart';
-import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_parser.dart';
 import 'package:path/path.dart' as dart_path;
 
@@ -27,7 +26,6 @@ class DataPoint {
   final videos = ToMany<VideoDocument>();
   final files = ToMany<FileDocument>();
   final links = ToMany<LinkDocument>();
-  final service = ToOne<ServiceDocument>();
 
   List<String> searchStrings = [];
 
@@ -65,14 +63,12 @@ class DataPoint {
   DataPoint.parse(
     DataCategory dataCategory,
     DataPointName parentName,
-    ServiceDocument dataService,
     ProfileDocument targetProfile,
     dynamic json,
     String basePathToMedia,
   ) : id = 0 {
     category.target = dataCategory;
     dataPointName.target = parentName;
-    service.target = dataService;
     stringName = parentName.name;
     profile.target = targetProfile;
     values = jsonEncode(json);
@@ -102,7 +98,6 @@ class DataPoint {
               );
 
               image.relatedDatapoint.target = this;
-              image.service.target = service.target;
               image.profile.target = profile.target;
               images.add(image);
             } else if (Extensions.isVideo(value)) {
@@ -112,7 +107,6 @@ class DataPoint {
               );
 
               video.relatedDatapoint.target = this;
-              video.service.target = service.target;
               video.profile.target = profile.target;
               videos.add(video);
             } else if (Extensions.isFile(value)) {
@@ -122,7 +116,6 @@ class DataPoint {
               );
 
               file.relatedDatapoint.target = this;
-              file.service.target = service.target;
               file.profile.target = profile.target;
               files.add(file);
             } else if (Extensions.isLink(value)) {
@@ -132,7 +125,6 @@ class DataPoint {
               );
 
               link.relatedDatapoint.target = this;
-              link.service.target = service.target;
               link.profile.target = profile.target;
               links.add(link);
             } else {

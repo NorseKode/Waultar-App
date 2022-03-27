@@ -60,7 +60,7 @@ Future<void> main() async {
       expect(year2022.categoryCount.length, 1);
       expect(year2022.categoryCount.first.item1.category.name, 'Posts');
       expect(year2022.categoryCount.first.item2, 3);
-      expect(year2022.serviceCount.length, 1);
+      expect(year2022.profileCount.length, 1);
     });
 
     test(' - test bucket repo returning monthModels', () async {
@@ -70,7 +70,7 @@ Future<void> main() async {
       expect(months.length, 2); // jan, mar, mar
 
       expect(months.first.total, 1);
-      expect(months.first.serviceCount.length, 1);
+      expect(months.first.profileCount.length, 1);
       expect(months.first.timeValue, 1);
       expect(months.last.total, 2);
     });
@@ -92,7 +92,7 @@ Future<void> main() async {
       var fridayMarch = days.first;
       expect(fridayMarch.dataPoints.length, 1);
       expect(fridayMarch.dataPoints.first.getAssociatedColor(), Colors.amber);
-      expect(fridayMarch.serviceCount.length, 1);
+      expect(fridayMarch.profileCount.length, 1);
       expect(fridayMarch.categoryCount.length, 1);
       expect(fridayMarch.categoryCount.first.item1.category.name, 'Posts');
 

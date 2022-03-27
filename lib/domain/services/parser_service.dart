@@ -17,7 +17,6 @@ class ParserService implements IParserService {
   // receive list of paths
   // løbe gennem alle .json filer
   // spawn en ny isolate der udfører den statiske parser
-  // (skal være statisk pga isolates)
   @override
   void parse(List<String> paths, ProfileDocument profile) {
     // TODO: implement parse

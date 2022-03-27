@@ -33,8 +33,6 @@ class _BrowseState extends State<Browse> {
 
   bool isLoading = false;
 
-  // final InodeParserService _inodeParserService =
-  //     locator.get<InodeParserService>(instanceName: 'inodeParser');
   final ICollectionsService _collectionsService =
       locator.get<ICollectionsService>(instanceName: 'collectionsService');
   

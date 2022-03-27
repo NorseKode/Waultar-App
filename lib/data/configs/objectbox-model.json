@@ -105,14 +105,6 @@
           "relationTarget": "ProfileDocument"
         },
         {
-          "id": "6:7235269531755654073",
-          "name": "serviceId",
-          "type": 11,
-          "flags": 520,
-          "indexId": "5:1391717991247072791",
-          "relationTarget": "ServiceDocument"
-        },
-        {
           "id": "7:4442456282481845387",
           "name": "searchStrings",
           "type": 30
@@ -209,45 +201,6 @@
           "targetId": "4:2484218537680512147"
         }
       ]
-    },
-    {
-      "id": "5:2136910632507853953",
-      "lastPropertyId": "6:1954013800691655327",
-      "name": "DateTimeTest",
-      "properties": [
-        {
-          "id": "1:4655828135116097749",
-          "name": "id",
-          "type": 6,
-          "flags": 1
-        },
-        {
-          "id": "2:7299945182700000877",
-          "name": "timestamp",
-          "type": 12
-        },
-        {
-          "id": "3:7872174616413914830",
-          "name": "timestamps",
-          "type": 30
-        },
-        {
-          "id": "4:2968127248289865272",
-          "name": "int8list",
-          "type": 23
-        },
-        {
-          "id": "5:3851440345415531181",
-          "name": "uint8list",
-          "type": 23
-        },
-        {
-          "id": "6:1954013800691655327",
-          "name": "dbColor",
-          "type": 6
-        }
-      ],
-      "relations": []
     },
     {
       "id": "6:7635894661546948956",
@@ -623,14 +576,6 @@
           "relationTarget": "ServiceDocument"
         },
         {
-          "id": "4:8777228519675099754",
-          "name": "dataPointId",
-          "type": 11,
-          "flags": 520,
-          "indexId": "23:1896398591841004714",
-          "relationTarget": "DataPoint"
-        },
-        {
           "id": "5:1546547442376161896",
           "name": "profilePictureId",
           "type": 11,
@@ -644,6 +589,11 @@
           "id": "10:6789925268906442258",
           "name": "categories",
           "targetId": "2:1763848440461678366"
+        },
+        {
+          "id": "12:5414413555058727098",
+          "name": "dataPoints",
+          "targetId": "3:2731175254480702483"
         }
       ]
     },
@@ -841,13 +791,27 @@
   ],
   "lastEntityId": "18:8442129445965994389",
   "lastIndexId": "30:1487675423554621830",
-  "lastRelationId": "11:3430155006526485248",
+  "lastRelationId": "12:5414413555058727098",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
-  "retiredEntityUids": [],
-  "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredEntityUids": [
+    2136910632507853953
+  ],
+  "retiredIndexUids": [
+    1391717991247072791,
+    1896398591841004714
+  ],
+  "retiredPropertyUids": [
+    7235269531755654073,
+    8777228519675099754,
+    4655828135116097749,
+    7299945182700000877,
+    7872174616413914830,
+    2968127248289865272,
+    3851440345415531181,
+    1954013800691655327
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

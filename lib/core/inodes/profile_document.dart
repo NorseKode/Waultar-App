@@ -10,7 +10,7 @@ class ProfileDocument {
   String name;
  
   final service = ToOne<ServiceDocument>();
-  final dataPoint = ToOne<DataPoint>();
+  final dataPoints = ToMany<DataPoint>();
   final profilePicture = ToOne<ImageDocument>();
   final categories = ToMany<DataCategory>();
 

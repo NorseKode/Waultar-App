@@ -1,4 +1,5 @@
 import 'package:tuple/tuple.dart';
+import 'package:waultar/core/inodes/profile_document.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/core/models/ui_model.dart';
@@ -8,11 +9,11 @@ abstract class TimeModel {
   int timeValue;
   int total;
   List<Tuple2<DataCategory, int>> categoryCount;
-  List<Tuple2<ServiceDocument, int>> serviceCount;
+  List<Tuple2<ProfileDocument, int>> profileCount;
   List<UIModel> dataPoints;
 
   TimeModel(this.id, this.timeValue, this.total, this.categoryCount,
-      this.serviceCount, this.dataPoints);
+      this.profileCount, this.dataPoints);
 }
 
 class YearModel extends TimeModel {
@@ -21,13 +22,13 @@ class YearModel extends TimeModel {
     required int year,
     required int total,
     required List<Tuple2<DataCategory, int>> categoryCount,
-    required List<Tuple2<ServiceDocument, int>> serviceCount,
+    required List<Tuple2<ProfileDocument, int>> profileCount,
   }) : super(
           id,
           year,
           total,
           categoryCount,
-          serviceCount,
+          profileCount,
           [],
         );
 }
@@ -38,13 +39,13 @@ class MonthModel extends TimeModel {
     required int month,
     required int total,
     required List<Tuple2<DataCategory, int>> categoryCount,
-    required List<Tuple2<ServiceDocument, int>> serviceCount,
+    required List<Tuple2<ProfileDocument, int>> profileCount,
   }) : super(
           id,
           month,
           total,
           categoryCount,
-          serviceCount,
+          profileCount,
           [],
         );
 }
@@ -55,14 +56,14 @@ class DayModel extends TimeModel {
     required int day,
     required int total,
     required List<Tuple2<DataCategory, int>> categoryCount,
-    required List<Tuple2<ServiceDocument, int>> serviceCount,
+    required List<Tuple2<ProfileDocument, int>> profileCount,
     required List<UIModel> dataPoints,
   }) : super(
           id,
           day,
           total,
           categoryCount,
-          serviceCount,
+          profileCount,
           dataPoints,
         );
 }
@@ -73,14 +74,14 @@ class HourModel extends TimeModel {
     required int hour,
     required int total,
     required List<Tuple2<DataCategory, int>> categoryCount,
-    required List<Tuple2<ServiceDocument, int>> serviceCount,
+    required List<Tuple2<ProfileDocument, int>> profileCount,
     required List<UIModel> dataPoints,
   }) : super(
           id,
           hour,
           total,
           categoryCount,
-          serviceCount,
+          profileCount,
           dataPoints,
         );
 }
