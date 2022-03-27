@@ -1,7 +1,11 @@
 import 'dart:math';
 
 class ModelHelper {
-  static const knownTimestampKeys = ["timestamp", "creation_timestamp", "timestamp_ms"];
+  static const knownTimestampKeys = [
+    "timestamp",
+    "creation_timestamp",
+    "timestamp_ms"
+  ];
 
   static DateTime? getTimestamp(var jsonData) {
     var key = trySeveralKeys(jsonData, knownTimestampKeys);
@@ -13,16 +17,12 @@ class ModelHelper {
     return null;
   }
 
-  static DateTime? intToTimestamp(int? timeSinceEpoch) {
-    if (timeSinceEpoch == null) {
-      return null;
-    } else {
-      var amountOfCharacters = timeSinceEpoch.toString().length;
-      var amountOfMissingCharacters = 16 - amountOfCharacters;
+  static DateTime intToTimestamp(int timeSinceEpoch) {
+    var amountOfCharacters = timeSinceEpoch.toString().length;
+    var amountOfMissingCharacters = 16 - amountOfCharacters;
 
-      return DateTime.fromMicrosecondsSinceEpoch(
-          timeSinceEpoch * (pow(10, amountOfMissingCharacters).toInt()));
-    }
+    return DateTime.fromMicrosecondsSinceEpoch(
+        timeSinceEpoch * (pow(10, amountOfMissingCharacters).toInt()));
   }
 
   static String? trySeveralKeys(var jsonData, List<String> keys) {

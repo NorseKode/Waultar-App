@@ -1,0 +1,331 @@
+{
+    "recently_viewed": [
+      {
+        "name": "Videoer og serier p\u00c3\u00a5 Facebook Watch",
+        "description": "Videoer og serier, du for nylig har bes\u00c3\u00b8gt eller set fra Facebook Watch, og den tid du har brugt p\u00c3\u00a5 at se serier",
+        "children": [
+          {
+            "name": "Tidsforbrug",
+            "description": "Den tid, du har brugt p\u00c3\u00a5 at se videoer fra en serieside",
+            "entries": [
+              {
+                "timestamp": 1556805143,
+                "data": {
+                  "name": "Hashem Al-Ghaili",
+                  "uri": "https://www.facebook.com/ScienceNaturePage/",
+                  "watch_time": "30"
+                }
+              },
+              {
+                "timestamp": 1555761305,
+                "data": {
+                  "name": "Andrea Espada",
+                  "uri": "https://www.facebook.com/TheRoyaltyFam/",
+                  "watch_time": "30"
+                }
+              }
+            ]
+          },
+          {
+            "name": "Visninger",
+            "description": "En liste over individuelle videoer, du har set",
+            "entries": [
+              {
+                "timestamp": 1642415903,
+                "data": {
+                  "uri": "https://www.facebook.com/upsoclthecracks/videos/512385320022508/",
+                  "name": "The Cracks' video: Cristiano Ronaldo gave Jos\u00c3\u00a9 Mourinho what he deserved"
+                }
+              },
+              {
+                "timestamp": 1642415446,
+                "data": {
+                  "uri": "https://www.facebook.com/upsoclthecracks/videos/3104878516505657/",
+                  "name": "The Cracks' video: Even Messi couldn't handle Rafa Marquez"
+                }
+              }
+            ]
+          },
+          {
+            "name": "Visningstid",
+            "description": "Den del af en enkelt video, du har set",
+            "entries": [
+              {
+                "timestamp": 1642415903,
+                "data": {
+                  "uri": "https://www.facebook.com/upsoclthecracks/videos/512385320022508/",
+                  "name": "The Cracks' video: Cristiano Ronaldo gave Jos\u00c3\u00a9 Mourinho what he deserved",
+                  "watch_position_seconds": "288.42"
+                }
+              },
+              {
+                "timestamp": 1642415446,
+                "data": {
+                  "uri": "https://www.facebook.com/upsoclthecracks/videos/3104878516505657/",
+                  "name": "The Cracks' video: Even Messi couldn't handle Rafa Marquez",
+                  "watch_position_seconds": "229.399"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Opslag, som er blevet vist til dig i dine nyheder",
+        "description": "Opslag, der er blevet vist til dig i dine nyheder inden for de eneste 90 dage.",
+        "entries": [
+          {
+            "timestamp": 1645474843,
+            "data": {
+              "name": "Just Footballs opslag ",
+              "uri": "https://www.facebook.com/justfootball2018/posts/2774743916160000"
+            }
+          },
+          {
+            "timestamp": 1645378578,
+            "data": {
+              "name": "BarcelonaFC.dks opslag ",
+              "uri": "https://www.facebook.com/bfcdk/posts/5167316249967010"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Videoer, du har set",
+        "description": "Videoer, du har set i de seneste 90 dage.",
+        "entries": [
+          {
+            "timestamp": 1645282844,
+            "data": {
+              "name": "Binge Society - The Greatest Movie Scenes' video: ",
+              "uri": "https://www.facebook.com/BingeSociety/posts/670715350943598"
+            }
+          },
+          {
+            "timestamp": 1645282638,
+            "data": {
+              "name": "Comedy Centrals video: ",
+              "uri": "https://www.facebook.com/ComedyCentral/posts/10159648139644030"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Websider, du har bes\u00c3\u00b8gt uden for Facebook",
+        "description": "Websider, du har bes\u00c3\u00b8gt uden for Facebook i de seneste 90 dage.",
+        "entries": [
+          {
+            "timestamp": 1645232774,
+            "data": {
+              "name": "barcelonafc.dks webside: Medie: Memphis er utilfreds og vil v\u00c3\u00a6k",
+              "share": "https://www.barcelonafc.dk/23348/medie-memphis-er-utilfreds-og-vil-vaek"
+            }
+          },
+          {
+            "timestamp": 1645004629,
+            "data": {
+              "name": "forbes.coms webside: What Is Social Media 2.0? Simple Explanation And Examples",
+              "share": "https://www.forbes.com/sites/bernardmarr/2022/02/14/what-is-social-media-20-simple-explanation-and-examples/"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Interaktioner p\u00c3\u00a5 Marketplace",
+        "description": "Dine seneste interaktioner p\u00c3\u00a5 Marketplace",
+        "children": [
+          {
+            "name": "Visninger af kategori p\u00c3\u00a5 Marketplace",
+            "description": "Datoer, du har f\u00c3\u00a5et vist bestemte kategorier",
+            "entries": [
+              {
+                "data": {
+                  "value": "29. okt. 2018"
+                }
+              },
+              {
+                "data": {
+                  "value": "7. sep. 2018"
+                }
+              },
+              {
+                "data": {
+                  "value": "6. sep. 2018"
+                }
+              },
+              {
+                "data": {
+                  "value": "7. sep. 2017"
+                }
+              }
+            ]
+          },
+          {
+            "name": "Varer sl\u00c3\u00a5et op p\u00c3\u00a5 Marketplace",
+            "description": "De dage, hvor brugeren slog noget direkte op under fanen",
+            "entries": [
+              {
+                "data": {
+                  "value": "14. maj 2019"
+                }
+              }
+            ]
+          },
+          {
+            "name": "Gruppeopslag om varer p\u00c3\u00a5 Marketplace",
+            "description": "De dage, hvor brugeren slog varer op i en k\u00c3\u00b8bs- og salgsgruppe. V\u00c3\u00a6rdien g\u00c3\u00a5r kun tilbage til den 27. juni 2019.",
+            "entries": [
+              {
+                "data": {
+                  "value": "5. aug. 2020"
+                }
+              },
+              {
+                "data": {
+                  "value": "4. aug. 2020"
+                }
+              }
+            ]
+          },
+          {
+            "name": "Krydsopslag med varer p\u00c3\u00a5 Marketplace",
+            "description": "De dage, hvor brugeren lavede krydsopslag om varer p\u00c3\u00a5 fanen",
+            "entries": [
+              {
+                "data": {
+                  "value": "4. aug. 2020"
+                }
+              }
+            ]
+          },
+          {
+            "name": "Beskeder fra k\u00c3\u00b8ber modtaget p\u00c3\u00a5 Marketplace",
+            "description": "De dage, hvor s\u00c3\u00a6lgeren modtog de f\u00c3\u00b8rste beskeder fra k\u00c3\u00b8berne",
+            "entries": [
+              {
+                "data": {
+                  "value": "5. aug. 2020"
+                }
+              }
+            ]
+          },
+          {
+            "name": "S\u00c3\u00b8gninger p\u00c3\u00a5 Marketplace",
+            "description": "De dage, brugeren har s\u00c3\u00b8gt p\u00c3\u00a5 Marketplace",
+            "entries": [
+              {
+                "data": {
+                  "value": "15. feb. 2022"
+                }
+              },
+              {
+                "data": {
+                  "value": "26. dec. 2021"
+                }
+              }
+            ]
+          },
+          {
+            "name": "Kontaktede s\u00c3\u00a6lgere p\u00c3\u00a5 Marketplace",
+            "description": "De dage, hvor brugeren kontaktede s\u00c3\u00a6lgerne",
+            "entries": [
+              {
+                "data": {
+                  "value": "2. sep. 2020"
+                }
+              },
+              {
+                "data": {
+                  "value": "21. jul. 2020"
+                }
+              }
+            ]
+          },
+          {
+            "name": "Detaljer om vare p\u00c3\u00a5 Marketplace",
+            "description": "Datoer, du har f\u00c3\u00a5et vist detaljer om en vare",
+            "entries": [
+              {
+                "data": {
+                  "value": "15. feb. 2022"
+                }
+              },
+              {
+                "data": {
+                  "value": "30. jan. 2022"
+                }
+              }
+            ]
+          },
+          {
+            "name": "Dine Marketplace-visninger",
+            "description": "Datoer, hvor du har f\u00c3\u00a5et vist Marketplace-fanen p\u00c3\u00a5 Facebook",
+            "entries": [
+              {
+                "data": {
+                  "value": "21. feb. 2022"
+                }
+              },
+              {
+                "data": {
+                  "value": "20. feb. 2022"
+                }
+              }
+            ]
+          },
+          {
+            "name": "Varer p\u00c3\u00a5 Marketplace",
+            "description": "Varer, du har f\u00c3\u00a5et vist p\u00c3\u00a5 Marketplace",
+            "entries": [
+              {
+                "timestamp": 1644958958,
+                "data": {
+                  "name": "Star Wars 1-6",
+                  "uri": "https://www.facebook.com/groups/StarwarsSI.FI/permalink/4890043487709284/?sale_post_id=4890043487709284"
+                }
+              },
+              {
+                "timestamp": 1644958939,
+                "data": {
+                  "name": "Star wars - ny",
+                  "uri": "https://www.facebook.com/marketplace/item/270840495002097/"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "P\u00c3\u00a5mindelser om opslag, du har gemt",
+        "description": "P\u00c3\u00a5mindelser, du har modtaget, efter du har gemt et opslag",
+        "entries": [
+          {
+            "timestamp": 1553415085,
+            "data": {
+              "value": "P\u00c3\u00a5mindelser af typen F\u00c3\u00a5 styr p\u00c3\u00a5 sagerne med samlinger! vist."
+            }
+          }
+        ]
+      },
+      {
+        "name": "Annoncer",
+        "description": "Annoncer, du har set for nylig",
+        "entries": [
+          {
+            "timestamp": 1645530797,
+            "data": {
+              "name": "Annonce af BCG in Denmark",
+              "uri": "https://www.facebook.com/BCGinDenmark/posts/4962368107162944"
+            }
+          },
+          {
+            "timestamp": 1645474780,
+            "data": {
+              "name": "Annonce af Wix",
+              "uri": "https://www.facebook.com/wix/posts/10159846849535429"
+            }
+          }
+        ]
+      }
+    ]
+  }

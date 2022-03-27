@@ -1,4 +1,5 @@
-import 'package:waultar/core/models/index.dart';
+// ignore_for_file: avoid_print
+import 'package:waultar/core/inodes/profile_document.dart';
 
 abstract class IParserService {
   // gets called by the uploader --> returns the paths
@@ -6,5 +7,6 @@ abstract class IParserService {
   // save parsed objects --> repositories
   //
   // on error throw exception
-  void parseAll(List<String> paths, ServiceModel service);
+  Future<void> parseIsolates(String zipPath, Function(String message, bool isDone) callback, String serviceName, {ProfileDocument? profile});
+  Future<void> parseMain(String zipPath, String serviceName);
 }

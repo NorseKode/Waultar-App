@@ -1,0 +1,85 @@
+{
+    "participants": [
+      {
+        "name": "Lukas Vinther Offenberg Larsen"
+      },
+      {
+        "name": "Gustav Johansen"
+      }
+    ],
+    "messages": [
+      {
+        "sender_name": "Lukas Vinther Offenberg Larsen",
+        "timestamp_ms": 1644488054912,
+        "content": "abstract class MediaModel extends BaseModel {\n  final Uri uri;\n  final String metadata;\n  final DateTime timestamp;\n\n  MediaModel(this.uri, this.metadata, this.timestamp);\n}",
+        "type": "Generic",
+        "is_unsent": false
+      },
+      {
+        "sender_name": "Lukas Vinther Offenberg Larsen",
+        "timestamp_ms": 1636480873293,
+        "content": "Tjek \u00f0\u009f\u0091\u008f",
+        "type": "Generic",
+        "is_unsent": false
+      },
+      {
+        "sender_name": "Gustav Johansen",
+        "timestamp_ms": 1636480850235,
+        "content": "nej nej no worries - havde alligevel t\u00c3\u00a6nkt mig at forberede nogle ting i toget. Ellers s\u00c3\u00b8dt af hende !",
+        "type": "Generic",
+        "is_unsent": false
+      },
+      {
+        "sender_name": "Gustav Johansen",
+        "timestamp_ms": 1620119347772,
+        "content": "Tager ogs\u00c3\u00a5 f\u00c3\u00b8rst metro til skolen om lidt",
+        "reactions": [
+          {
+            "reaction": "\u00f0\u009f\u0091\u008d",
+            "actor": "Lukas Vinther Offenberg Larsen"
+          }
+        ],
+        "type": "Generic",
+        "is_unsent": false
+      },
+      {
+        "sender_name": "Lukas Vinther Offenberg Larsen",
+        "timestamp_ms": 1620021847245,
+        "sticker": {
+          "uri": "messages/stickers_used/39178562_1505197616293642_5411344281094848512_n_369239263222822.png"
+        },
+        "type": "Generic",
+        "is_unsent": false
+      },
+      {
+        "sender_name": "Gustav Johansen",
+        "timestamp_ms": 1619975528604,
+        "gifs": [
+          {
+            "uri": "messages/inbox/lukasvintheroffenberglarsen_2qr6kux07q/gifs/50549199_427846157954746_1033930874485211136_n_772650183451834.gif"
+          }
+        ],
+        "type": "Generic",
+        "is_unsent": false
+      },
+      {
+        "sender_name": "Lukas Vinther Offenberg Larsen",
+        "timestamp_ms": 1619975189319,
+        "photos": [
+          {
+            "uri": "messages/inbox/lukasvintheroffenberglarsen_2qr6kux07q/photos/180880833_3860583890704444_8761560570886288290_n_3860583887371111.png",
+            "creation_timestamp": 1619975188
+          }
+        ],
+        "type": "Generic",
+        "is_unsent": false
+      }
+    ],
+    "title": "Lukas Vinther Offenberg Larsen",
+    "is_still_participant": true,
+    "thread_type": "Regular",
+    "thread_path": "inbox/lukasvintheroffenberglarsen_2qr6kux07q",
+    "magic_words": [
+      
+    ]
+  }

@@ -8,4 +8,8 @@ enum ViewScreen {
   dashboard,
   browse,
   theme,
+  timeline,
+  search,
+  settings,
+  gallery,
 }

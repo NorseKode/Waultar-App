@@ -1,0 +1,103 @@
+import 'package:objectbox/objectbox.dart';
+import 'package:waultar/core/inodes/profile_document.dart';
+import 'package:waultar/core/inodes/service_document.dart';
+import 'package:waultar/core/inodes/tree_nodes.dart';
+
+@Entity()
+class ImageDocument {
+  int id;
+  String uri;
+  String data;
+  String searchString;
+  late String mediaTags;
+  late List<String> mediaTagScores;
+
+  final service = ToOne<ServiceDocument>();
+  final relatedDatapoint = ToOne<DataPoint>();
+  final profile = ToOne<ProfileDocument>();
+
+  ImageDocument({
+    this.id = 0,
+    required this.uri,
+    required this.data,
+    this.searchString = "",
+    String? mediatags,
+    List<String>? mediatagscore,
+  }) {
+    if (mediatags != null) {
+      mediaTags = mediatags;
+    } else {
+      mediaTags = "";
+    }
+
+    if (mediatagscore != null) {
+      mediaTagScores = mediaTagScores;
+    } else {
+      mediaTagScores = <String>[];
+    }
+  }
+}
+
+@Entity()
+class VideoDocument {
+  int id;
+  String uri;
+  String data;
+  String searchString;
+  String? thumbnail;
+
+  final service = ToOne<ServiceDocument>();
+  final relatedDatapoint = ToOne<DataPoint>();
+  final profile = ToOne<ProfileDocument>();
+
+  VideoDocument({
+    this.id = 0,
+    required this.uri,
+    required this.data,
+    this.thumbnail,
+    this.searchString = "",
+  });
+}
+
+@Entity()
+class FileDocument {
+  int id;
+  String uri;
+  String data;
+  String searchString;
+  String? thumbnail;
+
+  final service = ToOne<ServiceDocument>();
+  final relatedDatapoint = ToOne<DataPoint>();
+  final profile = ToOne<ProfileDocument>();
+
+  FileDocument({
+    this.id = 0,
+    required this.uri,
+    required this.data,
+    this.thumbnail,
+    this.searchString = "",
+  });
+}
+
+@Entity()
+class LinkDocument {
+  int id;
+  String uri;
+  String data;
+  String? searchString;
+
+  final service = ToOne<ServiceDocument>();
+  // chrome serach history can link to the same url many times,
+  // perhaps we should make a tomany relation with this, such that 
+  // we can make aggregates on external links 
+  final relatedDatapoint = ToOne<DataPoint>();
+  final profile = ToOne<ProfileDocument>();
+
+  LinkDocument({
+    this.id = 0,
+    required this.uri,
+    required this.data,
+    this.searchString = "",
+  });
+}

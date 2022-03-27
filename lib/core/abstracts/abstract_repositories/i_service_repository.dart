@@ -1,7 +1,7 @@
-import 'package:waultar/core/models/misc/service_model.dart';
+import 'package:waultar/core/inodes/service_document.dart';
 
 abstract class IServiceRepository {
-  ServiceModel? get(String name);
+  ServiceDocument? get(String name);
 
-  List<ServiceModel> getAll();
+  List<ServiceDocument> getAll();
 }

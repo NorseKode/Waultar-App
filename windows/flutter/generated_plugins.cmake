@@ -4,6 +4,8 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   objectbox_flutter_libs
+  tflite_flutter_helper
+  url_launcher_windows
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

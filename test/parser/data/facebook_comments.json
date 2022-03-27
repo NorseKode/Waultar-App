@@ -1,0 +1,196 @@
+[
+    {
+        "group_comments_v2": [
+            {
+                "timestamp": 1538845753,
+                "data": [
+                    {
+                        "comment": {
+                            "timestamp": 1538845753,
+                            "comment": "REDACTED COMMENT",
+                            "author": "REDACTED AUTHOR",
+                            "group": "REDACTED GROUP"
+                        }
+                    }
+                ],
+                "title": "PROFILE har kommenteret REDACTED PERSONs opslag."
+            }
+        ]
+    },
+    {
+        "comments_v2": [
+            {
+                "timestamp": 1239798000,
+                "data": [
+                    {
+                        "comment": {
+                            "timestamp": 1239798000,
+                            "comment": "REDACTED COMMENT",
+                            "author": "REDACTED AUTHOR"
+                        }
+                    }
+                ],
+                "title": "PROFILE commented on REDACTED PERSON's post."
+            },
+            {
+                "timestamp": 1457387286,
+                "attachments": [
+                    {
+                        "data": [
+                            {
+                                "media": {
+                                    "uri": "posts/media/stickers_used/851575_126362140881916_1086262136_n_126362137548583.png"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "data": [
+                    {
+                        "comment": {
+                            "timestamp": 1457387286,
+                            "comment": "REDACTED COMMENT",
+                            "author": "REDACTED AUTHOR"
+                        }
+                    }
+                ],
+                "title": "PROFILE commented on REDACTED PERSON's post."
+            },
+            {
+                "timestamp": 1513717414,
+                "attachments": [
+                    {
+                        "data": [
+                            {
+                                "external_context": {
+                                    "url": "https://media1.tenor.co/images/9039efd78af386c430259dad871da807/tenor.gif?itemid=4367793"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "data": [
+                    {
+                        "comment": {
+                            "timestamp": 1513717414,
+                            "comment": "REDACTED COMMENT",
+                            "author": "REDACTED AUTHOR"
+                        }
+                    }
+                ],
+                "title": "PROFILE replied to REDACTED PERSON's comment."
+            },
+            {
+                "timestamp": 1555607877,
+                "attachments": [
+                    {
+                        "data": [
+                            {
+                                "media": {
+                                    "uri": "posts/media/videos/58142129_1044097399122414_2636513323016781824_n_10213265190774352.mp4",
+                                    "creation_timestamp": 1555607885,
+                                    "media_metadata": {
+                                        "video_metadata": {
+                                            "exif_data": [
+                                                {
+                                                    "upload_ip": "79.131.50.64",
+                                                    "upload_timestamp": 1555607876
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "thumbnail": {
+                                        "uri": "posts/media/videos/58142129_1044097399122414_2636513323016781824_n_10213265190774352.mp4"
+                                    },
+                                    "description": ""
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "data": [
+                    {
+                        "comment": {
+                            "timestamp": 1555607877,
+                            "comment": "REDACTED COMMENT",
+                            "author": "REDACTED AUTHOR"
+                        }
+                    }
+                ],
+                "title": "PROFILE replied to REDACTED PERSON's comment."
+            }
+        ]
+    },
+    {
+        "group_comments_v2": [
+            {
+                "timestamp": 1307553063,
+                "data": [
+                    {
+                        "comment": {
+                            "timestamp": 1307553063,
+                            "comment": "REDACTED COMMENT",
+                            "author": "REDACTED PROFILE",
+                            "group": "REDACTED GROUP"
+                        }
+                    }
+                ],
+                "title": "PROFILE commented on his own post."
+            },
+            {
+                "timestamp": 1488374281,
+                "attachments": [
+                    {
+                        "data": [
+                            {
+                                "external_context": {
+                                    "url": "http://www.holbaekshinsonhapkido.dk/enrollment2.php"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "data": [
+                    {
+                        "comment": {
+                            "timestamp": 1488374281,
+                            "comment": "http://www.holbaekshinsonhapkido.dk/enrollment2.php",
+                            "author": "REDACTED PROFILE",
+                            "group": "REDACTED GROUP"
+                        }
+                    }
+                ],
+                "title": "PROFILE commented on REDACTED PERSON's post."
+            },
+            {
+                "timestamp": 1604640602,
+                "attachments": [
+                    {
+                        "data": [
+                            {
+                                "event": {
+                                    "name": "REDACTED NAME",
+                                    "start_timestamp": 1605448800,
+                                    "end_timestamp": 1605452400,
+                                    "description": "REDACTED DESCRIPTION",
+                                    "create_timestamp": 1604605248
+                                }
+                            }
+                        ]
+                    }
+                ],
+                "data": [
+                    {
+                        "comment": {
+                            "timestamp": 1604640602,
+                            "comment": "REDACTED COMMENT",
+                            "author": "REDACTED AUTHOR",
+                            "group": "REDACTED GROUP"
+                        }
+                    }
+                ],
+                "title": "PROFILE commented on REDACTED PERSON's post."
+            }
+        ]
+    }
+]

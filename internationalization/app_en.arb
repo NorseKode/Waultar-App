@@ -29,6 +29,11 @@
     "startedLoadingOfData": "Started loading of data",
     "doneLoadingData": "Done loading data",
     "postsWithPolls": "Posts with Polls",
+    "timeline": "Timeline",
+    "noData": "No Data",
+    "search": "Search",
+    "gallery": "Gallery",
+    "downloadXData": "Download {0} Data",
     "@helloWorld": {
       "description": "The conventional newborn programmer greeting"
     },
@@ -117,6 +122,21 @@
       "description": ""
     },
     "@postsWithPolls": {
+      "description": ""
+    },
+    "@timeline": {
+      "description": ""
+    },
+    "@noData": {
+      "description": ""
+    },
+    "@search": {
+      "description": ""
+    },
+    "@gallery": {
+      "description": ""
+    },
+    "@downloadXData": {
       "description": ""
     }
 }

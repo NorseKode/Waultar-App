@@ -1,95 +1,123 @@
-import 'package:waultar/core/abstracts/abstract_repositories/i_event_repository.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_group_repository.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_post_poll_repository.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_post_repository.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_profile_repository.dart';
+// ignore_for_file: unused_field
+
+import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
+import 'package:waultar/configs/globals/app_logger.dart';
+import 'package:waultar/configs/globals/globals.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
-import 'package:waultar/core/models/content/post_poll_model.dart';
-import 'package:waultar/core/models/index.dart';
-import 'package:waultar/core/parsers/facebook_parser.dart';
-import 'package:waultar/core/parsers/instagram_parser.dart';
+import 'package:waultar/core/base_worker/base_worker.dart';
+import 'package:waultar/core/inodes/profile_document.dart';
+import 'package:waultar/core/inodes/profile_repo.dart';
+import 'package:waultar/core/inodes/tree_parser.dart';
+import 'package:waultar/domain/workers/parser_worker.dart';
+import 'package:waultar/domain/workers/unzip_worker.dart';
+import 'package:waultar/presentation/widgets/upload/upload_files.dart';
 import 'package:waultar/startup.dart';
 
 class ParserService implements IParserService {
-  final IPostRepository _postRepo =
-      locator.get<IPostRepository>(instanceName: 'postRepo');
-  final IProfileRepository _profileRepo =
-      locator.get<IProfileRepository>(instanceName: 'profileRepo');
-  final IGroupRepository _groupRepo =
-      locator.get<IGroupRepository>(instanceName: 'groupRepo');
-  final IEventRepository _eventRepo =
-      locator.get<IEventRepository>(instanceName: 'eventRepo');
-  final IPostPollRepository _postPollRepo =
-      locator.get<IPostPollRepository>(instanceName: 'postPollRepo');
+  var _totalCount = 0;
+  var _pathsToParse = <String>[];
+
+  final String _waultarPath =
+      locator.get<String>(instanceName: 'waultar_root_directory');
+  final BaseLogger _logger = locator.get<BaseLogger>(instanceName: 'logger');
+  final ProfileRepository _profileRepo =
+      locator.get<ProfileRepository>(instanceName: 'profileRepo');
+  final IServiceRepository _serviceRepo =
+      locator.get<IServiceRepository>(instanceName: 'serviceRepo');
+  ParserService();
+  late final ProfileDocument _profile;
 
   @override
-  Future parseAll(List<String> paths, ServiceModel service) async {
-    switch (service.name) {
-      case "Facebook":
-        var parser = FacebookParser();
+  Future<void> parseIsolates(
+    String zipPath,
+    Function(String message, bool isDone) callback,
+    String serviceName, {
+    ProfileDocument? profile,
+  }) async {
 
-        var profileAndPaths = await parser.parseProfile(paths);
-        var profile = profileAndPaths.item1;
-        paths = profileAndPaths.item2;
+    var profile = ProfileDocument(name: "temp test name");
+    var service = _serviceRepo.get(serviceName)!;
+    profile.service.target = service;
+    _profile = _profileRepo.add(profile);
 
-        var tempId = _makeEntity(profile);
-        var profileModel = _profileRepo.getProfileById(tempId);
+    _startExtracting(zipPath, callback);
 
-        var groupsAndPaths = await parser.parseGroupNames(paths, profileModel);
-        var groups = groupsAndPaths.item1;
-        if (groups.isNotEmpty) {
-          _groupRepo.addMany(groups);
-        }
-
-        // profile_information.json has now been removed
-        paths = groupsAndPaths.item2;
-
-        await for (final entity in FacebookParser()
-            .parseListOfPaths(paths, profile: profileModel)) {
-          _makeEntity(entity);
-        }
-        break;
-
-      case "Instagram":
-        var parser = InstagramParser();
-
-        var profileAndPaths =
-            await parser.parseProfile(paths, service: service);
-        var profile = profileAndPaths.item1;
-        paths = profileAndPaths.item2;
-
-        var tempId = _makeEntity(profile);
-        var profileModel = _profileRepo.getProfileById(tempId);
-
-        await for (final entity
-            in parser.parseListOfPaths(paths, profile: profileModel)) {
-          _makeEntity(entity);
-        }
-        break;
-
-      default:
-    }
   }
 
-  int _makeEntity(dynamic model) {
-    switch (model.runtimeType) {
-      case ProfileModel:
-        return _profileRepo.addProfile(model);
+  _startExtracting(String zipPath, Function callback) {
+    var initiator = IsolateUnzipStartPackage(
+      pathToZip: zipPath,
+      isPerformanceTracking: ISPERFORMANCETRACKING,
+      profileName: _profile.name,
+      waultarPath: _waultarPath,
+    );
+    _listenZip(dynamic data) {
+      switch (data.runtimeType) {
+        case MainUnzipTotalCountPackage:
+          data as MainUnzipTotalCountPackage;
+          _totalCount = data.total;
+          callback("Total files to extract: $_totalCount", false);
+          break;
 
-      case PostModel:
-        return _postRepo.addPost(model);
+        case MainUnzipProgressPackage:
+          data as MainUnzipProgressPackage;
+          callback("${data.progress} files extracted out of $_totalCount", false);
+          break;
 
-      case GroupModel:
-        return _groupRepo.updateGroup(model);
-
-      case EventModel:
-        return _eventRepo.addEvent(model);
-
-      case PostPollModel:
-        return _postPollRepo.addPostPoll(model);
-
-      default:
-        return -1;
+        case MainUnzippedPathsPackage:
+          data as MainUnzippedPathsPackage;
+          _pathsToParse = data.pathsInSameFolder;
+          _startParsing(callback);
+          break;
+        default:
+      }
     }
+    
+    var zipWorker = BaseWorker(initiator: initiator, mainHandler: _listenZip);
+    zipWorker.init(unzipWorkerBody);
+  }
+
+  _startParsing(Function callback) {
+    var parseInitiator = IsolateParserStartPackage(
+      paths: _pathsToParse,
+      profileId: _profile.id,
+      isPerformanceTracking: ISPERFORMANCETRACKING,
+      waultarPath: _waultarPath,
+    );
+    _listenParser(dynamic data) {
+      switch (data.runtimeType) {
+        case MainParsedProgressPackage:
+          data as MainParsedProgressPackage;
+          callback("Parsing ${data.parsedCount}/${_pathsToParse.length}",
+              data.isDone);
+          break;
+
+        case MainErrorPackage:
+          data as MainErrorPackage;
+          callback(data.message, true);
+          break;
+        default:
+      }
+    }
+    var parseWorker =
+        BaseWorker(mainHandler: _listenParser, initiator: parseInitiator);
+    parseWorker.init(parseWorkerBody);
+
+  }
+
+  // we could use this for performance checking of isolates vs single
+  @override
+  Future<void> parseMain(String zipPath, String serviceName) async {
+    var profile = ProfileDocument(name: "temp test name");
+    var service = _serviceRepo.get(serviceName)!;
+    profile.service.target = service;
+    profile = _profileRepo.add(profile);
+
+    var files =
+        await FileUploader.extractZip(zipPath, serviceName, profile.name);
+    await locator
+        .get<TreeParser>(instanceName: 'parser')
+        .parseManyPaths(files, profile);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:path/path.dart' as path_dart;
+import 'package:waultar/configs/globals/file_type_enum.dart';
 
 class Extensions {
   static final _imageExtensions = [".jpg", ".png", ".gif"];
@@ -50,13 +51,4 @@ class Extensions {
       return false;
     }
   }
-}
-
-enum FileType {
-  unknown,
-  image,
-  video,
-  audio,
-  file,
-  link
 }

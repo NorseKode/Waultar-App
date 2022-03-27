@@ -1,12 +1,18 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
-import 'package:waultar/domain/services/browse_service.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
+import 'package:waultar/core/inodes/tree_nodes.dart';
+import 'package:waultar/core/inodes/tree_parser.dart';
 import 'package:waultar/domain/services/parser_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
-import 'package:waultar/presentation/widgets/dashboard/default_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 import 'package:waultar/presentation/widgets/snackbar_custom.dart';
 import 'package:waultar/presentation/widgets/upload/upload_files.dart';
 import 'package:waultar/presentation/widgets/upload/uploader.dart';
@@ -22,111 +28,109 @@ class Browse extends StatefulWidget {
 
 class _BrowseState extends State<Browse> {
   late AppLocalizations localizer;
-  final _browseService = BrowseService();
-  List<dynamic>? _models;
   late ThemeProvider themeProvider;
+
+  final TreeParser parser = locator.get<TreeParser>(instanceName: 'parser');
   final IServiceRepository _serviceRepo =
       locator.get<IServiceRepository>(instanceName: 'serviceRepo');
+  final _parserService = locator.get<IParserService>(instanceName: 'parserService');
+
   bool isLoading = false;
+  var _progressMessage = "Initializing";
 
-  buttons() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _models = _browseService.getProfiles();
-              });
-            },
-            child: Text(localizer.profile),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _models = _browseService.getPosts() ?? [];
-              });
-            },
-            child: Text(localizer.posts),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // setState(() {
-              //   _models = _browseService.getGroups();
-              // });
-            },
-            child: Text(localizer.groups),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _models = _browseService.getPostPolls();
-              });
-            },
-            child: Text(localizer.postsWithPolls),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              var files = await Uploader.uploadDialogue(context);
+  final ICollectionsService _collectionsService =
+      locator.get<ICollectionsService>(instanceName: 'collectionsService');
 
-              if (files != null) {
-                SnackBarCustom.useSnackbarOfContext(context, localizer.startedLoadingOfData);
-                var service = _serviceRepo.get(files.item2);
+  late List<DataCategory> _categories;
+  late List<DataPointName> _names;
 
-                if (service != null) {
-                  setState(() {
-                    isLoading = true;
-                  });
-                  var zipFiles = files.item1
-                      .where((element) => dart_path.extension(element) == ".zip")
-                      .toList();
+  @override
+  void initState() {
+    super.initState();
+    _categories = _collectionsService.getAllCategories();
+    _names = _collectionsService.getAllNamesFromCategory(_categories.first);
+  }
 
-                  var inputMap = {
-                    'path': dart_path.normalize(zipFiles.first),
-                    'extracts_folder': locator.get<String>(instanceName: 'extracts_folder'),
-                    'service_name': service.name
-                  };
-                  var uploadedFiles = await compute(extractZip, inputMap);
-                  await ParserService()
-                      .parseAll(uploadedFiles, service)
-                      .whenComplete(() => setState(() {
-                            isLoading = false;
-                            SnackBarCustom.useSnackbarOfContext(context, localizer.doneLoadingData);
-                          }));
-                }
-              }
-            },
-            child: Text(localizer.upload),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                _models = [];
-              });
-            },
-            child: Text(localizer.clear),
-          ),
-          const SizedBox(
-            width: 20,
-          ),
-        ],
-      ),
+  _onUploadProgress(String message, bool isDone) {
+    setState(() {
+      _progressMessage = message;
+      isLoading = !isDone;
+    });
+  }
+
+  uploadButton() {
+    return DefaultButton(
+      onPressed: () async {
+        var files = await Uploader.uploadDialogue(context);
+
+        if (files != null) {
+          SnackBarCustom.useSnackbarOfContext(context, localizer.startedLoadingOfData);
+
+          setState(() {
+            isLoading = true;
+          });
+
+          var zipFile =
+              files.item1.singleWhere((element) => dart_path.extension(element) == ".zip");
+
+          await _parserService.parseIsolates(zipFile, _onUploadProgress, files.item2);
+          // await _parserService.parseMain(zipFile, files.item2);
+
+        }
+      },
+      text: localizer.upload,
+    );
+  }
+
+  categoriesColumn() {
+    return ListView.builder(
+      // shrinkWrap: true,
+      scrollDirection: Axis.vertical,
+      itemCount: _categories.length,
+      itemBuilder: (_, index) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap: () {
+                print(_categories[index].category.name);
+                setState(() {
+                  _names = _collectionsService.getAllNamesFromCategory(_categories[index]);
+                });
+              },
+              child: Text(
+                  _categories[index].category.name + "   " + _categories[index].count.toString()),
+            ),
+            const Divider(
+              thickness: 2.0,
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  namesColumn() {
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      // shrinkWrap: true,
+      itemCount: _names.length,
+      itemBuilder: (_, index) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            InkWell(
+              onTap: () {
+                print(_names[index].name);
+              },
+              child: Text(_names[index].name + "   " + _names[index].count.toString()),
+            ),
+            const Divider(
+              thickness: 2.0,
+            )
+          ],
+        );
+      },
     );
   }
 
@@ -136,44 +140,45 @@ class _BrowseState extends State<Browse> {
     themeProvider = Provider.of<ThemeProvider>(context);
 
     return isLoading
-      ? const Center(child: CircularProgressIndicator())
-      : Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Browse",
-          style: themeProvider.themeData().textTheme.headline3,
-        ),
-        const SizedBox(
-          height: 20,
-        ),
-        buttons(),
-        const SizedBox(
-          height: 20,
-        ),
-        Expanded(
-          child: SingleChildScrollView(
-            child: _models != null
-                ? SizedBox(
-                    width: MediaQuery.of(context).size.width - 290,
-                    child: Wrap(
-                      spacing: 20,
-                      runSpacing: 20,
-                      children: List.generate(
-                        _models!.length,
-                        (index) => DefaultWidget(
-                          title: "Title",
-                          child: Text(
-                            _models![index].toString(),
-                          ),
-                        ),
-                      ),
-                    ))
-                : Container(),
-          ),
-        )
-        // idgets
-      ],
-    );
+        ? Center(
+            child: Column(
+            children: [
+              Text(_progressMessage),
+              const CircularProgressIndicator(),
+            ],
+          ))
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text(
+                    "Browse",
+                    style: themeProvider.themeData().textTheme.headline3,
+                  ),
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  uploadButton()
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Flexible(
+                child: GridView.count(
+                  physics: const NeverScrollableScrollPhysics(),
+                  childAspectRatio: 0.7,
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 10,
+                  // shrinkWrap: true,
+                  children: [
+                    categoriesColumn(),
+                    namesColumn(),
+                  ],
+                ),
+              ),
+            ],
+          );
   }
 }

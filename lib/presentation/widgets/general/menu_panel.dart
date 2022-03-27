@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/configs/navigation/app_state.dart';
+import 'package:waultar/configs/navigation/router/app_route_path.dart';
 import 'package:waultar/configs/navigation/screen.dart';
-import 'package:waultar/presentation/presentation_helper.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MenuPanel extends StatefulWidget {
   final ViewScreen active;
-  final Function(ViewScreen screen) updateActive;
-  const MenuPanel({required this.active, required this.updateActive, Key? key}) : super(key: key);
+  const MenuPanel({required this.active, Key? key}) : super(key: key);
 
   @override
   _MenuPanelState createState() => _MenuPanelState();
@@ -39,7 +39,8 @@ class _MenuPanelState extends State<MenuPanel> {
               children: [
                 Text(
                   localizer.waultarBoard,
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.w400),
                 ),
                 const SizedBox(height: 3),
                 Row(
@@ -47,16 +48,23 @@ class _MenuPanelState extends State<MenuPanel> {
                     Text(
                       localizer.lastUpload + ":",
                       style: const TextStyle(
-                          color: Color(0xFFABAAB8), fontSize: 10, fontWeight: FontWeight.w200),
+                          color: Color(0xFFABAAB8),
+                          fontSize: 10,
+                          fontWeight: FontWeight.w200),
                     ),
                     const SizedBox(width: 5),
+                    // ignore: avoid_unnecessary_containers
                     Container(
-                      decoration: BoxDecoration(
-                          color: const Color(0xFF4FB376), borderRadius: BorderRadius.circular(100)),
+                      // decoration: BoxDecoration(
+                      //     color: const Color(0xFF4FB376),
+                      //     borderRadius: BorderRadius.circular(100)),
                       child: const Padding(
-                        padding: EdgeInsets.fromLTRB(8, 2, 8, 2),
+                        padding: EdgeInsets.fromLTRB(2, 2, 8, 2),
                         child: Text("Feb 2. 2022",
-                            style: TextStyle(fontSize: 9, fontWeight: FontWeight.w200)),
+                            style: TextStyle(
+                                color: Color(0xFF4FB376),
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600)),
                       ),
                     )
                   ],
@@ -77,10 +85,13 @@ class _MenuPanelState extends State<MenuPanel> {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: TextButton(
         style: ButtonStyle(
-          shape: MaterialStateProperty.all(
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0))),
-          backgroundColor: MaterialStateProperty.all(
-              widget.active == screen ? const Color(0xFF2F2F4A) : Colors.black.withOpacity(0.0)),
+          overlayColor: MaterialStateProperty.all(
+              (themeProvider.themeData().primaryColor).withOpacity(0.5)),
+          shape: MaterialStateProperty.all(RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0))),
+          backgroundColor: MaterialStateProperty.all(widget.active == screen
+              ? (themeProvider.themeData().primaryColor)
+              : Colors.black.withOpacity(0.0)),
         ),
         onPressed: () async {
           onPressed(screen);
@@ -92,7 +103,9 @@ class _MenuPanelState extends State<MenuPanel> {
             children: [
               Icon(
                 icon,
-                color: widget.active == screen ? Colors.white : const Color(0xFFABAAB8),
+                color: widget.active == screen
+                    ? Colors.white
+                    : const Color(0xFF7A80A9), //const Color(0xFFABAAB8),
                 size: 12,
               ),
               const SizedBox(width: 12),
@@ -100,7 +113,9 @@ class _MenuPanelState extends State<MenuPanel> {
                   style: TextStyle(
                       fontWeight: FontWeight.w400,
                       fontSize: 12,
-                      color: widget.active == screen ? Colors.white : const Color(0xFFABAAB8)))
+                      color: widget.active == screen
+                          ? Colors.white
+                          : const Color(0xFF7A80A9))) //const Color(0xFFABAAB8)))
             ],
           ),
         ),
@@ -116,9 +131,7 @@ class _MenuPanelState extends State<MenuPanel> {
     return Container(
         width: menuWidth,
         height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-            color: Color(0xFF272837),
-            borderRadius: BorderRadius.only(topRight: Radius.circular(10))),
+        color: const Color(0xFF202442),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -130,25 +143,45 @@ class _MenuPanelState extends State<MenuPanel> {
                   logo(),
                   const Divider(height: 40, thickness: 2, color: Color(0xFF363747)),
                   menuButton(Iconsax.music_dashboard, localizer.dashboard, ViewScreen.dashboard,
-                      widget.updateActive),
+                      (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.home()); }),
                   menuButton(Iconsax.command, localizer.collections, ViewScreen.browse,
-                      widget.updateActive),
-                  menuButton(themeProvider.isLightTheme ? Iconsax.sun : Iconsax.moon,
-                      localizer.changeTheme, ViewScreen.unknown, (_) async {
+                      (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.browse()); }),
+                  menuButton(Iconsax.command, localizer.gallery, ViewScreen.gallery,
+                      (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.gallery()); }),
+                  menuButton(Iconsax.routing, localizer.timeline, ViewScreen.timeline,
+                      (_) { context.read<AppState>().updateNavigatorState(AppRoutePath.timeline()); }),
+                  menuButton(
+                      Iconsax.routing, localizer.search, ViewScreen.search,
+                      (_) {
+                    context
+                        .read<AppState>()
+                        .updateNavigatorState(AppRoutePath.search());
+                  }),
+                  const Divider(
+                      height: 40, thickness: 2, color: Color(0xFF2D325A)),
+                  menuButton(
+                      themeProvider.isLightTheme ? Iconsax.sun : Iconsax.moon,
+                      localizer.changeTheme,
+                      ViewScreen.unknown, (_) async {
                     await themeProvider.toggleThemeData();
                   }),
-                  const Divider(height: 40, thickness: 2, color: Color(0xFF363747)),
-                  menuButton(Iconsax.command, localizer.nukeDatabase, ViewScreen.unknown, (_) {
-                    PresentationHelper.nukeDatabase();
-                  }),
+                  const Divider(
+                      height: 40, thickness: 2, color: Color(0xFF2D325A)),
                 ],
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   //profile(),
-                  menuButton(Iconsax.setting, localizer.settings, ViewScreen.unknown, (_) {}),
-                  menuButton(Iconsax.logout, localizer.logout, ViewScreen.signin, (_) {})
+                  menuButton(
+                      Iconsax.setting, localizer.settings, ViewScreen.unknown,
+                      (_) {
+                    context
+                        .read<AppState>()
+                        .updateNavigatorState(AppRoutePath.settings());
+                  }),
+                  menuButton(Iconsax.logout, localizer.logout,
+                      ViewScreen.signin, (_) {})
                 ],
               ),
             ],

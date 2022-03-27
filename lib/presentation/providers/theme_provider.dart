@@ -30,17 +30,17 @@ class ThemeProvider with ChangeNotifier {
       primarySwatch: Colors.grey,
       primaryColor: isLightTheme
           ? const Color(0xFFFFFFFF)
-          : const Color(0xFF1E1D2B), //Color(0xFF1A1D1F),
+          : const Color(0xFF2D325A), //Color(0xFF1A1D1F),
       brightness: isLightTheme ? Brightness.light : Brightness.dark,
       scaffoldBackgroundColor:
-          isLightTheme ? const Color(0xFFFFFFFF) : const Color(0xFF1E1D2B),
+          isLightTheme ? const Color(0xFFFFFFFF) : const Color(0xFF25294A),
       textTheme: TextTheme(
         headline1: TextStyle(
           color:
               isLightTheme ? const Color(0xFF65696F) : const Color(0xFFE0E0E0),
           fontFamily: "Poppins",
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
+          fontSize: 15,
+          fontWeight: FontWeight.w600,
         ),
         headline2: TextStyle(
           color:
@@ -54,6 +54,11 @@ class ThemeProvider with ChangeNotifier {
                 : const Color(0xFFFFFFFF),
             fontFamily: "Poppins",
             fontSize: 20,
+            fontWeight: FontWeight.w500),
+        headline4: const TextStyle(
+            color: Color(0xFF7A80A9),
+            fontFamily: "Poppins",
+            fontSize: 12,
             fontWeight: FontWeight.w500),
         bodyText1: const TextStyle(
             color: Colors.white, fontSize: 10, fontWeight: FontWeight.w500),
@@ -80,7 +85,7 @@ class ThemeProvider with ChangeNotifier {
           fontSize: 14,
           fontWeight: FontWeight.w400),
       widgetBackground:
-          isLightTheme ? const Color(0xFFEEEEEE) : const Color(0xff252728),
+          isLightTheme ? const Color(0xFFEEEEEE) : const Color(0xff2D325A),
       highlightedPrimary: isLightTheme
           ? const Color(0xFFFFFFFF)
           : const Color(0xFF1C1E1F), //0xFF262a2d),
