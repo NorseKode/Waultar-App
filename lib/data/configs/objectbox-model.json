@@ -1,0 +1,808 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:6606902048245260486",
+      "lastPropertyId": "2:6360065339511253182",
+      "name": "AppSettingsObjectBox",
+      "properties": [
+        {
+          "id": "1:6058705963797862740",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6360065339511253182",
+          "name": "darkmode",
+          "type": 1
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:5147512034022816361",
+      "lastPropertyId": "6:3206448037295761275",
+      "name": "DataCategory",
+      "properties": [
+        {
+          "id": "1:2996209078116722308",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4098628711839810418",
+          "name": "count",
+          "type": 6
+        },
+        {
+          "id": "3:4970143183768504428",
+          "name": "matchingFoldersFacebook",
+          "type": 30
+        },
+        {
+          "id": "4:8254838577285128017",
+          "name": "matchingFoldersInstagram",
+          "type": 30
+        },
+        {
+          "id": "5:3930999216652976772",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "1:5445169335603165360",
+          "relationTarget": "ProfileDocument"
+        },
+        {
+          "id": "6:3206448037295761275",
+          "name": "dbCategory",
+          "type": 6
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:8842904165111492278",
+      "lastPropertyId": "9:8687559314332404556",
+      "name": "DataPoint",
+      "properties": [
+        {
+          "id": "1:1899309333007670195",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6983948792506224609",
+          "name": "dataPointNameId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "2:5012918308605762904",
+          "relationTarget": "DataPointName"
+        },
+        {
+          "id": "3:223427388110967108",
+          "name": "stringName",
+          "type": 9
+        },
+        {
+          "id": "4:2087076855656404210",
+          "name": "categoryId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "3:2129374269350418371",
+          "relationTarget": "DataCategory"
+        },
+        {
+          "id": "5:1682490925406358955",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "4:3335594410123764613",
+          "relationTarget": "ProfileDocument"
+        },
+        {
+          "id": "6:8409794907452595720",
+          "name": "searchStrings",
+          "type": 30
+        },
+        {
+          "id": "7:8828297066879635511",
+          "name": "values",
+          "type": 9
+        },
+        {
+          "id": "8:5099353744454855635",
+          "name": "createdAt",
+          "type": 12
+        },
+        {
+          "id": "9:8687559314332404556",
+          "name": "dbCreatedAt",
+          "type": 6
+        }
+      ],
+      "relations": [
+        {
+          "id": "1:491381804760560834",
+          "name": "images",
+          "targetId": "9:972353063967848316"
+        },
+        {
+          "id": "2:8004965143252088661",
+          "name": "videos",
+          "targetId": "16:8348341417906490620"
+        },
+        {
+          "id": "3:5956359275847612269",
+          "name": "files",
+          "targetId": "7:790888452052915577"
+        },
+        {
+          "id": "4:7384840846747871055",
+          "name": "links",
+          "targetId": "10:5306432281528335468"
+        }
+      ]
+    },
+    {
+      "id": "4:4516041935764424876",
+      "lastPropertyId": "6:7583853745709582801",
+      "name": "DataPointName",
+      "properties": [
+        {
+          "id": "1:5087894882714682852",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6238155220978149046",
+          "name": "count",
+          "type": 6
+        },
+        {
+          "id": "3:7759062960036597931",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "4:7273974191457060567",
+          "name": "dataCategoryId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "5:2190321719361299046",
+          "relationTarget": "DataCategory"
+        },
+        {
+          "id": "5:4067598067871053637",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "6:6670649750674795931",
+          "relationTarget": "ProfileDocument"
+        },
+        {
+          "id": "6:7583853745709582801",
+          "name": "parentId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "7:5803245196922367365",
+          "relationTarget": "DataPointName"
+        }
+      ],
+      "relations": [
+        {
+          "id": "5:1259497606499822578",
+          "name": "children",
+          "targetId": "4:4516041935764424876"
+        }
+      ]
+    },
+    {
+      "id": "5:2505778376627272320",
+      "lastPropertyId": "6:6443479562232956870",
+      "name": "DayBucket",
+      "properties": [
+        {
+          "id": "1:3511128104333495033",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1534737980483238691",
+          "name": "day",
+          "type": 6
+        },
+        {
+          "id": "3:9057247847335984179",
+          "name": "total",
+          "type": 6
+        },
+        {
+          "id": "4:6401424126708999136",
+          "name": "monthId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "8:5048084604267094923",
+          "relationTarget": "MonthBucket"
+        },
+        {
+          "id": "5:6349811275169531754",
+          "name": "dbCategoryMap",
+          "type": 9
+        },
+        {
+          "id": "6:6443479562232956870",
+          "name": "dbServiceMap",
+          "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "6:8618189933839483471",
+          "name": "hours",
+          "targetId": "8:1719435879352259528"
+        },
+        {
+          "id": "7:7175270589871163691",
+          "name": "dataPoints",
+          "targetId": "3:8842904165111492278"
+        }
+      ]
+    },
+    {
+      "id": "6:2968827979678991018",
+      "lastPropertyId": "4:6950870894584641828",
+      "name": "EmailObjectBox",
+      "properties": [
+        {
+          "id": "1:8289340852690278689",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6969786400679355867",
+          "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "3:8859919663104674450",
+          "name": "email",
+          "type": 9,
+          "flags": 2080,
+          "indexId": "9:8202025192070052702"
+        },
+        {
+          "id": "4:6950870894584641828",
+          "name": "isCurrent",
+          "type": 1
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "7:790888452052915577",
+      "lastPropertyId": "8:2802038950038300032",
+      "name": "FileDocument",
+      "properties": [
+        {
+          "id": "1:1432790181279836698",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1967030547747991269",
+          "name": "uri",
+          "type": 9
+        },
+        {
+          "id": "3:5139581710238278685",
+          "name": "data",
+          "type": 9
+        },
+        {
+          "id": "4:6882113701389450812",
+          "name": "searchString",
+          "type": 9
+        },
+        {
+          "id": "5:2023169107842033896",
+          "name": "thumbnail",
+          "type": 9
+        },
+        {
+          "id": "6:4032315283952031383",
+          "name": "serviceId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "10:5308279761111182686",
+          "relationTarget": "ServiceDocument"
+        },
+        {
+          "id": "7:7009774567105665097",
+          "name": "relatedDatapointId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "11:5258086352610288485",
+          "relationTarget": "DataPoint"
+        },
+        {
+          "id": "8:2802038950038300032",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "12:4617859949036152600",
+          "relationTarget": "ProfileDocument"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "8:1719435879352259528",
+      "lastPropertyId": "6:5618949600524170452",
+      "name": "HourBucket",
+      "properties": [
+        {
+          "id": "1:5951337242136244124",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3603174758134898923",
+          "name": "hour",
+          "type": 6
+        },
+        {
+          "id": "3:3663367316014082898",
+          "name": "total",
+          "type": 6
+        },
+        {
+          "id": "4:2060720455529090527",
+          "name": "dayId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "13:4299140160291858778",
+          "relationTarget": "DayBucket"
+        },
+        {
+          "id": "5:7836339914308428697",
+          "name": "dbCategoryMap",
+          "type": 9
+        },
+        {
+          "id": "6:5618949600524170452",
+          "name": "dbServiceMap",
+          "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "8:2791869987371625353",
+          "name": "dataPoints",
+          "targetId": "3:8842904165111492278"
+        }
+      ]
+    },
+    {
+      "id": "9:972353063967848316",
+      "lastPropertyId": "9:3807921816434693631",
+      "name": "ImageDocument",
+      "properties": [
+        {
+          "id": "1:5262658205425684428",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:4982283938916737819",
+          "name": "uri",
+          "type": 9
+        },
+        {
+          "id": "3:8516448555856725533",
+          "name": "data",
+          "type": 9
+        },
+        {
+          "id": "4:3178537986578085699",
+          "name": "searchString",
+          "type": 9
+        },
+        {
+          "id": "5:6730589999358292446",
+          "name": "mediaTags",
+          "type": 9
+        },
+        {
+          "id": "6:6338951628101662974",
+          "name": "mediaTagScores",
+          "type": 30
+        },
+        {
+          "id": "7:6902126278371404198",
+          "name": "serviceId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "14:6401988960514821601",
+          "relationTarget": "ServiceDocument"
+        },
+        {
+          "id": "8:8661683216712525520",
+          "name": "relatedDatapointId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "15:4218823643712139812",
+          "relationTarget": "DataPoint"
+        },
+        {
+          "id": "9:3807921816434693631",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "16:2872087696039886322",
+          "relationTarget": "ProfileDocument"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "10:5306432281528335468",
+      "lastPropertyId": "7:5174739086526728632",
+      "name": "LinkDocument",
+      "properties": [
+        {
+          "id": "1:1570063678103746617",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:614502007572545766",
+          "name": "uri",
+          "type": 9
+        },
+        {
+          "id": "3:3225595471517752893",
+          "name": "data",
+          "type": 9
+        },
+        {
+          "id": "4:6356130775479779459",
+          "name": "searchString",
+          "type": 9
+        },
+        {
+          "id": "5:1261334158903138888",
+          "name": "serviceId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "17:1267192192170662982",
+          "relationTarget": "ServiceDocument"
+        },
+        {
+          "id": "6:6129714172106482339",
+          "name": "relatedDatapointId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "18:8198889214440864849",
+          "relationTarget": "DataPoint"
+        },
+        {
+          "id": "7:5174739086526728632",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "19:3221740186588843832",
+          "relationTarget": "ProfileDocument"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "11:4574985095699011830",
+      "lastPropertyId": "6:2502775872322516096",
+      "name": "MonthBucket",
+      "properties": [
+        {
+          "id": "1:7672042808805091456",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6376046119232595513",
+          "name": "month",
+          "type": 6
+        },
+        {
+          "id": "3:1000034228967240400",
+          "name": "total",
+          "type": 6
+        },
+        {
+          "id": "4:6574647506165162479",
+          "name": "yearId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "20:492013574169382682",
+          "relationTarget": "YearBucket"
+        },
+        {
+          "id": "5:195701422401032119",
+          "name": "dbCategoryMap",
+          "type": 9
+        },
+        {
+          "id": "6:2502775872322516096",
+          "name": "dbServiceMap",
+          "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "9:1685776900960267552",
+          "name": "days",
+          "targetId": "5:2505778376627272320"
+        }
+      ]
+    },
+    {
+      "id": "12:6372126713045300298",
+      "lastPropertyId": "4:1879639738220833392",
+      "name": "ProfileDocument",
+      "properties": [
+        {
+          "id": "1:6806241001914357506",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8692108519685015535",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:1865752989990808441",
+          "name": "serviceId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "21:4448498192043170797",
+          "relationTarget": "ServiceDocument"
+        },
+        {
+          "id": "4:1879639738220833392",
+          "name": "profilePictureId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "22:9124335483901116580",
+          "relationTarget": "ImageDocument"
+        }
+      ],
+      "relations": [
+        {
+          "id": "10:4157325912228884977",
+          "name": "dataPoints",
+          "targetId": "3:8842904165111492278"
+        },
+        {
+          "id": "11:4983659802934105468",
+          "name": "categories",
+          "targetId": "2:5147512034022816361"
+        }
+      ]
+    },
+    {
+      "id": "13:8946347283783028411",
+      "lastPropertyId": "3:2376697415178331561",
+      "name": "ReactionObjectBox",
+      "properties": [
+        {
+          "id": "1:8603936577011061575",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5557532709808797900",
+          "name": "raw",
+          "type": 9
+        },
+        {
+          "id": "3:2376697415178331561",
+          "name": "reaction",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "14:137864366780455198",
+      "lastPropertyId": "5:4043672162511044090",
+      "name": "ServiceDocument",
+      "properties": [
+        {
+          "id": "1:8911680700350849055",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1876285922907544410",
+          "name": "serviceName",
+          "type": 9,
+          "flags": 2080,
+          "indexId": "23:6186222140870967658"
+        },
+        {
+          "id": "3:5913078284408376919",
+          "name": "companyName",
+          "type": 9
+        },
+        {
+          "id": "4:6145348467868880173",
+          "name": "image",
+          "type": 9
+        },
+        {
+          "id": "5:4043672162511044090",
+          "name": "totalDatapoints",
+          "type": 6
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "15:6443970597157449702",
+      "lastPropertyId": "4:3404651960962254567",
+      "name": "ServiceObjectBox",
+      "properties": [
+        {
+          "id": "1:586830944109313283",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:3023637971498661303",
+          "name": "name",
+          "type": 9,
+          "flags": 2080,
+          "indexId": "24:7059281921205429461"
+        },
+        {
+          "id": "3:6149614932738670194",
+          "name": "company",
+          "type": 9
+        },
+        {
+          "id": "4:3404651960962254567",
+          "name": "image",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "16:8348341417906490620",
+      "lastPropertyId": "8:8268076725278203605",
+      "name": "VideoDocument",
+      "properties": [
+        {
+          "id": "1:8759108962965780917",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5930981860425445124",
+          "name": "uri",
+          "type": 9
+        },
+        {
+          "id": "3:315934816447150619",
+          "name": "data",
+          "type": 9
+        },
+        {
+          "id": "4:7169968065357251356",
+          "name": "searchString",
+          "type": 9
+        },
+        {
+          "id": "5:340627573618495252",
+          "name": "thumbnail",
+          "type": 9
+        },
+        {
+          "id": "6:5916155186482399731",
+          "name": "serviceId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "25:3656076114465735675",
+          "relationTarget": "ServiceDocument"
+        },
+        {
+          "id": "7:4676348803182585278",
+          "name": "relatedDatapointId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "26:462549589346196487",
+          "relationTarget": "DataPoint"
+        },
+        {
+          "id": "8:8268076725278203605",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "27:6233968814483694044",
+          "relationTarget": "ProfileDocument"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "17:3759316617497303931",
+      "lastPropertyId": "5:4287378329315537088",
+      "name": "YearBucket",
+      "properties": [
+        {
+          "id": "1:7044691714570045724",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:5115578294767886097",
+          "name": "year",
+          "type": 6,
+          "flags": 40,
+          "indexId": "28:7277019089336503590"
+        },
+        {
+          "id": "3:1622105978250885336",
+          "name": "total",
+          "type": 6
+        },
+        {
+          "id": "4:7405124269441146875",
+          "name": "dbCategoryMap",
+          "type": 9
+        },
+        {
+          "id": "5:4287378329315537088",
+          "name": "dbServiceMap",
+          "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "12:1821473989456676166",
+          "name": "months",
+          "targetId": "11:4574985095699011830"
+        }
+      ]
+    }
+  ],
+  "lastEntityId": "17:3759316617497303931",
+  "lastIndexId": "28:7277019089336503590",
+  "lastRelationId": "12:1821473989456676166",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}
