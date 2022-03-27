@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget_box.dart';
@@ -44,7 +43,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                       child: Checkbox(
                         splashRadius: 0,
                         checkColor: Colors.white,
-                        fillColor: MaterialStateProperty.all(Color(0xFF19A8F5)),
+                        fillColor: MaterialStateProperty.all(const Color(0xFF19A8F5)),
                         value: values[key],
                         onChanged: (bool? value) {
                           setState(() {
@@ -54,12 +53,12 @@ class _FilterWidgetState extends State<FilterWidget> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   Text(
                     key,
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                   ),
                 ],
               ),
@@ -81,21 +80,21 @@ class _FilterWidgetState extends State<FilterWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("Filter", style: themeProvider.themeData().textTheme.headline1),
-          SizedBox(
+          const SizedBox(
             height: 15,
           ),
           Text("Elements",
               style: themeProvider.themeData().textTheme.headline4),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           _checkboxList(elements),
-          SizedBox(
+          const SizedBox(
             height: 15,
           ),
           Text("Services",
               style: themeProvider.themeData().textTheme.headline4),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           _checkboxList(services),

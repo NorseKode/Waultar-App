@@ -143,7 +143,9 @@ class _TimelineWidgetState extends State<TimelineWidget> {
 
   int _maxListLength(List<TimeModel> blocks) {
     List<int> listLengths = [];
-    blocks.forEach((model) => listLengths.add(model.total));
+    for (var model in blocks) {
+      listLengths.add(model.total);
+    }
     return listLengths.isNotEmpty
         ? (listLengths.reduce(max) / 10000).ceil() * 10000
         : 0;
@@ -161,7 +163,7 @@ class _TimelineWidgetState extends State<TimelineWidget> {
     return DefaultWidgetBox(
         child: Container(
       child: blocks.isEmpty
-          ? Expanded(child: Container(child: Center(child: Text("No data"))))
+          ? Expanded(child: Container(child: const Center(child: Text("No data"))))
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -204,7 +206,7 @@ class _TimelineWidgetState extends State<TimelineWidget> {
                 ),
                 Row(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 50,
                     ),
                     Expanded(

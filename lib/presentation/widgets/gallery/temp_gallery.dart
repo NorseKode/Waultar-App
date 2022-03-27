@@ -2,8 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_image_repository.dart';
-import 'package:waultar/core/models/index.dart';
+import 'package:tuple/tuple.dart';
+import 'package:waultar/core/inodes/media_documents.dart';
+import 'package:waultar/core/inodes/media_repo.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 
@@ -19,8 +20,8 @@ class TempGallery extends StatefulWidget {
 class _TempGalleryState extends State<TempGallery> {
   late AppLocalizations localizer;
   late ThemeProvider themeProvider;
-  List<MediaModel> medias = [];
-  final _imageRepo = locator.get<IImageRepository>(instanceName: 'imageRepo');
+  List<ImageDocument> medias = [];
+  final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
   final _mediaListScrollController = ScrollController();
 
   Widget _selectionBoxes() {
@@ -43,11 +44,15 @@ class _TempGalleryState extends State<TempGallery> {
             child: Column(
               children: [
                 Image.file(
-                  File(Uri.decodeFull(medias[index].uri.path)),
+                  File(Uri.decodeFull(medias[index].uri)),
                   height: 500,
                 ),
                 Text(medias[index].mediaTags != null
-                    ? medias[index].mediaTags!.fold<String>(
+                    ? medias[index].mediaTags!.map((e) {
+                      var temp = e.split(",");
+                      return Tuple2(temp[0], temp[1]);
+                      })
+                    .fold<String>(
                         "",
                         (previousValue, element) =>
                             previousValue = previousValue + "${element.item1}, score: ${element.item2}\n")
@@ -62,7 +67,7 @@ class _TempGalleryState extends State<TempGallery> {
 
   @override
   Widget build(BuildContext context) {
-    medias = _imageRepo.getAllImages() ?? [];
+    medias = _mediaRepo.getAllImages();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

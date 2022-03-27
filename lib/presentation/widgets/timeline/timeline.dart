@@ -24,8 +24,8 @@ class Timeline extends StatefulWidget {
 class _TimelineState extends State<Timeline> {
   late ThemeProvider themeProvider;
 
-  var _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
-  Random _rnd = Random();
+  final _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  final Random _rnd = Random();
 
   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
       length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
@@ -76,18 +76,18 @@ class _TimelineState extends State<Timeline> {
           "Timeline",
           style: themeProvider.themeData().textTheme.headline3,
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Expanded(
           flex: 3,
           child: Row(
             children: [
               Expanded(flex: 4, child: TimelineWidget(blocks: blocks)),
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               Expanded(flex: 2, child: FilterWidget(blocks: blocks))
             ],
           ),
         ),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Expanded(flex: 2, child: DataPointWidget(dpList: dpList))
       ],
     );

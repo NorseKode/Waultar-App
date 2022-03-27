@@ -4,11 +4,13 @@ import 'package:path/path.dart' as dart_path;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_utility_repostitory.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/core/inodes/buckets_repo.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
@@ -21,7 +23,6 @@ import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/ai/sentiment_classifier.dart';
 import 'package:waultar/core/ai/image_classifier.dart';
 import 'package:waultar/core/ai/image_classifier_mobilenetv3.dart';
-import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/core/inodes/util_repo.dart';
 import 'package:waultar/core/ai/sentiment_classifier_textClassification.dart';
 import 'package:waultar/data/configs/objectbox.dart';
@@ -42,6 +43,7 @@ late final String _waultarPath;
 late final String _dbFolderPath;
 late final String _extractsFolderPath;
 late final String _logFolderPath;
+late final String _performanceFolderPath;
 
 Future<void> setupServices({bool testing = false, bool isolate = false, SendPort? sendPort}) async {
   await initApplicationPaths(testing: testing).whenComplete(() async {
@@ -63,6 +65,14 @@ Future<void> setupServices({bool testing = false, bool isolate = false, SendPort
       _logger = AppLogger(os);
     }
     locator.registerSingleton<BaseLogger>(_logger, instanceName: 'logger');
+
+    locator.registerSingleton<PerformanceHelper>(
+      PerformanceHelper(
+        pathToPerformanceFile: _performanceFolderPath,
+        parentKey: "",
+      ),
+      instanceName: 'performance',
+    );
 
     // create objectbox at startup
     // this MUST be the only context throughout runtime
@@ -176,6 +186,7 @@ Future initApplicationPaths({bool testing = false}) async {
   _dbFolderPath = dart_path.normalize(_waultarPath + '/objectbox/');
   _extractsFolderPath = dart_path.normalize(_waultarPath + '/extracts/');
   _logFolderPath = dart_path.normalize(_waultarPath + '/logs/');
+  _performanceFolderPath = dart_path.normalize(_waultarPath + '/performance/');
 
   var dbFolderDir = Directory(_dbFolderPath);
   var extractsFolderDir = Directory(_extractsFolderPath);

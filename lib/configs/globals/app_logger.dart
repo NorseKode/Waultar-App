@@ -13,6 +13,10 @@ class BaseLogger {
   setLogLevelRelease() {
     Logger.root.level = Level.SEVERE;
   }
+
+  changeLogLevel(Level level) {
+    Logger.root.level = level;
+  }
 }
 
 class AppLogger extends BaseLogger {
@@ -20,9 +24,13 @@ class AppLogger extends BaseLogger {
   String? _testPath;
   late File _logFile;
 
-  AppLogger(this.os) {
+  AppLogger(this.os, {Level? level}) {
     _logFile = File(dart_path.normalize(
         locator.get<String>(instanceName: 'log_folder') + "/logs.txt"));
+
+    if (level != null) {
+      Logger.root.level = level;
+    }
 
     logger.onRecord.listen((event) {
       _logFile.writeAsStringSync(

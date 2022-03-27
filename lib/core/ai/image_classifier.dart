@@ -29,10 +29,10 @@ class ImageClassifier extends IMLModel {
   late TfLiteType _inputType;
   late TfLiteType _outputType;
   late SequentialProcessor _probabilityProcessor;
-  final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
-
   late List<List<int>> _outputShapes;
   late List<TfLiteType> _outputTypes;
+  final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
+  PerformanceHelper? _performance;
 
   @override
   dispose() {
@@ -44,6 +44,8 @@ class ImageClassifier extends IMLModel {
 
   @override
   init() {
+    _appLogger.logger.info("Init of image classifier called");
+
     interpreterOptions = InterpreterOptions();
     _loadModel();
     _loadLabels();
@@ -68,11 +70,10 @@ class ImageClassifier extends IMLModel {
     var outputTensors = _interpreter.getOutputTensors();
     _outputShapes = [];
     _outputTypes = [];
-    // ignore: avoid_function_literals_in_foreach_calls
-    outputTensors.forEach((tensor) {
+    for (var tensor in outputTensors) {
       _outputShapes.add(tensor.shape);
       _outputTypes.add(tensor.type);
-    });
+    }
 
     _inputShape = _interpreter.getInputTensor(0).shape;
     _outputShape = _interpreter.getOutputTensor(0).shape;
@@ -103,22 +104,24 @@ class ImageClassifier extends IMLModel {
   }
 
   List<Tuple2<String, double>> predict(String imagePath, int amountOfTopCategories) {
-    var startTime = DateTime.now();
+    _appLogger.logger.info("Predicting image with path: $imagePath, and returning $amountOfTopCategories categories");
+
+    if (ISPERFORMANCETRACKING) {
+      _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
+      _performance!.resetChild();
+      _performance!.startChild();
+    }
 
     var image = img.decodeImage(File(imagePath).readAsBytesSync());
     if (image == null) {
       throw AIException("Couldn't locate image from path: $imagePath", this, image);
     }
 
-    // final pres = DateTime.now().millisecondsSinceEpoch;
     _inputImage = TensorImage(_inputType);
     _inputImage.loadImage(image);
     _inputImage = _preProcess();
-    // final pre = DateTime.now().millisecondsSinceEpoch - pres;
 
-    // final runs = DateTime.now().millisecondsSinceEpoch;
     _interpreter.run(_inputImage.buffer, _outputBuffer.getBuffer());
-    // final run = DateTime.now().millisecondsSinceEpoch - runs;
 
     Map<String, double> labeledProb =
         TensorLabel.fromList(_labels, _probabilityProcessor.process(_outputBuffer))
@@ -132,8 +135,7 @@ class ImageClassifier extends IMLModel {
     }
 
     if (ISPERFORMANCETRACKING) {
-      PerformanceHelper.logRunTime(
-          startTime, DateTime.now(), _appLogger, "Classifying of image with path $imagePath");
+      _performance!.addChildReading(metadata: {"path": imagePath});
     }
 
     return results;

@@ -13,7 +13,7 @@ class BaseWorker {
 
   final BaseLogger _logger = locator.get<BaseLogger>(instanceName: 'logger');
   final worker = Worker();
-  Function mainHandler;
+  Function(dynamic data) mainHandler;
   InitiatorPackage initiator;
 
   /// Initiate the worker (new thread) and start listen from messages between the two

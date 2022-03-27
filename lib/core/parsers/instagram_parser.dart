@@ -15,6 +15,7 @@ class InstagramParser extends BaseParser {
   final appLogger = locator.get<BaseLogger>(instanceName: 'logger');
   static const _profileFiles = ["personal_information", "signup_information"];
   // final _imageClassifier = locator.get<ImageClassifier>(instanceName: 'imageClassifier');
+  // final _profileRepo = locator.get<IProfileRepository>(instanceName: 'profileRepo');
 
   @override
   Stream<dynamic> parseFile(File file, {ProfileModel? profile}) async* {
