@@ -3,7 +3,6 @@ import 'dart:isolate';
 import 'package:archive/archive_io.dart';
 import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
-import 'package:waultar/core/helpers/PathHelper.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/startup.dart';
 import 'package:path/path.dart' as dart_path;
@@ -40,12 +39,14 @@ Future unzipWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
       // Send total count back
       mainSendPort.send(MainUnzipTotalCountPackage(archive.files.length));
       var extractsPath = locator.get<String>(instanceName: 'extracts_folder');
+
       String tempDestDirPath = extractsPath + "/" + profileName;
       final destDirPath = dart_path.normalize(tempDestDirPath);
 
       var list = <String>[];
+      int progress = 0;
       for (var file in archive.files) {
-        // only take the files and skip the optional .zip.enc file
+        // only take the files and skip the optional .zip.enc file (facebook specific)
         if (file.isFile && !file.name.endsWith('zip.enc')) {
           if (isPerformanceTracking) {
             fileCount++;
@@ -71,6 +72,8 @@ Future unzipWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
             list.add(outputStream.path);
           }
           outputStream.close();
+          progress = progress + 1;
+          mainSendPort.send(MainUnzipProgressPackage(progress));
         }
       }
       mainSendPort.send(MainUnzippedPathsPackage(list, list.length));
@@ -122,12 +125,15 @@ class IsolateUnzipStartPackage extends InitiatorPackage {
 class MainUnzippedPathsPackage {
   List<String> pathsInSameFolder;
   int parsedCount;
-  
   MainUnzippedPathsPackage(this.pathsInSameFolder, this.parsedCount);
 }
 
 class MainUnzipTotalCountPackage {
   int total;
-
   MainUnzipTotalCountPackage(this.total);
+}
+
+class MainUnzipProgressPackage {
+  int progress;
+  MainUnzipProgressPackage(this.progress);
 }

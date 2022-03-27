@@ -41,7 +41,10 @@ class TestHelper {
 
   static ProfileDocument createTestProfile(ObjectBox context) {
     var box = context.store.box<ProfileDocument>();
-    int created = box.put(ProfileDocument(name: 'Test Profile Name'));
+    var service = getFacebookService(context);
+    var profile = ProfileDocument(name: 'Test Profile Name');
+    profile.service.target = service;
+    int created = box.put(profile);
     return box.get(created)!;
   }
 

@@ -18,63 +18,79 @@ class ParserService implements IParserService {
   var _totalCount = 0;
   var _pathsToParse = <String>[];
 
-  final String _waultarPath = locator.get<String>(instanceName: 'waultar_root_directory');
+  final String _waultarPath =
+      locator.get<String>(instanceName: 'waultar_root_directory');
   final BaseLogger _logger = locator.get<BaseLogger>(instanceName: 'logger');
   final ProfileRepository _profileRepo =
       locator.get<ProfileRepository>(instanceName: 'profileRepo');
   final IServiceRepository _serviceRepo =
       locator.get<IServiceRepository>(instanceName: 'serviceRepo');
   ParserService();
+  late final ProfileDocument _profile;
 
   @override
-  Future<void> parseIsolates(String zipPath, Function(String message, bool isDone) callback, String serviceName,
-      {ProfileDocument? profile}) async {
+  Future<void> parseIsolates(
+    String zipPath,
+    Function(String message, bool isDone) callback,
+    String serviceName, {
+    ProfileDocument? profile,
+  }) async {
 
     var profile = ProfileDocument(name: "temp test name");
     var service = _serviceRepo.get(serviceName)!;
     profile.service.target = service;
-    profile = _profileRepo.add(profile);
+    _profile = _profileRepo.add(profile);
 
+    _startExtracting(zipPath, callback);
 
-    // unzip
+  }
+
+  _startExtracting(String zipPath, Function callback) {
+    var initiator = IsolateUnzipStartPackage(
+      pathToZip: zipPath,
+      isPerformanceTracking: ISPERFORMANCETRACKING,
+      profileName: _profile.name,
+      waultarPath: _waultarPath,
+    );
     _listenZip(dynamic data) {
       switch (data.runtimeType) {
         case MainUnzipTotalCountPackage:
           data as MainUnzipTotalCountPackage;
           _totalCount = data.total;
-          callback("Extracting files $_totalCount", false);
+          callback("Total files to extract: $_totalCount", false);
+          break;
+
+        case MainUnzipProgressPackage:
+          data as MainUnzipProgressPackage;
+          callback("${data.progress} files extracted out of $_totalCount", false);
           break;
 
         case MainUnzippedPathsPackage:
           data as MainUnzippedPathsPackage;
           _pathsToParse = data.pathsInSameFolder;
+          _startParsing(callback);
           break;
         default:
       }
     }
-
-    var initiator = IsolateUnzipStartPackage(
-      pathToZip: zipPath,
-      isPerformanceTracking: ISPERFORMANCETRACKING,
-      profileName: profile.name,
-      waultarPath: _waultarPath,
-    );
+    
     var zipWorker = BaseWorker(initiator: initiator, mainHandler: _listenZip);
-    await zipWorker.init(unzipWorkerBody);
+    zipWorker.init(unzipWorkerBody);
+  }
 
-    // parse the unzipped dir
+  _startParsing(Function callback) {
     var parseInitiator = IsolateParserStartPackage(
       paths: _pathsToParse,
-      profileId: profile.id,
+      profileId: _profile.id,
       isPerformanceTracking: ISPERFORMANCETRACKING,
       waultarPath: _waultarPath,
     );
-
     _listenParser(dynamic data) {
       switch (data.runtimeType) {
         case MainParsedProgressPackage:
           data as MainParsedProgressPackage;
-          callback("Parsing ${data.parsedCount}/${_pathsToParse.length}", data.isDone);
+          callback("Parsing ${data.parsedCount}/${_pathsToParse.length}",
+              data.isDone);
           break;
 
         case MainErrorPackage:
@@ -84,19 +100,24 @@ class ParserService implements IParserService {
         default:
       }
     }
+    var parseWorker =
+        BaseWorker(mainHandler: _listenParser, initiator: parseInitiator);
+    parseWorker.init(parseWorkerBody);
 
-    var parseWorker = BaseWorker(mainHandler: _listenParser, initiator: parseInitiator);
-    await parseWorker.init(parseWorkerBody);
   }
 
+  // we could use this for performance checking of isolates vs single
   @override
   Future<void> parseMain(String zipPath, String serviceName) async {
     var profile = ProfileDocument(name: "temp test name");
     var service = _serviceRepo.get(serviceName)!;
     profile.service.target = service;
     profile = _profileRepo.add(profile);
-    
-    var files = await FileUploader.extractZip(zipPath, serviceName, profile.name);
-    await locator.get<TreeParser>(instanceName: 'parser').parseManyPaths(files, profile);
+
+    var files =
+        await FileUploader.extractZip(zipPath, serviceName, profile.name);
+    await locator
+        .get<TreeParser>(instanceName: 'parser')
+        .parseManyPaths(files, profile);
   }
 }

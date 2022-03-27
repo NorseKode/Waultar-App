@@ -8,13 +8,14 @@ import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:path/path.dart' as dart_path;
 import 'package:waultar/core/inodes/tree_parser.dart';
+import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/startup.dart';
 
 import '../test_helper.dart';
 
 Future<void> main() async {
   late final TreeParser _parser;
-  late final ServiceDocument service;
+  // late final ServiceDocument service;
   late final ProfileDocument profile;
 
   final scriptDir = File(Platform.script.toFilePath()).parent;
@@ -48,9 +49,10 @@ Future<void> main() async {
   setUpAll(() async {
     await TestHelper.runStartupScript();
     _parser = locator.get<TreeParser>(instanceName: 'parser');
+    var _context = locator.get<ObjectBox>(instanceName: 'context');
     _parser.basePathToFiles = '';
-    service = TestHelper.serviceDocument;
-    profile = TestHelper.profileDocument;
+    // service = TestHelper.serviceDocument;
+    profile = TestHelper.createTestProfile(_context);
   });
 
   printResultName(DataPointName name) {

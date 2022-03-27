@@ -4,10 +4,12 @@ import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
 import 'package:path/path.dart' as path_dart;
+import 'package:waultar/startup.dart';
 
 class DataCategoryRepository {
   final ObjectBox _context;
   late final Box<DataCategory> _categoryBox;
+  // final String _extractsFolder = locator.get<String>(instanceName: 'extracts_folder');
 
   DataCategoryRepository(this._context) {
     _categoryBox = _context.store.box<DataCategory>();
@@ -62,45 +64,50 @@ class DataCategoryRepository {
     // get category from service based on parent directory for the file
     // keep looking backwards in the path until we reach root folder
 
-    // might result in stackOverflow if root folder is not Facebook or Instagram
-    try {
-      var name = path_dart.basename(folderName);
-
-      // if still none are found, set category to "Other" (default)
-
-      if (name == profile.name) {
-        return _categoryBox
-            .query(DataCategory_.dbCategory.equals(CategoryEnum.other.index))
-            .build()
-            .findUnique()!;
-      }
-      var service = profile.service.target!;
-
-      var category = service.serviceName == "Facebook"
-          ? _categoryBox
-              .query(DataCategory_.matchingFoldersFacebook.contains(name))
-              .build()
-              .findFirst()
-          : _categoryBox
-              .query(DataCategory_.matchingFoldersInstagram.contains(name))
-              .build()
-              .findFirst();
-
-      // if none is found :
-      if (category == null) {
-        return getFromFolderName(
-            folderName.substring(0, folderName.length - name.length), profile);
-      } else {
-        return category;
-      }
-    } on Exception catch (e) {
-      // ignore: avoid_print
-      print(e);
-      return _categoryBox
+    return _categoryBox
           .query(DataCategory_.dbCategory.equals(CategoryEnum.other.index))
           .build()
           .findUnique()!;
-    }
+
+    // might result in stackOverflow if root folder is not Facebook or Instagram
+    // try {
+    //   var name = path_dart.basename(folderName);
+
+    //   // if still none are found, set category to "Other" (default)
+
+    //   if (name == 'extracts') {
+    //     return _categoryBox
+    //         .query(DataCategory_.dbCategory.equals(CategoryEnum.other.index))
+    //         .build()
+    //         .findUnique()!;
+    //   }
+    //   var service = profile.service.target!;
+
+    //   var category = service.serviceName == "Facebook"
+    //       ? _categoryBox
+    //           .query(DataCategory_.matchingFoldersFacebook.contains(name))
+    //           .build()
+    //           .findFirst()
+    //       : _categoryBox
+    //           .query(DataCategory_.matchingFoldersInstagram.contains(name))
+    //           .build()
+    //           .findFirst();
+
+    //   // if none is found :
+    //   if (category == null) {
+    //     return getFromFolderName(
+    //         folderName.substring(0, folderName.length - name.length), profile);
+    //   } else {
+    //     return category;
+    //   }
+    // } on Exception catch (e) {
+    //   // ignore: avoid_print
+    //   print(e);
+    //   return _categoryBox
+    //       .query(DataCategory_.dbCategory.equals(CategoryEnum.other.index))
+    //       .build()
+    //       .findUnique()!;
+    // }
   }
 
   int count() => _categoryBox.count();
