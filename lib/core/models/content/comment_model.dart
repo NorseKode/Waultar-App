@@ -19,7 +19,7 @@ class CommentModel extends BaseModel {
   GroupModel? group;
   EventModel? event;
   // ReactionModel? reaction;
-  final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
+  final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
 
   CommentModel(
       {int id = 0,
@@ -39,8 +39,7 @@ class CommentModel extends BaseModel {
       : commented = PersonModel(profile: profile, name: json["title"], raw: ""),
         timestamp = json.containsKey(_instagramKey)
             ? ModelHelper.intToTimestamp(
-                    ((json[_instagramKey]).first)["timestamp"]) ??
-                DateTime.fromMicrosecondsSinceEpoch(0)
+                    ((json[_instagramKey]).first)["timestamp"])
             : DateTime.fromMillisecondsSinceEpoch(0),
         text = json.containsKey(_instagramKey)
             ? ((json[_instagramKey]).first)["value"]

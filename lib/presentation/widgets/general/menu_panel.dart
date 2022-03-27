@@ -53,6 +53,7 @@ class _MenuPanelState extends State<MenuPanel> {
                           fontWeight: FontWeight.w200),
                     ),
                     const SizedBox(width: 5),
+                    // ignore: avoid_unnecessary_containers
                     Container(
                       // decoration: BoxDecoration(
                       //     color: const Color(0xFF4FB376),

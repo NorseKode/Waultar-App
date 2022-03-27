@@ -37,29 +37,29 @@ class _TimelineState extends State<Timeline> {
     ITimelineService timelineService =
         locator.get<ITimelineService>(instanceName: 'timeService');
 
-    //List<TimeModel> blocks = timelineService.getAllYears();
+    List<TimeModel> blocks = timelineService.getAllYears();
 
-    List<TimeModel> blocks = List.generate(
-        4,
-        (index) => YearModel(index, 2000 + index,
-                ((index + 1) * 1405) + ((index + 1) * 3342), [
-              Tuple3((index + 1) * 2405, "Post:$index", const Color(0xFF19A8F5)),
-              Tuple3((index + 1) * 1442, "Image:$index", const Color(0xFFF06D85))
-            ]));
-    blocks.addAll(List.generate(
-        6,
-        (index) => YearModel(index, 2000 + index,
-                ((index + 1) * 1405) + ((index + 1) * 3342), [
-              Tuple3((index + 1) * 2405, "Post:$index", const Color(0xFF19A8F5)),
-              Tuple3((index + 1) * 1442, "Image:$index", const Color(0xFFF06D85))
-            ])).reversed);
-    blocks.addAll(List.generate(
-        2,
-        (index) => YearModel(index, 2000 + index,
-                ((index + 1) * 1405) + ((index + 1) * 3342), [
-              Tuple3((index + 1) * 2405, "Post:$index", const Color(0xFF19A8F5)),
-              Tuple3((index + 1) * 1442, "Image:$index", const Color(0xFFF06D85))
-            ])));
+    // List<TimeModel> blocks = List.generate(
+    //     4,
+    //     (index) => YearModel(index, 2000 + index,
+    //             ((index + 1) * 1405) + ((index + 1) * 3342), [
+    //           Tuple3((index + 1) * 2405, "Post:$index", Color(0xFF19A8F5)),
+    //           Tuple3((index + 1) * 1442, "Image:$index", Color(0xFFF06D85))
+    //         ]));
+    // blocks.addAll(List.generate(
+    //     6,
+    //     (index) => YearModel(index, 2000 + index,
+    //             ((index + 1) * 1405) + ((index + 1) * 3342), [
+    //           Tuple3((index + 1) * 2405, "Post:$index", Color(0xFF19A8F5)),
+    //           Tuple3((index + 1) * 1442, "Image:$index", Color(0xFFF06D85))
+    //         ])).reversed);
+    // blocks.addAll(List.generate(
+    //     2,
+    //     (index) => YearModel(index, 2000 + index,
+    //             ((index + 1) * 1405) + ((index + 1) * 3342), [
+    //           Tuple3((index + 1) * 2405, "Post:$index", Color(0xFF19A8F5)),
+    //           Tuple3((index + 1) * 1442, "Image:$index", Color(0xFFF06D85))
+    //         ])));
 
     List<UIModel> dpList = List.generate(
       10,

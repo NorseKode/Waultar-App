@@ -1,10 +1,13 @@
+import 'package:waultar/configs/globals/app_logger.dart';
+import 'package:waultar/core/inodes/profile_document.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
-import 'package:waultar/data/entities/profile/profile_objectbox.dart';
+import 'package:waultar/startup.dart';
 
 class ProfileRepository {
   final ObjectBox _context;
   late final Box<ProfileDocument> _profileBox;
+  final BaseLogger _logger = locator.get<BaseLogger>(instanceName: 'logger');
 
   ProfileRepository(this._context) {
     _profileBox = _context.store.box<ProfileDocument>();
@@ -18,6 +21,7 @@ class ProfileRepository {
       throw "Null profile";
     }
 
+    _logger.logger.info(profile.name);
     return profile;
   }
 }

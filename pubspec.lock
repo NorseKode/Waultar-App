@@ -232,6 +232,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.10.0"
+  easy_isolate:
+    dependency: "direct main"
+    description:
+      name: easy_isolate
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.3.0"
   enough_convert:
     dependency: "direct main"
     description:

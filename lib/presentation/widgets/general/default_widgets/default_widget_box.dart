@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 
+// ignore: must_be_immutable
 class DefaultWidgetBox extends StatefulWidget {
   Widget child;
   final BoxConstraints? constraints;

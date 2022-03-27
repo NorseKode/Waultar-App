@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_print
+// ignore_for_file: avoid_print, unused_field
 
 import 'dart:convert';
 import 'dart:io';
@@ -10,26 +10,29 @@ import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';
 import 'package:waultar/core/inodes/datapoint_name_repo.dart';
 import 'package:waultar/core/inodes/datapoint_repo.dart';
+import 'package:waultar/core/inodes/profile_document.dart';
 import 'package:waultar/core/inodes/profile_repo.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:path/path.dart' as path_dart;
 import 'package:waultar/core/inodes/json_decider.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
-import 'package:waultar/data/entities/profile/profile_objectbox.dart';
 import 'package:waultar/startup.dart';
 
 class TreeParser {
-  final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
-  final _profileRepo = locator.get<ProfileRepository>(instanceName: 'profileRepo');
+  final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
+  final _profileRepo =
+      locator.get<ProfileRepository>(instanceName: 'profileRepo');
   final DataCategoryRepository _categoryRepo;
-  // ignore: unused_field
   final DataPointNameRepository _nameRepo;
-  // ignore: unused_field
   final DataPointRepository _dataRepo;
-  late PerformanceHelper _performance;
+  final PerformanceHelper _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
 
-  TreeParser(this._categoryRepo, this._nameRepo, this._dataRepo);
+  TreeParser(
+    this._categoryRepo,
+    this._nameRepo,
+    this._dataRepo,
+  );
 
   late String formerFileName;
   late String formerFileParentName;
@@ -38,8 +41,6 @@ class TreeParser {
 
   Future<void> parseManyPaths(List<String> paths, ServiceDocument service) async {
     if (ISPERFORMANCETRACKING) {
-      _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
-
       _performance.reInit(newParentKey: "Parse all");
       _performance.start();
     }
@@ -77,14 +78,17 @@ class TreeParser {
     }
   }
 
-  Future<ProfileDocument> getProfile(List<String> paths, ServiceDocument service) async {
+  Future<ProfileDocument> getProfile(
+      List<String> paths, ServiceDocument service) async {
     _appLogger.logger.info("Started Parsing Profile Document");
 
     var profilePath = "";
     if (service.serviceName == "Facebook") {
-      profilePath = paths.firstWhere((element) => element.contains('profile_information.json'));
+      profilePath = paths.firstWhere(
+          (element) => element.contains('profile_information.json'));
     } else if (service.serviceName == "Instagram") {
-      profilePath = paths.firstWhere((element) => element.contains('personal_information.json'));
+      profilePath = paths.firstWhere(
+          (element) => element.contains('personal_information.json'));
     } else {
       // TODO: error
     }
@@ -185,7 +189,6 @@ class TreeParser {
           var directDataPoint = DataPoint.parse(
             category,
             parent,
-            service,
             profile,
             entry.value,
             basePathToFiles,
@@ -209,8 +212,13 @@ class TreeParser {
         }
 
         if (decision == Decision.linkAsDataPoint) {
-          var directDataPoint =
-              DataPoint.parse(category, parent, service, profile, item, basePathToFiles);
+          var directDataPoint = DataPoint.parse(
+            category,
+            parent,
+            profile,
+            item,
+            basePathToFiles,
+          );
 
           parent.dataPoints.add(directDataPoint);
         }
@@ -244,7 +252,6 @@ class TreeParser {
       var directDataPoint = DataPoint.parse(
         category,
         parent,
-        service,
         profile,
         mapToEmbedWith,
         basePathToFiles,
@@ -265,7 +272,6 @@ class TreeParser {
       var directDataPoint = DataPoint.parse(
         category,
         parent,
-        service,
         profile,
         listToEmbed,
         basePathToFiles,
@@ -273,7 +279,7 @@ class TreeParser {
       parent.dataPoints.add(directDataPoint);
     }
 
-    // parent.dataCategory.target = category;
+    parent.profile.target = profile;
     parent.count = parent.children.length + parent.dataPoints.length;
     return parent;
   }

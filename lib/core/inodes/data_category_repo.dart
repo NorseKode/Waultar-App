@@ -14,9 +14,16 @@ class DataCategoryRepository {
 
   int updateCategory(DataCategory category) => _categoryBox.put(category);
 
-  DataCategory? getCategoryByName(String name) {
-    var category = _categoryBox.query(DataCategory_.name.equals(name)).build().findUnique();
-    return category;
+  DataCategory getCategory(CategoryEnum category) {
+    var entity = _categoryBox
+        .query(DataCategory_.dbCategory.equals(category.index))
+        .build()
+        .findUnique();
+    return entity ??
+        _categoryBox
+            .query(DataCategory_.dbCategory.equals(CategoryEnum.unknown.index))
+            .build()
+            .findUnique()!;
   }
 
   List<DataCategory> getAllCategories() {
@@ -45,13 +52,9 @@ class DataCategoryRepository {
 
   DataCategory? getCategoryById(int id) => _categoryBox.get(id);
 
-  List<DataPointName>? getNamesByCategory(DataCategory category) {
-    var entity = _categoryBox.get(category.id);
-    if (entity != null) {
-      return entity.dataPointNames.toList();
-    }
-
-    return null;
+  List<DataPointName> getNamesByCategory(DataCategory category) {
+    var entity = _categoryBox.get(category.id)!;
+    return entity.dataPointNames.toList();
   }
 
   DataCategory getFromFolderName(String folderName, ServiceDocument service) {
@@ -64,7 +67,10 @@ class DataCategoryRepository {
 
       // if still none are found, set category to "Other" (default)
       if (name == "Facebook" || name == "Instagram") {
-        return _categoryBox.query(DataCategory_.name.equals("Other")).build().findUnique()!;
+        return _categoryBox
+            .query(DataCategory_.dbCategory.equals(CategoryEnum.other.index))
+            .build()
+            .findUnique()!;
       }
 
       var category = service.serviceName == "Facebook"
@@ -79,28 +85,39 @@ class DataCategoryRepository {
 
       // if none is found :
       if (category == null) {
-        return getFromFolderName(folderName.substring(0, folderName.length - name.length), service);
+        return getFromFolderName(
+            folderName.substring(0, folderName.length - name.length), service);
       } else {
         return category;
       }
     } on Exception catch (e) {
       // ignore: avoid_print
       print(e);
-      return _categoryBox.query(DataCategory_.name.equals("Other")).build().findUnique()!;
+      return _categoryBox
+          .query(DataCategory_.dbCategory.equals(CategoryEnum.other.index))
+          .build()
+          .findUnique()!;
     }
   }
 
   int count() => _categoryBox.count();
 
   int addCategory(
-      String name, List<String> matchingFoldersFacebook, List<String> matchingFoldersInstagram) {
-    var existing = _categoryBox.query(DataCategory_.name.equals(name)).build().findUnique();
+    CategoryEnum category,
+    List<String> matchingFoldersFacebook,
+    List<String> matchingFoldersInstagram,
+  ) {
+    var existing = _categoryBox
+        .query(DataCategory_.dbCategory.equals(category.index))
+        .build()
+        .findUnique();
 
     if (existing == null) {
       return _categoryBox.put(DataCategory(
-          name: name,
-          matchingFoldersFacebook: matchingFoldersFacebook,
-          matchingFoldersInstagram: matchingFoldersInstagram));
+        category: category,
+        matchingFoldersFacebook: matchingFoldersFacebook,
+        matchingFoldersInstagram: matchingFoldersInstagram,
+      ));
     }
 
     return existing.id;

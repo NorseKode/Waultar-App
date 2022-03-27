@@ -31,7 +31,7 @@ class ImageClassifier extends IMLModel {
   late SequentialProcessor _probabilityProcessor;
   late List<List<int>> _outputShapes;
   late List<TfLiteType> _outputTypes;
-  final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
+  final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
   PerformanceHelper? _performance;
 
   @override

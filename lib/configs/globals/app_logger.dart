@@ -1,20 +1,32 @@
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:logging/logging.dart';
-import 'package:waultar/configs/globals/globals.dart';
+import 'package:waultar/core/base_worker/package_models.dart';
+import 'package:waultar/startup.dart';
 import 'package:path/path.dart' as dart_path;
 
 import 'os_enum.dart';
 
-class AppLogger {
+class BaseLogger {
   final Logger logger = Logger("Logger");
+  setLogLevelRelease() {
+    Logger.root.level = Level.SEVERE;
+  }
+
+  changeLogLevel(Level level) {
+    Logger.root.level = level;
+  }
+}
+
+class AppLogger extends BaseLogger {
   final OS os;
   String? _testPath;
   late File _logFile;
 
-  AppLogger(this.os, String logFolder, {Level? level}) {
-    _logFile =
-        File(dart_path.normalize(logFolder + "/logs.txt"));
+  AppLogger(this.os, {Level? level}) {
+    _logFile = File(dart_path.normalize(
+        locator.get<String>(instanceName: 'log_folder') + "/logs.txt"));
 
     if (level != null) {
       Logger.root.level = level;
@@ -30,17 +42,15 @@ class AppLogger {
   AppLogger.test(this.os, this._testPath) {
     _logFile = _logFile = File(_testPath!);
   }
+}
 
-  setLogLevelRelease() {
-    LOGLEVEL = Level.SEVERE;
-    Logger.root.level = Level.SEVERE;
+class IsolateLogger extends BaseLogger {
+  SendPort sendPort;
+
+  IsolateLogger(this.sendPort) {
+    logger.onRecord.listen((event) {
+      final logRecord = LogRecordPackage(event.toString());
+      sendPort.send(logRecord);
+    });
   }
-
-  changeLogLevel(Level level) {
-    Logger.root.level = level;
-  }
-
-  // readLogFile() {
-  //   _logFile.
-  // }
 }

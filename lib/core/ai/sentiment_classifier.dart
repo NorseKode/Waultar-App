@@ -21,7 +21,7 @@ class SentimentClassifier extends IMLModel {
   final String unk = '<UNKNOWN>';
 
   late Map<String, int> _dict;
-  final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
+  final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
 
   // TensorFlow Lite Interpreter object
   late Interpreter _interpreter;
