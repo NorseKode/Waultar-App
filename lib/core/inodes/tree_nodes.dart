@@ -303,7 +303,6 @@ extension CategoryMapper on CategoryEnum {
 
 CategoryEnum getFromPath(String path) {
   var name = dart_path.basename(path);
-  print('path basename -> $name');
   if (name == 'extracts' || name == 'test') {
     return CategoryEnum.unknown;
   }
@@ -414,7 +413,6 @@ CategoryEnum getFromPath(String path) {
 
     default:
       var newPath = dart_path.dirname(path);
-      print('new name -> $newPath');
       return getFromPath(newPath);
   }
 }
