@@ -9,7 +9,6 @@ import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/core/inodes/tree_parser.dart';
 import 'package:waultar/core/models/misc/service_model.dart';
-import 'package:waultar/core/models/profile/profile_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
 import 'package:waultar/startup.dart';
@@ -44,27 +43,6 @@ class TestHelper {
     int created = box.put(ProfileDocument(name: 'Test Profile Name'));
     return box.get(created)!;
   }
-
-  static ProfileModel facebookProfile = ProfileModel(
-    activities: [],
-    createdTimestamp: DateTime.now(),
-    emails: [],
-    fullName: '',
-    raw: '',
-    uri: Uri(),
-    service: facebook,
-    basePathToFiles: "",
-  );
-  static ProfileModel instagramProfile = ProfileModel(
-    activities: [],
-    createdTimestamp: DateTime.now(),
-    emails: [],
-    fullName: '',
-    raw: '',
-    uri: Uri(),
-    basePathToFiles: "",
-    service: instagram,
-  );
 
   static getTreeParser() async {
     await deleteTestDb();
