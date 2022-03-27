@@ -17,26 +17,27 @@ class SentimentWidget extends StatefulWidget {
 
 class _SentimentWidgetState extends State<SentimentWidget> {
   List<DataCategory> chosenCategories = [];
+  int connotated = 0;
 
   @override
   Widget build(BuildContext context) {
     final sentimentService =
         locator.get<ISentimentService>(instanceName: 'sentimentService');
     List<ProfileDocument> profiles = sentimentService.getAllProfiles();
-    int connotated = 0;
-    print(profiles.first.categories.length);
+
+    print("${chosenCategories.toString()} : $connotated");
     // print(profiles.first.categories.first.category.name);
     return DefaultWidget(
         title: "Sentiment Analysis",
         child: Column(
           children: [
-            DefaultButton(
-                onPressed: () => {
-                      setState(() => {
-                            connotated = sentimentService
-                                .connotateTextsFromCategory(chosenCategories)
-                          })
-                    }),
+            DefaultButton(onPressed: () {
+              print("pressed");
+              connotated =
+                  sentimentService.connotateTextsFromCategory(chosenCategories);
+              print("rebuild");
+              setState(() => {});
+            }),
             Text("textConnotated: $connotated"),
             Column(children: _profileList(profiles)),
           ],
@@ -64,20 +65,22 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                   children: [
                     Checkbox(
                         value: chosenCategories
-                            .contains(profile.categories[index]),
-                        onChanged: (value) => {
-                              setState(
-                                () {
-                                  chosenCategories
-                                          .contains(profile.categories[index])
-                                      ? chosenCategories
-                                          .remove(profile.categories[index])
-                                      : chosenCategories
-                                          .add(profile.categories[index]);
-                                },
-                              )
-                            }),
-                    Text(profile.categories[index].category.name + "hello")
+                            .where((element) =>
+                                element.id == profile.categories[index].id)
+                            .toList()
+                            .isNotEmpty,
+                        onChanged: (value) {
+                          !value!
+                              ? chosenCategories.remove(
+                                  chosenCategories.firstWhere((element) =>
+                                      element.id ==
+                                      profile.categories[index].id))
+                              : chosenCategories.add(profile.categories[index]);
+                          setState(
+                            () {},
+                          );
+                        }),
+                    Text(profile.categories[index].category.name)
                   ],
                 )));
   }

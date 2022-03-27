@@ -19,7 +19,9 @@ class DataPointRepository {
   int count() => _dataBox.count();
 
   List<DataPoint> readAllFromCategory(DataCategory category) {
-    return [];
+    var query =
+        _dataBox.query(DataPoint_.category.equals(category.id)).build().find();
+    return query;
   }
 
   List<UIDTO> search(String searchString, int offset, int limit) {

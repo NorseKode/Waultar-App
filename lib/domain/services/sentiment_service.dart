@@ -33,8 +33,8 @@ class SentimentService extends ISentimentService {
   int connotateTextsFromCategory(List<DataCategory> categories) {
     var updated = 0;
     for (var category in categories) {
+      print("connotate: $category");
       List<DataPoint> dataPoints = _dataRepo.readAllFromCategory(category);
-
       for (var point in dataPoints) {
         var sentimentScore = _textClassifier.classify(point.stringName);
         point.sentimentScore = sentimentScore.last; //0-1
