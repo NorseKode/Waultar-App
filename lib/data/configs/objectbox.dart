@@ -245,7 +245,6 @@ class ObjectBox {
 
       var files = DataCategory(
         matchingFoldersFacebook: [
-          "",
         ],
         matchingFoldersInstagram: [
           "profile_photos.json",

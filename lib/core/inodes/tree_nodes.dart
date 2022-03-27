@@ -41,6 +41,7 @@ class DataPoint {
 
   DataPoint({
     this.id = 0,
+    this.sentimentScore = 0.0
   }) {
     createdAt = DateTime.now();
   }
@@ -79,6 +80,7 @@ class DataPoint {
       searchStrings.add(stringName);
     }
     createdAt = DateTime.now();
+    sentimentScore = 0;
   }
 
   void _createRelations(String basePathToMedia) {

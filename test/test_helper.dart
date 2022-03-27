@@ -1,13 +1,9 @@
 import 'dart:io';
 
 import 'package:path/path.dart' as path_dart;
-import 'package:waultar/core/inodes/data_category_repo.dart';
-import 'package:waultar/core/inodes/datapoint_name_repo.dart';
-import 'package:waultar/core/inodes/datapoint_repo.dart';
 import 'package:waultar/core/inodes/profile_document.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
-import 'package:waultar/core/inodes/tree_parser.dart';
 import 'package:waultar/core/models/misc/service_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
@@ -40,19 +36,11 @@ class TestHelper {
 
   static ProfileDocument createTestProfile(ObjectBox context) {
     var box = context.store.box<ProfileDocument>();
-    int created = box.put(ProfileDocument(name: 'Test Profile Name'));
+    var service = getFacebookService(context);
+    var profile = ProfileDocument(name: 'Test Profile Name');
+    profile.service.target = service;
+    int created = box.put(profile);
     return box.get(created)!;
-  }
-
-  static getTreeParser() async {
-    await deleteTestDb();
-    var _context = await createTestDb();
-    var _dataRepo = DataPointRepository(_context);
-    var _categoryRepo = DataCategoryRepository(_context);
-    var _nameRepo = DataPointNameRepository(_context);
-    var _parser = TreeParser(_categoryRepo, _nameRepo, _dataRepo);
-    _parser.basePathToFiles = "";
-    return _parser;
   }
 
   static ServiceModel facebook = ServiceModel(
