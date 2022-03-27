@@ -28,4 +28,8 @@ class ProfileRepository {
   ProfileDocument? get(int id) {
     return _profileBox.get(id);
   }
+
+  List<ProfileDocument> getAll() {
+    return _profileBox.getAll();
+  }
 }

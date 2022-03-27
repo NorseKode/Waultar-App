@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
-import 'package:waultar/core/models/content/post_model.dart';
 import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/core/parsers/parse_helper.dart';
@@ -61,14 +60,7 @@ class _TimelineState extends State<Timeline> {
     //           Tuple3((index + 1) * 1442, "Image:$index", Color(0xFFF06D85))
     //         ])));
 
-    List<UIModel> dpList = List.generate(
-      10,
-      (index) => PostModel(
-          title: getRandomString(100),
-          profile: ParseHelper.profile,
-          raw: "",
-          timestamp: DateTime.now()),
-    );
+   
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -88,7 +80,7 @@ class _TimelineState extends State<Timeline> {
           ),
         ),
         const SizedBox(height: 20),
-        Expanded(flex: 2, child: DataPointWidget(dpList: dpList))
+        Expanded(flex: 2, child: DataPointWidget(dpList: []))
       ],
     );
   }

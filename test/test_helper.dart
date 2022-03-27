@@ -1,15 +1,10 @@
 import 'dart:io';
 
 import 'package:path/path.dart' as path_dart;
-import 'package:waultar/core/inodes/data_category_repo.dart';
-import 'package:waultar/core/inodes/datapoint_name_repo.dart';
-import 'package:waultar/core/inodes/datapoint_repo.dart';
 import 'package:waultar/core/inodes/profile_document.dart';
 import 'package:waultar/core/inodes/service_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
-import 'package:waultar/core/inodes/tree_parser.dart';
 import 'package:waultar/core/models/misc/service_model.dart';
-import 'package:waultar/core/models/profile/profile_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
 import 'package:waultar/startup.dart';
@@ -47,28 +42,6 @@ class TestHelper {
     int created = box.put(profile);
     return box.get(created)!;
   }
-
-  static ProfileModel facebookProfile = ProfileModel(
-    activities: [],
-    createdTimestamp: DateTime.now(),
-    emails: [],
-    fullName: '',
-    raw: '',
-    uri: Uri(),
-    service: facebook,
-    basePathToFiles: "",
-  );
-  static ProfileModel instagramProfile = ProfileModel(
-    activities: [],
-    createdTimestamp: DateTime.now(),
-    emails: [],
-    fullName: '',
-    raw: '',
-    uri: Uri(),
-    basePathToFiles: "",
-    service: instagram,
-  );
-
 
   static ServiceModel facebook = ServiceModel(
       id: 1, name: "facebook", company: "meta", image: Uri(path: ""));

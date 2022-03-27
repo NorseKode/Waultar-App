@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:pretty_json/pretty_json.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
@@ -19,6 +18,12 @@ class DataPointRepository {
   List<DataPoint> readAll() => _dataBox.getAll();
   int count() => _dataBox.count();
 
+  updateDataPoint(DataPoint datapoint) => {};
+
+  List<DataPoint> readAllFromCategory(DataCategory category) {
+    return [];
+  }
+
   List<UIDTO> search(String searchString, int offset, int limit) {
     var builder = _dataBox
         .query(DataPoint_.searchStrings
@@ -27,10 +32,7 @@ class DataPointRepository {
     builder
       ..offset = offset
       ..limit = limit;
-    return builder
-        .find()
-        .map((e) => e.getUIDTO)
-        .toList();
+    return builder.find().map((e) => e.getUIDTO).toList();
   }
 
   List<UIDTO> searchWithCategories(
@@ -44,10 +46,7 @@ class DataPointRepository {
       ..offset = offset
       ..limit = limit;
 
-    return query
-        .find()
-        .map((e) => e.getUIDTO)
-        .toList();
+    return query.find().map((e) => e.getUIDTO).toList();
   }
 }
 

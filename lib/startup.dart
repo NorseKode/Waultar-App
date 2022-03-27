@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:isolate';
-import 'package:flutter/cupertino.dart';
 import 'package:path/path.dart' as dart_path;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get_it/get_it.dart';
@@ -12,6 +11,7 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_utility_repostito
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/core/inodes/buckets_repo.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';
@@ -22,17 +22,14 @@ import 'package:waultar/core/inodes/profile_repo.dart';
 import 'package:waultar/core/inodes/service_repo.dart';
 import 'package:waultar/core/inodes/tree_parser.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
-import 'package:waultar/core/ai/sentiment_classifier.dart';
-import 'package:waultar/core/ai/image_classifier.dart';
-import 'package:waultar/core/ai/image_classifier_mobilenetv3.dart';
 import 'package:waultar/core/inodes/util_repo.dart';
-import 'package:waultar/core/ai/sentiment_classifier_textClassification.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/repositories/appsettings_repo.dart';
 import 'package:waultar/domain/services/appsettings_service.dart';
 import 'package:waultar/domain/services/collections_service.dart';
 import 'package:waultar/domain/services/ml_service.dart';
 import 'package:waultar/domain/services/parser_service.dart';
+import 'package:waultar/domain/services/sentiment_service.dart';
 import 'package:waultar/domain/services/timeline_service.dart';
 import 'configs/globals/app_logger.dart';
 import 'configs/globals/os_enum.dart';
@@ -113,17 +110,6 @@ Future<void> setupServices({
     );
     locator.registerSingleton<IBucketsRepository>(_bucketsRepo, instanceName: 'bucketsRepo');
 
-    // AI Models
-    // locator.registerSingleton<ImageClassifier>(
-    //   ImageClassifierMobileNetV3(),
-    //   instanceName: 'imageClassifier',
-    // );
-
-    // locator.registerSingleton<SentimentClassifier>(
-    //   SentimentClassifierTextClassifierTFLite(),
-    //   instanceName: 'sentimentClassifier',
-    // );
-
     // register all services and inject their dependencies
     locator.registerSingleton<IAppSettingsService>(
       AppSettingsService(),
@@ -137,10 +123,6 @@ Future<void> setupServices({
       TreeParser(),
       instanceName: 'parser',
     );
-    // locator.registerSingleton<IMLService>(
-    //   MLService(),
-    //   instanceName: 'mlService',
-    // );
     locator.registerSingleton<ITimelineService>(
       TimeLineService(_bucketsRepo),
       instanceName: 'timeService',
