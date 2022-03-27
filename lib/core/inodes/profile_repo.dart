@@ -24,4 +24,8 @@ class ProfileRepository {
     _logger.logger.info(profile.name);
     return profile;
   }
+
+  List<ProfileDocument> getAll() {
+    return _profileBox.getAll();
+  }
 }

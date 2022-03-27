@@ -13,11 +13,12 @@ import 'package:path/path.dart' as dart_path;
 @Entity()
 class DataPoint {
   int id;
-  
+
   final dataPointName = ToOne<DataPointName>();
-  
-  // ui most important info field about the datapoint  
+
+  // ui most important info field about the datapoint
   late String stringName;
+  late double sentimentScore;
 
   final category = ToOne<DataCategory>();
   final profile = ToOne<ProfileDocument>();
@@ -81,7 +82,6 @@ class DataPoint {
   }
 
   void _createRelations(String basePathToMedia) {
-
     // the raw data as a map
     // the asMap getter will make sure it's always a map
     Map<String, dynamic> json = asMap;
@@ -170,7 +170,6 @@ class DataPoint {
   }
 
   UIDTO get getUIDTO => UIDTO(stringName, category.target!, asMap);
-  
 }
 
 @Entity()
@@ -208,7 +207,6 @@ class DataCategory {
   @Index()
   CategoryEnum category;
 
-  
   final profile = ToOne<ProfileDocument>();
 
   @Backlink('dataCategory')
@@ -228,8 +226,8 @@ class DataCategory {
 
   set dbCategory(int index) {
     category = index >= 0 && index < CategoryEnum.values.length
-    ? CategoryEnum.values[index]
-    : CategoryEnum.unknown;
+        ? CategoryEnum.values[index]
+        : CategoryEnum.unknown;
   }
 }
 

@@ -7,6 +7,7 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_service_repositor
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/inodes/media_repo.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
+import 'package:waultar/presentation/widgets/IM/sentiment_widget.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
@@ -37,7 +38,8 @@ class _DashboardState extends State<Dashboard> {
       child: Column(
         children: [
           Text("Untagged Images Count: $_imagesToTagCount"),
-          Text("Estimated Time To Tag All: ${(_imagesToTagCount * 0.5) / 60} minuets"),
+          Text(
+              "Estimated Time To Tag All: ${(_imagesToTagCount * 0.5) / 60} minuets"),
           DefaultButton(
             text: "Tag Images",
             onPressed: () {
@@ -111,6 +113,7 @@ class _DashboardState extends State<Dashboard> {
                       ), //dashboard widgets
 
                       const SizedBox(height: 20),
+                      SentimentWidget(),
                     ],
                   ),
                 ),

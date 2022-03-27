@@ -10,6 +10,7 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_service_repositor
 import 'package:waultar/core/abstracts/abstract_repositories/i_utility_repostitory.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/core/inodes/buckets_repo.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';
@@ -30,6 +31,7 @@ import 'package:waultar/data/repositories/appsettings_repo.dart';
 import 'package:waultar/domain/services/appsettings_service.dart';
 import 'package:waultar/domain/services/collections_service.dart';
 import 'package:waultar/domain/services/ml_service.dart';
+import 'package:waultar/domain/services/sentiment_service.dart';
 import 'package:waultar/domain/services/timeline_service.dart';
 import 'configs/globals/app_logger.dart';
 import 'configs/globals/os_enum.dart';
@@ -45,7 +47,8 @@ late final String _extractsFolderPath;
 late final String _logFolderPath;
 late final String _performanceFolderPath;
 
-Future<void> setupServices({bool testing = false, bool isolate = false, SendPort? sendPort}) async {
+Future<void> setupServices(
+    {bool testing = false, bool isolate = false, SendPort? sendPort}) async {
   await initApplicationPaths(testing: testing).whenComplete(() async {
     locator.registerSingleton<String>(_waultarPath,
         instanceName: 'waultar_root_directory');
@@ -54,7 +57,8 @@ Future<void> setupServices({bool testing = false, bool isolate = false, SendPort
         instanceName: 'extracts_folder');
     locator.registerSingleton<String>(_logFolderPath,
         instanceName: 'log_folder');
-
+    locator.registerSingleton<String>(_performanceFolderPath,
+        instanceName: 'performance_folder');
 
     os = detectPlatform();
     locator.registerSingleton<OS>(os, instanceName: 'platform');
@@ -141,6 +145,10 @@ Future<void> setupServices({bool testing = false, bool isolate = false, SendPort
     locator.registerSingleton<IMLService>(
       MLService(),
       instanceName: 'mlService',
+    );
+    locator.registerSingleton<ISentimentService>(
+      SentimentService(),
+      instanceName: 'sentimentService',
     );
     locator.registerSingleton<ITimelineService>(
       TimeLineService(_bucketsRepo),

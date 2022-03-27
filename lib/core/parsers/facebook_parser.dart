@@ -1,5 +1,6 @@
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
+import 'package:waultar/configs/globals/file_type_enum.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/models/index.dart';
 import 'package:waultar/core/models/content/post_poll_model.dart';
@@ -32,8 +33,10 @@ class FacebookParser extends BaseParser {
 
       if (isPosts) {
         for (var post in jsonData) {
-          var postModel = PostModel.fromJson(post, profile ?? ParseHelper.profile);
-          _appLogger.logger.info("Parsed Facebook profile: ${postModel.toString()}");
+          var postModel =
+              PostModel.fromJson(post, profile ?? ParseHelper.profile);
+          _appLogger.logger
+              .info("Parsed Facebook profile: ${postModel.toString()}");
           yield postModel;
         }
       }
@@ -44,14 +47,16 @@ class FacebookParser extends BaseParser {
             // skip
           } else if (object.containsKey("profile_v2") && profile == null) {
             var profileModel = ProfileModel.fromFacebook(object["profile_v2"]);
-            _appLogger.logger.info("Parsed Facebook Profile: ${profileModel.toString()}");
+            _appLogger.logger
+                .info("Parsed Facebook Profile: ${profileModel.toString()}");
             yield profileModel;
           } else if (object.containsKey("profile_v2") && profile != null) {
             var groupObjects = object["profile_v2"]["groups"];
             if (groupObjects is List<dynamic>) {
               for (var group in groupObjects) {
                 var groupModel = GroupModel.fromJson(group, profile);
-                _appLogger.logger.info("Parsed Facebook group: ${groupModel.toString()}");
+                _appLogger.logger
+                    .info("Parsed Facebook group: ${groupModel.toString()}");
                 yield groupModel;
               }
             }
@@ -91,7 +96,8 @@ class FacebookParser extends BaseParser {
                   badge: badge,
                   isUsers: true,
                 );
-                _appLogger.logger.info('Parsed badge to group ${model.name} : ${model.toString()}');
+                _appLogger.logger.info(
+                    'Parsed badge to group ${model.name} : ${model.toString()}');
 
                 yield model;
               }
@@ -130,7 +136,8 @@ class FacebookParser extends BaseParser {
           } else if (object.containsKey("poll_votes_v2")) {
             for (var poll in object["poll_votes_v2"]) {
               var pollModel = PostPollModel.fromJson(poll, profile!);
-              _appLogger.logger.info("Parsed Facebook Poll: ${pollModel.toString()}");
+              _appLogger.logger
+                  .info("Parsed Facebook Poll: ${pollModel.toString()}");
               yield pollModel;
             }
           } else if (object.containsKey("group_posts_v2")) {
@@ -138,47 +145,59 @@ class FacebookParser extends BaseParser {
               var keysInPost = ParseHelper.findAllKeysInJson(post);
               if (keysInPost.contains("poll")) {
                 var postPollModel = PostPollModel.fromJson(post, profile!);
-                _appLogger.logger.info("Parsed Facebook Poll: ${postPollModel.toString()}");
+                _appLogger.logger
+                    .info("Parsed Facebook Poll: ${postPollModel.toString()}");
                 yield postPollModel;
               }
             }
-          } else if (object.keys.any((element) => element.contains("comments"))) {
-            var commentKey = object.keys.firstWhere((element) => element.contains("comments_"));
+          } else if (object.keys
+              .any((element) => element.contains("comments"))) {
+            var commentKey = object.keys
+                .firstWhere((element) => element.contains("comments_"));
             for (var comment in object[commentKey]) {
               var commentModel = CommentModel.fromFacebook(comment, profile!);
-              _appLogger.logger.info("Parse Facebook Comment: ${commentModel.toString()}");
+              _appLogger.logger
+                  .info("Parse Facebook Comment: ${commentModel.toString()}");
               yield commentModel;
             }
           } else {
-            var mediaKey =
-                object.keys.firstWhere((key) => mediaKeys.contains(key), orElse: () => "");
+            var mediaKey = object.keys
+                .firstWhere((key) => mediaKeys.contains(key), orElse: () => "");
 
             if (mediaKey != "" && !uriAlreadyUsed.contains(object[mediaKey])) {
               switch (Extensions.getFileType(object[mediaKey])) {
                 case FileType.image:
                   uriAlreadyUsed.add(object[mediaKey]);
-                  var imageModel = ImageModel.fromJson(object, profile ?? ParseHelper.profile);
-                  _appLogger.logger.info("Parsed Facebook image: ${imageModel.toString()}");
+                  var imageModel = ImageModel.fromJson(
+                      object, profile ?? ParseHelper.profile);
+                  _appLogger.logger
+                      .info("Parsed Facebook image: ${imageModel.toString()}");
                   yield imageModel;
                   break;
                 case FileType.video:
                   uriAlreadyUsed.add(object[mediaKey]);
-                  var videoModel = VideoModel.fromJson(object, ParseHelper.profile);
-                  _appLogger.logger.info("Parsed Facebook : ${videoModel.toString()}");
+                  var videoModel =
+                      VideoModel.fromJson(object, ParseHelper.profile);
+                  _appLogger.logger
+                      .info("Parsed Facebook : ${videoModel.toString()}");
                   yield videoModel;
                   break;
                 case FileType.file:
                   uriAlreadyUsed.add(object[mediaKey]);
-                  var fileModel = FileModel.fromJson(object, ParseHelper.profile);
-                  _appLogger.logger.info("Parsed Facebook : ${fileModel.toString()}");
+                  var fileModel =
+                      FileModel.fromJson(object, ParseHelper.profile);
+                  _appLogger.logger
+                      .info("Parsed Facebook : ${fileModel.toString()}");
                   yield fileModel;
                   break;
                 case FileType.link:
                   if (object[mediaKey] is String &&
                       !object[mediaKey].startsWith("https://interncache")) {
                     uriAlreadyUsed.add(object[mediaKey]);
-                    var linkModel = LinkModel.fromJson(object, ParseHelper.profile);
-                    _appLogger.logger.info("Parsed Facebook : ${linkModel.toString()}");
+                    var linkModel =
+                        LinkModel.fromJson(object, ParseHelper.profile);
+                    _appLogger.logger
+                        .info("Parsed Facebook : ${linkModel.toString()}");
                     yield linkModel;
                   }
                   break;
@@ -190,7 +209,10 @@ class FacebookParser extends BaseParser {
         }
       }
     } on Tuple2<String, dynamic> catch (e) {
-      throw ParseException("Unexpected error occured in parsing of file, message: ${e.item1}", file, e.item2);
+      throw ParseException(
+          "Unexpected error occured in parsing of file, message: ${e.item1}",
+          file,
+          e.item2);
     } on FormatException catch (e) {
       throw ParseException("Wrong formatted json", file, e);
     }
@@ -209,7 +231,8 @@ class FacebookParser extends BaseParser {
         }
       }
     } on Tuple2<String, dynamic> catch (e) {
-      throw ParseException("Unexpected error occured in parsing of file", file, e.item2);
+      throw ParseException(
+          "Unexpected error occured in parsing of file", file, e.item2);
     } on FormatException catch (e) {
       throw ParseException("Wrong formatted json", file, e);
     }
@@ -218,16 +241,18 @@ class FacebookParser extends BaseParser {
   @override
   Future<Tuple2<ProfileModel, List<String>>> parseProfile(List<String> paths,
       {ServiceModel? service}) async {
-    var profilePath = paths.firstWhere((element) => element.contains('profile_information.json'));
+    var profilePath = paths
+        .firstWhere((element) => element.contains('profile_information.json'));
 
-    ProfileModel profile =
-        await parseFile(File(profilePath)).where((event) => event is ProfileModel).first;
+    ProfileModel profile = await parseFile(File(profilePath))
+        .where((event) => event is ProfileModel)
+        .first;
 
     if (service != null) {
       profile.service = service;
     }
 
-     if (paths.length > 1) {
+    if (paths.length > 1) {
       var basePathToFiles = StringBuffer();
       var path1 = paths.first;
       var path2 = paths.last;
@@ -249,19 +274,21 @@ class FacebookParser extends BaseParser {
   @override
   Future<Tuple2<List<GroupModel>, List<String>>> parseGroupNames(
       List<String> paths, ProfileModel profile) async {
-    var profilePath = paths.firstWhere((element) => element.contains('profile_information.json'));
+    var profilePath = paths
+        .firstWhere((element) => element.contains('profile_information.json'));
 
     var groups = await parseFile(File(profilePath), profile: profile)
         .where((event) => event is GroupModel)
         .cast<GroupModel>()
         .toList();
     if (groups.isEmpty) {
-      _appLogger.logger.info('While parsing group names in file $profilePath no groups were found');
+      _appLogger.logger.info(
+          'While parsing group names in file $profilePath no groups were found');
 
-      var groupsPath =
-          paths.firstWhere((element) => element.contains('your_group_membership_activity'));
-      var groupsStream =
-          parseFile(File(groupsPath), profile: profile).where((event) => event is GroupModel);
+      var groupsPath = paths.firstWhere(
+          (element) => element.contains('your_group_membership_activity'));
+      var groupsStream = parseFile(File(groupsPath), profile: profile)
+          .where((event) => event is GroupModel);
       var groups = await groupsStream.toList();
       if (groups.isNotEmpty) {
         var groupModels = groups.cast<GroupModel>();
