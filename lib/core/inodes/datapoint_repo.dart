@@ -18,8 +18,6 @@ class DataPointRepository {
   List<DataPoint> readAll() => _dataBox.getAll();
   int count() => _dataBox.count();
 
-  updateDataPoint(DataPoint datapoint) => {};
-
   List<DataPoint> readAllFromCategory(DataCategory category) {
     return [];
   }

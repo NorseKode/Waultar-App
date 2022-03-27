@@ -38,7 +38,7 @@ class SentimentService extends ISentimentService {
       for (var point in dataPoints) {
         var sentimentScore = _textClassifier.classify(point.stringName);
         point.sentimentScore = sentimentScore.last; //0-1
-        _dataRepo.updateDataPoint(point);
+        _dataRepo.addDataPoint(point);
         updated++;
       }
     }

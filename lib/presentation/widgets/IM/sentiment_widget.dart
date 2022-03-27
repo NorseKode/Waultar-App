@@ -24,6 +24,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
         locator.get<ISentimentService>(instanceName: 'sentimentService');
     List<ProfileDocument> profiles = sentimentService.getAllProfiles();
     int connotated = 0;
+    print(profiles.toString());
 
     return DefaultWidget(
         title: "Sentiment Analysis",
