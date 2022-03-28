@@ -1,6 +1,6 @@
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/globals.dart';
-import 'package:waultar/configs/globals/helper/performance_helper.dart';
+import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/ai/image_classifier.dart';
 import 'package:waultar/core/ai/sentiment_classifier.dart';

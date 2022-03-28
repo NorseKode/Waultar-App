@@ -6,6 +6,8 @@ import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
 import 'package:waultar/core/base_worker/base_worker.dart';
+import 'package:waultar/core/helpers/performance_helper.dart';
+import 'package:waultar/core/helpers/performance_helper2.dart';
 import 'package:waultar/core/inodes/profile_document.dart';
 import 'package:waultar/core/inodes/profile_repo.dart';
 import 'package:waultar/core/inodes/tree_parser.dart';
@@ -18,8 +20,7 @@ class ParserService implements IParserService {
   var _totalCount = 0;
   var _pathsToParse = <String>[];
 
-  final String _waultarPath =
-      locator.get<String>(instanceName: 'waultar_root_directory');
+  final String _waultarPath = locator.get<String>(instanceName: 'waultar_root_directory');
   final BaseLogger _logger = locator.get<BaseLogger>(instanceName: 'logger');
   final ProfileRepository _profileRepo =
       locator.get<ProfileRepository>(instanceName: 'profileRepo');
@@ -27,6 +28,7 @@ class ParserService implements IParserService {
       locator.get<IServiceRepository>(instanceName: 'serviceRepo');
   ParserService();
   late final ProfileDocument _profile;
+  final _performance = locator.get<PerformanceHelper2>(instanceName: 'performance2');
 
   @override
   Future<void> parseIsolates(
@@ -35,6 +37,11 @@ class ParserService implements IParserService {
     String serviceName, {
     ProfileDocument? profile,
   }) async {
+    if (ISPERFORMANCETRACKING) {
+      var key = "Extracting and parsing synchronously";
+      _performance.reInit(newParentKey: key);
+      _performance.start(key);
+    }
 
     var profile = ProfileDocument(name: "temp test name");
     var service = _serviceRepo.get(serviceName)!;
@@ -42,10 +49,15 @@ class ParserService implements IParserService {
     _profile = _profileRepo.add(profile);
 
     _startExtracting(zipPath, callback);
-
   }
 
   _startExtracting(String zipPath, Function callback) {
+    if (ISPERFORMANCETRACKING) {
+      var key = "Extracting file";
+      _performance.addTimers(key);
+      _performance.start(key);
+    }
+
     var initiator = IsolateUnzipStartPackage(
       pathToZip: zipPath,
       isPerformanceTracking: ISPERFORMANCETRACKING,
@@ -63,6 +75,9 @@ class ParserService implements IParserService {
         case MainUnzipProgressPackage:
           data as MainUnzipProgressPackage;
           callback("${data.progress} files extracted out of $_totalCount", false);
+          if (ISPERFORMANCETRACKING) {
+            _performance.addChildReading("Extracting file");
+          }
           break;
 
         case MainUnzippedPathsPackage:
@@ -73,7 +88,7 @@ class ParserService implements IParserService {
         default:
       }
     }
-    
+
     var zipWorker = BaseWorker(initiator: initiator, mainHandler: _listenZip);
     zipWorker.init(unzipWorkerBody);
   }
@@ -89,8 +104,13 @@ class ParserService implements IParserService {
       switch (data.runtimeType) {
         case MainParsedProgressPackage:
           data as MainParsedProgressPackage;
-          callback("Parsing ${data.parsedCount}/${_pathsToParse.length}",
-              data.isDone);
+          callback("Parsing ${data.parsedCount}/${_pathsToParse.length}", data.isDone);
+
+          if (data.isDone && ISPERFORMANCETRACKING) {
+            _performance.stop(_performance.parentKey);
+            _performance.addParentReading();
+            _performance.summary("Parsing and Extracting Synchronously");
+          }
           break;
 
         case MainErrorPackage:
@@ -100,10 +120,9 @@ class ParserService implements IParserService {
         default:
       }
     }
-    var parseWorker =
-        BaseWorker(mainHandler: _listenParser, initiator: parseInitiator);
-    parseWorker.init(parseWorkerBody);
 
+    var parseWorker = BaseWorker(mainHandler: _listenParser, initiator: parseInitiator);
+    parseWorker.init(parseWorkerBody);
   }
 
   // we could use this for performance checking of isolates vs single
@@ -114,10 +133,7 @@ class ParserService implements IParserService {
     profile.service.target = service;
     profile = _profileRepo.add(profile);
 
-    var files =
-        await FileUploader.extractZip(zipPath, serviceName, profile.name);
-    await locator
-        .get<TreeParser>(instanceName: 'parser')
-        .parseManyPaths(files, profile);
+    var files = await FileUploader.extractZip(zipPath, serviceName, profile.name);
+    await locator.get<TreeParser>(instanceName: 'parser').parseManyPaths(files, profile);
   }
 }

@@ -5,7 +5,7 @@ import 'dart:io';
 
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/globals.dart';
-import 'package:waultar/configs/globals/helper/performance_helper.dart';
+import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/helpers/PathHelper.dart';
 import 'package:waultar/core/inodes/data_category_repo.dart';

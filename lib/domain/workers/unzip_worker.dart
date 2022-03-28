@@ -1,7 +1,7 @@
 import 'dart:isolate';
 
 import 'package:archive/archive_io.dart';
-import 'package:waultar/configs/globals/helper/performance_helper.dart';
+import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/startup.dart';
