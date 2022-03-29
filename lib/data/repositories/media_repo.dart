@@ -1,6 +1,9 @@
-import 'package:waultar/core/inodes/media_documents.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
+import 'package:waultar/data/entities/media/file_document.dart';
+import 'package:waultar/data/entities/media/image_document.dart';
+import 'package:waultar/data/entities/media/link_document.dart';
+import 'package:waultar/data/entities/media/video_document.dart';
 
 class MediaRepository {
   final ObjectBox _context;
