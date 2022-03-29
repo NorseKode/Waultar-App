@@ -7,19 +7,17 @@ class PerformanceHelper2 {
   String pathToPerformanceFile;
   late String parentKey;
   late PerformanceDataPoint parentDataPoint;
-  late List<PerformanceDataPoint> childsData;
   var _timers = <String, Stopwatch>{};
+  var _tempStorageList = <PerformanceDataPoint>[];
 
   PerformanceHelper2({
     required this.pathToPerformanceFile,
-  }) {
-    childsData = <PerformanceDataPoint>[];
-  }
+  });
 
   void reInit({required String newParentKey}) {
     parentKey = newParentKey;
-    childsData = <PerformanceDataPoint>[];
     _timers.addAll({newParentKey: Stopwatch()});
+    
     parentDataPoint = PerformanceDataPoint(
       key: parentKey,
       timeFormat: "milliseconds",
@@ -58,6 +56,18 @@ class PerformanceHelper2 {
     }
   }
 
+  void storeDataPoint(PerformanceDataPoint dataPoint) {
+    _tempStorageList.add(dataPoint);
+  }
+  
+  List<PerformanceDataPoint> getStoredDataPoints() {
+    return _tempStorageList;
+  }
+
+  void clearDataPointStore() {
+    _tempStorageList = <PerformanceDataPoint>[];
+  }
+
   // void addChildReading(String key, {Map<String, dynamic>? metadata}) {
   //   parentDataPoint.childs.add(PerformanceDataPoint(
   //     key: key,
@@ -72,19 +82,22 @@ class PerformanceHelper2 {
     String key, {
     Map<String, dynamic>? metadata,
     PerformanceDataPoint? data,
+    List<PerformanceDataPoint>? childs,
   }) {
     if (parentKey == predecessorKey) {
-      parentDataPoint.childs.add(data ?? PerformanceDataPoint(
-        key: key,
-        timeFormat: "milliseconds",
-        inputTime: stop(key),
-        metaData: metadata,
-      ));
+      parentDataPoint.childs.add(data ??
+          PerformanceDataPoint(
+            key: key,
+            timeFormat: "milliseconds",
+            inputTime: stop(key),
+            inputChilds: childs,
+            metaData: metadata,
+          ));
 
       return true;
     } else {
       for (var childNode in parentDataPoint.childs) {
-        return _addReading(childNode, key, metadata: metadata, data: data);
+        return _addReading(childNode, key, metadata: metadata, data: data, childs: childs);
       }
     }
 
@@ -96,19 +109,22 @@ class PerformanceHelper2 {
     String key, {
     Map<String, dynamic>? metadata,
     PerformanceDataPoint? data,
+    List<PerformanceDataPoint>? childs,
   }) {
     if (previousNode.key == previousNode.key) {
-      previousNode.childs.add(data ?? PerformanceDataPoint(
-        key: key,
-        timeFormat: "milliseconds",
-        inputTime: stop(key),
-        metaData: metadata,
-      ));
+      previousNode.childs.add(data ??
+          PerformanceDataPoint(
+            key: key,
+            timeFormat: "milliseconds",
+            inputTime: stop(key),
+            inputChilds: childs,
+            metaData: metadata,
+          ));
 
       return true;
     } else {
       for (var childNode in previousNode.childs) {
-        var res = _addReading(childNode, key);
+        var res = _addReading(childNode, key, metadata: metadata, data: data, childs: childs);
 
         if (res) {
           return res;
@@ -166,6 +182,7 @@ class PerformanceHelper2 {
     }
 
     _timers = <String, Stopwatch>{};
+    _tempStorageList = <PerformanceDataPoint>[];
   }
 }
 
@@ -200,6 +217,18 @@ class PerformanceDataPoint {
       childs = <PerformanceDataPoint>[];
     }
   }
+
+  PerformanceDataPoint.fromMap(Map<String, dynamic> jsonMap)
+      : key = jsonMap["key"],
+        timeFormat = jsonMap["timeFormat"],
+        elapsedTime = Duration(milliseconds: jsonMap["elapsedTime"]),
+        childs = jsonMap["childs"] != null
+          ? (jsonMap["childs"])
+            .map<PerformanceDataPoint>((e) => PerformanceDataPoint.fromMap(e))
+            .toList()
+            as List<PerformanceDataPoint>
+          : <PerformanceDataPoint>[],
+        metadata = jsonMap["metadata"];
 
   Map<String, dynamic> toMap() {
     return {

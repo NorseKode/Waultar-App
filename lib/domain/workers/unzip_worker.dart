@@ -51,7 +51,7 @@ Future unzipWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
         if (file.isFile && !file.name.endsWith('zip.enc')) {
           var performanceReading = "";
           if (isPerformanceTracking) {
-            // performance!.startReading("Extracted File");
+            performance!.startReading("Extracted File");
             fileCount++;
             // performance!.resetChild();
             // performance.startChild();
@@ -68,15 +68,15 @@ Future unzipWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
           // }
 
           if (isPerformanceTracking) {
-            // var key = "Extracted File";
-            // var reading = performance!.stop(key);
-            // performanceReading = jsonEncode(PerformanceDataPoint(
-            //     key: "Extracted File",
-            //     timeFormat: "milliseconds",
-            //     inputTime: reading,
-            //     metaData: <String, dynamic>{
-            //       "file path": outputStream.path,
-            //     }));
+            var key = "Extracted File";
+            var reading = performance!.stop(key);
+            performanceReading = jsonEncode(PerformanceDataPoint(
+                key: "Extracted File",
+                timeFormat: "milliseconds",
+                inputTime: reading,
+                metaData: <String, dynamic>{
+                  "file path": outputStream.path,
+                }).toMap());
           }
 
           if (outputStream.path.endsWith(".json")) {

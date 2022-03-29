@@ -77,12 +77,12 @@ class ParserService implements IParserService {
           data as MainUnzipProgressPackage;
           callback("${data.progress} files extracted out of $_totalCount", false);
           if (ISPERFORMANCETRACKING) {
-            // PerformanceDataPoint performanceNode = jsonDecode(data.performanceNode);
-            // _performance.addReading(
-            //   "Extracting files",
-            //   "Extracted file",
-            //   data: performanceNode,
-            // );
+            var performanceNode = PerformanceDataPoint.fromMap(jsonDecode(data.performanceNode));
+            _performance.addReading(
+              "Extracting files",
+              performanceNode.key,
+              data: performanceNode,
+            );
           }
           break;
 
@@ -117,9 +117,12 @@ class ParserService implements IParserService {
           callback("Parsing ${data.parsedCount}/${_pathsToParse.length}", data.isDone);
 
           if (data.isDone && ISPERFORMANCETRACKING) {
-            _performance.addReading(_performance.parentKey, "Parsing of files");
+            _performance.addReading(_performance.parentKey, "Parsing of files", childs: _performance.getStoredDataPoints());
             _performance.addParentReading();
             _performance.summary("Parsing and Extracting Synchronously");
+          } else if (ISPERFORMANCETRACKING) {
+            var performanceNode = PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint));
+            _performance.storeDataPoint(performanceNode);
           }
           break;
 

@@ -19,6 +19,7 @@ class UtilityRepository implements IUtilityRepository {
     removed += _nukeAllDataPoints();
     removed += _nukeAllNames();
     removed += nukeAllProfiles();
+    removed += nukeAllCategories();
     _resetCounts();
 
     return removed;
@@ -41,6 +42,9 @@ class UtilityRepository implements IUtilityRepository {
   
   @override
   int nukeAllProfiles() => _context.store.box<ProfileDocument>().removeAll();
+
+  @override
+  int nukeAllCategories() => _context.store.box<DataCategory>().removeAll();
 
   void _resetCounts() {
     var categories = _context.store.box<DataCategory>().getAll();
