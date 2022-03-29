@@ -5,7 +5,6 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_service_repositor
 import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
-import 'package:waultar/domain/services/parser_service.dart';
 import 'package:waultar/core/parsers/tree_parser.dart';
 import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/data/entities/nodes/name_node.dart';
@@ -74,7 +73,7 @@ class _BrowseState extends State<Browse> {
           setState(() {
             isLoading = true;
           });
-
+          
           var zipFile =
               files.item1.singleWhere((element) => dart_path.extension(element) == ".zip");
 

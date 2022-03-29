@@ -1,6 +1,7 @@
 // ignore_for_file: unused_field
 
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
@@ -29,6 +30,7 @@ class ParserService implements IParserService {
       locator.get<IServiceRepository>(instanceName: 'serviceRepo');
   ParserService();
   final _performance = locator.get<PerformanceHelper2>(instanceName: 'performance2');
+  // var _timeline = TimelineTask();
 
   @override
   Future<void> parseIsolates(
@@ -37,6 +39,10 @@ class ParserService implements IParserService {
     String serviceName,
     ProfileDocument profile,
     ) async {
+      // print("Started");
+      // _timeline.start("kim");
+      // Timeline.startSync("interesting function");
+      // Timeline.instantSync("find me");
     if (ISPERFORMANCETRACKING) {
       var key = "Extracting and parsing synchronously";
       _performance.reInit(newParentKey: key);
@@ -115,6 +121,12 @@ class ParserService implements IParserService {
         case MainParsedProgressPackage:
           data as MainParsedProgressPackage;
           callback("Parsing ${data.parsedCount}/${_pathsToParse.length}", data.isDone);
+
+          if (data.isDone) {
+            // print("stoååed");
+            // _timeline.finish();
+            // Timeline.finishSync();
+          }
 
           if (data.isDone && ISPERFORMANCETRACKING) {
             _performance.addReading(_performance.parentKey, "Parsing of files", childs: _performance.getStoredDataPoints());
