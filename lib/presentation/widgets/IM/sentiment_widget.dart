@@ -18,28 +18,71 @@ class SentimentWidget extends StatefulWidget {
 class _SentimentWidgetState extends State<SentimentWidget> {
   List<DataCategory> chosenCategories = [];
   int connotated = 0;
+  int timeEstimateSeconds = 0;
 
   @override
   Widget build(BuildContext context) {
     final sentimentService =
         locator.get<ISentimentService>(instanceName: 'sentimentService');
     List<ProfileDocument> profiles = sentimentService.getAllProfiles();
-    // print(profiles.first.categories.first.category.name);
+    String timeEstimate = _timeEstimateOnCat();
+
     return DefaultWidget(
+        constraints: BoxConstraints(maxWidth: 350),
         title: "Sentiment Analysis",
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DefaultButton(onPressed: () {
-              print("pressed");
-              connotated =
-                  sentimentService.connotateTextsFromCategory(chosenCategories);
-              print("rebuild");
-              setState(() => {});
-            }),
-            Text("textConnotated: $connotated"),
-            Column(children: _profileList(profiles)),
+            const Text(
+              "Analyse the connotation of the content of you data.",
+              style: TextStyle(fontSize: 12),
+            ),
+            const SizedBox(height: 10),
+            const Text("Choose what data to run analysis on: ",
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 10),
+            SingleChildScrollView(
+                child: Column(children: _profileList(profiles))),
+            Container(
+                color: Color(0xFF202442),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text("Time estimate", style: TextStyle(fontSize: 9)),
+                          Text("$timeEstimate", style: TextStyle(fontSize: 12))
+                        ],
+                      ),
+                      SizedBox(width: 10),
+                      DefaultButton(
+                          text: "          Analyze          ",
+                          onPressed: () {
+                            connotated = sentimentService
+                                .connotateTextsFromCategory(chosenCategories);
+                            setState(() => {});
+                          })
+                    ],
+                  ),
+                )),
           ],
         ));
+  }
+
+  String formatTime(int seconds) {
+    return '${(Duration(seconds: seconds))}'
+        .substring(2, 7); //.padLeft(8, '0');
+  }
+
+  String _timeEstimateOnCat() {
+    int timeEstimate = 0;
+    chosenCategories.forEach((element) {
+      timeEstimate += (element.count * 0.001).ceil();
+    });
+    return formatTime(timeEstimate);
   }
 
   List<Widget> _profileList(List<ProfileDocument> profiles) {
@@ -47,8 +90,10 @@ class _SentimentWidgetState extends State<SentimentWidget> {
         profiles.length,
         (index) => Container(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(profiles[index].service.target!.serviceName),
+                  SizedBox(height: 5),
                   _categoryList(profiles[index]),
                 ],
               ),
@@ -56,30 +101,44 @@ class _SentimentWidgetState extends State<SentimentWidget> {
   }
 
   Widget _categoryList(ProfileDocument profile) {
-    return Column(
-        children: List.generate(
-            profile.categories.length,
-            (index) => Row(
-                  children: [
-                    Checkbox(
-                        value: chosenCategories
-                            .where((element) =>
-                                element.id == profile.categories[index].id)
-                            .toList()
-                            .isNotEmpty,
-                        onChanged: (value) {
-                          !value!
-                              ? chosenCategories.remove(
-                                  chosenCategories.firstWhere((element) =>
-                                      element.id ==
-                                      profile.categories[index].id))
-                              : chosenCategories.add(profile.categories[index]);
-                          setState(
-                            () {},
-                          );
-                        }),
-                    Text(profile.categories[index].category.name)
-                  ],
-                )));
+    return Container(
+      constraints: BoxConstraints(maxHeight: 200),
+      child: SingleChildScrollView(
+        child: Column(
+            children: List.generate(
+                profile.categories.length,
+                (index) => Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Checkbox(
+                                value: chosenCategories
+                                    .where((element) =>
+                                        element.id ==
+                                        profile.categories[index].id)
+                                    .toList()
+                                    .isNotEmpty,
+                                onChanged: (value) {
+                                  !value!
+                                      ? chosenCategories.remove(chosenCategories
+                                          .firstWhere((element) =>
+                                              element.id ==
+                                              profile.categories[index].id))
+                                      : chosenCategories
+                                          .add(profile.categories[index]);
+                                  setState(
+                                    () {},
+                                  );
+                                }),
+                            Text(profile.categories[index].category.name,
+                                style: TextStyle(fontSize: 12)),
+                          ],
+                        ),
+                        Text(profile.categories[index].count.toString())
+                      ],
+                    ))),
+      ),
+    );
   }
 }

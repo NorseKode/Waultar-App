@@ -6,7 +6,7 @@ import 'package:waultar/presentation/providers/theme_provider.dart';
 class DefaultWidgetBox extends StatefulWidget {
   Widget child;
   final BoxConstraints? constraints;
-  final double? padding;
+  final EdgeInsetsGeometry? padding;
   DefaultWidgetBox(
       {Key? key, required this.child, this.constraints, this.padding})
       : super(key: key);
@@ -27,7 +27,7 @@ class _DefaultWidgetBoxState extends State<DefaultWidgetBox> {
             borderRadius: BorderRadius.circular(10),
             color: themeProvider.themeData().primaryColor),
         child: Padding(
-            padding: EdgeInsets.all(widget.padding ?? 20),
+            padding: widget.padding ?? EdgeInsets.all(20),
             child: widget.child));
   }
 }
