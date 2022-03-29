@@ -29,17 +29,22 @@ class _BrowseState extends State<Browse> {
   late AppLocalizations localizer;
   late ThemeProvider themeProvider;
 
-  final TreeParser parser = locator.get<TreeParser>(instanceName: 'parser');
-  final IServiceRepository _serviceRepo =
-      locator.get<IServiceRepository>(instanceName: 'serviceRepo');
-  final _parserService =
-      locator.get<IParserService>(instanceName: 'parserService');
+  final TreeParser parser = locator.get<TreeParser>(
+    instanceName: 'parser',
+  );
+  final IServiceRepository _serviceRepo = locator.get<IServiceRepository>(
+    instanceName: 'serviceRepo',
+  );
+  final _parserService = locator.get<IParserService>(
+    instanceName: 'parserService',
+  );
+  final ICollectionsService _collectionsService =
+      locator.get<ICollectionsService>(
+    instanceName: 'collectionsService',
+  );
 
   bool isLoading = false;
   var _progressMessage = "Initializing";
-
-  final ICollectionsService _collectionsService =
-      locator.get<ICollectionsService>(instanceName: 'collectionsService');
 
   late List<DataCategory> _categories;
   late List<DataPointName> _names;
@@ -61,6 +66,7 @@ class _BrowseState extends State<Browse> {
       isLoading = !isDone;
       if (!isLoading) {
         _categories = _collectionsService.getAllCategories();
+        _parserService.createBuckets();
       }
     });
   }
@@ -81,9 +87,8 @@ class _BrowseState extends State<Browse> {
           var zipFile = files.item1
               .singleWhere((element) => dart_path.extension(element) == ".zip");
 
-          await _parserService.parseIsolates(
-              zipFile, _onUploadProgress, files.item2);
-          // await _parserService.parseMain(zipFile, files.item2);
+          await _parserService
+              .parseIsolates(zipFile, _onUploadProgress, files.item2);
 
         }
       },
@@ -147,16 +152,23 @@ class _BrowseState extends State<Browse> {
   }
 
   _treeMap() {
-    return SfTreemap(
-      dataCount: _categories.length,
-      levels: [
-        TreemapLevel(
-          groupMapper: (int index) {
+    return Expanded(
+      child: SfTreemap(
+        dataCount: _categories.length,
+        levels: [
+          TreemapLevel(groupMapper: (int index) {
             return _categories[index].category.categoryName;
-          },
-        ),
-      ],
-      weightValueMapper: weightValueMapper,
+          }, labelBuilder: (BuildContext context, TreemapTile tile) {
+            return Padding(
+              padding: const EdgeInsets.all(2.5),
+              child: Text('${tile.group} ${tile.weight.toInt()}'),
+            );
+          }),
+        ],
+        weightValueMapper: (int index) {
+          return _categories[index].count.toDouble();
+        },
+      ),
     );
   }
 
@@ -191,10 +203,10 @@ class _BrowseState extends State<Browse> {
               const SizedBox(
                 height: 20,
               ),
-              _categories.length < 2
-                  ? Container(
-                      child: const Text("You haven't uploaded any data yet "),
-                    )
+              _categories.isEmpty
+                  ? const Center(
+                      child: Text("You haven't uploaded any data yet "))
+                  // : _treeMap()
                   : Flexible(
                       child: GridView.count(
                         physics: const NeverScrollableScrollPhysics(),

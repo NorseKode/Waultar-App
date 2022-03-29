@@ -25,18 +25,18 @@ import 'startup.dart';
 
 void main() async {
   await setupServices();
-  locator.registerSingleton<ImageClassifier>(
-    ImageClassifierMobileNetV3(),
-    instanceName: 'imageClassifier',
-  );
+  // locator.registerSingleton<ImageClassifier>(
+  //   ImageClassifierMobileNetV3(),
+  //   instanceName: 'imageClassifier',
+  // );
   locator.registerSingleton<SentimentClassifier>(
     SentimentClassifierTextClassifierTFLite(),
     instanceName: 'sentimentClassifier',
   );
-  locator.registerSingleton<IMLService>(
-    MLService(),
-    instanceName: 'mlService',
-  );
+  // locator.registerSingleton<IMLService>(
+  //   MLService(),
+  //   instanceName: 'mlService',
+  // );
   locator.registerSingleton<ISentimentService>(
     SentimentService(),
     instanceName: 'sentimentService',

@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:tuple/tuple.dart';
+import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/core/models/ui_model.dart';
@@ -23,8 +25,21 @@ class Timeline extends StatefulWidget {
 class _TimelineState extends State<Timeline> {
   late ThemeProvider themeProvider;
 
-  final _chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+  final _chars =
+      'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
   final Random _rnd = Random();
+  final ITimelineService _timelineService = locator.get<ITimelineService>(
+    instanceName: 'timeService',
+  );
+  late List<TimeModel> _timeSeries;
+  late List<TimeModel> blocks;
+
+  @override
+  void initState() {
+    _timeSeries = _timelineService.getAllYears();
+    blocks = _timelineService.getAllYears();
+    super.initState();
+  }
 
   String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
       length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
@@ -33,34 +48,6 @@ class _TimelineState extends State<Timeline> {
   Widget build(BuildContext context) {
     themeProvider = Provider.of<ThemeProvider>(context);
 
-    ITimelineService timelineService =
-        locator.get<ITimelineService>(instanceName: 'timeService');
-
-    List<TimeModel> blocks = timelineService.getAllYears();
-
-    // List<TimeModel> blocks = List.generate(
-    //     4,
-    //     (index) => YearModel(index, 2000 + index,
-    //             ((index + 1) * 1405) + ((index + 1) * 3342), [
-    //           Tuple3((index + 1) * 2405, "Post:$index", Color(0xFF19A8F5)),
-    //           Tuple3((index + 1) * 1442, "Image:$index", Color(0xFFF06D85))
-    //         ]));
-    // blocks.addAll(List.generate(
-    //     6,
-    //     (index) => YearModel(index, 2000 + index,
-    //             ((index + 1) * 1405) + ((index + 1) * 3342), [
-    //           Tuple3((index + 1) * 2405, "Post:$index", Color(0xFF19A8F5)),
-    //           Tuple3((index + 1) * 1442, "Image:$index", Color(0xFFF06D85))
-    //         ])).reversed);
-    // blocks.addAll(List.generate(
-    //     2,
-    //     (index) => YearModel(index, 2000 + index,
-    //             ((index + 1) * 1405) + ((index + 1) * 3342), [
-    //           Tuple3((index + 1) * 2405, "Post:$index", Color(0xFF19A8F5)),
-    //           Tuple3((index + 1) * 1442, "Image:$index", Color(0xFFF06D85))
-    //         ])));
-
-   
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -73,7 +60,7 @@ class _TimelineState extends State<Timeline> {
           flex: 3,
           child: Row(
             children: [
-              Expanded(flex: 4, child: TimelineWidget(blocks: blocks)),
+              Expanded(flex: 4, child: _columnChart()),
               const SizedBox(width: 20),
               Expanded(flex: 2, child: FilterWidget(blocks: blocks))
             ],
@@ -83,5 +70,31 @@ class _TimelineState extends State<Timeline> {
         Expanded(flex: 2, child: DataPointWidget(dpList: []))
       ],
     );
+  }
+
+  _columnChart() {
+    print(_timeSeries.length);
+    return SfCartesianChart(
+      series: _getStackedTimeSeries(),
+      primaryXAxis: CategoryAxis(),
+    );
+  }
+
+  _getStackedTimeSeries() {
+    var returnList = <StackedColumnSeries>[];
+    for (var timeModel in _timeSeries) {
+      for (var categoryTuple in timeModel.categoryCount) {
+        var column = StackedColumnSeries(
+          dataSource: _timeSeries,
+          xValueMapper: (TimeModel model, _) => model.timeValue,
+          yValueMapper: (TimeModel model, _) => categoryTuple.item2,
+          // name: timeModel.categoryCount.first.item1.category.categoryName,
+          // color: categoryTuple.item1.category.color
+        );
+
+        returnList.add(column);
+      }
+    }
+    return returnList;
   }
 }

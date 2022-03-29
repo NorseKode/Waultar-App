@@ -181,7 +181,7 @@ class BucketsRepository extends IBucketsRepository {
           aux(item);
         }
       }
-      if (data is int || data is String) {
+      if (data is int) {
         var timestamp = tryParse(data);
         if (timestamp != null) timestampsSet.add(timestamp);
       }
@@ -204,11 +204,6 @@ class BucketsRepository extends IBucketsRepository {
 
       if (length >= 15 && length < 23) // <== microseconds and nano
         return DateTime.fromMicrosecondsSinceEpoch(value);
-    }
-
-    if (value is String) {
-      if (value.isEmpty) return null;
-      return DateTime.tryParse(value);
     }
 
     return null;
@@ -268,6 +263,7 @@ class BucketsRepository extends IBucketsRepository {
     var listToReturn = <YearModel>[];
     _context.store.runInTransaction(TxMode.read, () {
       var years = _yearBox.getAll();
+      print('amount of years in getAllYearModels -> ${years.length}');
       for (var year in years) {
         var categoryTuples = <Tuple2<DataCategory, int>>[];
         var profileTuples = <Tuple2<ProfileDocument, int>>[];

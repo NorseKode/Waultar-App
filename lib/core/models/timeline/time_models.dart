@@ -5,8 +5,8 @@ import 'package:waultar/data/entities/nodes/category_node.dart';
 
 abstract class TimeModel {
   int id;
-  int timeValue;
-  int total;
+  int timeValue; // x value
+  int total; // y total value
   List<Tuple2<DataCategory, int>> categoryCount;
   List<Tuple2<ProfileDocument, int>> profileCount;
   List<UIModel> dataPoints;

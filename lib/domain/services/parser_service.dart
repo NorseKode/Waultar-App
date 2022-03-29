@@ -3,6 +3,7 @@
 import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/globals.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
 import 'package:waultar/core/base_worker/base_worker.dart';
@@ -18,15 +19,25 @@ class ParserService implements IParserService {
   var _totalCount = 0;
   var _pathsToParse = <String>[];
 
-  final String _waultarPath =
-      locator.get<String>(instanceName: 'waultar_root_directory');
-  final BaseLogger _logger = locator.get<BaseLogger>(instanceName: 'logger');
-  final ProfileRepository _profileRepo =
-      locator.get<ProfileRepository>(instanceName: 'profileRepo');
-  final IServiceRepository _serviceRepo =
-      locator.get<IServiceRepository>(instanceName: 'serviceRepo');
-  ParserService();
   late final ProfileDocument _profile;
+  late DateTime _parsingStartTime;
+  final String _waultarPath = locator.get<String>(
+    instanceName: 'waultar_root_directory',
+  );
+  final BaseLogger _logger = locator.get<BaseLogger>(
+    instanceName: 'logger',
+  );
+  final ProfileRepository _profileRepo = locator.get<ProfileRepository>(
+    instanceName: 'profileRepo',
+  );
+  final IServiceRepository _serviceRepo = locator.get<IServiceRepository>(
+    instanceName: 'serviceRepo',
+  );
+  final IBucketsRepository _bucketsRepo = locator.get<IBucketsRepository>(
+    instanceName: 'bucketsRepo',
+  );
+
+  ParserService();
 
   @override
   Future<void> parseIsolates(
@@ -35,14 +46,14 @@ class ParserService implements IParserService {
     String serviceName, {
     ProfileDocument? profile,
   }) async {
-
     var profile = ProfileDocument(name: "temp test name");
     var service = _serviceRepo.get(serviceName)!;
     profile.service.target = service;
     _profile = _profileRepo.add(profile);
 
-    _startExtracting(zipPath, callback);
+    _parsingStartTime = DateTime.now();
 
+    _startExtracting(zipPath, callback);
   }
 
   _startExtracting(String zipPath, Function callback) {
@@ -62,7 +73,8 @@ class ParserService implements IParserService {
 
         case MainUnzipProgressPackage:
           data as MainUnzipProgressPackage;
-          callback("${data.progress} files extracted out of $_totalCount", false);
+          callback(
+              "${data.progress} files extracted out of $_totalCount", false);
           break;
 
         case MainUnzippedPathsPackage:
@@ -73,7 +85,7 @@ class ParserService implements IParserService {
         default:
       }
     }
-    
+
     var zipWorker = BaseWorker(initiator: initiator, mainHandler: _listenZip);
     zipWorker.init(unzipWorkerBody);
   }
@@ -100,10 +112,15 @@ class ParserService implements IParserService {
         default:
       }
     }
+
     var parseWorker =
         BaseWorker(mainHandler: _listenParser, initiator: parseInitiator);
     parseWorker.init(parseWorkerBody);
+  }
 
+  @override
+  createBuckets() {
+    _bucketsRepo.createBuckets(_parsingStartTime);
   }
 
   // we could use this for performance checking of isolates vs single
