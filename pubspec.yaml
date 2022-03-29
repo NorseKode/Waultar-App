@@ -78,6 +78,10 @@ dependencies:
   url_launcher: ^6.0.20
   easy_isolate: ^1.3.0
 
+  # charts package
+  syncfusion_flutter_charts: ^19.4.56
+  syncfusion_flutter_treemap: ^19.4.56-beta
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
