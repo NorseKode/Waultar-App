@@ -13,6 +13,7 @@ abstract class IUtilityRepository {
   int nukeAllFiles();
   /// Returns total amount of links deleted
   int nukeAllLinks();
+  int nukeAllProfiles();
   List<DataCategory> getAllCategories();
   int getTotalCountDataPoints();
   int getTotalCountDataNames();

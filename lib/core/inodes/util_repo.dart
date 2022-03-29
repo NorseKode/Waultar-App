@@ -1,5 +1,6 @@
 import 'package:waultar/core/abstracts/abstract_repositories/i_utility_repostitory.dart';
 import 'package:waultar/core/inodes/media_documents.dart';
+import 'package:waultar/core/inodes/profile_document.dart';
 import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 
@@ -17,6 +18,7 @@ class UtilityRepository implements IUtilityRepository {
     removed += nukeAllLinks();
     removed += _nukeAllDataPoints();
     removed += _nukeAllNames();
+    removed += nukeAllProfiles();
     _resetCounts();
 
     return removed;
@@ -37,6 +39,8 @@ class UtilityRepository implements IUtilityRepository {
   @override
   int nukeAllVideos() => _context.store.box<VideoDocument>().removeAll();
   
+  @override
+  int nukeAllProfiles() => _context.store.box<ProfileDocument>().removeAll();
 
   void _resetCounts() {
     var categories = _context.store.box<DataCategory>().getAll();

@@ -2,14 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart' as dart_path;
-import 'package:tuple/tuple.dart';
 
 class PerformanceHelper2 {
   String pathToPerformanceFile;
   late String parentKey;
   late PerformanceDataPoint parentDataPoint;
   late List<PerformanceDataPoint> childsData;
-  var _timers = <Tuple2<String, Stopwatch>>[];
+  var _timers = <String, Stopwatch>{};
 
   PerformanceHelper2({
     required this.pathToPerformanceFile,
@@ -20,7 +19,7 @@ class PerformanceHelper2 {
   void reInit({required String newParentKey}) {
     parentKey = newParentKey;
     childsData = <PerformanceDataPoint>[];
-    _timers.add(Tuple2(parentKey, Stopwatch()));
+    _timers.addAll({newParentKey: Stopwatch()});
     parentDataPoint = PerformanceDataPoint(
       key: parentKey,
       timeFormat: "milliseconds",
@@ -28,8 +27,13 @@ class PerformanceHelper2 {
     );
   }
 
-  void addTimers(String key) {
-    _timers.add(Tuple2(key, Stopwatch()));
+  void startReading(String key) {
+    if (_timers[key] == null) {
+      _timers.addAll({key: Stopwatch()});
+    }
+
+    reset(key);
+    start(key);
   }
 
   void start(String key) {
@@ -54,19 +58,69 @@ class PerformanceHelper2 {
     }
   }
 
-  void addChildReading(String key, {Map<String, dynamic>? metadata}) {
-    parentDataPoint.childs.add(PerformanceDataPoint(
-      key: key,
-      timeFormat: "milliseconds",
-      inputTime: stop(key),
-      metaData: metadata,
-    ));
+  // void addChildReading(String key, {Map<String, dynamic>? metadata}) {
+  //   parentDataPoint.childs.add(PerformanceDataPoint(
+  //     key: key,
+  //     timeFormat: "milliseconds",
+  //     inputTime: stop(key),
+  //     metaData: metadata,
+  //   ));
+  // }
+
+  bool addReading(
+    String predecessorKey,
+    String key, {
+    Map<String, dynamic>? metadata,
+    PerformanceDataPoint? data,
+  }) {
+    if (parentKey == predecessorKey) {
+      parentDataPoint.childs.add(data ?? PerformanceDataPoint(
+        key: key,
+        timeFormat: "milliseconds",
+        inputTime: stop(key),
+        metaData: metadata,
+      ));
+
+      return true;
+    } else {
+      for (var childNode in parentDataPoint.childs) {
+        return _addReading(childNode, key, metadata: metadata, data: data);
+      }
+    }
+
+    return false;
   }
 
-  void addSpecificChild
+  bool _addReading(
+    PerformanceDataPoint previousNode,
+    String key, {
+    Map<String, dynamic>? metadata,
+    PerformanceDataPoint? data,
+  }) {
+    if (previousNode.key == previousNode.key) {
+      previousNode.childs.add(data ?? PerformanceDataPoint(
+        key: key,
+        timeFormat: "milliseconds",
+        inputTime: stop(key),
+        metaData: metadata,
+      ));
+
+      return true;
+    } else {
+      for (var childNode in previousNode.childs) {
+        var res = _addReading(childNode, key);
+
+        if (res) {
+          return res;
+        }
+      }
+    }
+
+    return false;
+  }
 
   Stopwatch _getSpecificTimer(String key) {
-    return _timers.firstWhere((element) => element.item1 == key).item2;
+    return _timers[key]!;
   }
 
   /// Stops the parent timer, write results to a json file with [fileName]
@@ -106,12 +160,12 @@ class PerformanceHelper2 {
     parentKey = "";
     parentDataPoint = PerformanceDataPoint(key: "", timeFormat: "");
 
-    for (var timer in _timers) {
-      timer.item2.stop();
-      timer.item2.reset();
+    for (var timer in _timers.values) {
+      timer.stop();
+      timer.reset();
     }
 
-    _timers = <Tuple2<String, Stopwatch>>[];
+    _timers = <String, Stopwatch>{};
   }
 }
 
