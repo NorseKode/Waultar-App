@@ -1,5 +1,5 @@
 // ignore_for_file: avoid_print
-import 'package:waultar/core/inodes/profile_document.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 
 abstract class IParserService {
   // gets called by the uploader --> returns the paths

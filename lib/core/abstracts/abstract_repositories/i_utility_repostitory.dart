@@ -1,4 +1,4 @@
-import 'package:waultar/core/inodes/tree_nodes.dart';
+import 'package:waultar/data/entities/nodes/category_node.dart';
 
 abstract class IUtilityRepository {
   /// Delete all created entities and returns total amount of entities deleted

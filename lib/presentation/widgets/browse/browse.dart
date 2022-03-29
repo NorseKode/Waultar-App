@@ -1,21 +1,18 @@
 // ignore_for_file: avoid_print
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
-import 'package:waultar/core/inodes/profile_document.dart';
-import 'package:waultar/core/inodes/tree_nodes.dart';
-import 'package:waultar/core/inodes/tree_parser.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/domain/services/parser_service.dart';
+import 'package:waultar/core/parsers/tree_parser.dart';
+import 'package:waultar/data/entities/nodes/category_node.dart';
+import 'package:waultar/data/entities/nodes/name_node.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 import 'package:waultar/presentation/widgets/snackbar_custom.dart';
-import 'package:waultar/presentation/widgets/upload/upload_files.dart';
 import 'package:waultar/presentation/widgets/upload/uploader.dart';
 import 'package:waultar/startup.dart';
 import 'package:path/path.dart' as dart_path;

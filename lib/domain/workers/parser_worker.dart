@@ -4,8 +4,8 @@ import 'dart:isolate';
 import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
 import 'package:waultar/core/helpers/performance_helper2.dart';
-import 'package:waultar/core/inodes/profile_repo.dart';
-import 'package:waultar/core/inodes/tree_parser.dart';
+import 'package:waultar/data/repositories/profile_repo.dart';
+import 'package:waultar/core/parsers/tree_parser.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/startup.dart';
 

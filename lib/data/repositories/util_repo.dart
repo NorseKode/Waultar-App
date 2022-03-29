@@ -1,8 +1,13 @@
 import 'package:waultar/core/abstracts/abstract_repositories/i_utility_repostitory.dart';
-import 'package:waultar/core/inodes/media_documents.dart';
-import 'package:waultar/core/inodes/profile_document.dart';
-import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/data/configs/objectbox.dart';
+import 'package:waultar/data/entities/media/file_document.dart';
+import 'package:waultar/data/entities/media/image_document.dart';
+import 'package:waultar/data/entities/media/link_document.dart';
+import 'package:waultar/data/entities/media/video_document.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
+import 'package:waultar/data/entities/nodes/category_node.dart';
+import 'package:waultar/data/entities/nodes/datapoint_node.dart';
+import 'package:waultar/data/entities/nodes/name_node.dart';
 
 class UtilityRepository implements IUtilityRepository {
 

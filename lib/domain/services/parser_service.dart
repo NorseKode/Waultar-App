@@ -9,9 +9,9 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_service_repositor
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
 import 'package:waultar/core/base_worker/base_worker.dart';
 import 'package:waultar/core/helpers/performance_helper2.dart';
-import 'package:waultar/core/inodes/profile_document.dart';
-import 'package:waultar/core/inodes/profile_repo.dart';
-import 'package:waultar/core/inodes/tree_parser.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
+import 'package:waultar/data/repositories/profile_repo.dart';
+import 'package:waultar/core/parsers/tree_parser.dart';
 import 'package:waultar/domain/workers/parser_worker.dart';
 import 'package:waultar/domain/workers/unzip_worker.dart';
 import 'package:waultar/presentation/widgets/upload/upload_files.dart';

@@ -1,5 +1,5 @@
-import 'package:waultar/core/inodes/profile_document.dart';
-import 'package:waultar/core/inodes/tree_nodes.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
+import 'package:waultar/data/entities/nodes/category_node.dart';
 
 abstract class ISentimentService {
   double connotateText(String text);
