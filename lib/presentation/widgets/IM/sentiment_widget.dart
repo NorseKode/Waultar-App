@@ -36,7 +36,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
               style: TextStyle(fontSize: 12),
             ),
             const SizedBox(height: 10),
-            const Text("Choose what data to run analysis on: ",
+            Text("Choose what data to run analysis on:",
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
             SingleChildScrollView(
@@ -66,19 +66,19 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                     ],
                   ),
                 )),
+            connotated != 0 ? Text("done: $connotated") : Container(),
           ],
         ));
   }
 
   String formatTime(int seconds) {
-    return '${(Duration(seconds: seconds))}'
-        .substring(2, 7); //.padLeft(8, '0');
+    return '${(Duration(seconds: seconds))}'.substring(2, 7);
   }
 
   String _timeEstimateOnCat() {
     int timeEstimate = 0;
     chosenCategories.forEach((element) {
-      timeEstimate += (element.count * 0.001).ceil();
+      timeEstimate += (element.count * 0.0005).ceil();
     });
     return formatTime(timeEstimate);
   }

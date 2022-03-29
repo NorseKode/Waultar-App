@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:objectbox/objectbox.dart';
 import 'package:pretty_json/pretty_json.dart';
+import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/data/repositories/datapoint_repo.dart';
 import 'package:waultar/data/entities/media/file_document.dart';
@@ -23,7 +24,10 @@ class DataPoint {
 
   // ui most important info field about the datapoint
   late String stringName;
-  late double sentimentScore;
+
+  double? sentimentScore;
+
+  String? sentimentText;
 
   final category = ToOne<DataCategory>();
   final profile = ToOne<ProfileDocument>();
@@ -82,7 +86,30 @@ class DataPoint {
       searchStrings.add(stringName);
     }
     createdAt = DateTime.now();
-    sentimentScore = 0;
+    sentimentText = _getSentimentText(dataCategory, json, targetProfile);
+  }
+
+  String? _getSentimentText(
+      DataCategory dataCategory, dynamic json, ProfileDocument profile) {
+    switch (profile.service.target!.serviceName) {
+      case "Facebook":
+        switch (dataCategory.category) {
+          case CategoryEnum.messaging:
+            if (json is Map<String, dynamic> && json.containsKey("content")) {
+              return json["content"];
+            }
+        }
+        break;
+
+      case "Instagram":
+        switch (dataCategory.category) {
+          case CategoryEnum.messaging:
+            if (json is Map<String, dynamic> && json.containsKey("content")) {
+              return json["content"];
+            }
+        }
+        break;
+    }
   }
 
   void _createRelations(String basePathToMedia) {

@@ -80,7 +80,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(3, 947152359241009292),
       name: 'DataPoint',
-      lastPropertyId: const IdUid(10, 8749102867233895036),
+      lastPropertyId: const IdUid(11, 7095693234630223665),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -138,6 +138,11 @@ final _entities = <ModelEntity>[
             id: const IdUid(10, 8749102867233895036),
             name: 'dbCreatedAt',
             type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(11, 7095693234630223665),
+            name: 'sentimentText',
+            type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[
@@ -797,7 +802,10 @@ ModelDefinition getObjectBoxModel() {
               .map(fbb.writeString)
               .toList(growable: false));
           final valuesOffset = fbb.writeString(object.values);
-          fbb.startTable(11);
+          final sentimentTextOffset = object.sentimentText == null
+              ? null
+              : fbb.writeString(object.sentimentText!);
+          fbb.startTable(12);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.dataPointName.targetId);
           fbb.addOffset(2, stringNameOffset);
@@ -808,6 +816,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(7, valuesOffset);
           fbb.addInt64(8, object.createdAt.microsecondsSinceEpoch * 1000);
           fbb.addInt64(9, object.dbCreatedAt);
+          fbb.addOffset(10, sentimentTextOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -817,8 +826,8 @@ ModelDefinition getObjectBoxModel() {
 
           final object = DataPoint(
               id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
-              sentimentScore:
-                  const fb.Float64Reader().vTableGet(buffer, rootOffset, 10, 0))
+              sentimentScore: const fb.Float64Reader()
+                  .vTableGetNullable(buffer, rootOffset, 10))
             ..stringName = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 8, '')
             ..searchStrings = const fb.ListReader<String>(
@@ -832,7 +841,9 @@ ModelDefinition getObjectBoxModel() {
                         1000)
                     .round())
             ..dbCreatedAt =
-                const fb.Int64Reader().vTableGet(buffer, rootOffset, 22, 0);
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 22, 0)
+            ..sentimentText = const fb.StringReader(asciiOptimization: true)
+                .vTableGetNullable(buffer, rootOffset, 24);
           object.dataPointName.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
           object.dataPointName.attach(store);
@@ -1466,6 +1477,10 @@ class DataPoint_ {
   /// see [DataPoint.dbCreatedAt]
   static final dbCreatedAt =
       QueryIntegerProperty<DataPoint>(_entities[1].properties[9]);
+
+  /// see [DataPoint.sentimentText]
+  static final sentimentText =
+      QueryStringProperty<DataPoint>(_entities[1].properties[10]);
 
   /// see [DataPoint.images]
   static final images =

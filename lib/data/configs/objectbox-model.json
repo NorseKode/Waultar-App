@@ -47,7 +47,7 @@
     },
     {
       "id": "3:947152359241009292",
-      "lastPropertyId": "10:8749102867233895036",
+      "lastPropertyId": "11:7095693234630223665",
       "name": "DataPoint",
       "properties": [
         {
@@ -109,6 +109,11 @@
           "id": "10:8749102867233895036",
           "name": "dbCreatedAt",
           "type": 6
+        },
+        {
+          "id": "11:7095693234630223665",
+          "name": "sentimentText",
+          "type": 9
         }
       ],
       "relations": [
