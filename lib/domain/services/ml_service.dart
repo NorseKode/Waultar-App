@@ -1,13 +1,10 @@
-import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/ai/image_classifier.dart';
 import 'package:waultar/core/ai/sentiment_classifier.dart';
-import 'package:waultar/core/inodes/datapoint_repo.dart';
-import 'package:waultar/core/inodes/media_repo.dart';
-import 'package:waultar/core/inodes/profile_document.dart';
-import 'package:waultar/core/inodes/tree_nodes.dart';
+import 'package:waultar/data/repositories/datapoint_repo.dart';
+import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:waultar/startup.dart';
 
 class MLService extends IMLService {

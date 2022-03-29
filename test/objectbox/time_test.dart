@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:waultar/core/inodes/buckets_repo.dart';
-import 'package:waultar/core/inodes/tree_nodes.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repository.dart';
 import 'package:waultar/startup.dart';
+import 'package:waultar/configs/globals/category_enums.dart';
+
 
 import '../test_helper.dart';
 

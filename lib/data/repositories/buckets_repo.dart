@@ -1,28 +1,18 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
-
 import 'package:tuple/tuple.dart';
-import 'package:waultar/core/inodes/profile_document.dart';
-import 'package:waultar/core/inodes/service_document.dart';
-import 'package:waultar/core/inodes/tree_nodes.dart';
+import 'package:waultar/configs/globals/category_enums.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repository.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
-import 'package:waultar/data/entities/timebuckets/buckets.dart';
+import 'package:waultar/data/entities/nodes/category_node.dart';
+import 'package:waultar/data/entities/nodes/datapoint_node.dart';
+import 'package:waultar/data/entities/timebuckets/day_bucket.dart';
+import 'package:waultar/data/entities/timebuckets/hour_bucket.dart';
+import 'package:waultar/data/entities/timebuckets/month_bucket.dart';
+import 'package:waultar/data/entities/timebuckets/year_bucket.dart';
 
-abstract class IBucketsRepository {
-  Future createBuckets(DateTime dataPointsCreatedAfter);
-  List<YearBucket> getAllYears();
-  YearBucket? getYear(int year);
-  List<MonthBucket> getMonthsFromYearValue(int year);
-  List<MonthBucket> getMonthsFromYearId(int yearId);
-  List<DayBucket> getDaysFromMonth(MonthBucket month);
-  List<DayBucket> getDaysFromMonthId(int monthId);
-  List<DataPoint> getDataPointsFromDay(DayBucket day);
-  List<YearModel> getAllYearModels();
-  List<MonthModel> getMonthModelsFromYear(YearModel yearModel);
-  List<DayModel> getDayModelsFromMonth(MonthModel monthModel);
-  List<HourModel> getHourModelsFromDay(DayModel dayModel);
-}
 
 class BucketsRepository extends IBucketsRepository {
   final ObjectBox _context;

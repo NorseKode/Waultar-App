@@ -5,8 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/core/base_worker/base_worker.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
-import 'package:waultar/core/inodes/profile_document.dart';
-import 'package:waultar/core/inodes/profile_repo.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
+import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/startup.dart';
 
