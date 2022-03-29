@@ -6,11 +6,11 @@ import 'package:path/path.dart' as dart_path;
 class PerformanceHelper {
   String pathToPerformanceFile;
   late String parentKey;
-  late PerformanceDataPoint _parentDataPoint;
+  late PerformanceDataPoint parentDataPoint;
+  List<Stopwatch> _timers = <Stopwatch>[Stopwatch(),Stopwatch()];
   final _parentTimer = Stopwatch();
   String? childKey;
   final _childTimer = Stopwatch();
-  List<Stopwatch> _watches = <Stopwatch>[];
 
   PerformanceHelper({
     required this.pathToPerformanceFile,
@@ -22,7 +22,7 @@ class PerformanceHelper {
     if (newChildKey != null) {
       childKey = newChildKey;
     }
-    _parentDataPoint = PerformanceDataPoint(
+    parentDataPoint = PerformanceDataPoint(
       key: parentKey,
       timeFormat: "milliseconds",
     );
@@ -50,7 +50,7 @@ class PerformanceHelper {
   }
 
   void addChildReading({Map<String, dynamic>? metadata}) {
-    _parentDataPoint.childs.add(PerformanceDataPoint(
+    parentDataPoint.childs.add(PerformanceDataPoint(
       key: childKey!,
       timeFormat: "milliseconds",
       inputTime: _childTimer.elapsed,
@@ -59,15 +59,15 @@ class PerformanceHelper {
   }
 
   void addChildDataPointTimer() {
-    _watches.add(Stopwatch());
-    _watches[0].start();
+    _timers.add(Stopwatch());
+    _timers[0].start();
   }
 
   void addChildToDataPointReading(int index, String key, {Map<String, dynamic>? metadata}) {
-    _watches[index].stop();
-    var elapsed = _watches[index].elapsed;
+    _timers[index].stop();
+    var elapsed = _timers[index].elapsed;
 
-    _parentDataPoint.childs.add(
+    parentDataPoint.childs.add(
       PerformanceDataPoint(
         key: key,
         timeFormat: "milliseconds",
@@ -85,10 +85,10 @@ class PerformanceHelper {
   void stopParentAndWriteToFile(String fileName, {Map<String, dynamic>? metadata}) {
     stop();
     var elapsed = _parentTimer.elapsed;
-    _parentDataPoint.elapsedTime = elapsed;
+    parentDataPoint.elapsedTime = elapsed;
 
     if (metadata != null) {
-      _parentDataPoint.metadata.addAll(metadata);
+      parentDataPoint.metadata.addAll(metadata);
     }
 
     _summary(fileName, parentKey);
@@ -108,7 +108,7 @@ class PerformanceHelper {
     );
 
     summaryFile.createSync(recursive: true);
-    summaryFile.writeAsStringSync(jsonEncode(_parentDataPoint.toMap()));
+    summaryFile.writeAsStringSync(jsonEncode(parentDataPoint.toMap()));
 
     dispose();
   }
@@ -118,8 +118,8 @@ class PerformanceHelper {
     childKey = "";
     _parentTimer.reset();
     _childTimer.reset();
-    _parentDataPoint.childs = <PerformanceDataPoint>[];
-    _watches = <Stopwatch>[];
+    parentDataPoint.childs = <PerformanceDataPoint>[];
+    _timers = <Stopwatch>[];
   }
 }
 

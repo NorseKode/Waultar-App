@@ -1,5 +1,5 @@
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
-import 'package:waultar/core/inodes/service_document.dart';
+import 'package:waultar/data/entities/misc/service_document.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
 

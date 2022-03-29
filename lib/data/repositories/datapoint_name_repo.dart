@@ -1,6 +1,7 @@
-import 'package:waultar/core/inodes/tree_nodes.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
+import 'package:waultar/data/entities/nodes/datapoint_node.dart';
+import 'package:waultar/data/entities/nodes/name_node.dart';
 
 class DataPointNameRepository {
   final ObjectBox _context;

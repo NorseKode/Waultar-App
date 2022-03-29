@@ -5,20 +5,23 @@ import 'dart:io';
 
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/globals.dart';
-import 'package:waultar/configs/globals/helper/performance_helper.dart';
+import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/helpers/PathHelper.dart';
-import 'package:waultar/core/inodes/data_category_repo.dart';
-import 'package:waultar/core/inodes/datapoint_name_repo.dart';
-import 'package:waultar/core/inodes/datapoint_repo.dart';
-import 'package:waultar/core/inodes/profile_document.dart';
-import 'package:waultar/core/inodes/profile_repo.dart';
-import 'package:waultar/core/inodes/service_document.dart';
-import 'package:waultar/core/inodes/tree_nodes.dart';
+import 'package:waultar/data/repositories/data_category_repo.dart';
+import 'package:waultar/data/repositories/datapoint_name_repo.dart';
+import 'package:waultar/data/repositories/datapoint_repo.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
+import 'package:waultar/data/repositories/profile_repo.dart';
+import 'package:waultar/data/entities/misc/service_document.dart';
 import 'package:path/path.dart' as path_dart;
-import 'package:waultar/core/inodes/json_decider.dart';
-import 'package:waultar/core/parsers/parse_helper.dart';
+import 'package:waultar/core/parsers/json_decider.dart';
+import 'package:waultar/data/entities/nodes/category_node.dart';
+import 'package:waultar/data/entities/nodes/datapoint_node.dart';
+import 'package:waultar/data/entities/nodes/name_node.dart';
 import 'package:waultar/startup.dart';
+
+import 'json_decider.dart';
 
 class TreeParser {
   final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
@@ -330,7 +333,6 @@ dynamic _flattenRecurse(String keyState, dynamic acc) {
             updated.addAll({keyState: flattenedValue});
           }
         } else {
-          // TODO - change key to flattenedKey if the results are too unprecise
           updated.addAll({flattenedKey: flattenedValue});
         }
       }

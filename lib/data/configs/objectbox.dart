@@ -1,19 +1,17 @@
-import 'package:objectbox/internal.dart';
-import 'package:waultar/core/inodes/service_document.dart';
-import 'package:waultar/core/inodes/tree_nodes.dart';
+import 'package:waultar/data/configs/objectbox.g.dart';
+import 'package:waultar/data/entities/misc/service_document.dart';
 import 'package:path/path.dart' as dart_path;
 
-import '../entities/misc/appsettings_objectbox.dart';
-import 'objectbox.g.dart';
+import '../entities/misc/appsettings_document.dart';
 
 class ObjectBox {
   late final Store store;
 
   ObjectBox._create(this.store) {
     // additional setup code here
-    final appSettingsBox = store.box<AppSettingsObjectBox>();
+    final appSettingsBox = store.box<AppSettingsDocument>();
     if (appSettingsBox.count() == 0) {
-      var initialAppSettings = AppSettingsObjectBox(0, false);
+      var initialAppSettings = AppSettingsDocument(0, false);
       appSettingsBox.put(initialAppSettings);
     }
 

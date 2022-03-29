@@ -1,11 +1,12 @@
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 
 import 'package:waultar/core/ai/sentiment_classifier.dart';
-import 'package:waultar/core/inodes/datapoint_repo.dart';
+import 'package:waultar/data/repositories/datapoint_repo.dart';
 
-import 'package:waultar/core/inodes/profile_document.dart';
-import 'package:waultar/core/inodes/profile_repo.dart';
-import 'package:waultar/core/inodes/tree_nodes.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
+import 'package:waultar/data/repositories/profile_repo.dart';
+import 'package:waultar/data/entities/nodes/category_node.dart';
+import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/startup.dart';
 
 class SentimentService extends ISentimentService {

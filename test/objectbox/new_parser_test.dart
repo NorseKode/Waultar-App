@@ -3,12 +3,11 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:waultar/core/inodes/profile_document.dart';
-import 'package:waultar/core/inodes/service_document.dart';
-import 'package:waultar/core/inodes/tree_nodes.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:path/path.dart' as dart_path;
-import 'package:waultar/core/inodes/tree_parser.dart';
+import 'package:waultar/core/parsers/tree_parser.dart';
 import 'package:waultar/data/configs/objectbox.dart';
+import 'package:waultar/data/entities/nodes/name_node.dart';
 import 'package:waultar/startup.dart';
 
 import '../test_helper.dart';

@@ -1,10 +1,11 @@
-import 'package:waultar/core/inodes/profile_document.dart';
-import 'package:waultar/core/inodes/service_document.dart';
-import 'package:waultar/core/inodes/tree_nodes.dart';
+import 'package:waultar/configs/globals/category_enums.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
 import 'package:path/path.dart' as path_dart;
-import 'package:waultar/startup.dart';
+import 'package:waultar/data/entities/nodes/category_node.dart';
+import 'package:waultar/data/entities/nodes/datapoint_node.dart';
+import 'package:waultar/data/entities/nodes/name_node.dart';
 
 class DataCategoryRepository {
   final ObjectBox _context;

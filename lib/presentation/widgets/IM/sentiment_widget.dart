@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
-import 'package:waultar/core/inodes/profile_document.dart';
-import 'package:waultar/core/inodes/profile_repo.dart';
-import 'package:waultar/core/inodes/tree_nodes.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
+import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 import 'package:waultar/startup.dart';

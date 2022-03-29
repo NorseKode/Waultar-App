@@ -4,32 +4,30 @@ import 'package:path/path.dart' as dart_path;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:waultar/configs/globals/helper/performance_helper.dart';
+import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_utility_repostitory.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
-import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
-import 'package:waultar/core/inodes/buckets_repo.dart';
-import 'package:waultar/core/inodes/data_category_repo.dart';
-import 'package:waultar/core/inodes/datapoint_name_repo.dart';
-import 'package:waultar/core/inodes/datapoint_repo.dart';
-import 'package:waultar/core/inodes/media_repo.dart';
-import 'package:waultar/core/inodes/profile_repo.dart';
-import 'package:waultar/core/inodes/service_repo.dart';
-import 'package:waultar/core/inodes/tree_parser.dart';
-import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
-import 'package:waultar/core/inodes/util_repo.dart';
+import 'package:waultar/core/helpers/performance_helper2.dart';
+import 'package:waultar/data/repositories/buckets_repo.dart';
+import 'package:waultar/data/repositories/data_category_repo.dart';
+import 'package:waultar/data/repositories/datapoint_name_repo.dart';
+import 'package:waultar/data/repositories/datapoint_repo.dart';
+import 'package:waultar/data/repositories/media_repo.dart';
+import 'package:waultar/data/repositories/profile_repo.dart';
+import 'package:waultar/data/repositories/service_repo.dart';
+import 'package:waultar/core/parsers/tree_parser.dart';
+import 'package:waultar/data/repositories/util_repo.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/repositories/appsettings_repo.dart';
 import 'package:waultar/domain/services/appsettings_service.dart';
 import 'package:waultar/domain/services/collections_service.dart';
-import 'package:waultar/domain/services/ml_service.dart';
 import 'package:waultar/domain/services/parser_service.dart';
-import 'package:waultar/domain/services/sentiment_service.dart';
 import 'package:waultar/domain/services/timeline_service.dart';
 import 'configs/globals/app_logger.dart';
 import 'configs/globals/os_enum.dart';
@@ -73,6 +71,13 @@ Future<void> setupServices({
         pathToPerformanceFile: _performanceFolderPath,
       ),
       instanceName: 'performance',
+    );
+
+    locator.registerSingleton<PerformanceHelper2>(
+      PerformanceHelper2(
+        pathToPerformanceFile: _performanceFolderPath,
+      ),
+      instanceName: 'performance2',
     );
 
     // create objectbox at startup

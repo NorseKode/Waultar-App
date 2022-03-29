@@ -1,8 +1,11 @@
+import 'dart:convert';
 import 'dart:isolate';
 
+import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
-import 'package:waultar/core/inodes/profile_repo.dart';
-import 'package:waultar/core/inodes/tree_parser.dart';
+import 'package:waultar/core/helpers/performance_helper2.dart';
+import 'package:waultar/data/repositories/profile_repo.dart';
+import 'package:waultar/core/parsers/tree_parser.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/startup.dart';
 
@@ -10,6 +13,9 @@ Future parseWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
   if (data is IsolateParserStartPackage) {
     try {
       await setupIsolate(mainSendPort, data, data.waultarPath);
+      var performanceReading = "";
+      var count = 0;
+      var performance = locator<PerformanceHelper2>(instanceName: "performance2");
       var profile = locator.get<ProfileRepository>(instanceName: 'profileRepo').get(data.profileId);
 
       if (profile == null) {
@@ -17,11 +23,36 @@ Future parseWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
       } else {
         var parser = locator.get<TreeParser>(instanceName: 'parser');
 
+        if (data.isPerformanceTracking) {
+          performance.startReading("Parse of file");
+        }
         await for (final increment in parser.parseManyPaths(data.paths, profile)) {
-          mainSendPort.send(MainParsedProgressPackage(parsedCount: increment, isDone: false));
+          if (data.isPerformanceTracking) {
+            var key = "Parse of file";
+            performanceReading = jsonEncode(
+              PerformanceDataPoint(
+                key: key,
+                timeFormat: "milliseconds",
+                inputTime: performance.stop(key),
+                inputChilds: <PerformanceDataPoint>[],
+                metaData: {"file name": data.paths[count]},
+              ).toMap(),
+            );
+
+            count++;
+          }
+          mainSendPort.send(MainParsedProgressPackage(
+            parsedCount: increment,
+            isDone: false,
+            performanceDataPoint: performanceReading,
+          ));
         }
 
-        mainSendPort.send(MainParsedProgressPackage(parsedCount: 0, isDone: true));
+        mainSendPort.send(MainParsedProgressPackage(
+          parsedCount: 0,
+          isDone: true,
+          performanceDataPoint: performanceReading,
+        ));
       }
     } catch (e, stackTrace) {
       mainSendPort.send(LogRecordPackage(e.toString(), stackTrace.toString()));
@@ -57,10 +88,12 @@ class IsolateParserStartPackage extends InitiatorPackage {
 class MainParsedProgressPackage {
   int parsedCount;
   bool isDone;
+  String performanceDataPoint;
 
   MainParsedProgressPackage({
     required this.parsedCount,
     required this.isDone,
+    required this.performanceDataPoint,
   });
 }
 

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pretty_json/pretty_json.dart';
-import 'package:waultar/core/inodes/tree_nodes.dart';
+import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
+import 'package:waultar/data/entities/nodes/category_node.dart';
+import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 
 class DataPointRepository {
   final ObjectBox _context;

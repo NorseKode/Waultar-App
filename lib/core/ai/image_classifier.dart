@@ -9,7 +9,7 @@ import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/exceptions/ai_exception.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/globals.dart';
-import 'package:waultar/configs/globals/helper/performance_helper.dart';
+import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/core/ai/i_ml_model.dart';
 import 'package:waultar/startup.dart';
 

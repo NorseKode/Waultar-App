@@ -1,5 +1,5 @@
+import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
-import 'package:waultar/core/inodes/buckets_repo.dart';
 import 'package:waultar/core/models/timeline/time_models.dart';
 
 class TimeLineService implements ITimelineService {
