@@ -66,14 +66,13 @@ class _TimelineState extends State<Timeline> {
             ],
           ),
         ),
-        const SizedBox(height: 20),
-        Expanded(flex: 2, child: DataPointWidget(dpList: []))
+        // const SizedBox(height: 20),
+        // Expanded(flex: 2, child: DataPointWidget(dpList: []))
       ],
     );
   }
 
   _columnChart() {
-    print(_timeSeries.length);
     return SfCartesianChart(
       series: _getStackedTimeSeries(),
       primaryXAxis: CategoryAxis(),
@@ -82,18 +81,23 @@ class _TimelineState extends State<Timeline> {
 
   _getStackedTimeSeries() {
     var returnList = <StackedColumnSeries>[];
+    // for (var item in _timeSeries[1].categoryCount) {
+    //   print(item.item1.category.categoryName);
+    // }
     for (var timeModel in _timeSeries) {
-      for (var categoryTuple in timeModel.categoryCount) {
-        var column = StackedColumnSeries(
-          dataSource: _timeSeries,
-          xValueMapper: (TimeModel model, _) => model.timeValue,
-          yValueMapper: (TimeModel model, _) => categoryTuple.item2,
-          // name: timeModel.categoryCount.first.item1.category.categoryName,
-          // color: categoryTuple.item1.category.color
-        );
+      var column = StackedColumnSeries(
+        dataSource: timeModel.categoryCount,
+        xValueMapper: (model, _) => timeModel.timeValue,
+        yValueMapper: (model, index) => timeModel.categoryCount[index].item2,
+        dataLabelMapper: (model, index) =>
+            '${timeModel.categoryCount[index].item1.category.categoryName} \n${timeModel.categoryCount[index].item2}',
+        dataLabelSettings: const DataLabelSettings(
+          isVisible: true,
+          color: Colors.white
+        ),
+      );
 
-        returnList.add(column);
-      }
+      returnList.add(column);
     }
     return returnList;
   }
