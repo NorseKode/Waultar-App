@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/nodes/category_node.dart';
@@ -75,7 +76,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                                 },
                               )
                             }),
-                    Text(profile.categories[index].category.name + "hello")
+                    Text(profile.categories[index].category.categoryName + "hello")
                   ],
                 )));
   }

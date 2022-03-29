@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
@@ -13,6 +14,8 @@ import 'package:waultar/presentation/widgets/general/util_widgets/default_button
 import 'package:waultar/presentation/widgets/snackbar_custom.dart';
 import 'package:waultar/presentation/widgets/upload/uploader.dart';
 import 'package:waultar/startup.dart';
+import 'package:syncfusion_flutter_treemap/treemap.dart';
+
 import 'package:path/path.dart' as dart_path;
 
 class Browse extends StatefulWidget {
@@ -99,13 +102,13 @@ class _BrowseState extends State<Browse> {
           children: [
             InkWell(
               onTap: () {
-                print(_categories[index].category.name);
+                print(_categories[index].category.categoryName);
                 setState(() {
                   _names = _collectionsService
                       .getAllNamesFromCategory(_categories[index]);
                 });
               },
-              child: Text(_categories[index].category.name +
+              child: Text(_categories[index].category.categoryName +
                   "   " +
                   _categories[index].count.toString()),
             ),
@@ -140,6 +143,20 @@ class _BrowseState extends State<Browse> {
           ],
         );
       },
+    );
+  }
+
+  _treeMap() {
+    return SfTreemap(
+      dataCount: _categories.length,
+      levels: [
+        TreemapLevel(
+          groupMapper: (int index) {
+            return _categories[index].category.categoryName;
+          },
+        ),
+      ],
+      weightValueMapper: weightValueMapper,
     );
   }
 

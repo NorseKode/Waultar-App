@@ -70,7 +70,7 @@ extension CategoryMapper on CategoryEnum {
   };
 
   Color get color => colors[this] ?? Colors.cyan;
-  String get name => names[this] ?? 'Unknown';
+  String get categoryName => names[this] ?? 'Unknown';
 }
 
 CategoryEnum getFromPath(String path) {
