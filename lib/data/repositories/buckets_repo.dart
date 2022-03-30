@@ -263,7 +263,6 @@ class BucketsRepository extends IBucketsRepository {
     var listToReturn = <YearModel>[];
     _context.store.runInTransaction(TxMode.read, () {
       var years = _yearBox.getAll();
-      print('amount of years in getAllYearModels -> ${years.length}');
       for (var year in years) {
         var categoryTuples = <Tuple2<DataCategory, int>>[];
         var profileTuples = <Tuple2<ProfileDocument, int>>[];
