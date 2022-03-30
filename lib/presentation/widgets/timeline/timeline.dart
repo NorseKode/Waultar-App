@@ -133,18 +133,20 @@ class _TimelineState extends State<Timeline> {
         dataSource: entry.value,
         xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
         yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-        dataLabelMapper: (TimeUnitWithTotal model, _) {
-          if (model.total == 0) {
-            return '';
-          }
-          return entry.key.categoryName;
-        },
-        color: entry.key.color, // TODO - make the color for each categoryEnum prettier,
+        dataLabelMapper: (TimeUnitWithTotal model, _) => entry.key.categoryName,
+        legendIconType: LegendIconType.rectangle,
         name: entry.key.categoryName,
         dataLabelSettings: const DataLabelSettings(
           isVisible: false,
           showCumulativeValues: false,
         ),
+        // trendlines: [
+        //   Trendline(
+        //     type: TrendlineType.movingAverage,
+        //     color: entry.key.color,
+        //   )
+        // ],
+        // color: entry.key.color, // TODO - make the color for each categoryEnum prettier,
       );
 
       returnList.add(outPut);
@@ -161,7 +163,6 @@ class _TimelineState extends State<Timeline> {
     // }
   }
 }
-
 
 class TimeUnitWithTotal {
   int timeValue;
