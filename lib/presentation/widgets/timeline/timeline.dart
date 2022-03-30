@@ -88,6 +88,30 @@ class _TimelineState extends State<Timeline> {
   }
 
   List<ChartSeries> _generateTimeSeriesForChart() {
+    var map = _generateChartObjects();
+
+    var returnList = <ChartSeries>[];
+    for (var entry in map.entries) {
+      var outPut = StackedColumnSeries(
+        dataSource: entry.value,
+        xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
+        yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+        dataLabelMapper: (TimeUnitWithTotal model, _) => entry.key.categoryName,
+        legendIconType: LegendIconType.rectangle,
+        name: entry.key.categoryName,
+        dataLabelSettings: const DataLabelSettings(
+          isVisible: false,
+          showCumulativeValues: false,
+        ),
+      );
+
+      returnList.add(outPut);
+    }
+
+    return returnList;
+  }
+
+  Map<CategoryEnum, List<TimeUnitWithTotal>> _generateChartObjects() {
     var map = <CategoryEnum, List<TimeUnitWithTotal>>{};
 
     // generate the initial map with empty values to make sure every enum is covered
@@ -95,9 +119,14 @@ class _TimelineState extends State<Timeline> {
       map.addAll({catEnum: <TimeUnitWithTotal>[]});
     }
 
+    // we iterate the timeModels to project the timeValue to the TimeUnitWithTotal
     for (var timeModel in _timeSeries) {
-      // iterate the category:total tuples in each timeModel
+
+      // iterate the categoryEnum keys in the initial map to update the list of 
+      // TimeUnitWithTotal with respect to the values of the _timeSeries (timeModels from db)
       for (var key in map.keys) {
+        // if the categoryCount list in timeModel contains the enum, we update the value in 
+        // the map with the total value stored in the tuple.item2 in the timeModel categoryCount
         if (timeModel.categoryCount
             .any((element) => element.item1.category.index == key.index)) {
           var tuple = timeModel.categoryCount.singleWhere(
@@ -109,6 +138,7 @@ class _TimelineState extends State<Timeline> {
             ));
             return value;
           });
+        // otherwise, we add the timevalue from the timeModel with total = 0
         } else {
           map.update(key, (value) {
             value.add(TimeUnitWithTotal(
@@ -127,43 +157,14 @@ class _TimelineState extends State<Timeline> {
       return listWith0Total.length == value.length;
     });
 
-    var returnList = <ChartSeries>[];
-    for (var entry in map.entries) {
-      var outPut = StackedColumnSeries(
-        dataSource: entry.value,
-        xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-        yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-        dataLabelMapper: (TimeUnitWithTotal model, _) => entry.key.categoryName,
-        legendIconType: LegendIconType.rectangle,
-        name: entry.key.categoryName,
-        dataLabelSettings: const DataLabelSettings(
-          isVisible: false,
-          showCumulativeValues: false,
-        ),
-        // trendlines: [
-        //   Trendline(
-        //     type: TrendlineType.movingAverage,
-        //     color: entry.key.color,
-        //   )
-        // ],
-        // color: entry.key.color, // TODO - make the color for each categoryEnum prettier,
-      );
-
-      returnList.add(outPut);
-    }
-
-    return returnList;
-
-    // print('map length -> ${map.length}');
-    // for (var entry in map.entries) {
-    //   print(entry.key.categoryName);
-    //   for (var item in entry.value) {
-    //     print(item.toString());
-    //   }
-    // }
+    return map;
   }
+
+
 }
 
+// Im afraid we will have to project the timeModels to this class
+// otherwise, the stacked charts render faulty
 class TimeUnitWithTotal {
   int timeValue;
   int total;
