@@ -79,52 +79,100 @@ class _TimelineState extends State<Timeline> {
   _columnChart() {
     return SfCartesianChart(
       tooltipBehavior: _tooltipBehavior,
+      legend: Legend(isVisible: true),
       primaryXAxis: CategoryAxis(
         labelIntersectAction: AxisLabelIntersectAction.rotate45,
       ),
-      series: _getStackedTimeSeries(),
+      series: _generateTimeSeriesForChart(),
     );
   }
 
-  List<StackedColumnSeries> _getStackedTimeSeries() {
-    var returnList = <StackedColumnSeries>[];
+  List<ChartSeries> _generateTimeSeriesForChart() {
+    var map = <CategoryEnum, List<TimeUnitWithTotal>>{};
 
-    var dtoList = <TimeDTO>[];
+    // generate the initial map with empty values to make sure every enum is covered
+    for (var catEnum in CategoryEnum.values) {
+      map.addAll({catEnum: <TimeUnitWithTotal>[]});
+    }
 
     for (var timeModel in _timeSeries) {
-      print('${timeModel.timeValue} -> ${timeModel.total}');
-      for (var tuple in timeModel.categoryCount) {
-        final output = StackedColumnSeries(
-          dataSource: [tuple],
-          xValueMapper: (Tuple2 tuple, index) => timeModel.timeValue,
-          yValueMapper: (Tuple2 tuple, index) => tuple.item2,
-          dataLabelMapper: (Tuple2<DataCategory, int> tuple, index) =>
-              tuple.item1.category.categoryName,
-          dataLabelSettings: const DataLabelSettings(
-            isVisible: true,
-            showCumulativeValues: true,
-          ),
-          markerSettings: const MarkerSettings(
-            isVisible: true,
-          ),
-          name: tuple.item1.category.categoryName,
-        );
-
-        returnList.add(output);
+      // iterate the category:total tuples in each timeModel
+      for (var key in map.keys) {
+        if (timeModel.categoryCount
+            .any((element) => element.item1.category.index == key.index)) {
+          var tuple = timeModel.categoryCount.singleWhere(
+              (element) => element.item1.category.index == key.index);
+          map.update(key, (value) {
+            value.add(TimeUnitWithTotal(
+              timeValue: timeModel.timeValue,
+              total: tuple.item2,
+            ));
+            return value;
+          });
+        } else {
+          map.update(key, (value) {
+            value.add(TimeUnitWithTotal(
+              timeValue: timeModel.timeValue,
+              total: 0,
+            ));
+            return value;
+          });
+        }
       }
     }
 
+    // remove all the entries where all elements in list have total == 0
+    map.removeWhere((key, value) {
+      var listWith0Total = value.where((element) => element.total == 0);
+      return listWith0Total.length == value.length;
+    });
+
+    var returnList = <ChartSeries>[];
+    for (var entry in map.entries) {
+      var outPut = StackedColumnSeries(
+        dataSource: entry.value,
+        xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
+        yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+        dataLabelMapper: (TimeUnitWithTotal model, _) {
+          if (model.total == 0) {
+            return '';
+          }
+          return entry.key.categoryName;
+        },
+        color: entry.key.color, // TODO - make the color for each categoryEnum prettier,
+        name: entry.key.categoryName,
+        dataLabelSettings: const DataLabelSettings(
+          isVisible: false,
+          showCumulativeValues: false,
+        ),
+      );
+
+      returnList.add(outPut);
+    }
+
     return returnList;
+
+    // print('map length -> ${map.length}');
+    // for (var entry in map.entries) {
+    //   print(entry.key.categoryName);
+    //   for (var item in entry.value) {
+    //     print(item.toString());
+    //   }
+    // }
   }
 }
 
-class TimeDTO {
-  int total;
+
+class TimeUnitWithTotal {
   int timeValue;
-  DataCategory category;
-  TimeDTO({
-    required this.category,
-    required this.total,
+  int total;
+  TimeUnitWithTotal({
     required this.timeValue,
+    required this.total,
   });
+
+  @override
+  String toString() {
+    return 'timeValue -> $timeValue \ntotal -> $total';
+  }
 }
