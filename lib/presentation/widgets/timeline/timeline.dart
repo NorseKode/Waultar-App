@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
@@ -38,11 +39,13 @@ class _TimelineState extends State<Timeline> {
   );
   late List<TimeModel> _timeSeries;
   late TooltipBehavior _tooltipBehavior;
+  late ChartSeriesType _chosenChartType;
 
   @override
   void initState() {
     _timeSeries = _timelineService.getAllYears();
     _tooltipBehavior = TooltipBehavior(enable: true);
+    _chosenChartType = ChartSeriesType.stackedColumns;
     super.initState();
   }
 
@@ -57,41 +60,45 @@ class _TimelineState extends State<Timeline> {
           "Timeline",
           style: themeProvider.themeData().textTheme.headline3,
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 30),
+        // user can use this to choose chartSeriesType
+        _chartTypeSelector(),
+        const SizedBox(height: 30),
         Expanded(
-          flex: 3,
-          child: Row(
-            children: [
-              Expanded(flex: 4, child: _columnChart()),
-              // const SizedBox(width: 20),
-              // Expanded(flex: 2, child: FilterWidget(blocks: blocks))
-            ],
-          ),
+          child: _chart(),
         ),
-        // const SizedBox(height: 20),
-        // Expanded(flex: 2, child: DataPointWidget(dpList: []))
       ],
     );
   }
 
-  _columnChart() {
+  _chartTypeSelector() {
+    return DropdownButton(
+      value: _chosenChartType,
+      items: List.generate(
+        ChartSeriesType.values.length,
+        (index) => DropdownMenuItem(
+          child: Text(ChartSeriesType.values[index].chartName),
+          value: ChartSeriesType.values[index],
+        ),
+      ),
+      onChanged: (ChartSeriesType? chartType) {
+        setState(() {
+          _chosenChartType = chartType ?? ChartSeriesType.stackedColumns;
+        });
+      },
+    );
+  }
+
+  _chart() {
     return SfCartesianChart(
       tooltipBehavior: _tooltipBehavior,
       legend: Legend(isVisible: true),
       primaryXAxis: DateTimeAxis(
         labelIntersectAction: AxisLabelIntersectAction.rotate45,
-        intervalType: DateTimeIntervalType.years,
+        intervalType: DateTimeIntervalType
+            .years, // this should change dynamically with respect to current timeModels in _timeSeries
       ),
-      primaryYAxis: NumericAxis(
-          // plotBands: [
-          //   PlotBand(
-          //     associatedAxisStart: DateTime(2019, 9,),
-          //     associatedAxisEnd: DateTime(2022),
-          //     text: 'Corona',
-          //     isVisible: true,
-          //   ),
-          // ],
-          ),
+      primaryYAxis: NumericAxis(),
       series: _generateTimeSeriesForChart(),
       trackballBehavior: TrackballBehavior(
         enable: true,
@@ -119,6 +126,7 @@ class _TimelineState extends State<Timeline> {
       returnList.add(outPut);
     }
 
+    // this should not be rendered if the chosen chartSeries is of stacked100
     var profileMap = _generateProfileChartObjects();
     for (var entry in profileMap.entries) {
       var outPut = LineSeries(
@@ -133,6 +141,19 @@ class _TimelineState extends State<Timeline> {
 
     return returnList;
   }
+
+  // List<ChartSeries> _getChosenChartFromUser() {
+  //   var returnList = <ChartSeries>[];
+  //   var categoryMap = _generateCategoryChartObjects();
+
+  //   switch (_chosenChartType.chartType) {
+  //     case :
+        
+  //       break;
+  //     default:
+  //   }
+  //   return returnList;
+  // }
 
   Map<String, List<TimeUnitWithTotal>> _generateProfileChartObjects() {
     var map = <String, List<TimeUnitWithTotal>>{};
@@ -220,4 +241,36 @@ class TimeUnitWithTotal {
   String toString() {
     return 'timeValue -> $timeValue \ntotal -> $total';
   }
+}
+
+enum ChartSeriesType {
+  stackedColumns,
+  stackedColumns100,
+  stackedBar,
+  stackedBar100,
+  lines,
+  columns,
+}
+
+extension ChartSeriesTypeHelper on ChartSeriesType {
+  static const namesMap = {
+    ChartSeriesType.stackedColumns: 'Stacked Columns',
+    ChartSeriesType.stackedColumns100: 'Stacked Columns Percentage',
+    ChartSeriesType.stackedBar: 'Stacked Bars',
+    ChartSeriesType.stackedBar100: 'Stacked Bars Percentage',
+    ChartSeriesType.lines: 'Lines',
+    ChartSeriesType.columns: 'Columns',
+  };
+
+  static const chartTypeMap = {
+    ChartSeriesType.stackedColumns: StackedColumnSeries,
+    ChartSeriesType.stackedColumns100: StackedColumn100Series,
+    ChartSeriesType.stackedBar: StackedBarSeries,
+    ChartSeriesType.stackedBar100: StackedBar100Series,
+    ChartSeriesType.lines: LineSeries,
+    ChartSeriesType.columns: ColumnSeries,
+  };
+
+  String get chartName => namesMap[this] ?? 'Unknown';
+  Type get chartType => chartTypeMap[this] ?? StackedColumnSeries;
 }
