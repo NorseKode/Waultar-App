@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/core/models/timeline/time_models.dart';
-import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/startup.dart';
 
@@ -20,11 +17,6 @@ class Timeline extends StatefulWidget {
 class _TimelineState extends State<Timeline> {
   // TODOs :
   /* 
-    - let the user decide which kind of chartSeries to render
-        - stackedColumnSeries
-        - stackedBar100Series
-        - lineSeries
-
     - let the user tap on an x-axis time
         - should update the _timeSeries
         - how to show month name ?
@@ -99,13 +91,13 @@ class _TimelineState extends State<Timeline> {
             .years, // this should change dynamically with respect to current timeModels in _timeSeries
       ),
       primaryYAxis: NumericAxis(),
-      series: _generateTimeSeriesForChart(),
+      series: _getChartSeries(),
       trackballBehavior: TrackballBehavior(
         enable: true,
         activationMode: ActivationMode.longPress,
         tooltipDisplayMode: TrackballDisplayMode.groupAllPoints,
         lineColor: Colors.transparent,
-        // can use the builder to hide values where total == 0
+        // we can use the builder to hide values where total == 0
       ),
     );
   }
@@ -142,18 +134,138 @@ class _TimelineState extends State<Timeline> {
     return returnList;
   }
 
-  // List<ChartSeries> _getChosenChartFromUser() {
-  //   var returnList = <ChartSeries>[];
-  //   var categoryMap = _generateCategoryChartObjects();
 
-  //   switch (_chosenChartType.chartType) {
-  //     case :
-        
-  //       break;
-  //     default:
-  //   }
-  //   return returnList;
-  // }
+  List<ChartSeries> _getChartSeries() {
+
+    var returnList = <ChartSeries>[];
+    var categoryMap = _generateCategoryChartObjects();
+
+    switch (_chosenChartType.chartType) {
+      case StackedColumnSeries:
+        for (var entry in categoryMap.entries) {
+          var outPut = StackedColumnSeries(
+            dataSource: entry.value,
+            xValueMapper: (TimeUnitWithTotal model, _) =>
+                DateTime(model.timeValue),
+            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+            dataLabelMapper: (TimeUnitWithTotal model, _) =>
+                entry.key.categoryName,
+            legendIconType: LegendIconType.rectangle,
+            name: entry.key.categoryName,
+          );
+
+          returnList.add(outPut);
+        }
+        returnList.addAll(_getProfilesLineSeries());
+        break;
+
+      case StackedColumn100Series:
+        for (var entry in categoryMap.entries) {
+          var outPut = StackedColumn100Series(
+            dataSource: entry.value,
+            xValueMapper: (TimeUnitWithTotal model, _) =>
+                DateTime(model.timeValue),
+            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+            dataLabelMapper: (TimeUnitWithTotal model, _) =>
+                entry.key.categoryName,
+            legendIconType: LegendIconType.rectangle,
+            name: entry.key.categoryName,
+          );
+
+          returnList.add(outPut);
+        }
+        break;
+
+      case StackedBarSeries:
+        for (var entry in categoryMap.entries) {
+          var outPut = StackedBarSeries(
+            dataSource: entry.value,
+            xValueMapper: (TimeUnitWithTotal model, _) =>
+                DateTime(model.timeValue),
+            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+            dataLabelMapper: (TimeUnitWithTotal model, _) =>
+                entry.key.categoryName,
+            legendIconType: LegendIconType.rectangle,
+            name: entry.key.categoryName,
+          );
+
+          returnList.add(outPut);
+        }
+        returnList.addAll(_getProfilesLineSeries());
+        break;
+
+      case StackedBar100Series:
+        for (var entry in categoryMap.entries) {
+          var outPut = StackedBar100Series(
+            dataSource: entry.value,
+            xValueMapper: (TimeUnitWithTotal model, _) =>
+                DateTime(model.timeValue),
+            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+            dataLabelMapper: (TimeUnitWithTotal model, _) =>
+                entry.key.categoryName,
+            legendIconType: LegendIconType.rectangle,
+            name: entry.key.categoryName,
+          );
+
+          returnList.add(outPut);
+        }
+        break;
+
+      case LineSeries:
+        for (var entry in categoryMap.entries) {
+          var outPut = LineSeries(
+            dataSource: entry.value,
+            xValueMapper: (TimeUnitWithTotal model, _) =>
+                DateTime(model.timeValue),
+            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+            dataLabelMapper: (TimeUnitWithTotal model, _) =>
+                entry.key.categoryName,
+            legendIconType: LegendIconType.rectangle,
+            name: entry.key.categoryName,
+          );
+
+          returnList.add(outPut);
+        }
+        returnList.addAll(_getProfilesLineSeries());
+        break;
+
+      case ColumnSeries:
+        for (var entry in categoryMap.entries) {
+          var outPut = ColumnSeries(
+            dataSource: entry.value,
+            xValueMapper: (TimeUnitWithTotal model, _) =>
+                DateTime(model.timeValue),
+            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+            dataLabelMapper: (TimeUnitWithTotal model, _) =>
+                entry.key.categoryName,
+            legendIconType: LegendIconType.rectangle,
+            name: entry.key.categoryName,
+          );
+
+          returnList.add(outPut);
+        }
+        returnList.addAll(_getProfilesLineSeries());
+        break;
+    }
+    
+    return returnList;
+  }
+
+  List<LineSeries> _getProfilesLineSeries() {
+    var returnList = <LineSeries>[];
+    var profileMap = _generateProfileChartObjects();
+    for (var entry in profileMap.entries) {
+      var outPut = LineSeries(
+        dataSource: entry.value,
+        xValueMapper: (TimeUnitWithTotal model, _) => DateTime(model.timeValue),
+        yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+        name: '${entry.key} total',
+        legendIconType: LegendIconType.horizontalLine,
+      );
+      returnList.add(outPut);
+    }
+    return returnList;
+  }
 
   Map<String, List<TimeUnitWithTotal>> _generateProfileChartObjects() {
     var map = <String, List<TimeUnitWithTotal>>{};
@@ -272,5 +384,5 @@ extension ChartSeriesTypeHelper on ChartSeriesType {
   };
 
   String get chartName => namesMap[this] ?? 'Unknown';
-  Type get chartType => chartTypeMap[this] ?? StackedColumnSeries;
+  Type get chartType => chartTypeMap[this]!;
 }
