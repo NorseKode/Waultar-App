@@ -102,41 +102,8 @@ class _TimelineState extends State<Timeline> {
     );
   }
 
-  List<ChartSeries> _generateTimeSeriesForChart() {
-    var categoryMap = _generateCategoryChartObjects();
-    var returnList = <ChartSeries>[];
-    for (var entry in categoryMap.entries) {
-      var outPut = StackedColumnSeries(
-        dataSource: entry.value,
-        xValueMapper: (TimeUnitWithTotal model, _) => DateTime(model.timeValue),
-        yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-        dataLabelMapper: (TimeUnitWithTotal model, _) => entry.key.categoryName,
-        legendIconType: LegendIconType.rectangle,
-        name: entry.key.categoryName,
-      );
-
-      returnList.add(outPut);
-    }
-
-    // this should not be rendered if the chosen chartSeries is of stacked100
-    var profileMap = _generateProfileChartObjects();
-    for (var entry in profileMap.entries) {
-      var outPut = LineSeries(
-        dataSource: entry.value,
-        xValueMapper: (TimeUnitWithTotal model, _) => DateTime(model.timeValue),
-        yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-        name: '${entry.key} total',
-        legendIconType: LegendIconType.horizontalLine,
-      );
-      returnList.add(outPut);
-    }
-
-    return returnList;
-  }
-
 
   List<ChartSeries> _getChartSeries() {
-
     var returnList = <ChartSeries>[];
     var categoryMap = _generateCategoryChartObjects();
 
@@ -191,7 +158,6 @@ class _TimelineState extends State<Timeline> {
 
           returnList.add(outPut);
         }
-        returnList.addAll(_getProfilesLineSeries());
         break;
 
       case StackedBar100Series:
@@ -247,7 +213,7 @@ class _TimelineState extends State<Timeline> {
         returnList.addAll(_getProfilesLineSeries());
         break;
     }
-    
+
     return returnList;
   }
 
@@ -384,5 +350,5 @@ extension ChartSeriesTypeHelper on ChartSeriesType {
   };
 
   String get chartName => namesMap[this] ?? 'Unknown';
-  Type get chartType => chartTypeMap[this]!;
+  Type get chartType => chartTypeMap[this] ?? StackedColumnSeries;
 }
