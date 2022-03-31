@@ -15,14 +15,6 @@ class Timeline extends StatefulWidget {
 }
 
 class _TimelineState extends State<Timeline> {
-  // TODOs :
-  /* 
-    - let the user tap on an x-axis time
-        - should update the _timeSeries
-        - how to show month name ?
-        - how to show day name ?
-        - how to should hour name ?
-  */
 
   late ThemeProvider themeProvider;
 
@@ -65,7 +57,11 @@ class _TimelineState extends State<Timeline> {
         // _chartTypeSelector(),
         const SizedBox(height: 30),
         Expanded(
-          child: _chart(),
+          child: _timeSeries.isEmpty
+              ? const Center(
+                  child: Text('No datapoints found'),
+                )
+              : _chart(),
         ),
       ],
     );
@@ -140,11 +136,13 @@ class _TimelineState extends State<Timeline> {
       ),
       zoomPanBehavior: ZoomPanBehavior(
         enablePanning: true,
-        enableMouseWheelZooming: true,
-        zoomMode: ZoomMode.x,
+        enableMouseWheelZooming: _chosenChartType.canZoom,
+        zoomMode: ZoomMode.xy,
       ),
       primaryYAxis: NumericAxis(
-        title: AxisTitle(text: 'Amount of Datapoints'),
+        title: AxisTitle(
+          text: 'Amount of Datapoints',
+        ),
       ),
       series: _getChartSeries(),
       trackballBehavior: TrackballBehavior(
@@ -420,8 +418,18 @@ extension ChartSeriesTypeHelper on ChartSeriesType {
     ChartSeriesType.columns: ColumnSeries,
   };
 
+  static const canZoomMap = {
+    ChartSeriesType.stackedColumns: true,
+    ChartSeriesType.stackedColumns100: false,
+    ChartSeriesType.stackedBar: true,
+    ChartSeriesType.stackedBar100: false,
+    ChartSeriesType.lines: true,
+    ChartSeriesType.columns: true,
+  };
+
   String get chartName => namesMap[this] ?? 'Unknown';
   Type get chartType => chartTypeMap[this] ?? StackedColumnSeries;
+  bool get canZoom => canZoomMap[this] ?? false;
 }
 
 enum TimeIntervalType {

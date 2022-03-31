@@ -204,22 +204,24 @@ class _BrowseState extends State<Browse> {
                 height: 20,
               ),
               _categories.isEmpty
-                  ? const Center(
-                      child: Text("You haven't uploaded any data yet "))
+                  ? const Expanded(
+                    child: Center(
+                        child: Text("You haven't uploaded any data yet ")),
+                  )
                   // : _treeMap()
-                  : Flexible(
-                      child: GridView.count(
-                        physics: const NeverScrollableScrollPhysics(),
-                        childAspectRatio: 0.7,
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        // shrinkWrap: true,
-                        children: [
-                          categoriesColumn(),
-                          namesColumn(),
-                        ],
-                      ),
+                  : Expanded(
+                    child: GridView.count(
+                      physics: const NeverScrollableScrollPhysics(),
+                      childAspectRatio: 0.7,
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      // shrinkWrap: true,
+                      children: [
+                        categoriesColumn(),
+                        namesColumn(),
+                      ],
                     ),
+                  ),
             ],
           );
   }
