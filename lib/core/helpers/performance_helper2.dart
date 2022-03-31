@@ -2,13 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:path/path.dart' as dart_path;
+import 'package:tuple/tuple.dart';
 
 class PerformanceHelper2 {
   String pathToPerformanceFile;
   late String parentKey;
   late PerformanceDataPoint parentDataPoint;
   var _timers = <String, Stopwatch>{};
-  var _tempStorageList = <PerformanceDataPoint>[];
+  var _tempStorageList = <Tuple2<String, List<PerformanceDataPoint>>>[Tuple2("", <PerformanceDataPoint>[])];
 
   PerformanceHelper2({
     required this.pathToPerformanceFile,
@@ -56,26 +57,21 @@ class PerformanceHelper2 {
     }
   }
 
-  void storeDataPoint(PerformanceDataPoint dataPoint) {
-    _tempStorageList.add(dataPoint);
+  void storeDataPoint(String key, PerformanceDataPoint dataPoint) {
+    if (_tempStorageList.any((element) => element.item1 == key)) {
+      _tempStorageList.firstWhere((element) => element.item1 == key).item2.add(dataPoint);
+    } else {
+      _tempStorageList.add(Tuple2(key, [dataPoint]));
+    }
   }
   
-  List<PerformanceDataPoint> getStoredDataPoints() {
-    return _tempStorageList;
+  List<PerformanceDataPoint> getStoredDataPoints(String key) {
+    return _tempStorageList.firstWhere((element) => element.item1 == key).item2;
   }
 
   void clearDataPointStore() {
-    _tempStorageList = <PerformanceDataPoint>[];
+    _tempStorageList = <Tuple2<String, List<PerformanceDataPoint>>>[Tuple2("", <PerformanceDataPoint>[])];
   }
-
-  // void addChildReading(String key, {Map<String, dynamic>? metadata}) {
-  //   parentDataPoint.childs.add(PerformanceDataPoint(
-  //     key: key,
-  //     timeFormat: "milliseconds",
-  //     inputTime: stop(key),
-  //     metaData: metadata,
-  //   ));
-  // }
 
   bool addReading(
     String predecessorKey,
@@ -139,23 +135,6 @@ class PerformanceHelper2 {
     return _timers[key]!;
   }
 
-  /// Stops the parent timer, write results to a json file with [fileName]
-  /// with optional [metadata]
-  ///
-  /// This also disposes the performance helper, and when it should be used
-  /// again, a call to reInit should be made
-  // void stopParentAndWriteToFile(String fileName, {Map<String, dynamic>? metadata}) {
-  //   stop();
-  //   var elapsed = _parentTimer.elapsed;
-  //   parentDataPoint.elapsedTime = elapsed;
-
-  //   if (metadata != null) {
-  //     parentDataPoint.metadata.addAll(metadata);
-  //   }
-
-  //   _summary(fileName, parentKey);
-  // }
-
   void summary(String summaryFileName) {
     var summaryFile = File(
       dart_path.normalize(
@@ -182,7 +161,7 @@ class PerformanceHelper2 {
     }
 
     _timers = <String, Stopwatch>{};
-    _tempStorageList = <PerformanceDataPoint>[];
+    clearDataPointStore();
   }
 }
 

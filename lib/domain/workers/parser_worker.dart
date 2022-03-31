@@ -17,17 +17,18 @@ Future parseWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
       var count = 0;
       var performance = locator<PerformanceHelper2>(instanceName: "performance2");
       var profile = locator.get<ProfileRepository>(instanceName: 'profileRepo').get(data.profileId);
+      var isTestAll = data.isTrackAll;
 
       if (profile == null) {
         mainSendPort.send("No profile with id: ${data.profileId}");
       } else {
         var parser = locator.get<TreeParser>(instanceName: 'parser');
 
-        if (data.isPerformanceTracking) {
+        if (data.isPerformanceTracking && isTestAll) {
           performance.startReading("Parse of file");
         }
         await for (final increment in parser.parseManyPaths(data.paths, profile)) {
-          if (data.isPerformanceTracking) {
+          if (data.isPerformanceTracking && isTestAll) {
             var key = "Parse of file";
             performanceReading = jsonEncode(
               PerformanceDataPoint(
@@ -75,12 +76,14 @@ class IsolateParserStartPackage extends InitiatorPackage {
   List<String> paths;
   int profileId;
   bool isPerformanceTracking;
+  bool isTrackAll;
   String waultarPath;
 
   IsolateParserStartPackage({
     required this.paths,
     required this.profileId,
     required this.isPerformanceTracking,
+    required this.isTrackAll,
     required this.waultarPath,
   });
 }

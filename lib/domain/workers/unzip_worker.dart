@@ -5,6 +5,7 @@ import 'package:archive/archive_io.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
 import 'package:waultar/core/helpers/performance_helper2.dart';
 import 'package:waultar/data/configs/objectbox.dart';
+import 'package:waultar/domain/workers/shared_packages.dart';
 import 'package:waultar/startup.dart';
 import 'package:path/path.dart' as dart_path;
 
@@ -15,11 +16,10 @@ Future unzipWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
       PerformanceHelper2? performance;
       var fileCount = 0;
       var isPerformanceTracking = data.isPerformanceTracking;
+      var isTestAll = data.isTrackAll;
 
-      if (isPerformanceTracking) {
+      if (isPerformanceTracking && isTestAll) {
         performance = locator.get<PerformanceHelper2>(instanceName: 'performance2');
-        // performance.reInit(newParentKey: 'Extract zip');
-        // performance.start();
       }
 
       // using inputFileStream to access zip without storing it in memory
@@ -29,12 +29,22 @@ Future unzipWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
       // decode the zip via the stream - the archive will have the contents of the zip
       // without having to store it in memory
 
-      if (isPerformanceTracking) {
-        // performance!.addChildDataPointTimer();
+      if (isPerformanceTracking && isTestAll) {
+        performance!.startReading("Decode of zip");
       }
       final archive = ZipDecoder().decodeBuffer(inputStream);
-      if (isPerformanceTracking) {
-        // performance!.addChildToDataPointReading(0, "Decoding of files from zip");
+      if (isPerformanceTracking && isTestAll) {
+        var key = "Decode of zip";
+        var elapsed = performance!.stop(key);
+        mainSendPort.send(
+          MainPerformanceMeasurementPackage.fromPerformanceDataPoint(
+            performanceDataPoint: PerformanceDataPoint(
+              key: key,
+              timeFormat: "milliseconds",
+              inputTime: performance.stop(key),
+            ),
+          ),
+        );
       }
 
       // Send total count back
@@ -50,11 +60,9 @@ Future unzipWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
         // only take the files and skip the optional .zip.enc file (facebook specific)
         if (file.isFile && !file.name.endsWith('zip.enc')) {
           var performanceReading = "";
-          if (isPerformanceTracking) {
+          if (isPerformanceTracking && isTestAll) {
             performance!.startReading("Extracted File");
             fileCount++;
-            // performance!.resetChild();
-            // performance.startChild();
           }
 
           var filePath = dart_path.normalize(destDirPath + '/' + file.name);
@@ -67,7 +75,7 @@ Future unzipWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
           //   list = [outputStream.path];
           // }
 
-          if (isPerformanceTracking) {
+          if (isPerformanceTracking && isTestAll) {
             var key = "Extracted File";
             var reading = performance!.stop(key);
             performanceReading = jsonEncode(PerformanceDataPoint(
@@ -93,12 +101,8 @@ Future unzipWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
       mainSendPort.send(MainUnzippedPathsPackage(list, list.length));
       inputStream.close();
 
-      if (isPerformanceTracking) {
+      if (isPerformanceTracking && isTestAll) {
         performance!.dispose();
-        // performance!.stopParentAndWriteToFile(
-        //   "zip-extract",
-        //   metadata: {"filecount": fileCount},
-        // );
       }
     } catch (e, stacktrace) {
       mainSendPort.send(LogRecordPackage(e.toString(), stacktrace.toString()));
@@ -124,6 +128,7 @@ class IsolateUnzipStartPackage extends InitiatorPackage {
 
   // performance configs to be used inside isolate
   bool isPerformanceTracking;
+  bool isTrackAll;
 
   // to be used as root folder name for extracted dump
   String profileName;
@@ -131,6 +136,7 @@ class IsolateUnzipStartPackage extends InitiatorPackage {
   IsolateUnzipStartPackage({
     required this.pathToZip,
     required this.isPerformanceTracking,
+    required this.isTrackAll,
     required this.profileName,
     required this.waultarPath,
   });
