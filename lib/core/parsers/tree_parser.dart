@@ -25,14 +25,20 @@ import 'json_decider.dart';
 
 class TreeParser {
   final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
-  final _profileRepo =
-      locator.get<ProfileRepository>(instanceName: 'profileRepo');
-  final DataCategoryRepository _categoryRepo = locator.get<DataCategoryRepository>(instanceName: 'categoryRepo');
-  final DataPointNameRepository _nameRepo = locator.get<DataPointNameRepository>(instanceName: 'nameRepo');
+  final _profileRepo = locator.get<ProfileRepository>(instanceName: 'profileRepo');
+  final DataCategoryRepository _categoryRepo =
+      locator.get<DataCategoryRepository>(instanceName: 'categoryRepo');
+  final DataPointNameRepository _nameRepo =
+      locator.get<DataPointNameRepository>(instanceName: 'nameRepo');
   final DataPointRepository _dataRepo = locator.get<DataPointRepository>(instanceName: 'dataRepo');
-  final PerformanceHelper _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
+  final PerformanceHelper _performanceGlobal =
+      locator.get<PerformanceHelper>(instanceName: 'performance');
+  late PerformanceHelper _performance;
 
-  TreeParser();
+  TreeParser() {
+    _performance =
+        PerformanceHelper(pathToPerformanceFile: _performanceGlobal.pathToPerformanceFile);
+  }
 
   late String formerFileName;
   late String formerFileParentName;
@@ -40,10 +46,12 @@ class TreeParser {
   late String basePathToFiles;
 
   Stream<int> parseManyPaths(List<String> paths, ProfileDocument profile) async* {
-    // if (ISPERFORMANCETRACKING) {
-    //   _performance.reInit(newParentKey: "Parse all");
-    //   _performance.start();
-    // }
+    var fileCount = 0;
+    
+    if (ISPERFORMANCETRACKING) {
+      _performance.init(newParentKey: "Parser");
+      _performance.startReading(_performance.parentKey);
+    }
 
     if (paths.length > 1) {
       var path1 = paths.first;
@@ -55,48 +63,83 @@ class TreeParser {
     int progress = 0;
     for (var path in paths) {
       if (Extensions.isJson(path)) {
+        fileCount++;
         await parsePath(path, profile);
         progress = progress + 1;
         yield progress;
       }
     }
+
     _categoryRepo.updateCounts();
 
-    // if (ISPERFORMANCETRACKING) {
-    //   _performance.stopParentAndWriteToFile(
-    //     "parse-all",
-    //     metadata: {"filecount": paths.length},
-    //   );
-    // }
+    if (ISPERFORMANCETRACKING) {
+      _performance.addData(
+        _performance.parentKey,
+        duration: _performance.stopReading(_performance.parentKey),
+        metadata: <String, dynamic>{
+          'File count': fileCount,
+        },
+      );
+
+      _performance.summary("Tree Parser Performance Data");
+    }
   }
 
-  Future<DataPointName> parsePath(
-      String path, ProfileDocument profile) async {
+  Future<DataPointName> parsePath(String path, ProfileDocument profile) async {
     if (Extensions.isJson(path)) {
+      var key = "parsePath";
+      if (ISPERFORMANCETRACKING) {
+        _performance.startReading(key);
+      }
+      
       var service = profile.service.target!;
 
-      // if (ISPERFORMANCETRACKING) {
-      //   _performance.childKey = "parseSingleFile";
-      //   _performance.resetChild();
-      //   _performance.startChild();
-      // }
-
+      var key2 = "getFromFolderName";
+      if (ISPERFORMANCETRACKING) {
+        _performance.startReading(key2);
+      }
       var category = _categoryRepo.getFromFolderName(path, profile);
+      if (ISPERFORMANCETRACKING) {
+        _performance.addReading(_performance.parentKey, key2, _performance.stopReading(key2));
+      }
+
+      var key3 = "cleanFileName";
+      if (ISPERFORMANCETRACKING) {
+        _performance.startReading(key3);
+      }
       _appLogger.logger.info(
           "Started Parsing Path: $path, Profile: ${profile.toString()}, Service: ${service.toString()}, Category: $category");
       var file = File(path);
       var json = await getJson(file);
       var dirtyInitialName = path_dart.basename(path);
       var cleanInitialName = dirtyInitialName.replaceAll(".json", "");
+      if (ISPERFORMANCETRACKING) {
+        _performance.addReading(_performance.parentKey, key3, _performance.stopReading(key3));
+      }
 
+      var key4 = "parseName";
+      if (ISPERFORMANCETRACKING) {
+        _performance.startReading(key4);
+      }
       var name = parseName(json, category, cleanInitialName, profile, service, null);
+      if (ISPERFORMANCETRACKING) {
+        _performance.addReading(_performance.parentKey, key4, _performance.stopReading(key4));
+      }
+
+      var key5 = "addCategory";
+      if (ISPERFORMANCETRACKING) {
+        _performance.startReading(key5);
+      }
       category.dataPointNames.add(name);
       _categoryRepo.updateCategory(category);
       _profileRepo.add(profile);
+      if (ISPERFORMANCETRACKING) {
+        _performance.addReading(_performance.parentKey, key5, _performance.stopReading(key5));
+      }
 
-      // if (ISPERFORMANCETRACKING) {
-      //   _performance.addChildReading();
-      // }
+      if (ISPERFORMANCETRACKING) {
+        _performance.addReading(_performance.parentKey, key, _performance.stopReading(key));
+      }
 
       return name;
     } else {

@@ -18,6 +18,7 @@ Future parseWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
       var performance = locator<PerformanceHelper>(instanceName: "performance");
 
       if (data.isPerformanceTracking) {
+        ISPERFORMANCETRACKING = true;
         performance.init(newParentKey: "Parsing of files");
         performance.startReading(performance.parentKey);
       }
@@ -49,13 +50,15 @@ Future parseWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
         }
 
         if (data.isPerformanceTracking) {
-          performance.addData(performance.parentKey, duration: performance.stopReading(performance.parentKey));
+          performance.addData(performance.parentKey,
+              duration: performance.stopReading(performance.parentKey));
         }
 
         mainSendPort.send(MainParsedProgressPackage(
           parsedCount: 0,
           isDone: true,
-          performanceDataPoint: data.isPerformanceTracking ? jsonEncode(performance.parentDataPoint.toMap()) : "",
+          performanceDataPoint:
+              data.isPerformanceTracking ? jsonEncode(performance.parentDataPoint.toMap()) : "",
         ));
       }
     } catch (e, stackTrace) {
