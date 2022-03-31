@@ -49,8 +49,12 @@ class PerformanceHelper2 {
     _getSpecificTimer(key).reset();
   }
 
-  void addParentReading({Map<String, dynamic>? metadata}) {
+  void addParentReading({List<PerformanceDataPoint>? childs, Map<String, dynamic>? metadata}) {
     parentDataPoint.elapsedTime = stop(parentKey);
+
+    if (childs != null) {
+      parentDataPoint.childs = childs;
+    }
 
     if (metadata != null) {
       parentDataPoint.metadata.addAll(metadata);

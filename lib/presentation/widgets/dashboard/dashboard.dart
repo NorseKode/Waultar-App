@@ -11,6 +11,7 @@ import 'package:waultar/presentation/widgets/IM/sentiment_widget.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
+import 'package:waultar/presentation/widgets/machine_models/image_classify_widget.dart';
 
 import 'package:waultar/startup.dart';
 
@@ -27,57 +28,18 @@ class _DashboardState extends State<Dashboard> {
   List<File> uploadedFiles = [];
   final IServiceRepository _serviceRepo =
       locator.get<IServiceRepository>(instanceName: 'serviceRepo');
-  final _mlService = locator.get<IMLService>(instanceName: 'mlService');
-  final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
-  var _imagesToTagCount = 0;
-  var _isLoading = false;
-
-  Widget _imageTaggingWidget() {
-    return DefaultWidget(
-      title: "Image Classification",
-      child: Column(
-        children: [
-          Text("Untagged Images Count: $_imagesToTagCount"),
-          Text(
-              "Estimated Time To Tag All: ${(_imagesToTagCount * 0.5) / 60} minuets"),
-          DefaultButton(
-            text: "Tag Images",
-            onPressed: () {
-              setState(() {
-                _isLoading = true;
-              });
-
-              _mlService.classifyImagesFromDB();
-
-              setState(() {
-                _isLoading = false;
-              });
-            },
-          ),
-        ],
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     localizer = AppLocalizations.of(context)!;
     themeProvider = Provider.of<ThemeProvider>(context);
     final services = _serviceRepo.getAll();
-    _imagesToTagCount = _mediaRepo.getAmountOfUnTaggedImages();
 
     // List<Widget> serviceWidgets = List.generate(
     //     services.length, (e) => ServiceWidget(service: services[e]));
     List<Widget> serviceWidgets = [];
 
-    return _isLoading
-        // ignore: avoid_unnecessary_containers
-        ? Container(
-            child: const Center(
-              child: CircularProgressIndicator(),
-            ),
-          )
-        : Column(
+    return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -104,8 +66,10 @@ class _DashboardState extends State<Dashboard> {
                           ),
                         ),
                       ),
-                      if (_imagesToTagCount > 0) const SizedBox(height: 20),
-                      if (_imagesToTagCount > 0) _imageTaggingWidget(),
+                      // if (_imagesToTagCount > 0) const SizedBox(height: 20),
+                      // if (_imagesToTagCount > 0) _imageTaggingWidget(),
+                      const SizedBox(height: 20),
+                      ImageClassifyWidget(),
                       const SizedBox(height: 20),
                       Text(
                         localizer.yourSocialDataOverview,
@@ -113,7 +77,7 @@ class _DashboardState extends State<Dashboard> {
                       ), //dashboard widgets
 
                       const SizedBox(height: 20),
-                      SentimentWidget(),
+                      // SentimentWidget(),
                     ],
                   ),
                 ),
