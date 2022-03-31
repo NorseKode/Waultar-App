@@ -100,9 +100,7 @@ class _TimelineState extends State<Timeline> {
         enableMouseWheelZooming: true,
       ),
       primaryYAxis: NumericAxis(
-        title: AxisTitle(
-          text: 'Amount'
-        ),
+        title: AxisTitle(text: 'Amount'),
       ),
       series: _getChartSeries(),
       trackballBehavior: TrackballBehavior(
@@ -124,8 +122,7 @@ class _TimelineState extends State<Timeline> {
         for (var entry in categoryMap.entries) {
           var outPut = StackedColumnSeries(
             dataSource: entry.value,
-            xValueMapper: (TimeUnitWithTotal model, _) =>
-                DateTime(model.timeValue),
+            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
             yValueMapper: (TimeUnitWithTotal model, _) => model.total,
             dataLabelMapper: (TimeUnitWithTotal model, _) =>
                 entry.key.categoryName,
@@ -142,8 +139,7 @@ class _TimelineState extends State<Timeline> {
         for (var entry in categoryMap.entries) {
           var outPut = StackedColumn100Series(
             dataSource: entry.value,
-            xValueMapper: (TimeUnitWithTotal model, _) =>
-                DateTime(model.timeValue),
+            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
             yValueMapper: (TimeUnitWithTotal model, _) => model.total,
             dataLabelMapper: (TimeUnitWithTotal model, _) =>
                 entry.key.categoryName,
@@ -159,8 +155,7 @@ class _TimelineState extends State<Timeline> {
         for (var entry in categoryMap.entries) {
           var outPut = StackedBarSeries(
             dataSource: entry.value,
-            xValueMapper: (TimeUnitWithTotal model, _) =>
-                DateTime(model.timeValue),
+            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
             yValueMapper: (TimeUnitWithTotal model, _) => model.total,
             dataLabelMapper: (TimeUnitWithTotal model, _) =>
                 entry.key.categoryName,
@@ -176,8 +171,7 @@ class _TimelineState extends State<Timeline> {
         for (var entry in categoryMap.entries) {
           var outPut = StackedBar100Series(
             dataSource: entry.value,
-            xValueMapper: (TimeUnitWithTotal model, _) =>
-                DateTime(model.timeValue),
+            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
             yValueMapper: (TimeUnitWithTotal model, _) => model.total,
             dataLabelMapper: (TimeUnitWithTotal model, _) =>
                 entry.key.categoryName,
@@ -193,8 +187,7 @@ class _TimelineState extends State<Timeline> {
         for (var entry in categoryMap.entries) {
           var outPut = LineSeries(
             dataSource: entry.value,
-            xValueMapper: (TimeUnitWithTotal model, _) =>
-                DateTime(model.timeValue),
+            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
             yValueMapper: (TimeUnitWithTotal model, _) => model.total,
             dataLabelMapper: (TimeUnitWithTotal model, _) =>
                 entry.key.categoryName,
@@ -211,8 +204,7 @@ class _TimelineState extends State<Timeline> {
         for (var entry in categoryMap.entries) {
           var outPut = ColumnSeries(
             dataSource: entry.value,
-            xValueMapper: (TimeUnitWithTotal model, _) =>
-                DateTime(model.timeValue),
+            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
             yValueMapper: (TimeUnitWithTotal model, _) => model.total,
             dataLabelMapper: (TimeUnitWithTotal model, _) =>
                 entry.key.categoryName,
@@ -235,7 +227,7 @@ class _TimelineState extends State<Timeline> {
     for (var entry in profileMap.entries) {
       var outPut = LineSeries(
         dataSource: entry.value,
-        xValueMapper: (TimeUnitWithTotal model, _) => DateTime(model.timeValue),
+        xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
         yValueMapper: (TimeUnitWithTotal model, _) => model.total,
         name: '${entry.key} total',
         legendIconType: LegendIconType.horizontalLine,
@@ -252,13 +244,17 @@ class _TimelineState extends State<Timeline> {
         map.update(
           profileTuple.item1.name,
           (value) {
-            value.add(TimeUnitWithTotal(
-                timeValue: timeModel.timeValue, total: profileTuple.item2));
+            value.add(
+              TimeUnitWithTotal(
+                timeValue: timeModel.dateTime,
+                total: profileTuple.item2,
+              ),
+            );
             return value;
           },
           ifAbsent: () => <TimeUnitWithTotal>[
             TimeUnitWithTotal(
-              timeValue: timeModel.timeValue,
+              timeValue: timeModel.dateTime,
               total: profileTuple.item2,
             )
           ],
@@ -289,7 +285,7 @@ class _TimelineState extends State<Timeline> {
               (element) => element.item1.category.index == key.index);
           map.update(key, (value) {
             value.add(TimeUnitWithTotal(
-              timeValue: timeModel.timeValue,
+              timeValue: timeModel.dateTime,
               total: tuple.item2,
             ));
             return value;
@@ -298,7 +294,7 @@ class _TimelineState extends State<Timeline> {
         } else {
           map.update(key, (value) {
             value.add(TimeUnitWithTotal(
-              timeValue: timeModel.timeValue,
+              timeValue: timeModel.dateTime,
               total: 0,
             ));
             return value;
@@ -320,7 +316,7 @@ class _TimelineState extends State<Timeline> {
 // Im afraid we will have to project the timeModels to this class
 // otherwise, the stacked charts render faulty
 class TimeUnitWithTotal {
-  int timeValue;
+  DateTime timeValue;
   int total;
   TimeUnitWithTotal({
     required this.timeValue,
@@ -329,7 +325,7 @@ class TimeUnitWithTotal {
 
   @override
   String toString() {
-    return 'timeValue -> $timeValue \ntotal -> $total';
+    return 'timeValue -> ${timeValue.toString()} \ntotal -> $total';
   }
 }
 
