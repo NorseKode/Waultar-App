@@ -40,10 +40,10 @@ class TreeParser {
   late String basePathToFiles;
 
   Stream<int> parseManyPaths(List<String> paths, ProfileDocument profile) async* {
-    if (ISPERFORMANCETRACKING) {
-      _performance.reInit(newParentKey: "Parse all");
-      _performance.start();
-    }
+    // if (ISPERFORMANCETRACKING) {
+    //   _performance.reInit(newParentKey: "Parse all");
+    //   _performance.start();
+    // }
 
     if (paths.length > 1) {
       var path1 = paths.first;
@@ -62,12 +62,12 @@ class TreeParser {
     }
     _categoryRepo.updateCounts();
 
-    if (ISPERFORMANCETRACKING) {
-      _performance.stopParentAndWriteToFile(
-        "parse-all",
-        metadata: {"filecount": paths.length},
-      );
-    }
+    // if (ISPERFORMANCETRACKING) {
+    //   _performance.stopParentAndWriteToFile(
+    //     "parse-all",
+    //     metadata: {"filecount": paths.length},
+    //   );
+    // }
   }
 
   Future<DataPointName> parsePath(
@@ -75,11 +75,11 @@ class TreeParser {
     if (Extensions.isJson(path)) {
       var service = profile.service.target!;
 
-      if (ISPERFORMANCETRACKING) {
-        _performance.childKey = "parseSingleFile";
-        _performance.resetChild();
-        _performance.startChild();
-      }
+      // if (ISPERFORMANCETRACKING) {
+      //   _performance.childKey = "parseSingleFile";
+      //   _performance.resetChild();
+      //   _performance.startChild();
+      // }
 
       var category = _categoryRepo.getFromFolderName(path, profile);
       _appLogger.logger.info(
@@ -94,9 +94,9 @@ class TreeParser {
       _categoryRepo.updateCategory(category);
       _profileRepo.add(profile);
 
-      if (ISPERFORMANCETRACKING) {
-        _performance.addChildReading();
-      }
+      // if (ISPERFORMANCETRACKING) {
+      //   _performance.addChildReading();
+      // }
 
       return name;
     } else {

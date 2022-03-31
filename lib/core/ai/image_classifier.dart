@@ -106,11 +106,11 @@ class ImageClassifier extends IMLModel {
   List<Tuple2<String, double>> predict(String imagePath, int amountOfTopCategories) {
     _appLogger.logger.info("Predicting image with path: $imagePath, and returning $amountOfTopCategories categories");
 
-    if (ISPERFORMANCETRACKING) {
-      _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
-      _performance!.resetChild();
-      _performance!.startChild();
-    }
+    // if (ISPERFORMANCETRACKING) {
+    //   _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
+    //   _performance!.resetChild();
+    //   _performance!.startChild();
+    // }
 
     var image = img.decodeImage(File(imagePath).readAsBytesSync());
     if (image == null) {
@@ -136,9 +136,9 @@ class ImageClassifier extends IMLModel {
       }
     }
 
-    if (ISPERFORMANCETRACKING) {
-      _performance!.addChildReading(metadata: {"path": imagePath});
-    }
+    // if (ISPERFORMANCETRACKING) {
+    //   _performance!.addChildReading(metadata: {"path": imagePath});
+    // }
 
     return results;
   }

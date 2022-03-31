@@ -3,7 +3,7 @@ import 'dart:isolate';
 
 import 'package:archive/archive_io.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
-import 'package:waultar/core/helpers/performance_helper2.dart';
+import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/domain/workers/shared_packages.dart';
 import 'package:waultar/startup.dart';
@@ -13,13 +13,12 @@ Future unzipWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
   if (data is IsolateUnzipStartPackage) {
     try {
       await setupIsolate(mainSendPort, data, data.waultarPath);
-      PerformanceHelper2? performance;
-      var fileCount = 0;
+      var performance = locator.get<PerformanceHelper>(instanceName: 'performance');
       var isPerformanceTracking = data.isPerformanceTracking;
-      var isTestAll = data.isTrackAll;
 
-      if (isPerformanceTracking && isTestAll) {
-        performance = locator.get<PerformanceHelper2>(instanceName: 'performance2');
+      if (isPerformanceTracking) {
+        performance.init(newParentKey: "Extraction of files");
+        performance.startReading(performance.parentKey);
       }
 
       // using inputFileStream to access zip without storing it in memory
@@ -29,22 +28,13 @@ Future unzipWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
       // decode the zip via the stream - the archive will have the contents of the zip
       // without having to store it in memory
 
-      if (isPerformanceTracking && isTestAll) {
-        performance!.startReading("Decode of zip");
+      if (isPerformanceTracking) {
+        performance.startReading("Decode of zip");
       }
       final archive = ZipDecoder().decodeBuffer(inputStream);
-      if (isPerformanceTracking && isTestAll) {
+      if (isPerformanceTracking) {
         var key = "Decode of zip";
-        var elapsed = performance!.stop(key);
-        mainSendPort.send(
-          MainPerformanceMeasurementPackage.fromPerformanceDataPoint(
-            performanceDataPoint: PerformanceDataPoint(
-              key: key,
-              timeFormat: "milliseconds",
-              inputTime: performance.stop(key),
-            ),
-          ),
-        );
+        performance.addReading(performance.parentKey, key, performance.stopReading(key));
       }
 
       // Send total count back
@@ -60,9 +50,8 @@ Future unzipWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
         // only take the files and skip the optional .zip.enc file (facebook specific)
         if (file.isFile && !file.name.endsWith('zip.enc')) {
           var performanceReading = "";
-          if (isPerformanceTracking && isTestAll) {
-            performance!.startReading("Extracted File");
-            fileCount++;
+          if (isPerformanceTracking) {
+            performance.startReading("Extracted File");
           }
 
           var filePath = dart_path.normalize(destDirPath + '/' + file.name);
@@ -75,16 +64,16 @@ Future unzipWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
           //   list = [outputStream.path];
           // }
 
-          if (isPerformanceTracking && isTestAll) {
+          if (isPerformanceTracking) {
             var key = "Extracted File";
-            var reading = performance!.stop(key);
-            performanceReading = jsonEncode(PerformanceDataPoint(
-                key: "Extracted File",
-                timeFormat: "milliseconds",
-                inputTime: reading,
-                metaData: <String, dynamic>{
-                  "file path": outputStream.path,
-                }).toMap());
+            performance.addReading(
+              performance.parentKey,
+              key,
+              performance.stopReading(key),
+              metadata: <String, dynamic>{
+                "file path": outputStream.path,
+              },
+            );
           }
 
           if (outputStream.path.endsWith(".json")) {
@@ -94,15 +83,22 @@ Future unzipWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
           progress = progress + 1;
           mainSendPort.send(MainUnzipProgressPackage(
             progress,
-            performanceReading,
           ));
         }
       }
-      mainSendPort.send(MainUnzippedPathsPackage(list, list.length));
+
+      // todo
+      if (isPerformanceTracking) {
+        performance.addData(performance.parentKey,
+            duration: performance.stopReading(performance.parentKey));
+      }
+
+      mainSendPort.send(MainUnzippedPathsPackage(list, list.length,
+          isPerformanceTracking ? jsonEncode(performance.parentDataPoint.toMap()) : ""));
       inputStream.close();
 
-      if (isPerformanceTracking && isTestAll) {
-        performance!.dispose();
+      if (isPerformanceTracking) {
+        performance.dispose();
       }
     } catch (e, stacktrace) {
       mainSendPort.send(LogRecordPackage(e.toString(), stacktrace.toString()));
@@ -128,7 +124,6 @@ class IsolateUnzipStartPackage extends InitiatorPackage {
 
   // performance configs to be used inside isolate
   bool isPerformanceTracking;
-  bool isTrackAll;
 
   // to be used as root folder name for extracted dump
   String profileName;
@@ -136,7 +131,6 @@ class IsolateUnzipStartPackage extends InitiatorPackage {
   IsolateUnzipStartPackage({
     required this.pathToZip,
     required this.isPerformanceTracking,
-    required this.isTrackAll,
     required this.profileName,
     required this.waultarPath,
   });
@@ -146,7 +140,9 @@ class IsolateUnzipStartPackage extends InitiatorPackage {
 class MainUnzippedPathsPackage {
   List<String> pathsInSameFolder;
   int parsedCount;
-  MainUnzippedPathsPackage(this.pathsInSameFolder, this.parsedCount);
+  String performanceDataPoint;
+
+  MainUnzippedPathsPackage(this.pathsInSameFolder, this.parsedCount, this.performanceDataPoint);
 }
 
 class MainUnzipTotalCountPackage {
@@ -156,6 +152,6 @@ class MainUnzipTotalCountPackage {
 
 class MainUnzipProgressPackage {
   int progress;
-  String performanceNode;
-  MainUnzipProgressPackage(this.progress, this.performanceNode);
+
+  MainUnzipProgressPackage(this.progress);
 }

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:waultar/core/base_worker/package_models.dart';
-import 'package:waultar/core/helpers/performance_helper2.dart';
+import 'package:waultar/core/helpers/performance_helper.dart';
 
 class IsolateStandardStartupPackage extends InitiatorPackage {
   bool isPerformanceTracking;

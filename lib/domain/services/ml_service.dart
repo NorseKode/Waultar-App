@@ -3,22 +3,16 @@ import 'dart:convert';
 import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/base_worker/base_worker.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
-import 'package:waultar/core/ai/image_classifier.dart';
-import 'package:waultar/core/ai/sentiment_classifier.dart';
-import 'package:waultar/core/helpers/performance_helper2.dart';
-import 'package:waultar/data/repositories/datapoint_repo.dart';
-import 'package:waultar/data/repositories/media_repo.dart';
+import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/domain/workers/image_classifier_worker.dart';
-import 'package:waultar/domain/workers/shared_packages.dart';
 import 'package:waultar/startup.dart';
 
 class MLService extends IMLService {
-  final _performance = locator.get<PerformanceHelper2>(instanceName: 'performance2');
+  final _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
 
   @override
-  Future<void> classifyImagesSeparateThread(
-    {
-    required Function(String message, bool isDone) callback, 
+  Future<void> classifyImagesSeparateThread({
+    required Function(String message, bool isDone) callback,
     required int totalAmountOfImagesToTag,
     int? limitAmount,
   }) async {
@@ -26,8 +20,8 @@ class MLService extends IMLService {
 
     if (ISPERFORMANCETRACKING) {
       var key = "Classifying of images";
-      _performance.reInit(newParentKey: key);
-      _performance.start(key);
+      _performance.init(newParentKey: key);
+      _performance.startReading(key);
     }
 
     var initiator = IsolateImageClassifyStartPackage(
@@ -39,29 +33,19 @@ class MLService extends IMLService {
 
     _listenImageClassify(dynamic data) {
       switch (data.runtimeType) {
-        case MainPerformanceMeasurementPackage:
-          data as MainPerformanceMeasurementPackage;
-          if (ISTRACKALL) {
-            var performanceDataPoint = PerformanceDataPoint.fromMap(
-              jsonDecode(data.performanceDataPointJson),
-            );
-            _performance.storeDataPoint("Classifying of images", performanceDataPoint);
-          }
-          break;
-
         case MainImageClassifyProgressPackage:
           data as MainImageClassifyProgressPackage;
           amountTaggedSummed += data.amountTagged;
-          callback("$amountTaggedSummed/${limitAmount ?? totalAmountOfImagesToTag} Images Tagged", data.isDone);
+          callback("$amountTaggedSummed/${limitAmount ?? totalAmountOfImagesToTag} Images Tagged",
+              data.isDone);
           if (ISPERFORMANCETRACKING && data.isDone) {
-            _performance.addParentReading(
-                childs: _performance.getStoredDataPoints(_performance.parentKey),
-                metadata: {
-                  "Step": 1,
-                  "Device": "Lukas' Desktop",
-                  "Notes": "Only ran all",
-                  "Link to dataset": "https://1drv.ms/u/s!AmvKrTBSZGTNisdzGf8k0XE9EzKGmA?e=7B13wv",
-                });
+            _performance.addData(
+              _performance.parentKey,
+              duration: _performance.stopReading(_performance.parentKey),
+              childs: data.performanceDataPoint != null
+                  ? [PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint!))]
+                  : [],
+            );
             _performance.summary("Tagging of images only total");
           }
       }

@@ -1,7 +1,8 @@
+import 'dart:convert';
 import 'dart:isolate';
 import 'package:waultar/core/ai/image_classifier_mobilenetv3.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
-import 'package:waultar/core/helpers/performance_helper2.dart';
+import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:waultar/domain/workers/shared_packages.dart';
@@ -11,64 +12,42 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
   if (data is IsolateImageClassifyStartPackage) {
     try {
       await setupIsolate(mainSendPort, data, data.waultarPath);
-      PerformanceHelper2? performance;
+      var performance = locator.get<PerformanceHelper>(instanceName: 'performance');
       var mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
       if (data.isPerformanceTracking) {
-        performance = locator.get<PerformanceHelper2>(instanceName: 'performance2');
-        performance.reInit(newParentKey: "Not Used");
+        performance.init(newParentKey: "Classifier");
+        performance.startReading(performance.parentKey);
       }
-
       if (data.isPerformanceTracking) {
-        performance!.startReading("Setup of classifier");
+        performance.startReading("Setup of classifier");
       }
       var classifier = ImageClassifierMobileNetV3(aiFolder: data.aiFolder);
       if (data.isPerformanceTracking) {
         var key = "Setup of classifier";
-        mainSendPort.send(
-          MainPerformanceMeasurementPackage.fromPerformanceDataPoint(
-            performanceDataPoint: PerformanceDataPoint(
-              key: key,
-              timeFormat: "milliseconds",
-              inputTime: performance!.stop(key),
-            ),
-          ),
-        );
+        performance.addReading(performance.parentKey, key, performance.stopReading(key));
       }
 
       int step = 1;
       int offset = 0;
       int limit = step;
       if (data.isPerformanceTracking) {
-        performance!.startReading("Loading of images");
+        performance.startReading("Loading of images");
       }
       var images = mediaRepo.getImagesPagination(offset, limit);
       if (data.isPerformanceTracking) {
         var key = "Loading of images";
-        MainPerformanceMeasurementPackage.fromPerformanceDataPoint(
-          performanceDataPoint: PerformanceDataPoint(
-            key: key,
-            timeFormat: "milliseconds",
-            inputTime: performance!.stop(key),
-          ),
-        );
+        performance.addReading(performance.parentKey, key, performance.stopReading(key));
       }
 
       while (images.isNotEmpty && (data.limit != null && offset < data.limit!)) {
         for (var image in images) {
           if (data.isPerformanceTracking) {
-            performance!.startReading("Classify Image");
+            performance.startReading("Classify Image");
           }
           var mediaTags = classifier.predict(image.uri, 5);
           if (data.isPerformanceTracking) {
             var key = "Classify Image";
-            mainSendPort.send(
-              MainPerformanceMeasurementPackage.fromPerformanceDataPoint(
-                performanceDataPoint: PerformanceDataPoint(
-                    key: key,
-                    timeFormat: "milliseconds",
-                    inputTime: performance!.stop("Classify Image")),
-              ),
-            );
+            performance.addReading(performance.parentKey, key, performance.stopReading(key));
           }
 
           if (mediaTags.length == 0) {
@@ -87,24 +66,28 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
         offset += step;
 
         if (data.isPerformanceTracking) {
-          performance!.startReading("Loading of images");
+          performance.startReading("Loading of images");
         }
         images = mediaRepo.getImagesPagination(offset, limit);
         if (data.isPerformanceTracking) {
           var key = "Loading of images";
-          MainPerformanceMeasurementPackage.fromPerformanceDataPoint(
-            performanceDataPoint: PerformanceDataPoint(
-              key: key,
-              timeFormat: "milliseconds",
-              inputTime: performance!.stop(key),
-            ),
-          );
+          performance.addReading(performance.parentKey, key, performance.stopReading(key));
         }
       }
 
-      mainSendPort.send(MainImageClassifyProgressPackage(amountTagged: step, isDone: true));
       if (data.isPerformanceTracking) {
-        performance!.dispose();
+        performance.addData(performance.parentKey,
+            duration: performance.stopReading(performance.parentKey));
+      }
+
+      mainSendPort.send(MainImageClassifyProgressPackage(
+        amountTagged: step,
+        isDone: true,
+        performanceDataPoint: jsonEncode(performance.parentDataPoint.toMap()),
+      ));
+
+      if (data.isPerformanceTracking) {
+        performance.dispose();
       }
     } catch (e, stacktrace) {
       mainSendPort.send(LogRecordPackage(e.toString(), stacktrace.toString()));
@@ -140,9 +123,11 @@ class IsolateImageClassifyStartPackage extends InitiatorPackage {
 class MainImageClassifyProgressPackage {
   int amountTagged;
   bool isDone;
+  String? performanceDataPoint;
 
   MainImageClassifyProgressPackage({
     required this.amountTagged,
     required this.isDone,
+    this.performanceDataPoint,
   });
 }
