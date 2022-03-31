@@ -4,13 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
-import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
-import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
-import 'package:waultar/presentation/widgets/IM/sentiment_widget.dart';
-import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 
-import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 import 'package:waultar/presentation/widgets/machine_models/image_classify_widget.dart';
 
 import 'package:waultar/startup.dart';
@@ -67,7 +62,7 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      ImageClassifyWidget(),
+                      const ImageClassifyWidget(),
                       const SizedBox(height: 20),
                       Text(
                         localizer.yourSocialDataOverview,

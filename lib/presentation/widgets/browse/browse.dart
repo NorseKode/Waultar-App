@@ -28,8 +28,8 @@ class _BrowseState extends State<Browse> {
   late ThemeProvider themeProvider;
 
   final TreeParser parser = locator.get<TreeParser>(instanceName: 'parser');
-  final IServiceRepository _serviceRepo =
-      locator.get<IServiceRepository>(instanceName: 'serviceRepo');
+  // final IServiceRepository _serviceRepo =
+  //     locator.get<IServiceRepository>(instanceName: 'serviceRepo');
   final _parserService = locator.get<IParserService>(instanceName: 'parserService');
 
   bool isLoading = false;

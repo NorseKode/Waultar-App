@@ -8,8 +8,6 @@ import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/exceptions/ai_exception.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
-import 'package:waultar/configs/globals/globals.dart';
-import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/core/ai/i_ml_model.dart';
 import 'package:waultar/startup.dart';
 
@@ -32,7 +30,6 @@ class ImageClassifier extends IMLModel {
   late List<List<int>> _outputShapes;
   late List<TfLiteType> _outputTypes;
   final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
-  PerformanceHelper? _performance;
 
   @override
   dispose() {

@@ -112,7 +112,7 @@ class _GalleryState extends State<Gallery> {
           SizedBox(
             width: 150,
             child: ListTile(
-              title: Text("Images"),
+              title: const Text("Images"),
               leading: Radio<FileType>(
                 value: FileType.image,
                 groupValue: _selectedMediaType,
@@ -128,7 +128,7 @@ class _GalleryState extends State<Gallery> {
           SizedBox(
             width: 150,
             child: ListTile(
-              title: Text("Videos"),
+              title: const Text("Videos"),
               leading: Radio<FileType>(
                 value: FileType.video,
                 groupValue: _selectedMediaType,
@@ -144,7 +144,7 @@ class _GalleryState extends State<Gallery> {
           SizedBox(
             width: 150,
             child: ListTile(
-              title: Text("Files"),
+              title: const Text("Files"),
               leading: Radio<FileType>(
                 value: FileType.file,
                 groupValue: _selectedMediaType,

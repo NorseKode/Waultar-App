@@ -35,7 +35,7 @@ abstract class IPerformanceHelper {
 class PerformanceHelper extends IPerformanceHelper {
   var _timers = <String, Stopwatch>{};
   var _tempStorageList = <Tuple2<String, List<PerformanceDataPoint>>>[
-    Tuple2("", <PerformanceDataPoint>[])
+    const Tuple2("", <PerformanceDataPoint>[])
   ];
 
   PerformanceHelper({
@@ -168,7 +168,7 @@ class PerformanceHelper extends IPerformanceHelper {
   @override
   void clearDataPointStore() {
     _tempStorageList = <Tuple2<String, List<PerformanceDataPoint>>>[
-      Tuple2("", <PerformanceDataPoint>[])
+      const Tuple2("", <PerformanceDataPoint>[])
     ];
   }
 

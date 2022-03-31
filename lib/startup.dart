@@ -13,7 +13,6 @@ import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.d
 import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
-import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/data/repositories/buckets_repo.dart';
 import 'package:waultar/data/repositories/data_category_repo.dart';
 import 'package:waultar/data/repositories/datapoint_name_repo.dart';

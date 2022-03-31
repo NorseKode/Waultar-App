@@ -5,7 +5,6 @@ import 'package:waultar/core/base_worker/package_models.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/repositories/media_repo.dart';
-import 'package:waultar/domain/workers/shared_packages.dart';
 import 'package:waultar/startup.dart';
 
 Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function onError) async {
@@ -50,7 +49,7 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
             performance.addReading(performance.parentKey, key, performance.stopReading(key));
           }
 
-          if (mediaTags.length == 0) {
+          if (mediaTags.isEmpty) {
             image.mediaTagScores = ["NULL"];
             image.mediaTags = "NULL";
           } else {

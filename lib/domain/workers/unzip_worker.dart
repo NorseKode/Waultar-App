@@ -5,7 +5,6 @@ import 'package:archive/archive_io.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/data/configs/objectbox.dart';
-import 'package:waultar/domain/workers/shared_packages.dart';
 import 'package:waultar/startup.dart';
 import 'package:path/path.dart' as dart_path;
 
@@ -49,7 +48,6 @@ Future unzipWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
       for (var file in archive.files) {
         // only take the files and skip the optional .zip.enc file (facebook specific)
         if (file.isFile && !file.name.endsWith('zip.enc')) {
-          var performanceReading = "";
           if (isPerformanceTracking) {
             performance.startReading("Extracted File");
           }
