@@ -4,6 +4,7 @@ import 'package:waultar/data/entities/media/file_document.dart';
 import 'package:waultar/data/entities/media/image_document.dart';
 import 'package:waultar/data/entities/media/link_document.dart';
 import 'package:waultar/data/entities/media/video_document.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/entities/nodes/name_node.dart';
@@ -22,6 +23,8 @@ class UtilityRepository implements IUtilityRepository {
     removed += nukeAllLinks();
     removed += _nukeAllDataPoints();
     removed += _nukeAllNames();
+    removed += nukeAllProfiles();
+    removed += nukeAllCategories();
     _resetCounts();
 
     return removed;
@@ -42,6 +45,11 @@ class UtilityRepository implements IUtilityRepository {
   @override
   int nukeAllVideos() => _context.store.box<VideoDocument>().removeAll();
   
+  @override
+  int nukeAllProfiles() => _context.store.box<ProfileDocument>().removeAll();
+
+  @override
+  int nukeAllCategories() => _context.store.box<DataCategory>().removeAll();
 
   void _resetCounts() {
     var categories = _context.store.box<DataCategory>().getAll();

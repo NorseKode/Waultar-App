@@ -2,11 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/core/models/timeline/time_models.dart';
-import 'package:waultar/core/models/ui_model.dart';
-import 'package:waultar/core/parsers/parse_helper.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/timeline/datapoint_widget.dart';
 import 'package:waultar/presentation/widgets/timeline/filter_widget.dart';
@@ -80,7 +77,7 @@ class _TimelineState extends State<Timeline> {
           ),
         ),
         const SizedBox(height: 20),
-        Expanded(flex: 2, child: DataPointWidget(dpList: []))
+        Expanded(flex: 2, child: DataPointWidget(dpList: const []))
       ],
     );
   }

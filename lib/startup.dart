@@ -4,7 +4,7 @@ import 'package:path/path.dart' as dart_path;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:waultar/configs/globals/helper/performance_helper.dart';
+import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
@@ -41,6 +41,7 @@ late final String _dbFolderPath;
 late final String _extractsFolderPath;
 late final String _logFolderPath;
 late final String _performanceFolderPath;
+late final String _pathToAIFolder;
 
 Future<void> setupServices({
   bool testing = false,
@@ -54,6 +55,7 @@ Future<void> setupServices({
     locator.registerSingleton<String>(_extractsFolderPath, instanceName: 'extracts_folder');
     locator.registerSingleton<String>(_logFolderPath, instanceName: 'log_folder');
     locator.registerSingleton<String>(_performanceFolderPath, instanceName: 'performance_folder');
+    locator.registerSingleton<String>(_pathToAIFolder, instanceName: 'ai_folder');
 
     os = detectPlatform();
     locator.registerSingleton<OS>(os, instanceName: 'platform');
@@ -175,6 +177,16 @@ Future initApplicationPaths({bool testing = false, String? waultarPath}) async {
   _extractsFolderPath = dart_path.normalize(_waultarPath + '/extracts/');
   _logFolderPath = dart_path.normalize(_waultarPath + '/logs/');
   _performanceFolderPath = dart_path.normalize(_waultarPath + '/performance/');
+  _pathToAIFolder = dart_path
+      .normalize(
+        dart_path.join(
+          dart_path.dirname(Platform.script.path),
+          "lib",
+          "assets",
+          "ai_models",
+        ),
+      )
+      .substring(1);
 
   var dbFolderDir = Directory(_dbFolderPath);
   var extractsFolderDir = Directory(_extractsFolderPath);

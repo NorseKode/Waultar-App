@@ -37,7 +37,7 @@ class _SettingsViewState extends State<SettingsView> {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Developer Tools"),
+          const Text("Developer Tools"),
           const Divider(),
           DefaultButton(
             text: localizer.nukeDatabase,
