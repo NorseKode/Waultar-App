@@ -66,8 +66,6 @@ class _DashboardState extends State<Dashboard> {
                           ),
                         ),
                       ),
-                      // if (_imagesToTagCount > 0) const SizedBox(height: 20),
-                      // if (_imagesToTagCount > 0) _imageTaggingWidget(),
                       const SizedBox(height: 20),
                       ImageClassifyWidget(),
                       const SizedBox(height: 20),

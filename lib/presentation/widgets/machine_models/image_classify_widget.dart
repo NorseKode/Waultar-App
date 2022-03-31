@@ -65,22 +65,24 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
       title: "Image Classification",
       child: _isLoading
           ? _loadingScreen()
-          : Column(
-              children: [
-                Text("Untagged Images Count: $_imagesToTagCount"),
-                TextField(
-                  keyboardType: TextInputType.number,
-                  controller: _amountToTagTextController,
+          : _imagesToTagCount == 0
+              ? const Text("No Images To Tag")
+              : Column(
+                  children: [
+                    Text("Untagged Images Count: $_imagesToTagCount"),
+                    TextField(
+                      keyboardType: TextInputType.number,
+                      controller: _amountToTagTextController,
+                    ),
+                    Text("Estimated Time To Tag All: ${(_imagesToTagCount * 0.2) / 60} minuets"),
+                    DefaultButton(
+                      text: "Tag Images",
+                      onPressed: () {
+                        _tagImages();
+                      },
+                    ),
+                  ],
                 ),
-                Text("Estimated Time To Tag All: ${(_imagesToTagCount * 0.2) / 60} minuets"),
-                DefaultButton(
-                  text: "Tag Images",
-                  onPressed: () {
-                    _tagImages();
-                  },
-                ),
-              ],
-            ),
     );
   }
 }

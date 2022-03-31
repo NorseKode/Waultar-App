@@ -39,7 +39,7 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
         performance.addReading(performance.parentKey, key, performance.stopReading(key));
       }
 
-      while (images.isNotEmpty && (data.limit != null && offset < data.limit!)) {
+      while (images.isNotEmpty && (data.limit == null || offset < data.limit!)) {
         for (var image in images) {
           if (data.isPerformanceTracking) {
             performance.startReading("Classify Image");
@@ -53,12 +53,12 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
           if (mediaTags.length == 0) {
             image.mediaTagScores = ["NULL"];
             image.mediaTags = "NULL";
+          } else {
+            image.mediaTagScores = mediaTags.map((e) => ",(${e.item1},${e.item2})").toList();
+
+            image.mediaTags =
+                mediaTags.fold<String>("", (previous, next) => previous += ",${next.item1}");
           }
-
-          image.mediaTagScores = mediaTags.map((e) => ",(${e.item1},${e.item2})").toList();
-
-          image.mediaTags =
-              mediaTags.fold<String>("", (previous, next) => previous += ",${next.item1}");
         }
 
         mediaRepo.updateImages(images);
