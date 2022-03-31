@@ -479,19 +479,22 @@ class BucketsRepository extends IBucketsRepository {
   List<DateTime> _scrapeUniqueTimestamps(DataPoint dataPoint) {
     var timestampsSet = <DateTime>{};
     aux(dynamic data) {
+      
       if (data is Map<String, dynamic>) {
-        for (var value in data.values) {
-          aux(value);
+        for (var entry in data.entries) {
+          if ((entry.key.contains('time') || entry.key.contains('date')) && entry.value is int) {
+            var timestamp = tryParse(entry.value);
+            if (timestamp != null) timestampsSet.add(timestamp);    
+          }
+          if (entry.value is Map<String, dynamic> || entry.value is List<dynamic>) {
+            aux(entry.value);
+          }
         }
       }
       if (data is List<dynamic>) {
         for (var item in data) {
           aux(item);
         }
-      }
-      if (data is int) {
-        var timestamp = tryParse(data);
-        if (timestamp != null) timestampsSet.add(timestamp);
       }
     }
 

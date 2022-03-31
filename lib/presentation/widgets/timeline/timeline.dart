@@ -32,12 +32,14 @@ class _TimelineState extends State<Timeline> {
   late List<TimeModel> _timeSeries;
   late TooltipBehavior _tooltipBehavior;
   late ChartSeriesType _chosenChartType;
+  late TimeIntervalType _chosenTimeInterval;
 
   @override
   void initState() {
     _timeSeries = _timelineService.getAllYears();
     _tooltipBehavior = TooltipBehavior(enable: true);
     _chosenChartType = ChartSeriesType.stackedColumns;
+    _chosenTimeInterval = TimeIntervalType.years;
     super.initState();
   }
 
@@ -53,7 +55,14 @@ class _TimelineState extends State<Timeline> {
           style: themeProvider.themeData().textTheme.headline3,
         ),
         const SizedBox(height: 30),
-        _chartTypeSelector(),
+        Row(
+          children: [
+            _chartTypeSelector(),
+            const SizedBox(width: 20),
+            _timeIntervalSelector(),
+          ],
+        ),
+        // _chartTypeSelector(),
         const SizedBox(height: 30),
         Expanded(
           child: _chart(),
@@ -80,6 +89,39 @@ class _TimelineState extends State<Timeline> {
     );
   }
 
+  Widget _timeIntervalSelector() {
+    return DropdownButton(
+      value: _chosenTimeInterval,
+      items: List.generate(
+        TimeIntervalType.values.length,
+        (index) => DropdownMenuItem(
+          child: Text(TimeIntervalType.values[index].timeIntervalName),
+          value: TimeIntervalType.values[index],
+        ),
+      ),
+      onChanged: (TimeIntervalType? timeInterval) {
+        setState(() {
+          _chosenTimeInterval = timeInterval ?? TimeIntervalType.years;
+
+          switch (_chosenTimeInterval.intervalType) {
+            case YearModel:
+              _timeSeries = _timelineService.getAllYears();
+              break;
+            case MonthModel:
+              _timeSeries = _timelineService.getAllMonths();
+              break;
+            case DayModel:
+              _timeSeries = _timelineService.getAllDays();
+              break;
+
+            default:
+              _timeSeries = _timelineService.getAllYears();
+          }
+        });
+      },
+    );
+  }
+
   _chart() {
     return SfCartesianChart(
       tooltipBehavior: _tooltipBehavior,
@@ -88,19 +130,21 @@ class _TimelineState extends State<Timeline> {
         title: AxisTitle(
           text: 'Time',
         ),
-        autoScrollingDeltaType: DateTimeIntervalType.years,
+        autoScrollingDeltaType: DateTimeIntervalType.auto,
         // autoScrollingDelta: 3,
         autoScrollingMode: AutoScrollingMode.start,
         labelIntersectAction: AxisLabelIntersectAction.rotate45,
-        intervalType: DateTimeIntervalType
-            .years, // this should change dynamically with respect to current timeModels in _timeSeries
+        intervalType: _getCurrentXIntervalEnum(),
+        minimum: _timeSeries.first.dateTime,
+        maximum: _timeSeries.last.dateTime,
       ),
       zoomPanBehavior: ZoomPanBehavior(
         enablePanning: true,
         enableMouseWheelZooming: true,
+        zoomMode: ZoomMode.x,
       ),
       primaryYAxis: NumericAxis(
-        title: AxisTitle(text: 'Amount'),
+        title: AxisTitle(text: 'Amount of Datapoints'),
       ),
       series: _getChartSeries(),
       trackballBehavior: TrackballBehavior(
@@ -111,6 +155,25 @@ class _TimelineState extends State<Timeline> {
         // we can use the builder to hide values where total == 0
       ),
     );
+  }
+
+  DateTimeIntervalType _getCurrentXIntervalEnum() {
+    switch (_chosenTimeInterval.intervalType) {
+      case YearModel:
+        return DateTimeIntervalType.years;
+
+      case MonthModel:
+        return DateTimeIntervalType.months;
+
+      case DayModel:
+        return DateTimeIntervalType.days;
+
+      case HourModel:
+        return DateTimeIntervalType.hours;
+
+      default:
+        return DateTimeIntervalType.auto;
+    }
   }
 
   List<ChartSeries> _getChartSeries() {
@@ -359,4 +422,27 @@ extension ChartSeriesTypeHelper on ChartSeriesType {
 
   String get chartName => namesMap[this] ?? 'Unknown';
   Type get chartType => chartTypeMap[this] ?? StackedColumnSeries;
+}
+
+enum TimeIntervalType {
+  years,
+  months,
+  days,
+}
+
+extension TimeIntervalTypeHelper on TimeIntervalType {
+  static const namesMap = {
+    TimeIntervalType.years: 'Years',
+    TimeIntervalType.months: 'Months',
+    TimeIntervalType.days: 'Days',
+  };
+
+  static const intervalMap = {
+    TimeIntervalType.years: YearModel,
+    TimeIntervalType.months: MonthModel,
+    TimeIntervalType.days: DayModel,
+  };
+
+  String get timeIntervalName => namesMap[this] ?? 'Unknown';
+  Type get intervalType => intervalMap[this] ?? YearModel;
 }
