@@ -190,7 +190,7 @@
     },
     {
       "id": "5:847577287781739894",
-      "lastPropertyId": "6:1096578778279061653",
+      "lastPropertyId": "9:1535620110611098872",
       "name": "DayBucket",
       "properties": [
         {
@@ -226,6 +226,16 @@
           "id": "6:1096578778279061653",
           "name": "dbServiceMap",
           "type": 9
+        },
+        {
+          "id": "7:6739431816570423773",
+          "name": "dateTime",
+          "type": 12
+        },
+        {
+          "id": "9:1535620110611098872",
+          "name": "dbDateTime",
+          "type": 6
         }
       ],
       "relations": [
@@ -293,7 +303,7 @@
     },
     {
       "id": "7:1498108953875397065",
-      "lastPropertyId": "6:5085531036764321393",
+      "lastPropertyId": "9:7874932223722435257",
       "name": "HourBucket",
       "properties": [
         {
@@ -329,6 +339,16 @@
           "id": "6:5085531036764321393",
           "name": "dbServiceMap",
           "type": 9
+        },
+        {
+          "id": "7:6883593895564195860",
+          "name": "dateTime",
+          "type": 12
+        },
+        {
+          "id": "9:7874932223722435257",
+          "name": "dbDateTime",
+          "type": 6
         }
       ],
       "relations": [
@@ -441,7 +461,7 @@
     },
     {
       "id": "10:349564311328986986",
-      "lastPropertyId": "6:3320730968793816206",
+      "lastPropertyId": "9:7371930528374646999",
       "name": "MonthBucket",
       "properties": [
         {
@@ -477,6 +497,16 @@
           "id": "6:3320730968793816206",
           "name": "dbServiceMap",
           "type": 9
+        },
+        {
+          "id": "7:4647664965990350133",
+          "name": "dateTime",
+          "type": 12
+        },
+        {
+          "id": "9:7371930528374646999",
+          "name": "dbDateTime",
+          "type": 6
         }
       ],
       "relations": [
@@ -616,7 +646,7 @@
     },
     {
       "id": "14:6490719905445235655",
-      "lastPropertyId": "5:5217814735486016485",
+      "lastPropertyId": "8:5064198705187987116",
       "name": "YearBucket",
       "properties": [
         {
@@ -646,6 +676,16 @@
           "id": "5:5217814735486016485",
           "name": "dbServiceMap",
           "type": 9
+        },
+        {
+          "id": "6:6589696665297759928",
+          "name": "dateTime",
+          "type": 12
+        },
+        {
+          "id": "8:5064198705187987116",
+          "name": "dbDateTime",
+          "type": 6
         }
       ],
       "relations": [
@@ -688,7 +728,11 @@
   "retiredIndexUids": [],
   "retiredPropertyUids": [
     960916269998297458,
-    40955474443433670
+    40955474443433670,
+    5205168151133687056,
+    8644863752341424772,
+    4781883293328180961,
+    5929605835766362219
   ],
   "retiredRelationUids": [],
   "version": 1

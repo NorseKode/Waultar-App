@@ -9,6 +9,9 @@ class YearBucket {
   @Unique()
   int year;
 
+  @Property(type: PropertyType.dateNano)
+  DateTime dateTime;
+
   int total;
 
   late Map<int, int> categoryMap;
@@ -20,9 +23,15 @@ class YearBucket {
     this.id = 0,
     this.total = 0,
     required this.year,
+    required this.dateTime,
   }) {
     categoryMap = {};
     profileMap = {};
+  }
+
+  int get dbDateTime => dateTime.microsecondsSinceEpoch;
+  set dbDateTime(int value) {
+    dateTime = DateTime.fromMicrosecondsSinceEpoch(value, isUtc: false);
   }
 
   String get dbCategoryMap =>

@@ -53,7 +53,6 @@ class _TimelineState extends State<Timeline> {
           style: themeProvider.themeData().textTheme.headline3,
         ),
         const SizedBox(height: 30),
-        // user can use this to choose chartSeriesType
         _chartTypeSelector(),
         const SizedBox(height: 30),
         Expanded(
@@ -63,7 +62,7 @@ class _TimelineState extends State<Timeline> {
     );
   }
 
-  _chartTypeSelector() {
+  Widget _chartTypeSelector() {
     return DropdownButton(
       value: _chosenChartType,
       items: List.generate(
@@ -86,11 +85,25 @@ class _TimelineState extends State<Timeline> {
       tooltipBehavior: _tooltipBehavior,
       legend: Legend(isVisible: true),
       primaryXAxis: DateTimeAxis(
+        title: AxisTitle(
+          text: 'Time',
+        ),
+        autoScrollingDeltaType: DateTimeIntervalType.years,
+        // autoScrollingDelta: 3,
+        autoScrollingMode: AutoScrollingMode.start,
         labelIntersectAction: AxisLabelIntersectAction.rotate45,
         intervalType: DateTimeIntervalType
             .years, // this should change dynamically with respect to current timeModels in _timeSeries
       ),
-      primaryYAxis: NumericAxis(),
+      zoomPanBehavior: ZoomPanBehavior(
+        enablePanning: true,
+        enableMouseWheelZooming: true,
+      ),
+      primaryYAxis: NumericAxis(
+        title: AxisTitle(
+          text: 'Amount'
+        ),
+      ),
       series: _getChartSeries(),
       trackballBehavior: TrackballBehavior(
         enable: true,
@@ -101,7 +114,6 @@ class _TimelineState extends State<Timeline> {
       ),
     );
   }
-
 
   List<ChartSeries> _getChartSeries() {
     var returnList = <ChartSeries>[];
