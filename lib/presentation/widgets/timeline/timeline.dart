@@ -137,7 +137,7 @@ class _TimelineState extends State<Timeline> {
       zoomPanBehavior: ZoomPanBehavior(
         enablePanning: true,
         enableMouseWheelZooming: _chosenChartType.canZoom,
-        zoomMode: ZoomMode.xy,
+        zoomMode: ZoomMode.x,
       ),
       primaryYAxis: NumericAxis(
         title: AxisTitle(
@@ -386,7 +386,7 @@ class TimeUnitWithTotal {
 
   @override
   String toString() {
-    return 'timeValue -> ${timeValue.toString()} \ntotal -> $total';
+    return 'timeValue -> ${timeValue.toString()} total -> $total';
   }
 }
 

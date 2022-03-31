@@ -102,7 +102,7 @@ class BucketsRepository extends IBucketsRepository {
         listToReturn.add(model);
       }
     });
-    listToReturn.sort((a, b) => a.timeValue.compareTo(b.timeValue));
+    listToReturn.sort((a, b) => a.dateTime.compareTo(b.dateTime));
     return listToReturn;
   }
 
@@ -138,7 +138,7 @@ class BucketsRepository extends IBucketsRepository {
         listToReturn.add(model);
       }
     });
-    listToReturn.sort((a, b) => a.timeValue.compareTo(b.timeValue));
+    listToReturn.sort((a, b) => a.dateTime.compareTo(b.dateTime));
     return listToReturn;
   }
 
@@ -479,7 +479,7 @@ class BucketsRepository extends IBucketsRepository {
   List<DateTime> _scrapeUniqueTimestamps(DataPoint dataPoint) {
     var timestampsSet = <DateTime>{};
     aux(dynamic data) {
-      
+
       if (data is Map<String, dynamic>) {
         for (var entry in data.entries) {
           if ((entry.key.contains('time') || entry.key.contains('date')) && entry.value is int) {
