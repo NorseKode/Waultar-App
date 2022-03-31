@@ -72,7 +72,7 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                   keyboardType: TextInputType.number,
                   controller: _amountToTagTextController,
                 ),
-                Text("Estimated Time To Tag All: ${(_imagesToTagCount * 0.5) / 60} minuets"),
+                Text("Estimated Time To Tag All: ${(_imagesToTagCount * 0.2) / 60} minuets"),
                 DefaultButton(
                   text: "Tag Images",
                   onPressed: () {
