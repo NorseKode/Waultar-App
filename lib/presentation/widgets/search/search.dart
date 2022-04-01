@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:waultar/configs/globals/search_categories_enum.dart';
+import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/domain/services/text_search_service.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
@@ -15,25 +15,21 @@ class _SearchState extends State<Search> {
   final _controller = TextEditingController();
   final _textSearchService = TextSearchService();
   final _scrollController = ScrollController();
+  
+  var _chosenCategories = <CategoryEnum, bool>{};
   var _contents = <UIModel>[];
-  // ignore: prefer_final_fields, unused_field
+
   var _offset = 0;
-  // ignore: prefer_final_fields, unused_field
-  var _limit = 20;
-  // ignore: prefer_for_elements_to_map_fromiterable, prefer_final_fields
-  var _searchCategories = Map<SearchCategories, bool>.fromIterable(
-    SearchCategories.values,
-    key: (item) => item,
-    value: (item) => true,
-  );
+  final _limit = 20;
 
   _serach(bool isAppend) {
     setState(() {
+      var categories = _chosenCategories.entries.where((element) => element.value).map((e) => e.key).toList();
       isAppend
           ? _contents +=
-              _textSearchService.searchAll(_controller.text, _offset, _limit)
+              _textSearchService.search(categories, _controller.text, _offset, _limit)
           : _contents =
-              _textSearchService.searchAll(_controller.text, _offset, _limit);
+              _textSearchService.search(categories, _controller.text, _offset, _limit);
     });
   }
 
@@ -44,7 +40,8 @@ class _SearchState extends State<Search> {
   }
 
   _onScrollEnd() {
-    if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
+    if (_scrollController.position.maxScrollExtent ==
+        _scrollController.position.pixels) {
       _offset += _limit;
       _serach(true);
     }
@@ -52,6 +49,7 @@ class _SearchState extends State<Search> {
 
   @override
   void initState() {
+    _chosenCategories = {for (var item in CategoryEnum.values) item: true};
     super.initState();
     _scrollController.addListener(_onScrollEnd);
   }
@@ -62,27 +60,26 @@ class _SearchState extends State<Search> {
     _scrollController.removeListener(_onScrollEnd);
   }
 
-  _searchCategoriesCheckBoxes() {
-    return Expanded(
-      flex: 1,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: SearchCategories.values.length,
-        itemBuilder: (_, index) => Row(
+  Widget _searchCategoriesCheckBoxes() {
+    return Wrap(
+      children: List.generate(
+        CategoryEnum.values.length,
+        (index) => Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Checkbox(
-              value: _searchCategories[SearchCategories.values[index]],
+              value: _chosenCategories[CategoryEnum.values[index]],
               onChanged: (changedTo) {
                 if (changedTo != null) {
                   setState(() {
-                    _searchCategories[SearchCategories.values[index]] =
-                        !_searchCategories[SearchCategories.values[index]]!;
+                    _chosenCategories[CategoryEnum.values[index]] =
+                        !_chosenCategories[CategoryEnum.values[index]]!;
                     _loadNewData();
                   });
                 }
               },
             ),
-            Text(SearchCategories.values[index].toString().split(".")[1]),
+            Text(CategoryEnum.values[index].categoryName),
           ],
         ),
       ),
@@ -91,30 +88,43 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      _searchCategoriesCheckBoxes(),
-      TextField(
-        controller: _controller,
-        onChanged: (change) {
-          // call text search
-          setState(() {
-            _loadNewData();
-          });
-        },
-      ),
-      Expanded(
-        flex: 20,
-        child: ListView.builder(
-          controller: _scrollController,
-          itemCount: _contents.length,
-          itemBuilder: (_, index) => DefaultWidget(
-            title: "post",
-            child: Text(
-              _contents[index].toString(),
+    return Column(
+      children: [
+        TextField(
+          controller: _controller,
+          onChanged: (change) {
+            // call text search
+            setState(() {
+              _loadNewData();
+            });
+          },
+        ),
+        const SizedBox(
+          height: 20.0,
+        ),
+        _searchCategoriesCheckBoxes(),
+        const SizedBox(
+          height: 20.0,
+        ),
+        Expanded(
+          // flex: 20,
+          child: ListView.builder(
+            controller: _scrollController,
+            padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+            itemCount: _contents.length,
+            itemBuilder: (_, index) => Padding(
+              padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+              child: DefaultWidget(
+                edgeInsetsGeometry: const EdgeInsets.all(8.0),
+                title: _contents[index].getMostInformativeField(),
+                child: Text(
+                  _contents[index].toString(),
+                ),
+              ),
             ),
           ),
         ),
-      ),
-    ]);
+      ],
+    );
   }
 }

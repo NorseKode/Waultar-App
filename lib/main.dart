@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
 import 'package:waultar/configs/navigation/app_state.dart';
 import 'package:waultar/configs/navigation/router/app_route_information_parser.dart';
@@ -12,6 +11,8 @@ import 'package:waultar/configs/navigation/router/app_route_path.dart';
 import 'package:waultar/configs/navigation/router/app_router_delegate.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
+import 'package:waultar/core/ai/image_classifier.dart';
+import 'package:waultar/core/ai/image_classifier_mobilenetv3.dart';
 import 'package:waultar/core/ai/sentiment_classifier.dart';
 import 'package:waultar/core/ai/sentiment_classifier_textClassification.dart';
 import 'package:waultar/domain/services/ml_service.dart';
@@ -23,10 +24,10 @@ import 'startup.dart';
 
 void main() async {
   await setupServices();
-  // locator.registerSingleton<ImageClassifier>(
-  //   ImageClassifierMobileNetV3(),
-  //   instanceName: 'imageClassifier',
-  // );
+  locator.registerSingleton<ImageClassifier>(
+    ImageClassifierMobileNetV3(),
+    instanceName: 'imageClassifier',
+  );
   locator.registerSingleton<SentimentClassifier>(
     SentimentClassifierTextClassifierTFLite(),
     instanceName: 'sentimentClassifier',

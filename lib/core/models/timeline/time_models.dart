@@ -5,13 +5,14 @@ import 'package:waultar/data/entities/nodes/category_node.dart';
 
 abstract class TimeModel {
   int id;
-  int timeValue;
-  int total;
+  int timeValue; // x value
+  int total; // y total value
+  DateTime dateTime;
   List<Tuple2<DataCategory, int>> categoryCount;
   List<Tuple2<ProfileDocument, int>> profileCount;
   List<UIModel> dataPoints;
 
-  TimeModel(this.id, this.timeValue, this.total, this.categoryCount,
+  TimeModel(this.id, this.timeValue, this.total, this.dateTime, this.categoryCount,
       this.profileCount, this.dataPoints);
 }
 
@@ -20,12 +21,14 @@ class YearModel extends TimeModel {
     required int id,
     required int year,
     required int total,
+    required DateTime dateTime,
     required List<Tuple2<DataCategory, int>> categoryCount,
     required List<Tuple2<ProfileDocument, int>> profileCount,
   }) : super(
           id,
           year,
           total,
+          dateTime,
           categoryCount,
           profileCount,
           [],
@@ -37,12 +40,14 @@ class MonthModel extends TimeModel {
     required int id,
     required int month,
     required int total,
+    required DateTime dateTime,
     required List<Tuple2<DataCategory, int>> categoryCount,
     required List<Tuple2<ProfileDocument, int>> profileCount,
   }) : super(
           id,
           month,
           total,
+          dateTime,
           categoryCount,
           profileCount,
           [],
@@ -54,6 +59,7 @@ class DayModel extends TimeModel {
     required int id,
     required int day,
     required int total,
+    required DateTime dateTime,
     required List<Tuple2<DataCategory, int>> categoryCount,
     required List<Tuple2<ProfileDocument, int>> profileCount,
     required List<UIModel> dataPoints,
@@ -61,6 +67,7 @@ class DayModel extends TimeModel {
           id,
           day,
           total,
+          dateTime,
           categoryCount,
           profileCount,
           dataPoints,
@@ -72,6 +79,7 @@ class HourModel extends TimeModel {
     required int id,
     required int hour,
     required int total,
+    required DateTime dateTime,
     required List<Tuple2<DataCategory, int>> categoryCount,
     required List<Tuple2<ProfileDocument, int>> profileCount,
     required List<UIModel> dataPoints,
@@ -79,6 +87,7 @@ class HourModel extends TimeModel {
           id,
           hour,
           total,
+          dateTime,
           categoryCount,
           profileCount,
           dataPoints,

@@ -59,7 +59,7 @@ Future<void> main() async {
       expect(year2022.timeValue, 2022);
       expect(year2022.total, 3);
       expect(year2022.categoryCount.length, 1);
-      expect(year2022.categoryCount.first.item1.category.name, 'Posts');
+      expect(year2022.categoryCount.first.item1.category.categoryName, 'Posts');
       expect(year2022.categoryCount.first.item2, 3);
       expect(year2022.profileCount.length, 1);
     });
@@ -95,7 +95,7 @@ Future<void> main() async {
       expect(fridayMarch.dataPoints.first.getAssociatedColor(), Colors.amber);
       expect(fridayMarch.profileCount.length, 1);
       expect(fridayMarch.categoryCount.length, 1);
-      expect(fridayMarch.categoryCount.first.item1.category.name, 'Posts');
+      expect(fridayMarch.categoryCount.first.item1.category.categoryName, 'Posts');
 
       var hour12_10 = _bucketsRepo.getHourModelsFromDay(fridayMarch);
       expect(hour12_10.length, 1);

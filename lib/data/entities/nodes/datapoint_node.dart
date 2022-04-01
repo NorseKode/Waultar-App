@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:objectbox/objectbox.dart';
 import 'package:pretty_json/pretty_json.dart';
+import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/data/repositories/datapoint_repo.dart';
 import 'package:waultar/data/entities/media/file_document.dart';
@@ -33,7 +34,8 @@ class DataPoint {
   final files = ToMany<FileDocument>();
   final links = ToMany<LinkDocument>();
 
-  List<String> searchStrings = [];
+  @Index()
+  late String searchTerms;
 
   // the actual data stored in JSON format
   late String values;
@@ -44,7 +46,11 @@ class DataPoint {
   @Property(type: PropertyType.dateNano)
   late DateTime createdAt;
 
-  DataPoint({this.id = 0, this.sentimentScore = 0.0}) {
+  DataPoint({
+    this.id = 0,
+    this.sentimentScore = 0.0,
+    this.searchTerms = '',
+  }) {
     createdAt = DateTime.now();
   }
 
@@ -77,15 +83,17 @@ class DataPoint {
     profile.target = targetProfile;
     values = jsonEncode(json);
 
-    _createRelations(basePathToMedia);
-    if (searchStrings.isEmpty) {
-      searchStrings.add(stringName);
-    }
+    final StringBuffer sb = StringBuffer();
+    sb.write('${parentName.name} ');
+
+    _createRelations(basePathToMedia, sb);
+    
+    searchTerms = sb.toString();
     createdAt = DateTime.now();
     sentimentScore = 0;
   }
 
-  void _createRelations(String basePathToMedia) {
+  void _createRelations(String basePathToMedia, StringBuffer sb) {
     // the raw data as a map
     // the asMap getter will make sure it's always a map
     Map<String, dynamic> json = asMap;
@@ -132,7 +140,7 @@ class DataPoint {
               link.profile.target = profile.target;
               links.add(link);
             } else {
-              searchStrings.add(value);
+              sb.write('$value ');
             }
           } else {
             recurse(entry.value);
@@ -173,5 +181,18 @@ class DataPoint {
     return sb.toString();
   }
 
-  UIDTO get getUIDTO => UIDTO(stringName, category.target!, asMap);
+  String get path {
+    var sb = StringBuffer();
+    sb.write('${category.target!.category.categoryName}/');
+    var appendList = <String>[];
+    var parent = dataPointName.target;
+    while(parent != null) {
+      appendList.add('${parent.name}/');
+      parent = parent.parent.target;
+    }
+    appendList.reversed.forEach((element) => sb.write(element));
+    return sb.toString();
+  }
+
+  UIDTO get getUIDTO => UIDTO(dataPoint: this);
 }

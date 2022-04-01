@@ -47,7 +47,7 @@
     },
     {
       "id": "3:947152359241009292",
-      "lastPropertyId": "10:8749102867233895036",
+      "lastPropertyId": "11:8643535097958077629",
       "name": "DataPoint",
       "properties": [
         {
@@ -91,11 +91,6 @@
           "relationTarget": "ProfileDocument"
         },
         {
-          "id": "7:3238422020867945061",
-          "name": "searchStrings",
-          "type": 30
-        },
-        {
           "id": "8:760085426556875161",
           "name": "values",
           "type": 9
@@ -109,6 +104,13 @@
           "id": "10:8749102867233895036",
           "name": "dbCreatedAt",
           "type": 6
+        },
+        {
+          "id": "11:8643535097958077629",
+          "name": "searchTerms",
+          "type": 9,
+          "flags": 2048,
+          "indexId": "23:6646369849072523385"
         }
       ],
       "relations": [
@@ -180,17 +182,11 @@
           "relationTarget": "DataPointName"
         }
       ],
-      "relations": [
-        {
-          "id": "5:3230943822304619354",
-          "name": "children",
-          "targetId": "4:4165549596007760405"
-        }
-      ]
+      "relations": []
     },
     {
       "id": "5:847577287781739894",
-      "lastPropertyId": "6:1096578778279061653",
+      "lastPropertyId": "9:1535620110611098872",
       "name": "DayBucket",
       "properties": [
         {
@@ -226,6 +222,16 @@
           "id": "6:1096578778279061653",
           "name": "dbServiceMap",
           "type": 9
+        },
+        {
+          "id": "7:6739431816570423773",
+          "name": "dateTime",
+          "type": 12
+        },
+        {
+          "id": "9:1535620110611098872",
+          "name": "dbDateTime",
+          "type": 6
         }
       ],
       "relations": [
@@ -293,7 +299,7 @@
     },
     {
       "id": "7:1498108953875397065",
-      "lastPropertyId": "6:5085531036764321393",
+      "lastPropertyId": "9:7874932223722435257",
       "name": "HourBucket",
       "properties": [
         {
@@ -329,6 +335,16 @@
           "id": "6:5085531036764321393",
           "name": "dbServiceMap",
           "type": 9
+        },
+        {
+          "id": "7:6883593895564195860",
+          "name": "dateTime",
+          "type": 12
+        },
+        {
+          "id": "9:7874932223722435257",
+          "name": "dbDateTime",
+          "type": 6
         }
       ],
       "relations": [
@@ -441,7 +457,7 @@
     },
     {
       "id": "10:349564311328986986",
-      "lastPropertyId": "6:3320730968793816206",
+      "lastPropertyId": "9:7371930528374646999",
       "name": "MonthBucket",
       "properties": [
         {
@@ -477,6 +493,16 @@
           "id": "6:3320730968793816206",
           "name": "dbServiceMap",
           "type": 9
+        },
+        {
+          "id": "7:4647664965990350133",
+          "name": "dateTime",
+          "type": 12
+        },
+        {
+          "id": "9:7371930528374646999",
+          "name": "dbDateTime",
+          "type": 6
         }
       ],
       "relations": [
@@ -616,7 +642,7 @@
     },
     {
       "id": "14:6490719905445235655",
-      "lastPropertyId": "5:5217814735486016485",
+      "lastPropertyId": "8:5064198705187987116",
       "name": "YearBucket",
       "properties": [
         {
@@ -646,6 +672,16 @@
           "id": "5:5217814735486016485",
           "name": "dbServiceMap",
           "type": 9
+        },
+        {
+          "id": "6:6589696665297759928",
+          "name": "dateTime",
+          "type": 12
+        },
+        {
+          "id": "8:5064198705187987116",
+          "name": "dbDateTime",
+          "type": 6
         }
       ],
       "relations": [
@@ -677,7 +713,7 @@
     }
   ],
   "lastEntityId": "15:8577188339897494082",
-  "lastIndexId": "22:3877252189574955723",
+  "lastIndexId": "23:6646369849072523385",
   "lastRelationId": "11:760371621654623288",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
@@ -688,8 +724,15 @@
   "retiredIndexUids": [],
   "retiredPropertyUids": [
     960916269998297458,
-    40955474443433670
+    40955474443433670,
+    5205168151133687056,
+    8644863752341424772,
+    4781883293328180961,
+    5929605835766362219,
+    3238422020867945061
   ],
-  "retiredRelationUids": [],
+  "retiredRelationUids": [
+    3230943822304619354
+  ],
   "version": 1
 }

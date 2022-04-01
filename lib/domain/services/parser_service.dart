@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/globals.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
 import 'package:waultar/core/base_worker/base_worker.dart';
@@ -20,16 +21,26 @@ import 'package:waultar/startup.dart';
 class ParserService implements IParserService {
   var _totalCount = 0;
   var _pathsToParse = <String>[];
+  late final DateTime _parsingStartedAt;
 
-  final String _waultarPath = locator.get<String>(instanceName: 'waultar_root_directory');
-  final BaseLogger _logger = locator.get<BaseLogger>(instanceName: 'logger');
-  final ProfileRepository _profileRepo =
-      locator.get<ProfileRepository>(instanceName: 'profileRepo');
-  final IServiceRepository _serviceRepo =
-      locator.get<IServiceRepository>(instanceName: 'serviceRepo');
+  final String _waultarPath = locator.get<String>(
+    instanceName: 'waultar_root_directory',
+  );
+  final BaseLogger _logger = locator.get<BaseLogger>(
+    instanceName: 'logger',
+  );
+  final ProfileRepository _profileRepo = locator.get<ProfileRepository>(
+    instanceName: 'profileRepo',
+  );
+  final IServiceRepository _serviceRepo = locator.get<IServiceRepository>(
+    instanceName: 'serviceRepo',
+  );
+  final IBucketsRepository _bucketsRepo = locator.get<IBucketsRepository>(instanceName: 'bucketsRepo',);
   ParserService();
-  final _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
-  
+  final _performance = locator.get<PerformanceHelper>(
+    instanceName: 'performance',
+  );
+
   @override
   Future<void> parseIsolates(
     String zipPath,
@@ -41,6 +52,8 @@ class ParserService implements IParserService {
       _performance.init(newParentKey: "Extracting and parsing synchronously");
       _performance.startReading(_performance.parentKey);
     }
+
+    _parsingStartedAt = DateTime.now();
 
     var service = _serviceRepo.get(serviceName)!;
     profile.service.target = service;
@@ -66,7 +79,8 @@ class ParserService implements IParserService {
 
         case MainUnzipProgressPackage:
           data as MainUnzipProgressPackage;
-          callback("${data.progress} files extracted out of $_totalCount", false);
+          callback(
+              "${data.progress} files extracted out of $_totalCount", false);
           break;
 
         case MainUnzippedPathsPackage:
@@ -75,7 +89,10 @@ class ParserService implements IParserService {
           _startParsing(callback, profile);
 
           if (ISPERFORMANCETRACKING && ISTRACKALL) {
-            _performance.addDataPoint(_performance.parentKey, PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
+            _performance.addDataPoint(
+                _performance.parentKey,
+                PerformanceDataPoint.fromMap(
+                    jsonDecode(data.performanceDataPoint)));
           }
 
           break;
@@ -83,7 +100,8 @@ class ParserService implements IParserService {
         case MainPerformanceMeasurementPackage:
           data as MainPerformanceMeasurementPackage;
           if (ISPERFORMANCETRACKING && ISTRACKALL) {
-            var performanceReading = PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPointJson));
+            var performanceReading = PerformanceDataPoint.fromMap(
+                jsonDecode(data.performanceDataPointJson));
             _performance.storeDataPoint("Extracting files", performanceReading);
           }
           break;
@@ -106,13 +124,22 @@ class ParserService implements IParserService {
       switch (data.runtimeType) {
         case MainParsedProgressPackage:
           data as MainParsedProgressPackage;
-          callback("Parsing ${data.parsedCount}/${_pathsToParse.length}", data.isDone);
+          callback("Parsing ${data.parsedCount}/${_pathsToParse.length}",
+              data.isDone);
+
+          if (data.isDone) {
+            _bucketsRepo.createBuckets(_parsingStartedAt);
+          }
 
           if (data.isDone && ISPERFORMANCETRACKING && ISTRACKALL) {
-            _performance.addData(_performance.parentKey, duration: _performance.stopReading(_performance.parentKey));
-            _performance.addDataPoint(_performance.parentKey, PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
+            _performance.addData(_performance.parentKey,
+                duration: _performance.stopReading(_performance.parentKey));
+            _performance.addDataPoint(
+                _performance.parentKey,
+                PerformanceDataPoint.fromMap(
+                    jsonDecode(data.performanceDataPoint)));
             _performance.summary("Extraction and parsing");
-          } 
+          }
           break;
 
         case MainErrorPackage:
@@ -123,7 +150,8 @@ class ParserService implements IParserService {
       }
     }
 
-    var parseWorker = BaseWorker(mainHandler: _listenParser, initiator: parseInitiator);
+    var parseWorker =
+        BaseWorker(mainHandler: _listenParser, initiator: parseInitiator);
     parseWorker.init(parseWorkerBody);
   }
 
@@ -136,7 +164,9 @@ class ParserService implements IParserService {
     profile = _profileRepo.add(profile);
 
     var files = FileUploader.extractZip(zipPath, serviceName, profile.name);
-    locator.get<TreeParser>(instanceName: 'parser').parseManyPaths(files, profile);
+    locator
+        .get<TreeParser>(instanceName: 'parser')
+        .parseManyPaths(files, profile);
   }
 
   @override

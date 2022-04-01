@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
@@ -14,6 +15,8 @@ import 'package:waultar/presentation/widgets/general/util_widgets/default_button
 import 'package:waultar/presentation/widgets/snackbar_custom.dart';
 import 'package:waultar/presentation/widgets/upload/uploader.dart';
 import 'package:waultar/startup.dart';
+import 'package:syncfusion_flutter_treemap/treemap.dart';
+
 import 'package:path/path.dart' as dart_path;
 
 class Browse extends StatefulWidget {
@@ -27,16 +30,22 @@ class _BrowseState extends State<Browse> {
   late AppLocalizations localizer;
   late ThemeProvider themeProvider;
 
-  final TreeParser parser = locator.get<TreeParser>(instanceName: 'parser');
-  // final IServiceRepository _serviceRepo =
-  //     locator.get<IServiceRepository>(instanceName: 'serviceRepo');
-  final _parserService = locator.get<IParserService>(instanceName: 'parserService');
-
+  final TreeParser parser = locator.get<TreeParser>(
+    instanceName: 'parser',
+  );
+  final IServiceRepository _serviceRepo = locator.get<IServiceRepository>(
+    instanceName: 'serviceRepo',
+  );
+  final _parserService = locator.get<IParserService>(
+    instanceName: 'parserService',
+  );
+  final ICollectionsService _collectionsService =
+      locator.get<ICollectionsService>(
+    instanceName: 'collectionsService',
+  );
+  
   bool isLoading = false;
   var _progressMessage = "Initializing";
-
-  final ICollectionsService _collectionsService =
-      locator.get<ICollectionsService>(instanceName: 'collectionsService');
 
   late List<DataCategory> _categories;
   late List<DataPointName> _names;
@@ -102,13 +111,14 @@ class _BrowseState extends State<Browse> {
           children: [
             InkWell(
               onTap: () {
-                print(_categories[index].category.name);
+                print(_categories[index].category.categoryName);
                 setState(() {
                   _names = _collectionsService.getAllNamesFromCategory(_categories[index]);
                 });
               },
-              child: Text(
-                  _categories[index].category.name + "   " + _categories[index].count.toString()),
+              child: Text(_categories[index].category.categoryName +
+                  "   " +
+                  _categories[index].count.toString()),
             ),
             const Divider(
               thickness: 2.0,
@@ -143,6 +153,27 @@ class _BrowseState extends State<Browse> {
     );
   }
 
+  _treeMap() {
+    return Expanded(
+      child: SfTreemap(
+        dataCount: _categories.length,
+        levels: [
+          TreemapLevel(groupMapper: (int index) {
+            return _categories[index].category.categoryName;
+          }, labelBuilder: (BuildContext context, TreemapTile tile) {
+            return Padding(
+              padding: const EdgeInsets.all(2.5),
+              child: Text('${tile.group} ${tile.weight.toInt()}'),
+            );
+          }),
+        ],
+        weightValueMapper: (int index) {
+          return _categories[index].count.toDouble();
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     localizer = AppLocalizations.of(context)!;
@@ -174,23 +205,25 @@ class _BrowseState extends State<Browse> {
               const SizedBox(
                 height: 20,
               ),
-              _categories.length < 2
-                  ? Container(
-                      child: const Text("You haven't uploaded any data yet "),
-                    )
-                  : Flexible(
-                      child: GridView.count(
-                        physics: const NeverScrollableScrollPhysics(),
-                        childAspectRatio: 0.7,
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 10,
-                        // shrinkWrap: true,
-                        children: [
-                          categoriesColumn(),
-                          namesColumn(),
-                        ],
-                      ),
+              _categories.isEmpty
+                  ? const Expanded(
+                    child: Center(
+                        child: Text("You haven't uploaded any data yet ")),
+                  )
+                  // : _treeMap()
+                  : Expanded(
+                    child: GridView.count(
+                      physics: const NeverScrollableScrollPhysics(),
+                      childAspectRatio: 0.7,
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      // shrinkWrap: true,
+                      children: [
+                        categoriesColumn(),
+                        namesColumn(),
+                      ],
                     ),
+                  ),
             ],
           );
   }

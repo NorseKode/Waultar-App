@@ -80,7 +80,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(3, 947152359241009292),
       name: 'DataPoint',
-      lastPropertyId: const IdUid(10, 8749102867233895036),
+      lastPropertyId: const IdUid(11, 8643535097958077629),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -120,11 +120,6 @@ final _entities = <ModelEntity>[
             indexId: const IdUid(4, 5831091004964578383),
             relationTarget: 'ProfileDocument'),
         ModelProperty(
-            id: const IdUid(7, 3238422020867945061),
-            name: 'searchStrings',
-            type: 30,
-            flags: 0),
-        ModelProperty(
             id: const IdUid(8, 760085426556875161),
             name: 'values',
             type: 9,
@@ -138,7 +133,13 @@ final _entities = <ModelEntity>[
             id: const IdUid(10, 8749102867233895036),
             name: 'dbCreatedAt',
             type: 6,
-            flags: 0)
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(11, 8643535097958077629),
+            name: 'searchTerms',
+            type: 9,
+            flags: 2048,
+            indexId: const IdUid(23, 6646369849072523385))
       ],
       relations: <ModelRelation>[
         ModelRelation(
@@ -202,22 +203,19 @@ final _entities = <ModelEntity>[
             indexId: const IdUid(7, 7708495691955882452),
             relationTarget: 'DataPointName')
       ],
-      relations: <ModelRelation>[
-        ModelRelation(
-            id: const IdUid(5, 3230943822304619354),
-            name: 'children',
-            targetId: const IdUid(4, 4165549596007760405))
-      ],
+      relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[
         ModelBacklink(
             name: 'dataPoints',
             srcEntity: 'DataPoint',
-            srcField: 'dataPointName')
+            srcField: 'dataPointName'),
+        ModelBacklink(
+            name: 'children', srcEntity: 'DataPointName', srcField: 'parent')
       ]),
   ModelEntity(
       id: const IdUid(5, 847577287781739894),
       name: 'DayBucket',
-      lastPropertyId: const IdUid(6, 1096578778279061653),
+      lastPropertyId: const IdUid(9, 1535620110611098872),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -251,6 +249,16 @@ final _entities = <ModelEntity>[
             id: const IdUid(6, 1096578778279061653),
             name: 'dbServiceMap',
             type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(7, 6739431816570423773),
+            name: 'dateTime',
+            type: 12,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(9, 1535620110611098872),
+            name: 'dbDateTime',
+            type: 6,
             flags: 0)
       ],
       relations: <ModelRelation>[
@@ -315,7 +323,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(7, 1498108953875397065),
       name: 'HourBucket',
-      lastPropertyId: const IdUid(6, 5085531036764321393),
+      lastPropertyId: const IdUid(9, 7874932223722435257),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -349,6 +357,16 @@ final _entities = <ModelEntity>[
             id: const IdUid(6, 5085531036764321393),
             name: 'dbServiceMap',
             type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(7, 6883593895564195860),
+            name: 'dateTime',
+            type: 12,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(9, 7874932223722435257),
+            name: 'dbDateTime',
+            type: 6,
             flags: 0)
       ],
       relations: <ModelRelation>[
@@ -457,7 +475,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(10, 349564311328986986),
       name: 'MonthBucket',
-      lastPropertyId: const IdUid(6, 3320730968793816206),
+      lastPropertyId: const IdUid(9, 7371930528374646999),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -491,6 +509,16 @@ final _entities = <ModelEntity>[
             id: const IdUid(6, 3320730968793816206),
             name: 'dbServiceMap',
             type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(7, 4647664965990350133),
+            name: 'dateTime',
+            type: 12,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(9, 7371930528374646999),
+            name: 'dbDateTime',
+            type: 6,
             flags: 0)
       ],
       relations: <ModelRelation>[
@@ -627,7 +655,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(14, 6490719905445235655),
       name: 'YearBucket',
-      lastPropertyId: const IdUid(5, 5217814735486016485),
+      lastPropertyId: const IdUid(8, 5064198705187987116),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -655,6 +683,16 @@ final _entities = <ModelEntity>[
             id: const IdUid(5, 5217814735486016485),
             name: 'dbServiceMap',
             type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(6, 6589696665297759928),
+            name: 'dateTime',
+            type: 12,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(8, 5064198705187987116),
+            name: 'dbDateTime',
+            type: 6,
             flags: 0)
       ],
       relations: <ModelRelation>[
@@ -706,13 +744,21 @@ ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
       lastEntityId: const IdUid(15, 8577188339897494082),
-      lastIndexId: const IdUid(22, 3877252189574955723),
+      lastIndexId: const IdUid(23, 6646369849072523385),
       lastRelationId: const IdUid(11, 760371621654623288),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [4762876818333355262],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [960916269998297458, 40955474443433670],
-      retiredRelationUids: const [],
+      retiredPropertyUids: const [
+        960916269998297458,
+        40955474443433670,
+        5205168151133687056,
+        8644863752341424772,
+        4781883293328180961,
+        5929605835766362219,
+        3238422020867945061
+      ],
+      retiredRelationUids: const [3230943822304619354],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
       version: 1);
@@ -793,21 +839,19 @@ ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (DataPoint object, fb.Builder fbb) {
           final stringNameOffset = fbb.writeString(object.stringName);
-          final searchStringsOffset = fbb.writeList(object.searchStrings
-              .map(fbb.writeString)
-              .toList(growable: false));
           final valuesOffset = fbb.writeString(object.values);
-          fbb.startTable(11);
+          final searchTermsOffset = fbb.writeString(object.searchTerms);
+          fbb.startTable(12);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.dataPointName.targetId);
           fbb.addOffset(2, stringNameOffset);
           fbb.addFloat64(3, object.sentimentScore);
           fbb.addInt64(4, object.category.targetId);
           fbb.addInt64(5, object.profile.targetId);
-          fbb.addOffset(6, searchStringsOffset);
           fbb.addOffset(7, valuesOffset);
           fbb.addInt64(8, object.createdAt.microsecondsSinceEpoch * 1000);
           fbb.addInt64(9, object.dbCreatedAt);
+          fbb.addOffset(10, searchTermsOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -818,13 +862,11 @@ ModelDefinition getObjectBoxModel() {
           final object = DataPoint(
               id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
               sentimentScore:
-                  const fb.Float64Reader().vTableGet(buffer, rootOffset, 10, 0))
+                  const fb.Float64Reader().vTableGet(buffer, rootOffset, 10, 0),
+              searchTerms: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 24, ''))
             ..stringName = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 8, '')
-            ..searchStrings = const fb.ListReader<String>(
-                    fb.StringReader(asciiOptimization: true),
-                    lazy: false)
-                .vTableGet(buffer, rootOffset, 16, [])
             ..values = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 18, '')
             ..createdAt = DateTime.fromMicrosecondsSinceEpoch(
@@ -857,10 +899,12 @@ ModelDefinition getObjectBoxModel() {
         toOneRelations: (DataPointName object) =>
             [object.dataCategory, object.profile, object.parent],
         toManyRelations: (DataPointName object) => {
-              RelInfo<DataPointName>.toMany(5, object.id): object.children,
               RelInfo<DataPoint>.toOneBacklink(2, object.id,
                       (DataPoint srcObject) => srcObject.dataPointName):
-                  object.dataPoints
+                  object.dataPoints,
+              RelInfo<DataPointName>.toOneBacklink(6, object.id,
+                      (DataPointName srcObject) => srcObject.parent):
+                  object.children
             },
         getId: (DataPointName object) => object.id,
         setId: (DataPointName object, int id) {
@@ -897,15 +941,16 @@ ModelDefinition getObjectBoxModel() {
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
           object.parent.attach(store);
           InternalToManyAccess.setRelInfo(
-              object.children,
-              store,
-              RelInfo<DataPointName>.toMany(5, object.id),
-              store.box<DataPointName>());
-          InternalToManyAccess.setRelInfo(
               object.dataPoints,
               store,
               RelInfo<DataPoint>.toOneBacklink(2, object.id,
                   (DataPoint srcObject) => srcObject.dataPointName),
+              store.box<DataPointName>());
+          InternalToManyAccess.setRelInfo(
+              object.children,
+              store,
+              RelInfo<DataPointName>.toOneBacklink(
+                  6, object.id, (DataPointName srcObject) => srcObject.parent),
               store.box<DataPointName>());
           return object;
         }),
@@ -923,13 +968,15 @@ ModelDefinition getObjectBoxModel() {
         objectToFB: (DayBucket object, fb.Builder fbb) {
           final dbCategoryMapOffset = fbb.writeString(object.dbCategoryMap);
           final dbServiceMapOffset = fbb.writeString(object.dbServiceMap);
-          fbb.startTable(7);
+          fbb.startTable(10);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.day);
           fbb.addInt64(2, object.total);
           fbb.addInt64(3, object.month.targetId);
           fbb.addOffset(4, dbCategoryMapOffset);
           fbb.addOffset(5, dbServiceMapOffset);
+          fbb.addInt64(6, object.dateTime.microsecondsSinceEpoch * 1000);
+          fbb.addInt64(8, object.dbDateTime);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -940,11 +987,17 @@ ModelDefinition getObjectBoxModel() {
           final object = DayBucket(
               id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
               total: const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0),
-              day: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0))
+              day: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0),
+              dateTime: DateTime.fromMicrosecondsSinceEpoch(
+                  (const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0) /
+                          1000)
+                      .round()))
             ..dbCategoryMap = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 12, '')
             ..dbServiceMap = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 14, '');
+                .vTableGet(buffer, rootOffset, 14, '')
+            ..dbDateTime =
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 20, 0);
           object.month.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
           object.month.attach(store);
@@ -1015,13 +1068,15 @@ ModelDefinition getObjectBoxModel() {
         objectToFB: (HourBucket object, fb.Builder fbb) {
           final dbCategoryMapOffset = fbb.writeString(object.dbCategoryMap);
           final dbServiceMapOffset = fbb.writeString(object.dbServiceMap);
-          fbb.startTable(7);
+          fbb.startTable(10);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.hour);
           fbb.addInt64(2, object.total);
           fbb.addInt64(3, object.day.targetId);
           fbb.addOffset(4, dbCategoryMapOffset);
           fbb.addOffset(5, dbServiceMapOffset);
+          fbb.addInt64(6, object.dateTime.microsecondsSinceEpoch * 1000);
+          fbb.addInt64(8, object.dbDateTime);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1032,11 +1087,17 @@ ModelDefinition getObjectBoxModel() {
           final object = HourBucket(
               id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
               total: const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0),
-              hour: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0))
+              hour: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0),
+              dateTime: DateTime.fromMicrosecondsSinceEpoch(
+                  (const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0) /
+                          1000)
+                      .round()))
             ..dbCategoryMap = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 12, '')
             ..dbServiceMap = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 14, '');
+                .vTableGet(buffer, rootOffset, 14, '')
+            ..dbDateTime =
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 20, 0);
           object.day.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
           object.day.attach(store);
@@ -1159,13 +1220,15 @@ ModelDefinition getObjectBoxModel() {
         objectToFB: (MonthBucket object, fb.Builder fbb) {
           final dbCategoryMapOffset = fbb.writeString(object.dbCategoryMap);
           final dbServiceMapOffset = fbb.writeString(object.dbServiceMap);
-          fbb.startTable(7);
+          fbb.startTable(10);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.month);
           fbb.addInt64(2, object.total);
           fbb.addInt64(3, object.year.targetId);
           fbb.addOffset(4, dbCategoryMapOffset);
           fbb.addOffset(5, dbServiceMapOffset);
+          fbb.addInt64(6, object.dateTime.microsecondsSinceEpoch * 1000);
+          fbb.addInt64(8, object.dbDateTime);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1176,11 +1239,17 @@ ModelDefinition getObjectBoxModel() {
           final object = MonthBucket(
               id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
               total: const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0),
-              month: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0))
+              month: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0),
+              dateTime: DateTime.fromMicrosecondsSinceEpoch(
+                  (const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0) /
+                          1000)
+                      .round()))
             ..dbCategoryMap = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 12, '')
             ..dbServiceMap = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 14, '');
+                .vTableGet(buffer, rootOffset, 14, '')
+            ..dbDateTime =
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 20, 0);
           object.year.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
           object.year.attach(store);
@@ -1341,12 +1410,14 @@ ModelDefinition getObjectBoxModel() {
         objectToFB: (YearBucket object, fb.Builder fbb) {
           final dbCategoryMapOffset = fbb.writeString(object.dbCategoryMap);
           final dbServiceMapOffset = fbb.writeString(object.dbServiceMap);
-          fbb.startTable(6);
+          fbb.startTable(9);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.year);
           fbb.addInt64(2, object.total);
           fbb.addOffset(3, dbCategoryMapOffset);
           fbb.addOffset(4, dbServiceMapOffset);
+          fbb.addInt64(5, object.dateTime.microsecondsSinceEpoch * 1000);
+          fbb.addInt64(7, object.dbDateTime);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1357,11 +1428,17 @@ ModelDefinition getObjectBoxModel() {
           final object = YearBucket(
               id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
               total: const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0),
-              year: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0))
+              year: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0),
+              dateTime: DateTime.fromMicrosecondsSinceEpoch(
+                  (const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0) /
+                          1000)
+                      .round()))
             ..dbCategoryMap = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 10, '')
             ..dbServiceMap = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 12, '');
+                .vTableGet(buffer, rootOffset, 12, '')
+            ..dbDateTime =
+                const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0);
           InternalToManyAccess.setRelInfo(
               object.months,
               store,
@@ -1451,21 +1528,21 @@ class DataPoint_ {
   static final profile = QueryRelationToOne<DataPoint, ProfileDocument>(
       _entities[1].properties[5]);
 
-  /// see [DataPoint.searchStrings]
-  static final searchStrings =
-      QueryStringVectorProperty<DataPoint>(_entities[1].properties[6]);
-
   /// see [DataPoint.values]
   static final values =
-      QueryStringProperty<DataPoint>(_entities[1].properties[7]);
+      QueryStringProperty<DataPoint>(_entities[1].properties[6]);
 
   /// see [DataPoint.createdAt]
   static final createdAt =
-      QueryIntegerProperty<DataPoint>(_entities[1].properties[8]);
+      QueryIntegerProperty<DataPoint>(_entities[1].properties[7]);
 
   /// see [DataPoint.dbCreatedAt]
   static final dbCreatedAt =
-      QueryIntegerProperty<DataPoint>(_entities[1].properties[9]);
+      QueryIntegerProperty<DataPoint>(_entities[1].properties[8]);
+
+  /// see [DataPoint.searchTerms]
+  static final searchTerms =
+      QueryStringProperty<DataPoint>(_entities[1].properties[9]);
 
   /// see [DataPoint.images]
   static final images =
@@ -1509,10 +1586,6 @@ class DataPointName_ {
   /// see [DataPointName.parent]
   static final parent = QueryRelationToOne<DataPointName, DataPointName>(
       _entities[2].properties[5]);
-
-  /// see [DataPointName.children]
-  static final children = QueryRelationToMany<DataPointName, DataPointName>(
-      _entities[2].relations[0]);
 }
 
 /// [DayBucket] entity fields to define ObjectBox queries.
@@ -1539,6 +1612,14 @@ class DayBucket_ {
   /// see [DayBucket.dbServiceMap]
   static final dbServiceMap =
       QueryStringProperty<DayBucket>(_entities[3].properties[5]);
+
+  /// see [DayBucket.dateTime]
+  static final dateTime =
+      QueryIntegerProperty<DayBucket>(_entities[3].properties[6]);
+
+  /// see [DayBucket.dbDateTime]
+  static final dbDateTime =
+      QueryIntegerProperty<DayBucket>(_entities[3].properties[7]);
 
   /// see [DayBucket.hours]
   static final hours =
@@ -1605,6 +1686,14 @@ class HourBucket_ {
   /// see [HourBucket.dbServiceMap]
   static final dbServiceMap =
       QueryStringProperty<HourBucket>(_entities[5].properties[5]);
+
+  /// see [HourBucket.dateTime]
+  static final dateTime =
+      QueryIntegerProperty<HourBucket>(_entities[5].properties[6]);
+
+  /// see [HourBucket.dbDateTime]
+  static final dbDateTime =
+      QueryIntegerProperty<HourBucket>(_entities[5].properties[7]);
 
   /// see [HourBucket.dataPoints]
   static final dataPoints =
@@ -1698,6 +1787,14 @@ class MonthBucket_ {
   /// see [MonthBucket.dbServiceMap]
   static final dbServiceMap =
       QueryStringProperty<MonthBucket>(_entities[8].properties[5]);
+
+  /// see [MonthBucket.dateTime]
+  static final dateTime =
+      QueryIntegerProperty<MonthBucket>(_entities[8].properties[6]);
+
+  /// see [MonthBucket.dbDateTime]
+  static final dbDateTime =
+      QueryIntegerProperty<MonthBucket>(_entities[8].properties[7]);
 
   /// see [MonthBucket.days]
   static final days =
@@ -1803,6 +1900,14 @@ class YearBucket_ {
   /// see [YearBucket.dbServiceMap]
   static final dbServiceMap =
       QueryStringProperty<YearBucket>(_entities[12].properties[4]);
+
+  /// see [YearBucket.dateTime]
+  static final dateTime =
+      QueryIntegerProperty<YearBucket>(_entities[12].properties[5]);
+
+  /// see [YearBucket.dbDateTime]
+  static final dbDateTime =
+      QueryIntegerProperty<YearBucket>(_entities[12].properties[6]);
 
   /// see [YearBucket.months]
   static final months =
