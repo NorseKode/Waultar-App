@@ -122,7 +122,9 @@ class _TimelineState extends State<Timeline> {
     return SfCartesianChart(
       tooltipBehavior: _tooltipBehavior,
       legend: Legend(isVisible: true),
-      primaryXAxis: DateTimeAxis(
+      primaryXAxis: DateTimeCategoryAxis(
+        // edgeLabelPlacement: EdgeLabelPlacement.shift,
+        placeLabelsNearAxisLine: true,
         title: AxisTitle(
           text: 'Time',
         ),
