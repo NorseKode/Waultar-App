@@ -25,7 +25,7 @@ class _TopPanelState extends State<TopPanel> {
         children: [
           _dayDisplay(),
           SizedBox(width: 20),
-          _searchBar(),
+          _searchBarButton(),
           SizedBox(width: 20),
           _profileBar(),
         ],
@@ -49,6 +49,100 @@ class _TopPanelState extends State<TopPanel> {
                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400))
           ],
         ));
+  }
+
+  Widget _searchBarButton() {
+    return Expanded(
+      flex: 4,
+      child: Container(
+        alignment: Alignment.centerLeft,
+        padding: EdgeInsets.only(left: 15),
+        decoration: BoxDecoration(
+            color: Color(0xFF272837),
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        child: TextButton(
+          onPressed: () {
+            _showSearchDialog();
+          },
+          child: Text(
+            searchController.text.isEmpty
+                ? "search ..."
+                : searchController.text,
+            style: TextStyle(
+                color:
+                    searchController.text.isEmpty ? Colors.grey : Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w200),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showSearchDialog() {
+    showDialog(
+        barrierDismissible: true,
+        context: context,
+        builder: (context) {
+          return Row(children: [
+            SizedBox(
+              width: 250,
+            ),
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(children: [
+                      Expanded(flex: 1, child: Container()),
+                      SizedBox(width: 20),
+                      Expanded(
+                        flex: 4,
+                        child: Container(
+                          constraints: BoxConstraints(maxHeight: 500),
+                          child: Scaffold(
+                            backgroundColor: Colors.transparent,
+                            body: Column(
+                              children: [
+                                Container(
+                                  constraints: BoxConstraints(maxHeight: 40),
+                                  alignment: Alignment.centerLeft,
+                                  child: TextField(
+                                    autofocus: true,
+                                    decoration: const InputDecoration(
+                                        border: OutlineInputBorder(
+                                            borderSide: BorderSide.none,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(10))),
+                                        fillColor: Color(0xFF272837),
+                                        filled: true,
+                                        hintText: "search ..."),
+                                    style: TextStyle(
+                                        color: searchController.text.isEmpty
+                                            ? Colors.grey
+                                            : Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w200),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Container(color: Colors.red),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 20),
+                      Expanded(flex: 2, child: Container())
+                    ]),
+                  ],
+                ),
+              ),
+            )
+          ]);
+        });
   }
 
   Widget _searchBar() {
