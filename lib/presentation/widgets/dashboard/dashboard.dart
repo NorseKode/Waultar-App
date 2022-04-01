@@ -9,6 +9,7 @@ import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/IM/sentiment_widget.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/service_widget.dart';
 
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 
@@ -34,29 +35,42 @@ class _DashboardState extends State<Dashboard> {
 
   Widget _imageTaggingWidget() {
     return DefaultWidget(
-      title: "Image Classification",
-      child: Column(
-        children: [
+        constraints: const BoxConstraints(maxWidth: 300),
+        title: "Image Classification",
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          const Text(
+            "Analyse the content of your images.",
+          ),
+          const SizedBox(height: 10),
           Text("Untagged Images Count: $_imagesToTagCount"),
           Text(
               "Estimated Time To Tag All: ${(_imagesToTagCount * 0.5) / 60} minuets"),
-          DefaultButton(
-            text: "Tag Images",
-            onPressed: () {
-              setState(() {
-                _isLoading = true;
-              });
+          const SizedBox(height: 10),
+          const Divider(
+              height: 2, thickness: 2, color: Color.fromARGB(255, 61, 67, 113)),
+          const SizedBox(height: 10),
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                DefaultButton(
+                  text: "       Tag Images       ",
+                  onPressed: () {
+                    setState(() {
+                      _isLoading = true;
+                    });
 
-              _mlService.classifyImagesFromDB();
+                    _mlService.classifyImagesFromDB();
 
-              setState(() {
-                _isLoading = false;
-              });
-            },
-          ),
-        ],
-      ),
-    );
+                    setState(() {
+                      _isLoading = false;
+                    });
+                  },
+                ),
+              ],
+            ),
+          )
+        ]));
   }
 
   @override
@@ -66,9 +80,8 @@ class _DashboardState extends State<Dashboard> {
     final services = _serviceRepo.getAll();
     _imagesToTagCount = _mediaRepo.getAmountOfUnTaggedImages();
 
-    // List<Widget> serviceWidgets = List.generate(
-    //     services.length, (e) => ServiceWidget(service: services[e]));
-    List<Widget> serviceWidgets = [];
+    List<Widget> serviceWidgets = List.generate(
+        services.length, (e) => ServiceWidget(service: services[e]));
 
     return _isLoading
         // ignore: avoid_unnecessary_containers
@@ -113,7 +126,11 @@ class _DashboardState extends State<Dashboard> {
                       ), //dashboard widgets
 
                       const SizedBox(height: 20),
-                      SentimentWidget(),
+                      Row(), //expands window
+                      Wrap(
+                          spacing: 20,
+                          runSpacing: 20,
+                          children: [SentimentWidget(), _imageTaggingWidget()])
                     ],
                   ),
                 ),

@@ -63,7 +63,7 @@ class ThemeProvider with ChangeNotifier {
         bodyText1: const TextStyle(
             color: Colors.white, fontSize: 10, fontWeight: FontWeight.w500),
         bodyText2: const TextStyle(
-            color: Colors.white, fontSize: 13, fontWeight: FontWeight.w400),
+            color: Colors.white, fontSize: 12, fontWeight: FontWeight.w200),
       ),
     );
   }

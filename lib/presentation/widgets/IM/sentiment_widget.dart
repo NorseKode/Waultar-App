@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/nodes/category_node.dart';
+import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 import 'package:waultar/startup.dart';
@@ -14,61 +16,76 @@ class SentimentWidget extends StatefulWidget {
 }
 
 class _SentimentWidgetState extends State<SentimentWidget> {
+  final sentimentService =
+      locator.get<ISentimentService>(instanceName: 'sentimentService');
+  late ThemeProvider themeProvider;
+  late List<ProfileDocument> profiles;
+
   List<DataCategory> chosenCategories = [];
   int connotated = 0;
   int timeEstimateSeconds = 0;
+  bool analyzing = false;
 
   @override
   Widget build(BuildContext context) {
-    final sentimentService =
-        locator.get<ISentimentService>(instanceName: 'sentimentService');
-    List<ProfileDocument> profiles = sentimentService.getAllProfiles();
-    String timeEstimate = _timeEstimateOnCat();
+    profiles = sentimentService.getAllProfiles();
+    themeProvider = Provider.of<ThemeProvider>(context);
 
     return DefaultWidget(
-        constraints: BoxConstraints(maxWidth: 350),
+        constraints: const BoxConstraints(maxWidth: 300),
         title: "Sentiment Analysis",
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "Analyse the connotation of the content of you data.",
-              style: TextStyle(fontSize: 12),
+              "Analyze the invoked sentiment in your data.",
+            ),
+            //const SizedBox(height: 10),
+            const Text(
+              "Choose what data to run analysis on :",
             ),
             const SizedBox(height: 10),
-            Text("Choose what data to run analysis on:",
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+            SingleChildScrollView(child: Column(children: _profileList())),
             const SizedBox(height: 10),
-            SingleChildScrollView(
-                child: Column(children: _profileList(profiles))),
-            Container(
-                color: Color(0xFF202442),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text("Time estimate", style: TextStyle(fontSize: 9)),
-                          Text("$timeEstimate", style: TextStyle(fontSize: 12))
-                        ],
-                      ),
-                      SizedBox(width: 10),
-                      DefaultButton(
-                          text: "          Analyze          ",
-                          onPressed: () {
-                            connotated = sentimentService
-                                .connotateTextsFromCategory(chosenCategories);
-                            setState(() => {});
-                          })
-                    ],
-                  ),
-                )),
+            const Divider(
+                height: 2,
+                thickness: 2,
+                color: Color.fromARGB(255, 61, 67, 113)),
+
+            const SizedBox(height: 10),
+            _analyzeBar(),
+
             connotated != 0 ? Text("done: $connotated") : Container(),
           ],
         ));
+  }
+
+  Widget _analyzeBar() {
+    var timeEstimate = _timeEstimateOnCat();
+    return Container(
+        child: Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text("Time estimate",
+                style: TextStyle(fontSize: 9, fontWeight: FontWeight.w400)),
+            Text("$timeEstimate", style: TextStyle(fontSize: 12))
+          ],
+        ),
+        SizedBox(width: 10),
+        DefaultButton(
+            text: "          Analyze          ",
+            onPressed: profiles.isEmpty
+                ? null
+                : () {
+                    connotated = sentimentService
+                        .connotateTextsFromCategory(chosenCategories);
+                    setState(() => {});
+                  })
+      ],
+    ));
   }
 
   String formatTime(int seconds) {
@@ -83,24 +100,32 @@ class _SentimentWidgetState extends State<SentimentWidget> {
     return formatTime(timeEstimate);
   }
 
-  List<Widget> _profileList(List<ProfileDocument> profiles) {
-    return List.generate(
-        profiles.length,
-        (index) => Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(profiles[index].service.target!.serviceName),
-                  SizedBox(height: 5),
-                  _categoryList(profiles[index]),
-                ],
-              ),
-            ));
+  List<Widget> _profileList() {
+    return profiles.isEmpty
+        ? [
+            Text("No data to analyze",
+                style: themeProvider.themeData().textTheme.headline4)
+          ]
+        : List.generate(
+            profiles.length,
+            (index) => Container(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        profiles[index].service.target!.serviceName,
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      SizedBox(height: 5),
+                      _categoryList(profiles[index]),
+                    ],
+                  ),
+                ));
   }
 
   Widget _categoryList(ProfileDocument profile) {
     return Container(
-      constraints: BoxConstraints(maxHeight: 200),
+      constraints: BoxConstraints(maxHeight: 150),
       child: SingleChildScrollView(
         child: Column(
             children: List.generate(
@@ -111,6 +136,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                         Row(
                           children: [
                             Checkbox(
+                                activeColor: const Color(0xFF5D97FF),
                                 value: chosenCategories
                                     .where((element) =>
                                         element.id ==

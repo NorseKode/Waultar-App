@@ -36,7 +36,9 @@ class _DefaultWidgetState extends State<DefaultWidget> {
             Container(
                 decoration: const BoxDecoration(
                     border: Border(
-                        top: BorderSide(color: Color(0xFF4D4F68), width: 2))),
+                  top: BorderSide(
+                      color: Color.fromARGB(255, 61, 67, 113), width: 2),
+                )),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: widget.child,

@@ -1,10 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/core/models/misc/service_model.dart';
+import 'package:waultar/data/entities/misc/service_document.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 
 class ServiceWidget extends StatefulWidget {
-  final ServiceModel service;
+  final ServiceDocument service;
   const ServiceWidget({Key? key, required this.service}) : super(key: key);
 
   @override
@@ -13,6 +16,7 @@ class ServiceWidget extends StatefulWidget {
 
 class _ServiceWidgetState extends State<ServiceWidget> {
   late ThemeProvider themeProvider;
+
   @override
   Widget build(BuildContext context) {
     themeProvider = Provider.of<ThemeProvider>(context);
@@ -30,13 +34,17 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                    color: widget.service.color,
+                    color: Color(0xFF5D97FF),
                     borderRadius: BorderRadius.circular(5)),
-                child: Icon(widget.service.icon, size: 25),
+                child: Container(
+                  child: Container(),
+                  width: 25,
+                  height: 25,
+                ),
               ),
               const SizedBox(height: 15),
               Text(
-                widget.service.name,
+                widget.service.serviceName,
                 style: const TextStyle(fontSize: 12),
               ),
               const SizedBox(height: 15),
@@ -46,7 +54,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                     child: Container(
                       height: 5,
                       decoration: BoxDecoration(
-                        color: widget.service.color,
+                        color: Color(0xFF5D97FF),
                         borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(10),
                           bottomLeft: Radius.circular(10),
@@ -71,15 +79,20 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
-                  const Text(
-                    "251 Files",
+                  Text(
+                    "${widget.service.totalDatapoints} data points",
                     style: TextStyle(color: Color(0xFFABAAB8), fontSize: 12),
                   ),
-                  const Text("2.9 GB", style: TextStyle(fontSize: 12))
+                  Text("${_sizeOfService(widget.service)} GB",
+                      style: TextStyle(fontSize: 12))
                 ],
               ),
             ],
           ),
         ));
+  }
+
+  double _sizeOfService(ServiceDocument service) {
+    return 0.0;
   }
 }

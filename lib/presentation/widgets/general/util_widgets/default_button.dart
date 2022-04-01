@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class DefaultButton extends StatefulWidget {
   final String? text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final Color? color;
   final IconData? icon;
   final double? size;
@@ -11,7 +11,7 @@ class DefaultButton extends StatefulWidget {
   const DefaultButton(
       {Key? key,
       this.text,
-      required this.onPressed,
+      this.onPressed,
       this.color,
       this.icon,
       this.size,
@@ -28,11 +28,14 @@ class _DefaultButtonState extends State<DefaultButton> {
     TextStyle textStyle = TextStyle(
         color: widget.textColor ?? Colors.white,
         fontSize: widget.size ?? 11,
-        fontWeight: FontWeight.w200);
+        fontWeight: FontWeight.w500);
 
     return Container(
       decoration: BoxDecoration(
-          color: widget.color ?? const Color(0xFF5D97FF),
+          color: widget.color ??
+              (widget.onPressed != null
+                  ? const Color(0xFF5D97FF)
+                  : Color.fromARGB(255, 114, 130, 161)),
           borderRadius: widget.icon != null && widget.text == null
               ? BorderRadius.circular(100)
               : BorderRadius.circular(5)),
