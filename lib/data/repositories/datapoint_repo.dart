@@ -26,30 +26,26 @@ class DataPointRepository {
     return [];
   }
 
-  List<UIDTO> search(String searchString, int offset, int limit) {
-    var builder = _dataBox
-        .query(DataPoint_.searchTerms
-            .contains(searchString, caseSensitive: false))
-        .build();
-    builder
-      ..offset = offset
-      ..limit = limit;
-    return builder.find().map((e) => e.getUIDTO).toList();
-  }
-
-  List<UIDTO> searchWithCategories(
-      List<int> categorieIDs, String searchString, int offset, int limit) {
+  List<UIDTO> search(
+      List<int> categoryIds, String searchString, int offset, int limit) {
     var builder = _dataBox.query(
-        DataPoint_.searchTerms.contains(searchString, caseSensitive: false));
-    builder.link(DataPoint_.category, DataCategory_.id.oneOf(categorieIDs));
-
+      DataPoint_.searchTerms.contains(
+        searchString,
+        caseSensitive: false,
+      ),
+    );
+    builder.link(
+      DataPoint_.category,
+      DataCategory_.dbCategory.oneOf(categoryIds),
+    );
     var query = builder.build();
+
     query
       ..offset = offset
       ..limit = limit;
-
     return query.find().map((e) => e.getUIDTO).toList();
   }
+
 }
 
 class UIDTO implements UIModel {

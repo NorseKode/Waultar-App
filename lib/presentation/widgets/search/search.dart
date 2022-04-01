@@ -24,19 +24,15 @@ class _SearchState extends State<Search> {
   // ignore: prefer_final_fields, unused_field
   var _limit = 20;
   // ignore: prefer_for_elements_to_map_fromiterable, prefer_final_fields
-  var _searchCategories = Map<SearchCategories, bool>.fromIterable(
-    SearchCategories.values,
-    key: (item) => item,
-    value: (item) => true,
-  );
 
   _serach(bool isAppend) {
     setState(() {
+      var categories = _chosenCategories.entries.where((element) => element.value).map((e) => e.key).toList();
       isAppend
           ? _contents +=
-              _textSearchService.searchAll(_controller.text, _offset, _limit)
+              _textSearchService.search(categories, _controller.text, _offset, _limit)
           : _contents =
-              _textSearchService.searchAll(_controller.text, _offset, _limit);
+              _textSearchService.search(categories, _controller.text, _offset, _limit);
     });
   }
 
@@ -65,44 +61,6 @@ class _SearchState extends State<Search> {
   void dispose() {
     super.dispose();
     _scrollController.removeListener(_onScrollEnd);
-  }
-
-  _categoryFilters() {
-    return DropdownButtonHideUnderline(
-      child: DropdownButton(
-        hint: const Text('Filter by category'),
-        // value: null,
-        onChanged: (dynamic value) {
-          // for (var item in _chosenCategories.entries) {
-          //   print('${item.key.categoryName} -> ${item.value.toString()}');
-          // }
-        },
-        items: List.generate(
-            CategoryEnum.values.length,
-            (index) => DropdownMenuItem(
-                  enabled: false,
-                  value: _chosenCategories[CategoryEnum.values[index]],
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        value: _chosenCategories[CategoryEnum.values[index]]!,
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() {
-                              value = !value!;
-                              _chosenCategories[CategoryEnum.values[index]] =
-                                  !_chosenCategories[
-                                      CategoryEnum.values[index]]!;
-                            });
-                          }
-                        },
-                      ),
-                      Text(CategoryEnum.values[index].categoryName),
-                    ],
-                  ),
-                )),
-      ),
-    );
   }
 
   Widget _searchCategoriesCheckBoxes() {
