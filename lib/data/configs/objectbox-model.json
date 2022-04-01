@@ -182,13 +182,7 @@
           "relationTarget": "DataPointName"
         }
       ],
-      "relations": [
-        {
-          "id": "5:3230943822304619354",
-          "name": "children",
-          "targetId": "4:4165549596007760405"
-        }
-      ]
+      "relations": []
     },
     {
       "id": "5:847577287781739894",
@@ -737,6 +731,8 @@
     5929605835766362219,
     3238422020867945061
   ],
-  "retiredRelationUids": [],
+  "retiredRelationUids": [
+    3230943822304619354
+  ],
   "version": 1
 }

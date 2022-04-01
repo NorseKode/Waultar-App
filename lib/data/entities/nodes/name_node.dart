@@ -16,6 +16,7 @@ class DataPointName {
   @Backlink('dataPointName')
   final dataPoints = ToMany<DataPoint>();
 
+  @Backlink('parent')
   final children = ToMany<DataPointName>();
   final parent = ToOne<DataPointName>();
 

@@ -203,17 +203,14 @@ final _entities = <ModelEntity>[
             indexId: const IdUid(7, 7708495691955882452),
             relationTarget: 'DataPointName')
       ],
-      relations: <ModelRelation>[
-        ModelRelation(
-            id: const IdUid(5, 3230943822304619354),
-            name: 'children',
-            targetId: const IdUid(4, 4165549596007760405))
-      ],
+      relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[
         ModelBacklink(
             name: 'dataPoints',
             srcEntity: 'DataPoint',
-            srcField: 'dataPointName')
+            srcField: 'dataPointName'),
+        ModelBacklink(
+            name: 'children', srcEntity: 'DataPointName', srcField: 'parent')
       ]),
   ModelEntity(
       id: const IdUid(5, 847577287781739894),
@@ -761,7 +758,7 @@ ModelDefinition getObjectBoxModel() {
         5929605835766362219,
         3238422020867945061
       ],
-      retiredRelationUids: const [],
+      retiredRelationUids: const [3230943822304619354],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
       version: 1);
@@ -902,10 +899,12 @@ ModelDefinition getObjectBoxModel() {
         toOneRelations: (DataPointName object) =>
             [object.dataCategory, object.profile, object.parent],
         toManyRelations: (DataPointName object) => {
-              RelInfo<DataPointName>.toMany(5, object.id): object.children,
               RelInfo<DataPoint>.toOneBacklink(2, object.id,
                       (DataPoint srcObject) => srcObject.dataPointName):
-                  object.dataPoints
+                  object.dataPoints,
+              RelInfo<DataPointName>.toOneBacklink(6, object.id,
+                      (DataPointName srcObject) => srcObject.parent):
+                  object.children
             },
         getId: (DataPointName object) => object.id,
         setId: (DataPointName object, int id) {
@@ -942,15 +941,16 @@ ModelDefinition getObjectBoxModel() {
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
           object.parent.attach(store);
           InternalToManyAccess.setRelInfo(
-              object.children,
-              store,
-              RelInfo<DataPointName>.toMany(5, object.id),
-              store.box<DataPointName>());
-          InternalToManyAccess.setRelInfo(
               object.dataPoints,
               store,
               RelInfo<DataPoint>.toOneBacklink(2, object.id,
                   (DataPoint srcObject) => srcObject.dataPointName),
+              store.box<DataPointName>());
+          InternalToManyAccess.setRelInfo(
+              object.children,
+              store,
+              RelInfo<DataPointName>.toOneBacklink(
+                  6, object.id, (DataPointName srcObject) => srcObject.parent),
               store.box<DataPointName>());
           return object;
         }),
@@ -1586,10 +1586,6 @@ class DataPointName_ {
   /// see [DataPointName.parent]
   static final parent = QueryRelationToOne<DataPointName, DataPointName>(
       _entities[2].properties[5]);
-
-  /// see [DataPointName.children]
-  static final children = QueryRelationToMany<DataPointName, DataPointName>(
-      _entities[2].relations[0]);
 }
 
 /// [DayBucket] entity fields to define ObjectBox queries.

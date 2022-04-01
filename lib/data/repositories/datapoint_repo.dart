@@ -28,7 +28,7 @@ class DataPointRepository {
 
   List<UIDTO> search(String searchString, int offset, int limit) {
     var builder = _dataBox
-        .query(DataPoint_.searchStrings
+        .query(DataPoint_.searchTerms
             .contains(searchString, caseSensitive: false))
         .build();
     builder
@@ -40,7 +40,7 @@ class DataPointRepository {
   List<UIDTO> searchWithCategories(
       List<int> categorieIDs, String searchString, int offset, int limit) {
     var builder = _dataBox.query(
-        DataPoint_.searchStrings.contains(searchString, caseSensitive: false));
+        DataPoint_.searchTerms.contains(searchString, caseSensitive: false));
     builder.link(DataPoint_.category, DataCategory_.id.oneOf(categorieIDs));
 
     var query = builder.build();
@@ -53,15 +53,15 @@ class DataPointRepository {
 }
 
 class UIDTO implements UIModel {
-  final String stringName;
-  final DataCategory category;
-  final Map<String, dynamic> dataMap;
+  final DataPoint dataPoint;
   late Color associatedColor;
   late String mostInformativeField;
   late DateTime timeStamp;
+  late String path;
 
-  UIDTO(this.stringName, this.category, this.dataMap) {
-    associatedColor = category.category.color;
+  UIDTO({required this.dataPoint}) {
+    associatedColor = dataPoint.category.target!.category.color;
+    path = dataPoint.path;
   }
 
   @override
@@ -71,7 +71,7 @@ class UIDTO implements UIModel {
 
   @override
   String getMostInformativeField() {
-    return 'MOST INFORMATIVE FIELD TEST';
+    return dataPoint.stringName;
   }
 
   @override
@@ -81,11 +81,11 @@ class UIDTO implements UIModel {
 
   @override
   Map<String, dynamic> toMap() {
-    return dataMap;
+    return dataPoint.asMap;
   }
 
   @override
   String toString() {
-    return 'Dataname: $stringName \nData: \n${prettyJson(dataMap)}';
+    return 'Path: $path \nData: \n${prettyJson(dataPoint.asMap)}';
   }
 }

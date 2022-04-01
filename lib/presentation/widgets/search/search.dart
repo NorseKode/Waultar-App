@@ -106,11 +106,16 @@ class _SearchState extends State<Search> {
         flex: 20,
         child: ListView.builder(
           controller: _scrollController,
+          padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
           itemCount: _contents.length,
-          itemBuilder: (_, index) => DefaultWidget(
-            title: "post",
-            child: Text(
-              _contents[index].toString(),
+          itemBuilder: (_, index) => Padding(
+            padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+            child: DefaultWidget(
+              edgeInsetsGeometry: const EdgeInsets.all(8.0),
+              title: _contents[index].getMostInformativeField(),
+              child: Text(
+                _contents[index].toString(),
+              ),
             ),
           ),
         ),

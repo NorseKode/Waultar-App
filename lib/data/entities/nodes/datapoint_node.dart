@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:objectbox/objectbox.dart';
 import 'package:pretty_json/pretty_json.dart';
+import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/data/repositories/datapoint_repo.dart';
 import 'package:waultar/data/entities/media/file_document.dart';
@@ -181,5 +182,20 @@ class DataPoint {
     return sb.toString();
   }
 
-  UIDTO get getUIDTO => UIDTO(stringName, category.target!, asMap);
+  String get path {
+    var sb = StringBuffer();
+    sb.write('${category.target!.category.categoryName}/');
+    var appendList = <String>[];
+    var parent = dataPointName.target;
+    while(parent != null) {
+      print(parent.name);
+      appendList.add('${parent.name}/');
+      parent = parent.parent.target;
+    }
+    var orderedList = appendList.reversed.toList();
+    orderedList.forEach((element) => sb.write(element));
+    return sb.toString();
+  }
+
+  UIDTO get getUIDTO => UIDTO(dataPoint: this);
 }
