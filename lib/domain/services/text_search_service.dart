@@ -1,3 +1,4 @@
+import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/configs/globals/search_categories_enum.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_text_search_service.dart';
 import 'package:waultar/data/repositories/datapoint_repo.dart';
@@ -29,5 +30,10 @@ class TextSearchService extends ITextSearchService {
   @override
   List<UIModel> searchAll(String search, int offset, int limit) {
     return _dataRepo.search(search, offset, limit);
+  }
+
+  @override
+  List<CategoryEnum> getFilterCategories() {
+    return CategoryEnum.values;
   }
 }

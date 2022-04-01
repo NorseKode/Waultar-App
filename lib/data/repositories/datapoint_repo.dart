@@ -86,6 +86,6 @@ class UIDTO implements UIModel {
 
   @override
   String toString() {
-    return 'Path: $path \nData: \n${prettyJson(dataPoint.asMap)}';
+    return 'Path: $path \n${prettyJson(dataPoint.asMap)}';
   }
 }

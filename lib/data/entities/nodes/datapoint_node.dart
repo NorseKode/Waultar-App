@@ -36,7 +36,6 @@ class DataPoint {
 
   @Index()
   late String searchTerms;
-  // List<String> searchStrings = [];
 
   // the actual data stored in JSON format
   late String values;
@@ -188,12 +187,10 @@ class DataPoint {
     var appendList = <String>[];
     var parent = dataPointName.target;
     while(parent != null) {
-      print(parent.name);
       appendList.add('${parent.name}/');
       parent = parent.parent.target;
     }
-    var orderedList = appendList.reversed.toList();
-    orderedList.forEach((element) => sb.write(element));
+    appendList.reversed.forEach((element) => sb.write(element));
     return sb.toString();
   }
 
