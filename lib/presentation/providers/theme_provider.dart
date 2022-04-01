@@ -30,10 +30,12 @@ class ThemeProvider with ChangeNotifier {
       primarySwatch: Colors.grey,
       primaryColor: isLightTheme
           ? const Color(0xFFFFFFFF)
-          : const Color(0xFF2D325A), //Color(0xFF1A1D1F),
+          : const Color(0xFF272837), //widget color,
       brightness: isLightTheme ? Brightness.light : Brightness.dark,
-      scaffoldBackgroundColor:
-          isLightTheme ? const Color(0xFFFFFFFF) : const Color(0xFF25294A),
+      scaffoldBackgroundColor: isLightTheme
+          ? const Color(0xFFFFFFFF)
+          : const Color(0xFF1E1D2B), //background
+
       textTheme: TextTheme(
         headline1: TextStyle(
           color:
@@ -56,7 +58,7 @@ class ThemeProvider with ChangeNotifier {
             fontSize: 20,
             fontWeight: FontWeight.w500),
         headline4: const TextStyle(
-            color: Color(0xFF7A80A9),
+            color: Color(0xFFAEAFBB),
             fontFamily: "Poppins",
             fontSize: 12,
             fontWeight: FontWeight.w500),
@@ -70,47 +72,42 @@ class ThemeProvider with ChangeNotifier {
 
   PersonalTheme themeMode() {
     return PersonalTheme(
-      buttonColor: isLightTheme
-          ? const Color.fromARGB(255, 236, 236, 236)
-          : const Color(0xFF272B30),
-      themeColor: Colors.blue,
-      iconColor:
-          isLightTheme ? const Color(0xFF65696F) : const Color(0xFFE0E0E0),
-      iconSize: 12,
-      bodyText3: const TextStyle(
-          color: Colors.grey, fontSize: 13, fontWeight: FontWeight.w500),
-      bodyText4: TextStyle(
-          color:
-              isLightTheme ? const Color(0xFF65696F) : const Color(0xFFE0E0E0),
-          fontSize: 14,
-          fontWeight: FontWeight.w400),
-      widgetBackground:
-          isLightTheme ? const Color(0xFFEEEEEE) : const Color(0xff2D325A),
-      highlightedPrimary: isLightTheme
-          ? const Color(0xFFFFFFFF)
-          : const Color(0xFF1C1E1F), //0xFF262a2d),
-    );
+        themeColor: Color(0xFF02A9F2),
+        iconColor:
+            isLightTheme ? const Color(0xFF65696F) : const Color(0xFFE0E0E0),
+        secondaryColor:
+            isLightTheme ? const Color(0xFFFFFFFF) : Color(0xFF272837),
+        highlightColor:
+            isLightTheme ? const Color(0xFFFFFFFF) : Color(0xFF363747),
+        tonedColor: isLightTheme ? const Color(0xFFFFFFFF) : Color(0xFF424354),
+        iconSize: 12,
+        menuHeaderStyle: const TextStyle(
+            color: Color(0xFFAEAFBB),
+            fontFamily: "Poppins",
+            fontSize: 12,
+            fontWeight: FontWeight.w400),
+        tonedTextColor: Color(0xFFAEAFBB));
   }
 }
 
 //Add additional references that doesn't exist in themedata
 class PersonalTheme {
-  Color buttonColor;
   Color themeColor;
   Color iconColor;
+  Color secondaryColor;
+  Color highlightColor;
+  Color tonedColor;
+  TextStyle menuHeaderStyle;
+  Color tonedTextColor;
   double iconSize;
-  TextStyle bodyText3;
-  TextStyle bodyText4;
-  Color widgetBackground;
-  Color highlightedPrimary;
 
   PersonalTheme(
-      {required this.buttonColor,
-      required this.themeColor,
+      {required this.themeColor,
       required this.iconColor,
+      required this.secondaryColor,
+      required this.highlightColor,
+      required this.tonedColor,
       required this.iconSize,
-      required this.bodyText3,
-      required this.bodyText4,
-      required this.widgetBackground,
-      required this.highlightedPrimary});
+      required this.menuHeaderStyle,
+      required this.tonedTextColor});
 }

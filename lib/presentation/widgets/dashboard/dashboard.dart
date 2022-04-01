@@ -46,8 +46,10 @@ class _DashboardState extends State<Dashboard> {
           Text(
               "Estimated Time To Tag All: ${(_imagesToTagCount * 0.5) / 60} minuets"),
           const SizedBox(height: 10),
-          const Divider(
-              height: 2, thickness: 2, color: Color.fromARGB(255, 61, 67, 113)),
+          Divider(
+              height: 2,
+              thickness: 2,
+              color: themeProvider.themeMode().tonedColor),
           const SizedBox(height: 10),
           Container(
             child: Row(

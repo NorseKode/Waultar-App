@@ -34,10 +34,10 @@ class _DefaultWidgetState extends State<DefaultWidget> {
                 style: themeProvider.themeData().textTheme.headline1),
             const SizedBox(height: 10),
             Container(
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                     border: Border(
                   top: BorderSide(
-                      color: Color.fromARGB(255, 61, 67, 113), width: 2),
+                      color: themeProvider.themeMode().tonedColor, width: 2),
                 )),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10),

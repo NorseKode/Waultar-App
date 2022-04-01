@@ -47,10 +47,10 @@ class _SentimentWidgetState extends State<SentimentWidget> {
             const SizedBox(height: 10),
             SingleChildScrollView(child: Column(children: _profileList())),
             const SizedBox(height: 10),
-            const Divider(
+            Divider(
                 height: 2,
                 thickness: 2,
-                color: Color.fromARGB(255, 61, 67, 113)),
+                color: themeProvider.themeMode().tonedColor),
 
             const SizedBox(height: 10),
             _analyzeBar(),
@@ -136,7 +136,8 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                         Row(
                           children: [
                             Checkbox(
-                                activeColor: const Color(0xFF5D97FF),
+                                activeColor:
+                                    themeProvider.themeMode().themeColor,
                                 value: chosenCategories
                                     .where((element) =>
                                         element.id ==

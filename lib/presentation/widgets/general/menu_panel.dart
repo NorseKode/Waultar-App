@@ -38,7 +38,7 @@ class _MenuPanelState extends State<MenuPanel> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  localizer.waultarBoard,
+                  "Waultar App",
                   style: const TextStyle(
                       fontSize: 12, fontWeight: FontWeight.w400),
                 ),
@@ -47,17 +47,14 @@ class _MenuPanelState extends State<MenuPanel> {
                   children: [
                     Text(
                       localizer.lastUpload + ":",
-                      style: const TextStyle(
-                          color: Color(0xFFABAAB8),
+                      style: TextStyle(
+                          color: themeProvider.themeMode().tonedTextColor,
                           fontSize: 10,
                           fontWeight: FontWeight.w200),
                     ),
                     const SizedBox(width: 5),
                     // ignore: avoid_unnecessary_containers
                     Container(
-                      // decoration: BoxDecoration(
-                      //     color: const Color(0xFF4FB376),
-                      //     borderRadius: BorderRadius.circular(100)),
                       child: const Padding(
                         padding: EdgeInsets.fromLTRB(2, 2, 8, 2),
                         child: Text("Feb 2. 2022",
@@ -86,11 +83,11 @@ class _MenuPanelState extends State<MenuPanel> {
       child: TextButton(
         style: ButtonStyle(
           overlayColor: MaterialStateProperty.all(
-              (themeProvider.themeData().primaryColor).withOpacity(0.5)),
+              (themeProvider.themeMode().secondaryColor)),
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0))),
           backgroundColor: MaterialStateProperty.all(widget.active == screen
-              ? (themeProvider.themeData().primaryColor)
+              ? (themeProvider.themeMode().secondaryColor)
               : Colors.black.withOpacity(0.0)),
         ),
         onPressed: () async {
@@ -103,20 +100,22 @@ class _MenuPanelState extends State<MenuPanel> {
             children: [
               Icon(
                 icon,
-                color: widget.active == screen
-                    ? Colors.white
-                    : const Color(0xFF7A80A9), //const Color(0xFFABAAB8),
+                color: widget.active != screen
+                    ? themeProvider.themeMode().tonedTextColor
+                    : Colors.white, //const Color(0xFFABAAB8),
                 size: 12,
               ),
               const SizedBox(width: 12),
-              Text(title,
-                  style: TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      color: widget.active == screen
-                          ? Colors.white
-                          : const Color(
-                              0xFF7A80A9))) //const Color(0xFFABAAB8)))
+              Text(
+                title,
+                style: TextStyle(
+                    color: widget.active != screen
+                        ? themeProvider.themeMode().tonedTextColor
+                        : Colors.white,
+                    fontFamily: "Poppins",
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400),
+              ) //const Color(0xFFABAAB8)))
             ],
           ),
         ),
@@ -132,7 +131,7 @@ class _MenuPanelState extends State<MenuPanel> {
     return Container(
         width: menuWidth,
         height: MediaQuery.of(context).size.height,
-        color: const Color(0xFF202442),
+        color: themeProvider.themeData().primaryColor,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(
@@ -142,8 +141,10 @@ class _MenuPanelState extends State<MenuPanel> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   logo(),
-                  const Divider(
-                      height: 40, thickness: 2, color: Color(0xFF2D325A)),
+                  Divider(
+                      height: 40,
+                      thickness: 2,
+                      color: themeProvider.themeMode().tonedColor),
                   menuButton(
                       Iconsax.health, localizer.dashboard, ViewScreen.dashboard,
                       (_) {
@@ -177,16 +178,20 @@ class _MenuPanelState extends State<MenuPanel> {
                         .read<AppState>()
                         .updateNavigatorState(AppRoutePath.search());
                   }),
-                  const Divider(
-                      height: 40, thickness: 2, color: Color(0xFF2D325A)),
+                  Divider(
+                      height: 40,
+                      thickness: 2,
+                      color: themeProvider.themeMode().tonedColor),
                   menuButton(
                       themeProvider.isLightTheme ? Iconsax.sun : Iconsax.moon,
                       localizer.changeTheme,
                       ViewScreen.unknown, (_) async {
                     await themeProvider.toggleThemeData();
                   }),
-                  const Divider(
-                      height: 40, thickness: 2, color: Color(0xFF2D325A)),
+                  Divider(
+                      height: 40,
+                      thickness: 2,
+                      color: themeProvider.themeMode().tonedColor),
                 ],
               ),
               Column(

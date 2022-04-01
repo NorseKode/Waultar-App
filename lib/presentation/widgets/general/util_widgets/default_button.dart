@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:waultar/presentation/providers/theme_provider.dart';
 
 class DefaultButton extends StatefulWidget {
   final String? text;
@@ -23,8 +25,10 @@ class DefaultButton extends StatefulWidget {
 }
 
 class _DefaultButtonState extends State<DefaultButton> {
+  late ThemeProvider themeProvider;
   @override
   Widget build(BuildContext context) {
+    themeProvider = Provider.of<ThemeProvider>(context);
     TextStyle textStyle = TextStyle(
         color: widget.textColor ?? Colors.white,
         fontSize: widget.size ?? 11,
@@ -32,10 +36,9 @@ class _DefaultButtonState extends State<DefaultButton> {
 
     return Container(
       decoration: BoxDecoration(
-          color: widget.color ??
-              (widget.onPressed != null
-                  ? const Color(0xFF5D97FF)
-                  : Color.fromARGB(255, 114, 130, 161)),
+          color: widget.onPressed != null
+              ? (widget.color ?? themeProvider.themeMode().themeColor)
+              : Color.fromARGB(255, 114, 130, 161),
           borderRadius: widget.icon != null && widget.text == null
               ? BorderRadius.circular(100)
               : BorderRadius.circular(5)),
