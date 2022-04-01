@@ -144,36 +144,35 @@ class _MenuPanelState extends State<MenuPanel> {
                   logo(),
                   const Divider(
                       height: 40, thickness: 2, color: Color(0xFF2D325A)),
-                  menuButton(Iconsax.music_dashboard, localizer.dashboard,
-                      ViewScreen.dashboard, (_) {
+                  menuButton(
+                      Iconsax.health, localizer.dashboard, ViewScreen.dashboard,
+                      (_) {
                     context
                         .read<AppState>()
                         .updateNavigatorState(AppRoutePath.home());
                   }),
-                  menuButton(
-                      Iconsax.command, localizer.collections, ViewScreen.browse,
-                      (_) {
+                  menuButton(Iconsax.element_3, localizer.collections,
+                      ViewScreen.browse, (_) {
                     context
                         .read<AppState>()
                         .updateNavigatorState(AppRoutePath.browse());
                   }),
                   menuButton(
-                      Iconsax.command, localizer.gallery, ViewScreen.gallery,
+                      Iconsax.image, localizer.gallery, ViewScreen.gallery,
                       (_) {
                     context
                         .read<AppState>()
                         .updateNavigatorState(AppRoutePath.gallery());
                   }),
                   menuButton(
-                      Iconsax.routing, localizer.timeline, ViewScreen.timeline,
+                      Iconsax.ruler, localizer.timeline, ViewScreen.timeline,
                       (_) {
                     context
                         .read<AppState>()
                         .updateNavigatorState(AppRoutePath.timeline());
                   }),
-                  menuButton(
-                      Iconsax.routing, localizer.search, ViewScreen.search,
-                      (_) {
+                  menuButton(Iconsax.search_normal_1, localizer.search,
+                      ViewScreen.search, (_) {
                     context
                         .read<AppState>()
                         .updateNavigatorState(AppRoutePath.search());
