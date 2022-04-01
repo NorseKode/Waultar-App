@@ -33,7 +33,9 @@ class DataPoint {
   final files = ToMany<FileDocument>();
   final links = ToMany<LinkDocument>();
 
-  List<String> searchStrings = [];
+  @Index()
+  late String searchTerms;
+  // List<String> searchStrings = [];
 
   // the actual data stored in JSON format
   late String values;
@@ -44,7 +46,11 @@ class DataPoint {
   @Property(type: PropertyType.dateNano)
   late DateTime createdAt;
 
-  DataPoint({this.id = 0, this.sentimentScore = 0.0}) {
+  DataPoint({
+    this.id = 0,
+    this.sentimentScore = 0.0,
+    this.searchTerms = '',
+  }) {
     createdAt = DateTime.now();
   }
 
@@ -77,15 +83,17 @@ class DataPoint {
     profile.target = targetProfile;
     values = jsonEncode(json);
 
-    _createRelations(basePathToMedia);
-    if (searchStrings.isEmpty) {
-      searchStrings.add(stringName);
-    }
+    final StringBuffer sb = StringBuffer();
+    sb.write('${parentName.name} ');
+
+    _createRelations(basePathToMedia, sb);
+    
+    searchTerms = sb.toString();
     createdAt = DateTime.now();
     sentimentScore = 0;
   }
 
-  void _createRelations(String basePathToMedia) {
+  void _createRelations(String basePathToMedia, StringBuffer sb) {
     // the raw data as a map
     // the asMap getter will make sure it's always a map
     Map<String, dynamic> json = asMap;
@@ -132,7 +140,7 @@ class DataPoint {
               link.profile.target = profile.target;
               links.add(link);
             } else {
-              searchStrings.add(value);
+              sb.write('$value ');
             }
           } else {
             recurse(entry.value);

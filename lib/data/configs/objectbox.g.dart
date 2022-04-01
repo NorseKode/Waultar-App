@@ -80,7 +80,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(3, 947152359241009292),
       name: 'DataPoint',
-      lastPropertyId: const IdUid(10, 8749102867233895036),
+      lastPropertyId: const IdUid(11, 8643535097958077629),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -120,11 +120,6 @@ final _entities = <ModelEntity>[
             indexId: const IdUid(4, 5831091004964578383),
             relationTarget: 'ProfileDocument'),
         ModelProperty(
-            id: const IdUid(7, 3238422020867945061),
-            name: 'searchStrings',
-            type: 30,
-            flags: 0),
-        ModelProperty(
             id: const IdUid(8, 760085426556875161),
             name: 'values',
             type: 9,
@@ -138,7 +133,13 @@ final _entities = <ModelEntity>[
             id: const IdUid(10, 8749102867233895036),
             name: 'dbCreatedAt',
             type: 6,
-            flags: 0)
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(11, 8643535097958077629),
+            name: 'searchTerms',
+            type: 9,
+            flags: 2048,
+            indexId: const IdUid(23, 6646369849072523385))
       ],
       relations: <ModelRelation>[
         ModelRelation(
@@ -746,7 +747,7 @@ ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
       lastEntityId: const IdUid(15, 8577188339897494082),
-      lastIndexId: const IdUid(22, 3877252189574955723),
+      lastIndexId: const IdUid(23, 6646369849072523385),
       lastRelationId: const IdUid(11, 760371621654623288),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [4762876818333355262],
@@ -757,7 +758,8 @@ ModelDefinition getObjectBoxModel() {
         5205168151133687056,
         8644863752341424772,
         4781883293328180961,
-        5929605835766362219
+        5929605835766362219,
+        3238422020867945061
       ],
       retiredRelationUids: const [],
       modelVersion: 5,
@@ -840,21 +842,19 @@ ModelDefinition getObjectBoxModel() {
         },
         objectToFB: (DataPoint object, fb.Builder fbb) {
           final stringNameOffset = fbb.writeString(object.stringName);
-          final searchStringsOffset = fbb.writeList(object.searchStrings
-              .map(fbb.writeString)
-              .toList(growable: false));
           final valuesOffset = fbb.writeString(object.values);
-          fbb.startTable(11);
+          final searchTermsOffset = fbb.writeString(object.searchTerms);
+          fbb.startTable(12);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.dataPointName.targetId);
           fbb.addOffset(2, stringNameOffset);
           fbb.addFloat64(3, object.sentimentScore);
           fbb.addInt64(4, object.category.targetId);
           fbb.addInt64(5, object.profile.targetId);
-          fbb.addOffset(6, searchStringsOffset);
           fbb.addOffset(7, valuesOffset);
           fbb.addInt64(8, object.createdAt.microsecondsSinceEpoch * 1000);
           fbb.addInt64(9, object.dbCreatedAt);
+          fbb.addOffset(10, searchTermsOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -865,13 +865,11 @@ ModelDefinition getObjectBoxModel() {
           final object = DataPoint(
               id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
               sentimentScore:
-                  const fb.Float64Reader().vTableGet(buffer, rootOffset, 10, 0))
+                  const fb.Float64Reader().vTableGet(buffer, rootOffset, 10, 0),
+              searchTerms: const fb.StringReader(asciiOptimization: true)
+                  .vTableGet(buffer, rootOffset, 24, ''))
             ..stringName = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 8, '')
-            ..searchStrings = const fb.ListReader<String>(
-                    fb.StringReader(asciiOptimization: true),
-                    lazy: false)
-                .vTableGet(buffer, rootOffset, 16, [])
             ..values = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 18, '')
             ..createdAt = DateTime.fromMicrosecondsSinceEpoch(
@@ -1530,21 +1528,21 @@ class DataPoint_ {
   static final profile = QueryRelationToOne<DataPoint, ProfileDocument>(
       _entities[1].properties[5]);
 
-  /// see [DataPoint.searchStrings]
-  static final searchStrings =
-      QueryStringVectorProperty<DataPoint>(_entities[1].properties[6]);
-
   /// see [DataPoint.values]
   static final values =
-      QueryStringProperty<DataPoint>(_entities[1].properties[7]);
+      QueryStringProperty<DataPoint>(_entities[1].properties[6]);
 
   /// see [DataPoint.createdAt]
   static final createdAt =
-      QueryIntegerProperty<DataPoint>(_entities[1].properties[8]);
+      QueryIntegerProperty<DataPoint>(_entities[1].properties[7]);
 
   /// see [DataPoint.dbCreatedAt]
   static final dbCreatedAt =
-      QueryIntegerProperty<DataPoint>(_entities[1].properties[9]);
+      QueryIntegerProperty<DataPoint>(_entities[1].properties[8]);
+
+  /// see [DataPoint.searchTerms]
+  static final searchTerms =
+      QueryStringProperty<DataPoint>(_entities[1].properties[9]);
 
   /// see [DataPoint.images]
   static final images =

@@ -47,7 +47,7 @@
     },
     {
       "id": "3:947152359241009292",
-      "lastPropertyId": "10:8749102867233895036",
+      "lastPropertyId": "11:8643535097958077629",
       "name": "DataPoint",
       "properties": [
         {
@@ -91,11 +91,6 @@
           "relationTarget": "ProfileDocument"
         },
         {
-          "id": "7:3238422020867945061",
-          "name": "searchStrings",
-          "type": 30
-        },
-        {
           "id": "8:760085426556875161",
           "name": "values",
           "type": 9
@@ -109,6 +104,13 @@
           "id": "10:8749102867233895036",
           "name": "dbCreatedAt",
           "type": 6
+        },
+        {
+          "id": "11:8643535097958077629",
+          "name": "searchTerms",
+          "type": 9,
+          "flags": 2048,
+          "indexId": "23:6646369849072523385"
         }
       ],
       "relations": [
@@ -717,7 +719,7 @@
     }
   ],
   "lastEntityId": "15:8577188339897494082",
-  "lastIndexId": "22:3877252189574955723",
+  "lastIndexId": "23:6646369849072523385",
   "lastRelationId": "11:760371621654623288",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
@@ -732,7 +734,8 @@
     5205168151133687056,
     8644863752341424772,
     4781883293328180961,
-    5929605835766362219
+    5929605835766362219,
+    3238422020867945061
   ],
   "retiredRelationUids": [],
   "version": 1
