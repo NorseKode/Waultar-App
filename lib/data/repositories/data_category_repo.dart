@@ -2,7 +2,6 @@ import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
-import 'package:path/path.dart' as path_dart;
 import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/entities/nodes/name_node.dart';

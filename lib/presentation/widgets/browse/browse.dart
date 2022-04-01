@@ -5,6 +5,7 @@ import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_collections_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/core/parsers/tree_parser.dart';
 import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/data/entities/nodes/name_node.dart';
@@ -42,7 +43,7 @@ class _BrowseState extends State<Browse> {
       locator.get<ICollectionsService>(
     instanceName: 'collectionsService',
   );
-
+  
   bool isLoading = false;
   var _progressMessage = "Initializing";
 
@@ -66,7 +67,6 @@ class _BrowseState extends State<Browse> {
       isLoading = !isDone;
       if (!isLoading) {
         _categories = _collectionsService.getAllCategories();
-        _parserService.createBuckets();
       }
     });
   }
@@ -77,18 +77,22 @@ class _BrowseState extends State<Browse> {
         var files = await Uploader.uploadDialogue(context);
 
         if (files != null) {
-          SnackBarCustom.useSnackbarOfContext(
-              context, localizer.startedLoadingOfData);
+          SnackBarCustom.useSnackbarOfContext(context, localizer.startedLoadingOfData);
 
           setState(() {
             isLoading = true;
           });
+          
+          var zipFile =
+              files.item1.singleWhere((element) => dart_path.extension(element) == ".zip");
 
-          var zipFile = files.item1
-              .singleWhere((element) => dart_path.extension(element) == ".zip");
-
-          await _parserService
-              .parseIsolates(zipFile, _onUploadProgress, files.item2);
+          await _parserService.parseIsolates(
+            zipFile,
+            _onUploadProgress,
+            files.item2,
+            ProfileDocument(name: "temp test name"),
+          );
+          // await _parserService.parseMain(zipFile, files.item2);
 
         }
       },
@@ -109,8 +113,7 @@ class _BrowseState extends State<Browse> {
               onTap: () {
                 print(_categories[index].category.categoryName);
                 setState(() {
-                  _names = _collectionsService
-                      .getAllNamesFromCategory(_categories[index]);
+                  _names = _collectionsService.getAllNamesFromCategory(_categories[index]);
                 });
               },
               child: Text(_categories[index].category.categoryName +
@@ -139,8 +142,7 @@ class _BrowseState extends State<Browse> {
               onTap: () {
                 print(_names[index].name);
               },
-              child: Text(
-                  _names[index].name + "   " + _names[index].count.toString()),
+              child: Text(_names[index].name + "   " + _names[index].count.toString()),
             ),
             const Divider(
               thickness: 2.0,

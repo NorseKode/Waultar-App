@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
 import 'package:waultar/configs/navigation/app_state.dart';
 import 'package:waultar/configs/navigation/router/app_route_information_parser.dart';
@@ -25,18 +24,18 @@ import 'startup.dart';
 
 void main() async {
   await setupServices();
-  // locator.registerSingleton<ImageClassifier>(
-  //   ImageClassifierMobileNetV3(),
-  //   instanceName: 'imageClassifier',
-  // );
+  locator.registerSingleton<ImageClassifier>(
+    ImageClassifierMobileNetV3(),
+    instanceName: 'imageClassifier',
+  );
   locator.registerSingleton<SentimentClassifier>(
     SentimentClassifierTextClassifierTFLite(),
     instanceName: 'sentimentClassifier',
   );
-  // locator.registerSingleton<IMLService>(
-  //   MLService(),
-  //   instanceName: 'mlService',
-  // );
+  locator.registerSingleton<IMLService>(
+    MLService(),
+    instanceName: 'mlService',
+  );
   locator.registerSingleton<ISentimentService>(
     SentimentService(),
     instanceName: 'sentimentService',

@@ -7,7 +7,7 @@ abstract class IParserService {
   // save parsed objects --> repositories
   //
   // on error throw exception
-  Future<void> parseIsolates(String zipPath, Function(String message, bool isDone) callback, String serviceName, {ProfileDocument? profile});
+  Future<void> parseIsolates(String zipPath, Function(String message, bool isDone) callback, String serviceName, ProfileDocument profile);
   Future<void> parseMain(String zipPath, String serviceName);
-  void createBuckets();
+  void dispose();
 }

@@ -33,7 +33,11 @@ class MediaRepository {
   }
 
   int getAmountOfUnTaggedImages() {
-    return _imageBox.query(ImageDocument_.mediaTags.lessThan("")).build().count();
+    // var imgs = _imageBox.query(ImageDocument_.mediaTags.equals("")).build().find();
+    // for (var img in imgs) {
+    //   print(img.mediaTags);
+    // }
+    return _imageBox.query(ImageDocument_.mediaTags.equals("")).build().count();
   }
 
   List<ImageDocument> searchImagesPagination(String searchText, int offset, int limit) {

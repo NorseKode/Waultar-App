@@ -8,8 +8,6 @@ import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/exceptions/ai_exception.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
-import 'package:waultar/configs/globals/globals.dart';
-import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/core/ai/i_ml_model.dart';
 import 'package:waultar/startup.dart';
 
@@ -32,7 +30,6 @@ class ImageClassifier extends IMLModel {
   late List<List<int>> _outputShapes;
   late List<TfLiteType> _outputTypes;
   final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
-  PerformanceHelper? _performance;
 
   @override
   dispose() {
@@ -106,11 +103,11 @@ class ImageClassifier extends IMLModel {
   List<Tuple2<String, double>> predict(String imagePath, int amountOfTopCategories) {
     _appLogger.logger.info("Predicting image with path: $imagePath, and returning $amountOfTopCategories categories");
 
-    if (ISPERFORMANCETRACKING) {
-      _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
-      _performance!.resetChild();
-      _performance!.startChild();
-    }
+    // if (ISPERFORMANCETRACKING) {
+    //   _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
+    //   _performance!.resetChild();
+    //   _performance!.startChild();
+    // }
 
     var image = img.decodeImage(File(imagePath).readAsBytesSync());
     if (image == null) {
@@ -136,9 +133,9 @@ class ImageClassifier extends IMLModel {
       }
     }
 
-    if (ISPERFORMANCETRACKING) {
-      _performance!.addChildReading(metadata: {"path": imagePath});
-    }
+    // if (ISPERFORMANCETRACKING) {
+    //   _performance!.addChildReading(metadata: {"path": imagePath});
+    // }
 
     return results;
   }

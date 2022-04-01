@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
-import 'package:waultar/configs/globals/search_categories_enum.dart';
 import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/domain/services/text_search_service.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
@@ -16,14 +15,12 @@ class _SearchState extends State<Search> {
   final _controller = TextEditingController();
   final _textSearchService = TextSearchService();
   final _scrollController = ScrollController();
-  // ignore: prefer_final_fields, prefer_for_elements_to_map_fromiterable
+  
   var _chosenCategories = <CategoryEnum, bool>{};
   var _contents = <UIModel>[];
-  // ignore: prefer_final_fields, unused_field
+
   var _offset = 0;
-  // ignore: prefer_final_fields, unused_field
-  var _limit = 20;
-  // ignore: prefer_for_elements_to_map_fromiterable, prefer_final_fields
+  final _limit = 20;
 
   _serach(bool isAppend) {
     setState(() {
