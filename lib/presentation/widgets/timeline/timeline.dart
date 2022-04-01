@@ -444,13 +444,13 @@ extension TimeIntervalTypeHelper on TimeIntervalType {
   static const namesMap = {
     TimeIntervalType.years: 'Years',
     TimeIntervalType.months: 'Months',
-    TimeIntervalType.days: 'Days',
+    // TimeIntervalType.days: 'Days',
   };
 
   static const intervalMap = {
     TimeIntervalType.years: YearModel,
     TimeIntervalType.months: MonthModel,
-    TimeIntervalType.days: DayModel,
+    // TimeIntervalType.days: DayModel,
   };
 
   String get timeIntervalName => namesMap[this] ?? 'Unknown';
