@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
@@ -111,6 +113,11 @@ class _TopPanelState extends State<TopPanel> {
   }
 
   void _showserachDialog() {
+    Map<String, bool> categories = {
+      "Tags": true,
+      "People": true,
+      "Trains": false
+    };
     showDialog(
         barrierDismissible: true,
         context: context,
@@ -144,6 +151,7 @@ class _TopPanelState extends State<TopPanel> {
                                     controller: serachController,
                                     autofocus: true,
                                     decoration: InputDecoration(
+                                        hoverColor: Colors.transparent,
                                         contentPadding:
                                             EdgeInsets.only(left: 15),
                                         border: const OutlineInputBorder(
@@ -179,12 +187,12 @@ class _TopPanelState extends State<TopPanel> {
                                     padding: const EdgeInsets.fromLTRB(
                                         15, 0, 15, 15),
                                     child: Column(
-                                      mainAxisSize: MainAxisSize.min,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        _categorySerachList(),
-                                        _serachResults(),
+                                        _categorySerachList(categories),
+                                        _serachResults(categories),
+                                        Row()
                                       ],
                                     ),
                                   ),
@@ -205,46 +213,68 @@ class _TopPanelState extends State<TopPanel> {
         });
   }
 
-  Widget _categorySerachList() {
-    return Expanded(
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: List.generate(
-              12,
-              (index) => Padding(
-                    padding: const EdgeInsets.only(right: 10.0),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 4, horizontal: 10),
-                      decoration: BoxDecoration(
-                          color: Color(0xFF323346),
-                          borderRadius: BorderRadius.circular(5)),
-                      child: Row(
-                        children: [
-                          Icon(Iconsax.document,
-                              size: 12,
-                              color: themeProvider.themeMode().tonedTextColor),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            "hello",
-                            style:
-                                themeProvider.themeData().textTheme.headline4,
-                          )
-                        ],
-                      ),
+  Widget _categorySerachList(Map<String, bool> categories) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: List.generate(
+            categories.length,
+            (index) => Padding(
+                  padding: const EdgeInsets.only(right: 10.0),
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                    decoration: BoxDecoration(
+                        color: categories.values.elementAt(index)
+                            ? Color(0xFF323346)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(5)),
+                    child: Row(
+                      children: [
+                        Icon(Iconsax.document,
+                            size: 12,
+                            color: themeProvider.themeMode().tonedTextColor),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          categories.keys.elementAt(index),
+                          style: themeProvider.themeData().textTheme.headline4,
+                        )
+                      ],
                     ),
-                  )),
-        ),
+                  ),
+                )),
       ),
     );
   }
 
-  Widget _serachResults() {
-    return Container();
+  Widget _serachResults(Map<String, bool> categories) {
+    var trueMap = categories.entries.where((element) => element.value == true);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: List.generate(
+          trueMap.length,
+          (index) => Container(
+                padding: EdgeInsets.only(top: 15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(trueMap.elementAt(index).key,
+                        style: themeProvider
+                            .themeData()
+                            .textTheme
+                            .headline4
+                            ?.copyWith(fontWeight: FontWeight.w200)),
+                    SizedBox(height: 15),
+                    Container(
+                      color: Color(0xFF323346),
+                      height: 100,
+                    )
+                  ],
+                ),
+              )),
+    );
   }
 }
