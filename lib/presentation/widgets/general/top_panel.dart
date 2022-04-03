@@ -12,7 +12,7 @@ class TopPanel extends StatefulWidget {
 
 class _TopPanelState extends State<TopPanel> {
   late ThemeProvider themeProvider;
-  var searchController = TextEditingController();
+  var serachController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class _TopPanelState extends State<TopPanel> {
         children: [
           _dayDisplay(),
           SizedBox(width: 20),
-          _searchBarButton(),
+          _serachBarButton(),
           SizedBox(width: 20),
           _profileBar(),
         ],
@@ -51,35 +51,48 @@ class _TopPanelState extends State<TopPanel> {
         ));
   }
 
-  Widget _searchBarButton() {
+  Widget _serachBarButton() {
     return Expanded(
       flex: 4,
+      // child: TextButton(
+      //   style: TextButton.styleFrom(
+      //       backgroundColor: Colors.transparent,
+      //       primary: Colors.transparent,
+      //       padding: EdgeInsets.zero,
+      //       minimumSize: Size(50, 30),
+      //       alignment: Alignment.centerLeft),
+      //   onPressed: () {
+      //     _showserachDialog();
+      //   },
       child: Container(
         alignment: Alignment.centerLeft,
-        padding: EdgeInsets.only(left: 15),
         decoration: BoxDecoration(
-            color: Color(0xFF272837),
-            borderRadius: BorderRadius.all(Radius.circular(10))),
-        child: TextButton(
-          onPressed: () {
-            _showSearchDialog();
+            color: themeProvider.themeData().primaryColor,
+            borderRadius: const BorderRadius.all(Radius.circular(10))),
+        child: TextField(
+          controller: serachController,
+          readOnly: true,
+          onTap: () {
+            _showserachDialog();
           },
-          child: Text(
-            searchController.text.isEmpty
-                ? "search ..."
-                : searchController.text,
-            style: TextStyle(
-                color:
-                    searchController.text.isEmpty ? Colors.grey : Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.w200),
+          decoration: InputDecoration(
+              border: const OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              fillColor: themeProvider.themeData().primaryColor,
+              filled: true,
+              hintText: "serach ..."),
+          style: TextStyle(
+            color: Color(0xFFAEAFBB),
+            fontSize: 12,
           ),
         ),
       ),
+      //),
     );
   }
 
-  void _showSearchDialog() {
+  Future<void> _showserachDialog() async {
     showDialog(
         barrierDismissible: true,
         context: context,
@@ -107,27 +120,33 @@ class _TopPanelState extends State<TopPanel> {
                               children: [
                                 Container(
                                   constraints: BoxConstraints(maxHeight: 40),
-                                  alignment: Alignment.centerLeft,
+                                  //alignment: Alignment.centerLeft,
                                   child: TextField(
+                                    controller: serachController,
                                     autofocus: true,
-                                    decoration: const InputDecoration(
-                                        border: OutlineInputBorder(
+                                    decoration: InputDecoration(
+                                        border: const OutlineInputBorder(
                                             borderSide: BorderSide.none,
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(10))),
-                                        fillColor: Color(0xFF272837),
+                                        fillColor: themeProvider
+                                            .themeData()
+                                            .primaryColor,
                                         filled: true,
-                                        hintText: "search ..."),
+                                        hintText: "serach ..."),
                                     style: TextStyle(
-                                        color: searchController.text.isEmpty
-                                            ? Colors.grey
-                                            : Colors.white,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w200),
+                                      color: serachController.text.isEmpty
+                                          ? Color(0xFFAEAFBB)
+                                          : Colors.white,
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 ),
                                 Expanded(
-                                  child: Container(color: Colors.red),
+                                  child: Container(
+                                      color: themeProvider
+                                          .themeData()
+                                          .primaryColor),
                                 )
                               ],
                             ),
@@ -143,29 +162,6 @@ class _TopPanelState extends State<TopPanel> {
             )
           ]);
         });
-  }
-
-  Widget _searchBar() {
-    return Expanded(
-        flex: 4,
-        child: Container(
-          constraints: BoxConstraints(maxHeight: 40),
-          child: TextField(
-            cursorWidth: 1.0,
-            style: const TextStyle(
-                color: Colors.white, fontSize: 12, fontWeight: FontWeight.w200),
-            controller: searchController,
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.only(left: 15),
-              fillColor: Color(0xFF272837),
-              filled: true,
-              border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              hintText: 'search ...',
-            ),
-          ),
-        ));
   }
 
   Widget _profileBar() {
