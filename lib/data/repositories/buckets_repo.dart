@@ -260,6 +260,52 @@ class BucketsRepository extends IBucketsRepository {
   }
 
   @override
+  List<DayModel> getDaysFrom(DateTime from) {
+    var listToReturn = <DayModel>[];
+    final fromFormatted = from.microsecondsSinceEpoch;
+    final toFormatted =
+        from.add(const Duration(days: 120)).microsecondsSinceEpoch;
+
+    _context.store.runInTransaction(TxMode.read, () {
+      var query = _dayBox
+          .query(DayBucket_.dbDateTime.between(fromFormatted, toFormatted))
+          .build();
+      var days = query.find();
+      print(days.length);
+
+      for (var day in days) {
+        var categoryTuples = <Tuple2<DataCategory, int>>[];
+        var profileTuples = <Tuple2<ProfileDocument, int>>[];
+        var categoryMap = day.categoryMap;
+        var profileMap = day.profileMap;
+
+        for (var entry in categoryMap.entries) {
+          DataCategory category = _getCategory(entry.key);
+          categoryTuples.add(Tuple2(category, entry.value));
+        }
+        for (var entry in profileMap.entries) {
+          ProfileDocument profile = _getProfile(entry.key);
+          profileTuples.add(Tuple2(profile, entry.value));
+        }
+
+        var model = DayModel(
+          id: day.id,
+          day: day.day,
+          total: day.total,
+          dateTime: day.dateTime,
+          categoryCount: categoryTuples,
+          profileCount: profileTuples,
+          dataPoints: day.dataPoints.map((d) => d.getUIDTO).toList(),
+        );
+        listToReturn.add(model);
+      }
+    });
+
+    listToReturn.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+    return listToReturn;
+  }
+
+  @override
   List<MonthModel> getMonthModelsFromYear(YearModel yearModel) {
     var listToReturn = <MonthModel>[];
     _context.store.runInTransaction(TxMode.read, () {
@@ -479,14 +525,15 @@ class BucketsRepository extends IBucketsRepository {
   List<DateTime> _scrapeUniqueTimestamps(DataPoint dataPoint) {
     var timestampsSet = <DateTime>{};
     aux(dynamic data) {
-
       if (data is Map<String, dynamic>) {
         for (var entry in data.entries) {
-          if ((entry.key.contains('time') || entry.key.contains('date')) && entry.value is int) {
+          if ((entry.key.contains('time') || entry.key.contains('date')) &&
+              entry.value is int) {
             var timestamp = tryParse(entry.value);
-            if (timestamp != null) timestampsSet.add(timestamp);    
+            if (timestamp != null) timestampsSet.add(timestamp);
           }
-          if (entry.value is Map<String, dynamic> || entry.value is List<dynamic>) {
+          if (entry.value is Map<String, dynamic> ||
+              entry.value is List<dynamic>) {
             aux(entry.value);
           }
         }

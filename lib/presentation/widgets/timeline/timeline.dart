@@ -15,36 +15,53 @@ class Timeline extends StatefulWidget {
 }
 
 class _TimelineState extends State<Timeline> {
-
-  late ThemeProvider themeProvider;
+  late ThemeProvider _themeProvider;
 
   final ITimelineService _timelineService = locator.get<ITimelineService>(
     instanceName: 'timeService',
   );
+
   late List<TimeModel> _timeSeries;
   late TooltipBehavior _tooltipBehavior;
   late ChartSeriesType _chosenChartType;
   late TimeIntervalType _chosenTimeInterval;
+  ChartSeriesController? _seriesController;
+  late bool isLoadMoreView, isNeedToUpdateView, isDataUpdated;
+  double? oldAxisVisibleMin, oldAxisVisibleMax;
+  late ZoomPanBehavior _zoomPanBehavior;
+  late GlobalKey<State> globalKey;
 
   @override
   void initState() {
-    _timeSeries = _timelineService.getAllYears();
+    initVariables();
+    super.initState();
+  }
+
+  void initVariables() {
+    _timeSeries = _timelineService.getDaysFrom(DateTime(2019));
     _tooltipBehavior = TooltipBehavior(enable: true);
     _chosenChartType = ChartSeriesType.stackedColumns;
-    _chosenTimeInterval = TimeIntervalType.years;
-    super.initState();
+    _chosenTimeInterval = TimeIntervalType.days;
+    isLoadMoreView = false;
+    isNeedToUpdateView = false;
+    isDataUpdated = true;
+    globalKey = GlobalKey<State>();
+    _zoomPanBehavior = ZoomPanBehavior(
+      enablePanning: true,
+      zoomMode: ZoomMode.x,
+      enableMouseWheelZooming: _chosenChartType.canZoom,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    themeProvider = Provider.of<ThemeProvider>(context);
-
+    _themeProvider = Provider.of<ThemeProvider>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           "Timeline",
-          style: themeProvider.themeData().textTheme.headline3,
+          style: _themeProvider.themeData().textTheme.headline3,
         ),
         const SizedBox(height: 30),
         Row(
@@ -107,9 +124,9 @@ class _TimelineState extends State<Timeline> {
               _timeSeries = _timelineService.getAllMonths();
               break;
             case DayModel:
-              _timeSeries = _timelineService.getAllDays();
+              _timeSeries =
+                  _timelineService.getDaysFrom(_timeSeries.first.dateTime);
               break;
-
             default:
               _timeSeries = _timelineService.getAllYears();
           }
@@ -120,39 +137,141 @@ class _TimelineState extends State<Timeline> {
 
   _chart() {
     return SfCartesianChart(
+      key: GlobalKey<State>(),
+      onActualRangeChanged: _chosenTimeInterval == TimeIntervalType.days
+          ? (ActualRangeChangedArgs args) {
+              if (args.orientation == AxisOrientation.horizontal) {
+                if (isLoadMoreView) {
+                  args.visibleMin = oldAxisVisibleMin;
+                  args.visibleMax = oldAxisVisibleMax;
+                }
+                oldAxisVisibleMin = args.visibleMin as double;
+                oldAxisVisibleMax = args.visibleMax as double;
+              }
+              isLoadMoreView = false;
+            }
+          : null,
+      loadMoreIndicatorBuilder: _chosenTimeInterval == TimeIntervalType.days
+          ? (BuildContext context, ChartSwipeDirection direction) =>
+              getloadMoreIndicatorBuilder(context, direction)
+          : null,
       tooltipBehavior: _tooltipBehavior,
+      zoomPanBehavior: _zoomPanBehavior,
       legend: Legend(isVisible: true),
-      primaryXAxis: DateTimeCategoryAxis(
-        // edgeLabelPlacement: EdgeLabelPlacement.shift,
-        placeLabelsNearAxisLine: true,
-        title: AxisTitle(
-          text: 'Time',
-        ),
-        autoScrollingDeltaType: DateTimeIntervalType.auto,
-        // autoScrollingDelta: 3,
-        autoScrollingMode: AutoScrollingMode.start,
-        labelIntersectAction: AxisLabelIntersectAction.rotate45,
-        intervalType: _getCurrentXIntervalEnum(),
-        minimum: _timeSeries.first.dateTime,
-        maximum: _timeSeries.last.dateTime,
-      ),
-      zoomPanBehavior: ZoomPanBehavior(
-        enablePanning: true,
-        enableMouseWheelZooming: _chosenChartType.canZoom,
-        zoomMode: ZoomMode.x,
-      ),
-      primaryYAxis: NumericAxis(
-        title: AxisTitle(
-          text: 'Amount of Datapoints',
-        ),
-      ),
-      series: _getChartSeries(),
       trackballBehavior: TrackballBehavior(
         enable: true,
         activationMode: ActivationMode.longPress,
         tooltipDisplayMode: TrackballDisplayMode.groupAllPoints,
         lineColor: Colors.transparent,
         // we can use the builder to hide values where total == 0
+      ),
+      primaryYAxis: NumericAxis(
+        title: AxisTitle(
+          text: 'Amount of Datapoints',
+        ),
+      ),
+      onAxisLabelTapped: (AxisLabelTapArgs args) {
+        print(args.value);
+      },
+      primaryXAxis: DateTimeCategoryAxis(
+        placeLabelsNearAxisLine: true,
+        title: AxisTitle(
+          text: 'Time',
+        ),
+        labelIntersectAction: AxisLabelIntersectAction.rotate45,
+        intervalType: _getCurrentXIntervalEnum(),
+        minimum: _timeSeries.first.dateTime,
+        maximum: _timeSeries.last.dateTime,
+      ),
+      series: _getChartSeries(),
+    );
+  }
+
+  Widget getloadMoreIndicatorBuilder(
+      BuildContext context, ChartSwipeDirection direction) {
+    if (direction == ChartSwipeDirection.end) {
+      isNeedToUpdateView = true;
+      globalKey = GlobalKey<State>();
+      return StatefulBuilder(
+          key: globalKey,
+          builder: (BuildContext context, StateSetter stateSetter) {
+            Widget widget;
+            if (isNeedToUpdateView) {
+              widget = getProgressIndicator();
+              _updateView();
+              isDataUpdated = true;
+            } else {
+              widget = Container();
+            }
+            return widget;
+          });
+    } else if (direction == ChartSwipeDirection.start) {
+      return SizedBox.fromSize(size: Size.zero);
+    } else {
+      return SizedBox.fromSize(size: Size.zero);
+    }
+  }
+
+  //Adding new data to the chart.
+  void _updateData() {
+    var newData = _timelineService.getDaysFrom(_timeSeries.last.dateTime);
+    _timeSeries.addAll(newData);
+    isLoadMoreView = true;
+    _seriesController?.updateDataSource(
+        addedDataIndexes: getIndexes(newData.length));
+  }
+
+  getIndexes(int lenght) {
+    List<int> indexes = <int>[];
+    for (int i = lenght - 1; i >= 0; i--) {
+      indexes.add(_timeSeries.length - 1 - i);
+    }
+    return indexes;
+  }
+
+  // Redrawing the chart with updated data by calling the chart state.
+  Future<void> _updateView() async {
+    await Future<void>.delayed(const Duration(seconds: 1), () {
+      isNeedToUpdateView = false;
+      if (isDataUpdated) {
+        _updateData();
+        isDataUpdated = false;
+      }
+      setState(() {});
+    });
+  }
+
+  Widget getProgressIndicator() {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 22),
+        child: Container(
+          width: 50,
+          alignment: Alignment.centerRight,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: _themeProvider.isLightTheme
+                  ? <Color>[
+                      Colors.white.withOpacity(0.0),
+                      Colors.white.withOpacity(0.74)
+                    ]
+                  : const <Color>[
+                      Color.fromRGBO(33, 33, 33, 0.0),
+                      Color.fromRGBO(33, 33, 33, 0.74)
+                    ],
+              stops: const <double>[0.0, 1],
+            ),
+          ),
+          child: const SizedBox(
+            height: 35,
+            width: 35,
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.transparent,
+              strokeWidth: 3,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -191,6 +310,13 @@ class _TimelineState extends State<Timeline> {
                 entry.key.categoryName,
             legendIconType: LegendIconType.rectangle,
             name: entry.key.categoryName,
+            onRendererCreated: (ChartSeriesController controller) {
+              _seriesController = controller;
+            },
+            onPointTap: (ChartPointDetails details) {
+              print(details.dataPoints!.length);
+              // print(details.);
+            }
           );
 
           returnList.add(outPut);
@@ -201,14 +327,16 @@ class _TimelineState extends State<Timeline> {
       case StackedColumn100Series:
         for (var entry in categoryMap.entries) {
           var outPut = StackedColumn100Series(
-            dataSource: entry.value,
-            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-            dataLabelMapper: (TimeUnitWithTotal model, _) =>
-                entry.key.categoryName,
-            legendIconType: LegendIconType.rectangle,
-            name: entry.key.categoryName,
-          );
+              dataSource: entry.value,
+              xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
+              yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+              dataLabelMapper: (TimeUnitWithTotal model, _) =>
+                  entry.key.categoryName,
+              legendIconType: LegendIconType.rectangle,
+              name: entry.key.categoryName,
+              onRendererCreated: (ChartSeriesController controller) {
+                _seriesController = controller;
+              });
 
           returnList.add(outPut);
         }
@@ -217,14 +345,16 @@ class _TimelineState extends State<Timeline> {
       case StackedBarSeries:
         for (var entry in categoryMap.entries) {
           var outPut = StackedBarSeries(
-            dataSource: entry.value,
-            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-            dataLabelMapper: (TimeUnitWithTotal model, _) =>
-                entry.key.categoryName,
-            legendIconType: LegendIconType.rectangle,
-            name: entry.key.categoryName,
-          );
+              dataSource: entry.value,
+              xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
+              yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+              dataLabelMapper: (TimeUnitWithTotal model, _) =>
+                  entry.key.categoryName,
+              legendIconType: LegendIconType.rectangle,
+              name: entry.key.categoryName,
+              onRendererCreated: (ChartSeriesController controller) {
+                _seriesController = controller;
+              });
 
           returnList.add(outPut);
         }
@@ -233,14 +363,16 @@ class _TimelineState extends State<Timeline> {
       case StackedBar100Series:
         for (var entry in categoryMap.entries) {
           var outPut = StackedBar100Series(
-            dataSource: entry.value,
-            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-            dataLabelMapper: (TimeUnitWithTotal model, _) =>
-                entry.key.categoryName,
-            legendIconType: LegendIconType.rectangle,
-            name: entry.key.categoryName,
-          );
+              dataSource: entry.value,
+              xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
+              yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+              dataLabelMapper: (TimeUnitWithTotal model, _) =>
+                  entry.key.categoryName,
+              legendIconType: LegendIconType.rectangle,
+              name: entry.key.categoryName,
+              onRendererCreated: (ChartSeriesController controller) {
+                _seriesController = controller;
+              });
 
           returnList.add(outPut);
         }
@@ -249,14 +381,16 @@ class _TimelineState extends State<Timeline> {
       case LineSeries:
         for (var entry in categoryMap.entries) {
           var outPut = LineSeries(
-            dataSource: entry.value,
-            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-            dataLabelMapper: (TimeUnitWithTotal model, _) =>
-                entry.key.categoryName,
-            legendIconType: LegendIconType.rectangle,
-            name: entry.key.categoryName,
-          );
+              dataSource: entry.value,
+              xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
+              yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+              dataLabelMapper: (TimeUnitWithTotal model, _) =>
+                  entry.key.categoryName,
+              legendIconType: LegendIconType.rectangle,
+              name: entry.key.categoryName,
+              onRendererCreated: (ChartSeriesController controller) {
+                _seriesController = controller;
+              });
 
           returnList.add(outPut);
         }
@@ -266,14 +400,16 @@ class _TimelineState extends State<Timeline> {
       case ColumnSeries:
         for (var entry in categoryMap.entries) {
           var outPut = ColumnSeries(
-            dataSource: entry.value,
-            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-            dataLabelMapper: (TimeUnitWithTotal model, _) =>
-                entry.key.categoryName,
-            legendIconType: LegendIconType.rectangle,
-            name: entry.key.categoryName,
-          );
+              dataSource: entry.value,
+              xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
+              yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+              dataLabelMapper: (TimeUnitWithTotal model, _) =>
+                  entry.key.categoryName,
+              legendIconType: LegendIconType.rectangle,
+              name: entry.key.categoryName,
+              onRendererCreated: (ChartSeriesController controller) {
+                _seriesController = controller;
+              });
 
           returnList.add(outPut);
         }
@@ -289,12 +425,14 @@ class _TimelineState extends State<Timeline> {
     var profileMap = _generateProfileChartObjects();
     for (var entry in profileMap.entries) {
       var outPut = LineSeries(
-        dataSource: entry.value,
-        xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-        yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-        name: '${entry.key} total',
-        legendIconType: LegendIconType.horizontalLine,
-      );
+          dataSource: entry.value,
+          xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
+          yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+          name: '${entry.key} total',
+          legendIconType: LegendIconType.horizontalLine,
+          onRendererCreated: (ChartSeriesController controller) {
+            _seriesController = controller;
+          });
       returnList.add(outPut);
     }
     return returnList;
@@ -444,13 +582,13 @@ extension TimeIntervalTypeHelper on TimeIntervalType {
   static const namesMap = {
     TimeIntervalType.years: 'Years',
     TimeIntervalType.months: 'Months',
-    // TimeIntervalType.days: 'Days',
+    TimeIntervalType.days: 'Days',
   };
 
   static const intervalMap = {
     TimeIntervalType.years: YearModel,
     TimeIntervalType.months: MonthModel,
-    // TimeIntervalType.days: DayModel,
+    TimeIntervalType.days: DayModel,
   };
 
   String get timeIntervalName => namesMap[this] ?? 'Unknown';

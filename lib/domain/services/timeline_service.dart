@@ -36,5 +36,13 @@ class TimeLineService implements ITimelineService {
     return _bucketsRepo.getHourModelsFromDay(day);
   }
 
+  @override
+  List<DayModel> getDaysFrom(DateTime from) {
+    // call repo with from parameter
+    // the to interval parameter should always be the same
+    //  -> let's do 90 dayBuckets to start off with
+    return _bucketsRepo.getDaysFrom(from);
+  }
+
 
 }

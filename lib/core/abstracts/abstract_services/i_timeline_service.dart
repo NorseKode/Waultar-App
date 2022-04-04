@@ -4,6 +4,7 @@ abstract class ITimelineService {
   List<YearModel> getAllYears();
   List<MonthModel> getAllMonths();
   List<DayModel> getAllDays();
+  List<DayModel> getDaysFrom(DateTime from);
   /// returns all months (max 12) from the given year in sorted order
   List<MonthModel> getMonthsFromYear(YearModel year);
   /// returns all days (max 31) from the given month in sorted order
