@@ -25,4 +25,17 @@ class DataPointName {
     this.count = 0,
     required this.name,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'count': count,
+      'name': name,
+      'dataCategory': dataCategory.targetId,
+      'profile': profile.targetId,
+      'dataPoints': dataPoints.map((element) => element.id),
+      'children': children.map((element) => element.id),
+      'parent': parent.targetId,
+    };
+  }
 }

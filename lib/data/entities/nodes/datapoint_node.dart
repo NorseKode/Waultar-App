@@ -87,7 +87,7 @@ class DataPoint {
     sb.write('${parentName.name} ');
 
     _createRelations(basePathToMedia, sb);
-    
+
     searchTerms = sb.toString();
     createdAt = DateTime.now();
     sentimentScore = 0;
@@ -165,8 +165,7 @@ class DataPoint {
     sb.write("ID: $id \n");
 
     if (dataPointName.hasValue) {
-      sb.write(
-          "DataPoint relation target name: ${dataPointName.target!.name}\n");
+      sb.write("DataPoint relation target name: ${dataPointName.target!.name}\n");
     }
 
     sb.write("Data:\n");
@@ -186,7 +185,7 @@ class DataPoint {
     sb.write('${category.target!.category.categoryName}/');
     var appendList = <String>[];
     var parent = dataPointName.target;
-    while(parent != null) {
+    while (parent != null) {
       appendList.add('${parent.name}/');
       parent = parent.parent.target;
     }
@@ -195,4 +194,28 @@ class DataPoint {
   }
 
   UIDTO get getUIDTO => UIDTO(dataPoint: this);
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'dataPointName': dataPointName.targetId,
+      'stringName': stringName,
+      'sentimentScore': sentimentScore,
+      'category': category.targetId,
+      'profile': profile.targetId,
+      'images': images.map((element) => element.id).toList(),
+      'videos': videos.map((element) => element.id).toList(),
+      'files': files.map((element) => element.id).toList(),
+      'links': links.map((element) => element.id).toList(),
+      'searchTerms': searchTerms,
+      'values': values,
+      // TODO-Lukas: is valuesmap used?
+      // 'valuesMap': valuesMap,
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'dbCreatedAt': dbCreatedAt,
+      'asMap': asMap,
+      'path': path,
+      'getUIDTO': getUIDTO.toMap(),
+    };
+  }
 }

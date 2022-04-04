@@ -12,7 +12,6 @@ class MonthBucket {
   DateTime dateTime;
   int total;
 
-
   late Map<int, int> categoryMap;
   late Map<int, int> profileMap;
 
@@ -34,18 +33,16 @@ class MonthBucket {
     dateTime = DateTime.fromMicrosecondsSinceEpoch(value, isUtc: false);
   }
 
-  String get dbCategoryMap =>
-      jsonEncode(categoryMap.map((key, value) => MapEntry('$key', value)));
-  String get dbServiceMap =>
-      jsonEncode(profileMap.map((key, value) => MapEntry('$key', value)));
+  String get dbCategoryMap => jsonEncode(categoryMap.map((key, value) => MapEntry('$key', value)));
+  String get dbServiceMap => jsonEncode(profileMap.map((key, value) => MapEntry('$key', value)));
   set dbCategoryMap(String json) {
-    categoryMap = Map.from(jsonDecode(json)
-        .map((key, value) => MapEntry(int.parse(key), value as int)));
+    categoryMap =
+        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
   }
 
   set dbServiceMap(String json) {
-    profileMap = Map.from(jsonDecode(json)
-        .map((key, value) => MapEntry(int.parse(key), value as int)));
+    profileMap =
+        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
   }
 
   void updateCounts(int categoryId, int serviceId) {
@@ -54,10 +51,25 @@ class MonthBucket {
       return 1;
     });
     profileMap.update(serviceId, (value) => value + 1, ifAbsent: () {
-      profileMap.addAll({serviceId:1});
+      profileMap.addAll({serviceId: 1});
       return 1;
     });
     total = total + 1;
   }
-  
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'month': month,
+      'dateTime': dateTime.millisecondsSinceEpoch,
+      'total': total,
+      'categoryMap': categoryMap,
+      'profileMap': profileMap,
+      'year': year.targetId,
+      'days': days.map((element) => element.id).toList(),
+      'dbDateTime': dbDateTime,
+      'dbCategoryMap': dbCategoryMap,
+      'dbServiceMap': dbServiceMap,
+    };
+  }
 }
