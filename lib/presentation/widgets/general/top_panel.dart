@@ -122,94 +122,73 @@ class _TopPanelState extends State<TopPanel> {
         barrierDismissible: true,
         context: context,
         builder: (context) {
-          return Row(children: [
-            SizedBox(
-              width: 250,
-            ),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(children: [
-                      Expanded(flex: 1, child: Container()),
-                      SizedBox(width: 20),
-                      Expanded(
-                        flex: 4,
-                        child: Container(
-                          constraints: BoxConstraints(maxHeight: 500
-                              //MediaQuery.of(context).size.height - 100
-                              ),
-                          child: Scaffold(
-                            backgroundColor: Colors.transparent,
-                            body: Column(
-                              children: [
-                                Container(
-                                  constraints: BoxConstraints(maxHeight: 40),
-                                  child: TextField(
-                                    controller: serachController,
-                                    autofocus: true,
-                                    decoration: InputDecoration(
-                                        hoverColor: Colors.transparent,
-                                        contentPadding:
-                                            EdgeInsets.only(left: 15),
-                                        border: const OutlineInputBorder(
-                                            borderSide: BorderSide.none,
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(10),
-                                                topRight: Radius.circular(10))),
-                                        fillColor: themeProvider
-                                            .themeData()
-                                            .primaryColor,
-                                        filled: true,
-                                        hintText: "serach ..."),
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      color: serachController.text.isEmpty
-                                          ? themeProvider
-                                              .themeMode()
-                                              .tonedTextColor
-                                          : Colors.white,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: themeProvider
-                                            .themeData()
-                                            .primaryColor,
-                                        borderRadius: const BorderRadius.only(
-                                            bottomLeft: Radius.circular(10),
-                                            bottomRight: Radius.circular(10))),
-                                    padding: const EdgeInsets.fromLTRB(
-                                        15, 0, 15, 15),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        _categorySerachList(categories),
-                                        _serachResults(categories),
-                                        Row()
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
+          return Container(
+            padding: EdgeInsets.all(20),
+            child: Row(
+              children: [
+                SizedBox(width: 250),
+                Expanded(flex: 1, child: Container()),
+                SizedBox(width: 20),
+                Expanded(
+                  flex: 4,
+                  child: Container(
+                      child: Dialog(
+                    backgroundColor: Colors.transparent,
+                    insetPadding: EdgeInsets.zero,
+                    alignment: Alignment.topLeft,
+                    child: Column(
+                      children: [
+                        Container(
+                          constraints: BoxConstraints(maxHeight: 40),
+                          child: TextField(
+                            controller: serachController,
+                            autofocus: true,
+                            decoration: InputDecoration(
+                                hoverColor: Colors.transparent,
+                                contentPadding: EdgeInsets.only(left: 15),
+                                border: const OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        topRight: Radius.circular(10))),
+                                fillColor:
+                                    themeProvider.themeData().primaryColor,
+                                filled: true,
+                                hintText: "serach ..."),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              color: serachController.text.isEmpty
+                                  ? themeProvider.themeMode().tonedTextColor
+                                  : Colors.white,
+                              fontSize: 12,
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(width: 20),
-                      Expanded(flex: 2, child: Container())
-                    ]),
-                  ],
+                        Container(
+                          decoration: BoxDecoration(
+                              color: themeProvider.themeData().primaryColor,
+                              borderRadius: const BorderRadius.only(
+                                  bottomLeft: Radius.circular(10),
+                                  bottomRight: Radius.circular(10))),
+                          padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _categorySerachList(categories),
+                              _serachResults(categories),
+                              Row()
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  )),
                 ),
-              ),
-            )
-          ]);
+                SizedBox(width: 20),
+                Expanded(flex: 2, child: Container()),
+              ],
+            ),
+          );
         });
   }
 
