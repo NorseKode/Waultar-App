@@ -24,7 +24,10 @@ class DataPoint {
 
   // ui most important info field about the datapoint
   late String stringName;
-  late double sentimentScore;
+
+  double? sentimentScore;
+
+  String? sentimentText;
 
   final category = ToOne<DataCategory>();
   final profile = ToOne<ProfileDocument>();
@@ -90,7 +93,30 @@ class DataPoint {
     
     searchTerms = sb.toString();
     createdAt = DateTime.now();
-    sentimentScore = 0;
+    sentimentText = _getSentimentText(dataCategory, json, targetProfile);
+  }
+
+  String? _getSentimentText(
+      DataCategory dataCategory, dynamic json, ProfileDocument profile) {
+    switch (profile.service.target!.serviceName) {
+      case "Facebook":
+        switch (dataCategory.category) {
+          case CategoryEnum.messaging:
+            if (json is Map<String, dynamic> && json.containsKey("content")) {
+              return json["content"];
+            }
+        }
+        break;
+
+      case "Instagram":
+        switch (dataCategory.category) {
+          case CategoryEnum.messaging:
+            if (json is Map<String, dynamic> && json.containsKey("content")) {
+              return json["content"];
+            }
+        }
+        break;
+    }
   }
 
   void _createRelations(String basePathToMedia, StringBuffer sb) {
