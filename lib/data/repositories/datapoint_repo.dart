@@ -26,42 +26,38 @@ class DataPointRepository {
     return query;
   }
 
-  List<UIDTO> search(String searchString, int offset, int limit) {
-    var builder = _dataBox
-        .query(DataPoint_.searchStrings
-            .contains(searchString, caseSensitive: false))
-        .build();
-    builder
-      ..offset = offset
-      ..limit = limit;
-    return builder.find().map((e) => e.getUIDTO).toList();
-  }
-
-  List<UIDTO> searchWithCategories(
-      List<int> categorieIDs, String searchString, int offset, int limit) {
+  List<UIDTO> search(
+      List<int> categoryIds, String searchString, int offset, int limit) {
     var builder = _dataBox.query(
-        DataPoint_.searchStrings.contains(searchString, caseSensitive: false));
-    builder.link(DataPoint_.category, DataCategory_.id.oneOf(categorieIDs));
-
+      DataPoint_.searchTerms.contains(
+        searchString,
+        caseSensitive: false,
+      ),
+    );
+    builder.link(
+      DataPoint_.category,
+      DataCategory_.dbCategory.oneOf(categoryIds),
+    );
     var query = builder.build();
+
     query
       ..offset = offset
       ..limit = limit;
-
     return query.find().map((e) => e.getUIDTO).toList();
   }
+
 }
 
 class UIDTO implements UIModel {
-  final String stringName;
-  final DataCategory category;
-  final Map<String, dynamic> dataMap;
+  final DataPoint dataPoint;
   late Color associatedColor;
   late String mostInformativeField;
   late DateTime timeStamp;
+  late String path;
 
-  UIDTO(this.stringName, this.category, this.dataMap) {
-    associatedColor = category.category.color;
+  UIDTO({required this.dataPoint}) {
+    associatedColor = dataPoint.category.target!.category.color;
+    path = dataPoint.path;
   }
 
   @override
@@ -71,7 +67,7 @@ class UIDTO implements UIModel {
 
   @override
   String getMostInformativeField() {
-    return 'MOST INFORMATIVE FIELD TEST';
+    return dataPoint.stringName;
   }
 
   @override
@@ -81,11 +77,11 @@ class UIDTO implements UIModel {
 
   @override
   Map<String, dynamic> toMap() {
-    return dataMap;
+    return dataPoint.asMap;
   }
 
   @override
   String toString() {
-    return 'Dataname: $stringName \nData: \n${prettyJson(dataMap)}';
+    return 'Path: $path \n${prettyJson(dataPoint.asMap)}';
   }
 }

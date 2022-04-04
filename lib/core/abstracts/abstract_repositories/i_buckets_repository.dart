@@ -14,6 +14,8 @@ abstract class IBucketsRepository {
   List<DayBucket> getDaysFromMonthId(int monthId);
   List<DataPoint> getDataPointsFromDay(DayBucket day);
   List<YearModel> getAllYearModels();
+  List<MonthModel> getAllMonthModels();
+  List<DayModel> getAllDayModels();
   List<MonthModel> getMonthModelsFromYear(YearModel yearModel);
   List<DayModel> getDayModelsFromMonth(MonthModel monthModel);
   List<HourModel> getHourModelsFromDay(DayModel dayModel);

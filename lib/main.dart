@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
 import 'package:waultar/configs/navigation/app_state.dart';
 import 'package:waultar/configs/navigation/router/app_route_information_parser.dart';

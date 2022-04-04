@@ -1,28 +1,58 @@
+import 'dart:convert';
+
 import 'package:waultar/configs/globals/globals.dart';
-import 'package:waultar/core/helpers/performance_helper.dart';
+import 'package:waultar/core/base_worker/base_worker.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
-import 'package:waultar/core/ai/image_classifier.dart';
-import 'package:waultar/core/ai/sentiment_classifier.dart';
-import 'package:waultar/data/repositories/datapoint_repo.dart';
-import 'package:waultar/data/repositories/media_repo.dart';
+import 'package:waultar/core/helpers/performance_helper.dart';
+import 'package:waultar/domain/workers/image_classifier_worker.dart';
 import 'package:waultar/startup.dart';
 
 class MLService extends IMLService {
-  // final _appLogger = locator.get<AppLogger>(instanceName: 'logger');
-  final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
-  final _dataRepo = locator.get<DataPointRepository>(instanceName: 'dataRepo');
-  final _classifier =
-      locator.get<ImageClassifier>(instanceName: 'imageClassifier');
-  // final _context = locator.get<ObjectBox>(instanceName: 'context');
-  final _performance =
-      locator.get<PerformanceHelper>(instanceName: 'performance');
-  final _textClassifier =
-      locator.get<SentimentClassifier>(instanceName: 'sentimentClassifier');
+  final _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
 
   @override
-  Future<void> classifyAllImagesSeparateThreadFromDB() {
-    // TODO: implement classifyAllImagesSeparateThreadFromDB
-    throw UnimplementedError();
+  Future<void> classifyImagesSeparateThread({
+    required Function(String message, bool isDone) callback,
+    required int totalAmountOfImagesToTag,
+    int? limitAmount,
+  }) async {
+    var amountTaggedSummed = 0;
+
+    if (ISPERFORMANCETRACKING) {
+      var key = "Classifying of images";
+      _performance.init(newParentKey: key);
+      _performance.startReading(key);
+    }
+
+    var initiator = IsolateImageClassifyStartPackage(
+      waultarPath: locator.get<String>(instanceName: 'waultar_root_directory'),
+      aiFolder: locator.get<String>(instanceName: 'ai_folder'),
+      limit: limitAmount,
+      isPerformanceTracking: ISTRACKALL,
+    );
+
+    _listenImageClassify(dynamic data) {
+      switch (data.runtimeType) {
+        case MainImageClassifyProgressPackage:
+          data as MainImageClassifyProgressPackage;
+          amountTaggedSummed += data.amountTagged;
+          callback("$amountTaggedSummed/${limitAmount ?? totalAmountOfImagesToTag} Images Tagged",
+              data.isDone);
+          if (ISPERFORMANCETRACKING && data.isDone) {
+            _performance.addData(
+              _performance.parentKey,
+              duration: _performance.stopReading(_performance.parentKey),
+              childs: data.performanceDataPoint != null
+                  ? [PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint!))]
+                  : [],
+            );
+            _performance.summary("Tagging of images only total");
+          }
+      }
+    }
+
+    var classifyWorker = BaseWorker(initiator: initiator, mainHandler: _listenImageClassify);
+    classifyWorker.init(imageClassifierWorkerBody);
   }
 
   @override
@@ -33,49 +63,49 @@ class MLService extends IMLService {
 
   @override
   int classifyImagesFromDB() {
-    if (ISPERFORMANCETRACKING) {
-      _performance.reInit(newParentKey: "imageTagging", newChildKey: "image");
-      _performance.start();
-    }
+    // if (ISPERFORMANCETRACKING) {
+    //   _performance.reInit(newParentKey: "imageTagging", newChildKey: "image");
+    //   _performance.start();
+    // }
 
-    var startTime = DateTime.now();
+    // var startTime = DateTime.now();
 
-    int updated = 0;
-    int step = 100;
-    int offset = 0;
-    int limit = step;
-    var images = _mediaRepo.getImagesPagination(offset, limit);
+    // int updated = 0;
+    // int step = 100;
+    // int offset = 0;
+    // int limit = step;
+    // var images = _mediaRepo.getImagesPagination(offset, limit);
 
-    while (images.isNotEmpty) {
-      for (var image in images) {
-        var mediaTags = _classifier.predict(image.uri, 5);
+    // while (images.isNotEmpty) {
+    //   for (var image in images) {
+    //     var mediaTags = _classifier.predict(image.uri, 5);
 
-        if (mediaTags.length == 0) {
-          image.mediaTagScores = ["No Tag Found"];
-          image.mediaTags = "No Tag Found";
-        }
+    //     if (mediaTags.length == 0) {
+    //       image.mediaTagScores = ["No Tag Found"];
+    //       image.mediaTags = "No Tag Found";
+    //     }
 
-        image.mediaTagScores =
-            mediaTags.map((e) => ",(${e.item1},${e.item2})").toList();
+    //     image.mediaTagScores = mediaTags.map((e) => ",(${e.item1},${e.item2})").toList();
 
-        image.mediaTags = mediaTags.fold<String>(
-            "", (previous, next) => previous += ",${next.item1}");
+    //     image.mediaTags =
+    //         mediaTags.fold<String>("", (previous, next) => previous += ",${next.item1}");
 
-        updated++;
-      }
+    //     updated++;
+    //   }
 
-      _mediaRepo.updateImages(images);
-      offset += step;
-      images = _mediaRepo.getImagesPagination(offset, limit);
-    }
+    //   _mediaRepo.updateImages(images);
+    //   offset += step;
+    //   images = _mediaRepo.getImagesPagination(offset, limit);
+    // }
 
-    if (ISPERFORMANCETRACKING) {
-      _performance.stopParentAndWriteToFile(
-        "image-tagging",
-        metadata: {"Image count": updated},
-      );
-    }
+    // if (ISPERFORMANCETRACKING) {
+    //   _performance.stopParentAndWriteToFile(
+    //     "image-tagging",
+    //     metadata: {"Image count": updated},
+    //   );
+    // }
 
-    return updated;
+    // return updated;
+    throw UnimplementedError();
   }
 }

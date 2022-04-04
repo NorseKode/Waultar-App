@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/nodes/category_node.dart';
@@ -152,6 +153,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                                               profile.categories[index].id))
                                       : chosenCategories
                                           .add(profile.categories[index]);
+
                                   setState(
                                     () {},
                                   );
@@ -165,5 +167,6 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                     ))),
       ),
     );
+
   }
 }

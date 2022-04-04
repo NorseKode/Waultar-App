@@ -7,7 +7,11 @@ import 'package:waultar/data/entities/timebuckets/year_bucket.dart';
 class MonthBucket {
   int id;
   int month;
+
+  @Property(type: PropertyType.dateNano)
+  DateTime dateTime;
   int total;
+
 
   late Map<int, int> categoryMap;
   late Map<int, int> profileMap;
@@ -19,9 +23,15 @@ class MonthBucket {
     this.id = 0,
     this.total = 0,
     required this.month,
+    required this.dateTime,
   }) {
     categoryMap = {};
     profileMap = {};
+  }
+
+  int get dbDateTime => dateTime.microsecondsSinceEpoch;
+  set dbDateTime(int value) {
+    dateTime = DateTime.fromMicrosecondsSinceEpoch(value, isUtc: false);
   }
 
   String get dbCategoryMap =>

@@ -17,8 +17,8 @@ class InfiniteScroll extends StatefulWidget {
 }
 
 class _InfiniteScrollState extends State<InfiniteScroll> {
-  var _scrollController = ScrollController();
-  var _limit = 0;
+  final _scrollController = ScrollController();
+  final _limit = 0;
   var _offset = 0;
   var _elements = [];
 

@@ -22,7 +22,7 @@ class _DefaultWidgetBoxState extends State<DefaultWidgetBox> {
   Widget build(BuildContext context) {
     themeProvider = Provider.of<ThemeProvider>(context);
     return Container(
-        constraints: widget.constraints ?? BoxConstraints(),
+        constraints: widget.constraints ?? const BoxConstraints(),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: themeProvider.themeData().primaryColor),

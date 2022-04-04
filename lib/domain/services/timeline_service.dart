@@ -12,6 +12,16 @@ class TimeLineService implements ITimelineService {
   }
 
   @override
+  List<MonthModel> getAllMonths() {
+    return _bucketsRepo.getAllMonthModels();
+  }
+
+  @override
+  List<DayModel> getAllDays() {
+    return _bucketsRepo.getAllDayModels();
+  }
+
+  @override
   List<DayModel> getDaysFromMonth(MonthModel month) {
     return _bucketsRepo.getDayModelsFromMonth(month);
   }
@@ -25,5 +35,6 @@ class TimeLineService implements ITimelineService {
   List<HourModel> getHoursFromDay(DayModel day) {
     return _bucketsRepo.getHourModelsFromDay(day);
   }
+
 
 }

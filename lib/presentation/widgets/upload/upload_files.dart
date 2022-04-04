@@ -174,14 +174,14 @@ List<String> extractZip(Map<String, String> input) {
   var fileCount = 0;
   var isPerformanceTracking = input["is_performance_tracking"] == "true";
 
-  if (isPerformanceTracking) {
-    performance = PerformanceHelper(
-        pathToPerformanceFile: input['log_folder']!,
-        // parentKey: "Extract zip",
-        childKey: "Single file");
-    performance.reInit(newParentKey: "Extract zip");
-    performance.start();
-  }
+  // if (isPerformanceTracking) {
+  //   performance = PerformanceHelper(
+  //       pathToPerformanceFile: input['log_folder']!,
+  //       // parentKey: "Extract zip",
+  //       childKey: "Single file");
+  //   performance.reInit(newParentKey: "Extract zip");
+  //   performance.start();
+  // }
 
   // using inputFileStream to access zip without storing it in memory
   final inputStream = InputFileStream(input['path'] as String);
@@ -189,13 +189,13 @@ List<String> extractZip(Map<String, String> input) {
   // decode the zip via the stream - the archive will have the contents of the zip
   // without having to store it in memory
 
-  if (isPerformanceTracking) {
-    performance!.addChildDataPointTimer();
-  }
+  // if (isPerformanceTracking) {
+  //   performance!.addChildDataPointTimer();
+  // }
   final archive = ZipDecoder().decodeBuffer(inputStream);
-  if (isPerformanceTracking) {
-    performance!.addChildToDataPointReading(0, "Decoding of files from zip");
-  }
+  // if (isPerformanceTracking) {
+  //   performance!.addChildToDataPointReading(0, "Decoding of files from zip");
+  // }
 
   // performance end
 
@@ -207,11 +207,11 @@ List<String> extractZip(Map<String, String> input) {
   for (var file in archive.files) {
     // only take the files and skip the optional .zip.enc file
     if (file.isFile && !file.name.endsWith('zip.enc')) {
-      if (isPerformanceTracking) {
-        fileCount++;
-        performance!.resetChild();
-        performance.startChild();
-      }
+      // if (isPerformanceTracking) {
+      //   fileCount++;
+      //   performance!.resetChild();
+      //   performance.startChild();
+      // }
 
       var filePath = dart_path.normalize(destDirPath + '/' + file.name);
       if (!PathHelper.hasCommonPath(list[list.length], filePath)) {
@@ -223,9 +223,9 @@ List<String> extractZip(Map<String, String> input) {
       final outputStream = OutputFileStream(filePath);
       file.writeContent(outputStream);
 
-      if (isPerformanceTracking) {
-        performance!.addChildReading(metadata: {'filename': outputStream.path});
-      }
+      // if (isPerformanceTracking) {
+      //   performance!.addChildReading(metadata: {'filename': outputStream.path});
+      // }
 
       list.add(outputStream.path);
       outputStream.close();
@@ -235,12 +235,12 @@ List<String> extractZip(Map<String, String> input) {
   inputStream.close();
   list.sort();
 
-  if (isPerformanceTracking) {
-    performance!.stopParentAndWriteToFile(
-      "zip-extract",
-      metadata: {"filecount": fileCount},
-    );
-  }
+  // if (isPerformanceTracking) {
+  //   performance!.stopParentAndWriteToFile(
+  //     "zip-extract",
+  //     metadata: {"filecount": fileCount},
+  //   );
+  // }
 
   return list;
 }
