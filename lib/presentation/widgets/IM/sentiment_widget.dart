@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/configs/globals/category_enums.dart';
 
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
@@ -82,7 +83,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                 ? null
                 : () {
                     connotated = sentimentService
-                        .connotateTextsFromCategory(chosenCategories);
+                        .connotateOwnTextsFromCategory(chosenCategories);
                     setState(() => {});
                   })
       ],
@@ -131,42 +132,52 @@ class _SentimentWidgetState extends State<SentimentWidget> {
         child: Column(
             children: List.generate(
                 profile.categories.length,
-                (index) => Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Checkbox(
-                                activeColor:
-                                    themeProvider.themeMode().themeColor,
-                                value: chosenCategories
-                                    .where((element) =>
-                                        element.id ==
-                                        profile.categories[index].id)
-                                    .toList()
-                                    .isNotEmpty,
-                                onChanged: (value) {
-                                  !value!
-                                      ? chosenCategories.remove(chosenCategories
-                                          .firstWhere((element) =>
-                                              element.id ==
-                                              profile.categories[index].id))
-                                      : chosenCategories
-                                          .add(profile.categories[index]);
+                (index) => profile.categories[index].category ==
+                            CategoryEnum.messaging ||
+                        profile.categories[index].category ==
+                            CategoryEnum.posts ||
+                        profile.categories[index].category ==
+                            CategoryEnum.comments
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Checkbox(
+                                  activeColor:
+                                      themeProvider.themeMode().themeColor,
+                                  value: chosenCategories
+                                      .where((element) =>
+                                          element.id ==
+                                          profile.categories[index].id)
+                                      .toList()
+                                      .isNotEmpty,
+                                  onChanged: (value) {
+                                    !value!
+                                        ? chosenCategories.remove(
+                                            chosenCategories
+                                                .firstWhere((element) =>
+                                                    element.id ==
+                                                    profile
+                                                        .categories[index].id))
+                                        : chosenCategories
+                                            .add(profile.categories[index]);
 
-                                  setState(
-                                    () {},
-                                  );
-                                }),
-                            Text(profile.categories[index].category.name,
-                                style: TextStyle(fontSize: 12)),
-                          ],
-                        ),
-                        Text(profile.categories[index].count.toString())
-                      ],
-                    ))),
+                                    setState(
+                                      () {},
+                                    );
+                                  }),
+                              Text(profile.categories[index].category.name,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                  )),
+                            ],
+                          ),
+                          Text(profile.categories[index].count.toString())
+                        ],
+                      )
+                    : Container())),
       ),
     );
-
   }
 }

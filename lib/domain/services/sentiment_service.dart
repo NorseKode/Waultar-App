@@ -1,3 +1,4 @@
+import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 
@@ -33,9 +34,19 @@ class SentimentService extends ISentimentService {
   }
 
   @override
-  int connotateTextsFromCategory(List<DataCategory> categories) {
-    // var performance =
-    //     locator.get<PerformanceHelper>(instanceName: "performance");
+  int connotateOwnTextsFromCategory(List<DataCategory> categories) {
+    var username = "";
+    var profileName = categories.first.profile.target!.name;
+    var profileData = categories.first.profile.target!.categories
+        .firstWhere((element) => element.category == CategoryEnum.profile)
+        .dataPointNames
+        .forEach((element) {
+      if (element.name == "profile user") {
+        element.dataPoints.forEach((element) {
+          username = ((element.asMap["string_map_data"])["Username"])["value"];
+        });
+      }
+    });
 
     // if (ISPERFORMANCETRACKING) {
     //   performance.reInit(newParentKey: "sentimentanal");
@@ -46,7 +57,10 @@ class SentimentService extends ISentimentService {
     for (var category in categories) {
       List<DataPoint> dataPoints = _dataRepo.readAllFromCategory(category);
       for (var point in dataPoints) {
+        var isOwnData = _isOwnData(point, username, profileName);
+
         if (point.sentimentText == null) continue;
+
         // if (ISPERFORMANCETRACKING) performance.startReading("classify");
         var text = point.sentimentText!;
         if (text.length > 256) text = text.substring(0, 256);
@@ -59,12 +73,26 @@ class SentimentService extends ISentimentService {
         updated++;
       }
     }
+
     // if (ISPERFORMANCETRACKING) {
     //   performance.addParentReading();
     //   performance.summary("sentimentanal");
     // }
 
     return updated;
+  }
+
+  bool _isOwnData(DataPoint point, String profileUsername, String profileName) {
+    switch (point.category.target!.category) {
+      case CategoryEnum.messaging:
+        if (point.asMap["sender name"] == profileUsername) {
+          return true;
+        }
+        return false;
+
+      default:
+        return true;
+    }
   }
 
   @override

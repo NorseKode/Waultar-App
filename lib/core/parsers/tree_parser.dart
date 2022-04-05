@@ -138,6 +138,7 @@ class TreeParser {
         _performance.startReading(key5);
       }
       category.dataPointNames.add(name);
+      category.profile.target = profile;
       _categoryRepo.updateCategory(category);
       _profileRepo.add(profile);
       if (ISPERFORMANCETRACKING) {

@@ -3,7 +3,7 @@ import 'package:waultar/data/entities/nodes/category_node.dart';
 
 abstract class ISentimentService {
   double connotateText(String text);
-  int connotateTextsFromCategory(List<DataCategory> categories);
+  int connotateOwnTextsFromCategory(List<DataCategory> categories);
   Future<void> connotateAllTextSeparateThreadFromDB();
   List<ProfileDocument> getAllProfiles();
 }
