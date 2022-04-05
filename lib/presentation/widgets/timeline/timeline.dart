@@ -41,12 +41,12 @@ class _TimelineState extends State<Timeline> {
   }
 
   void initVariables() {
-    _timeSeries = _timelineService.getDaysFrom(DateTime(2019));
     _profiles = _timelineService.getAllProfiles();
     _chosenProfile = _profiles.first;
+    _timeSeries = _timelineService.getAllYears(_chosenProfile);
     _tooltipBehavior = TooltipBehavior(enable: true);
     _chosenChartType = ChartSeriesType.stackedColumns;
-    _chosenTimeInterval = TimeIntervalType.days;
+    _chosenTimeInterval = TimeIntervalType.years;
     isLoadMoreView = false;
     isNeedToUpdateView = false;
     isDataUpdated = true;
@@ -98,7 +98,7 @@ class _TimelineState extends State<Timeline> {
         _profiles.length,
         (index) => DropdownMenuItem(
           child: Text(
-              '${_profiles[index].name} - ${_profiles[index].service.target!.companyName}'),
+              '${_profiles[index].name} - ${_profiles[index].service.target!.serviceName}'),
           value: _profiles[index],
         ),
       ),

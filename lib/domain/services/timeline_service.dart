@@ -48,5 +48,19 @@ class TimeLineService implements ITimelineService {
     return _profileRepo.getAll();
   }
 
+  @override
+  List<TimeModel> getInnerValues(TimeModel timeModel) {
+    switch (timeModel.runtimeType) {
+      case YearModel:
+        return _bucketsRepo.getMonthModelsFromYear(timeModel as YearModel);        
+      case MonthModel:
+        return _bucketsRepo.getDayModelsFromMonth(timeModel as MonthModel);        
+      case DayModel:
+        return _bucketsRepo.getHourModelsFromDay(timeModel as DayModel);        
+      default:
+        return [];        
+    }
+  }
+
 
 }

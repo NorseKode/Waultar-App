@@ -8,6 +8,10 @@ import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/entities/nodes/name_node.dart';
+import 'package:waultar/data/entities/timebuckets/day_bucket.dart';
+import 'package:waultar/data/entities/timebuckets/hour_bucket.dart';
+import 'package:waultar/data/entities/timebuckets/month_bucket.dart';
+import 'package:waultar/data/entities/timebuckets/year_bucket.dart';
 
 class UtilityRepository implements IUtilityRepository {
 
@@ -25,6 +29,7 @@ class UtilityRepository implements IUtilityRepository {
     removed += _nukeAllNames();
     removed += nukeAllProfiles();
     removed += nukeAllCategories();
+    removed += nukeAllBuckets();
     _resetCounts();
 
     return removed;
@@ -50,6 +55,16 @@ class UtilityRepository implements IUtilityRepository {
 
   @override
   int nukeAllCategories() => _context.store.box<DataCategory>().removeAll();
+
+  @override
+  int nukeAllBuckets() {
+    int removed = 0;
+    removed += _context.store.box<YearBucket>().removeAll();
+    removed += _context.store.box<MonthBucket>().removeAll();
+    removed += _context.store.box<DayBucket>().removeAll();
+    removed += _context.store.box<HourBucket>().removeAll();
+    return removed;
+  }
 
   void _resetCounts() {
     var categories = _context.store.box<DataCategory>().getAll();
