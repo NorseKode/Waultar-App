@@ -752,10 +752,42 @@
           "targetId": "10:1279055715132364075"
         }
       ]
+    },
+    {
+      "id": "15:5531187511291422360",
+      "lastPropertyId": "4:27673161790691413",
+      "name": "WeekDayAverageComputed",
+      "properties": [
+        {
+          "id": "1:3173331373189263254",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8147886653491358959",
+          "name": "weekDay",
+          "type": 6
+        },
+        {
+          "id": "3:7944382994156725506",
+          "name": "profileId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "28:2627664810646818872",
+          "relationTarget": "ProfileDocument"
+        },
+        {
+          "id": "4:27673161790691413",
+          "name": "dbAverageCategoryMap",
+          "type": 9
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "14:7538433076249109789",
-  "lastIndexId": "27:5474799876765562971",
+  "lastEntityId": "15:5531187511291422360",
+  "lastIndexId": "28:2627664810646818872",
   "lastRelationId": "10:8258379157713928626",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

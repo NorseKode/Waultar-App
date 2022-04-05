@@ -26,6 +26,7 @@ import '../../data/entities/nodes/name_node.dart';
 import '../../data/entities/timebuckets/day_bucket.dart';
 import '../../data/entities/timebuckets/hour_bucket.dart';
 import '../../data/entities/timebuckets/month_bucket.dart';
+import '../../data/entities/timebuckets/weekday_average_bucket.dart';
 import '../../data/entities/timebuckets/year_bucket.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
@@ -758,6 +759,37 @@ final _entities = <ModelEntity>[
             name: 'months',
             targetId: const IdUid(10, 1279055715132364075))
       ],
+      backlinks: <ModelBacklink>[]),
+  ModelEntity(
+      id: const IdUid(15, 5531187511291422360),
+      name: 'WeekDayAverageComputed',
+      lastPropertyId: const IdUid(4, 27673161790691413),
+      flags: 0,
+      properties: <ModelProperty>[
+        ModelProperty(
+            id: const IdUid(1, 3173331373189263254),
+            name: 'id',
+            type: 6,
+            flags: 1),
+        ModelProperty(
+            id: const IdUid(2, 8147886653491358959),
+            name: 'weekDay',
+            type: 6,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(3, 7944382994156725506),
+            name: 'profileId',
+            type: 11,
+            flags: 520,
+            indexId: const IdUid(28, 2627664810646818872),
+            relationTarget: 'ProfileDocument'),
+        ModelProperty(
+            id: const IdUid(4, 27673161790691413),
+            name: 'dbAverageCategoryMap',
+            type: 9,
+            flags: 0)
+      ],
+      relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[])
 ];
 
@@ -781,8 +813,8 @@ Future<Store> openStore(
 ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
-      lastEntityId: const IdUid(14, 7538433076249109789),
-      lastIndexId: const IdUid(27, 5474799876765562971),
+      lastEntityId: const IdUid(15, 5531187511291422360),
+      lastIndexId: const IdUid(28, 2627664810646818872),
       lastRelationId: const IdUid(10, 8258379157713928626),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
@@ -1529,6 +1561,41 @@ ModelDefinition getObjectBoxModel() {
               RelInfo<YearBucket>.toMany(10, object.id),
               store.box<YearBucket>());
           return object;
+        }),
+    WeekDayAverageComputed: EntityDefinition<WeekDayAverageComputed>(
+        model: _entities[14],
+        toOneRelations: (WeekDayAverageComputed object) => [object.profile],
+        toManyRelations: (WeekDayAverageComputed object) => {},
+        getId: (WeekDayAverageComputed object) => object.id,
+        setId: (WeekDayAverageComputed object, int id) {
+          object.id = id;
+        },
+        objectToFB: (WeekDayAverageComputed object, fb.Builder fbb) {
+          final dbAverageCategoryMapOffset =
+              fbb.writeString(object.dbAverageCategoryMap);
+          fbb.startTable(5);
+          fbb.addInt64(0, object.id);
+          fbb.addInt64(1, object.weekDay);
+          fbb.addInt64(2, object.profile.targetId);
+          fbb.addOffset(3, dbAverageCategoryMapOffset);
+          fbb.finish(fbb.endTable());
+          return object.id;
+        },
+        objectFromFB: (Store store, ByteData fbData) {
+          final buffer = fb.BufferContext(fbData);
+          final rootOffset = buffer.derefObject(0);
+
+          final object = WeekDayAverageComputed(
+              id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
+              weekDay:
+                  const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0))
+            ..dbAverageCategoryMap =
+                const fb.StringReader(asciiOptimization: true)
+                    .vTableGet(buffer, rootOffset, 10, '');
+          object.profile.targetId =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0);
+          object.profile.attach(store);
+          return object;
         })
   };
 
@@ -2006,4 +2073,24 @@ class YearBucket_ {
   /// see [YearBucket.months]
   static final months =
       QueryRelationToMany<YearBucket, MonthBucket>(_entities[13].relations[0]);
+}
+
+/// [WeekDayAverageComputed] entity fields to define ObjectBox queries.
+class WeekDayAverageComputed_ {
+  /// see [WeekDayAverageComputed.id]
+  static final id =
+      QueryIntegerProperty<WeekDayAverageComputed>(_entities[14].properties[0]);
+
+  /// see [WeekDayAverageComputed.weekDay]
+  static final weekDay =
+      QueryIntegerProperty<WeekDayAverageComputed>(_entities[14].properties[1]);
+
+  /// see [WeekDayAverageComputed.profile]
+  static final profile =
+      QueryRelationToOne<WeekDayAverageComputed, ProfileDocument>(
+          _entities[14].properties[2]);
+
+  /// see [WeekDayAverageComputed.dbAverageCategoryMap]
+  static final dbAverageCategoryMap =
+      QueryStringProperty<WeekDayAverageComputed>(_entities[14].properties[3]);
 }

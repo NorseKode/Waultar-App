@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repository.dart';
-import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/startup.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
@@ -23,7 +22,7 @@ Future<void> main() async {
     _bucketsRepo = locator.get<IBucketsRepository>(instanceName: 'bucketsRepo');
     parsedAt = DateTime.now();
     testProfile = TestHelper.seedForTimeBuckets();
-    await _bucketsRepo.createBuckets(parsedAt);
+    await _bucketsRepo.createBuckets(parsedAt, testProfile);
   });
 
 
@@ -106,6 +105,17 @@ Future<void> main() async {
       var hour12_10 = _bucketsRepo.getHourModelsFromDay(fridayMarch);
       expect(hour12_10.length, 1);
       expect(hour12_10.first.timeValue, 12);
+    });
+
+    test(' - test bucket repo returning average computed for weekdays', () {
+      var avgWeekDays = _bucketsRepo.getAverages(testProfile);
+      expect(avgWeekDays.length, 7);
+      var monday = avgWeekDays.first;
+      expect(monday.weekDay, 1);
+      expect(monday.profile.hasValue, true);
+      expect(monday.profile.target!.name, 'Test Profile Name');
+      var map = monday.averageCategoryMap;
+      expect(map.length, 2);
     });
   });
 }

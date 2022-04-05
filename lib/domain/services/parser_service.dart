@@ -128,7 +128,7 @@ class ParserService implements IParserService {
               data.isDone);
 
           if (data.isDone) {
-            _bucketsRepo.createBuckets(_parsingStartedAt);
+            _bucketsRepo.createBuckets(_parsingStartedAt, profile);
           }
 
           if (data.isDone && ISPERFORMANCETRACKING && ISTRACKALL) {
