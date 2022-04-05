@@ -103,16 +103,28 @@ class DataPoint {
       case "Facebook":
         switch (dataCategory.category) {
           case CategoryEnum.messaging:
-            if (json is Map<String, dynamic> && json.containsKey("content")) {
+            if (parent.name == "messages" &&
+                json is Map<String, dynamic> &&
+                json.containsKey("content")) {
               return json["content"];
             }
             break;
+
           case CategoryEnum.posts:
-            if (json is Map<String, dynamic> &&
-                json.containsKey("description")) {
-              return json["description"];
+            if (json is Map<String, dynamic>) {
+              // your_posts
+              if (parent.name.contains("your_posts_") json.containsKey("data") &&
+                (json["data"]).first.containsKey("post")) {
+              return (json["data"]).first["post"];
+
+                }
             }
+            // if (json is Map<String, dynamic> &&
+            //     json.containsKey("data") &&
+            //     (json["data"]).first.containsKey("post")) {
+            // }
             break;
+
           case CategoryEnum.comments:
             if (json is Map<String, dynamic> && json.containsKey("comment")) {
               return json["comment"];
