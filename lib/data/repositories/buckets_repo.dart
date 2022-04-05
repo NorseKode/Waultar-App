@@ -75,7 +75,11 @@ class BucketsRepository extends IBucketsRepository {
 
   @override
   List<WeekDayAverageComputed> getAverages(ProfileDocument profile) {
-    return [];
+    var builder = _averageBox.query()
+      ..link(WeekDayAverageComputed_.profile,
+          ProfileDocument_.id.equals(profile.id));
+    var weekDays = builder.build().find();
+    return weekDays;
   }
 
   @override
@@ -120,7 +124,8 @@ class BucketsRepository extends IBucketsRepository {
   List<MonthModel> getAllMonthModels(ProfileDocument profile) {
     var listToReturn = <MonthModel>[];
     _context.store.runInTransaction(TxMode.read, () {
-      var query = _monthBox.query()..link(MonthBucket_.profile, ProfileDocument_.id.equals(profile.id));
+      var query = _monthBox.query()
+        ..link(MonthBucket_.profile, ProfileDocument_.id.equals(profile.id));
       var months = query.build().find();
       for (var month in months) {
         var categoryTuples = <Tuple2<DataCategory, int>>[];
@@ -152,7 +157,6 @@ class BucketsRepository extends IBucketsRepository {
     listToReturn.sort((a, b) => a.dateTime.compareTo(b.dateTime));
     return listToReturn;
   }
-
 
   @override
   List<DayModel> getDayModelsFromMonth(MonthModel monthModel) {
@@ -346,7 +350,7 @@ class BucketsRepository extends IBucketsRepository {
     List<WeekDayAverageComputed> avgList = [];
     for (int i = 1; i < 8; i++) {
       avgList.add(WeekDayAverageComputed(weekDay: i));
-    }    
+    }
 
     var toBeProcessed = toBeProcessedQuery.stream();
     // process each datapoint from the stream
@@ -367,35 +371,39 @@ class BucketsRepository extends IBucketsRepository {
           int day = dissected.item3;
           int hour = dissected.item4;
           int weekDay = timestamp.weekday;
-          
+
           var avgDay = avgList.singleWhere((avg) => avg.weekDay == weekDay);
           avgDay.profile.target = profile;
-          avgDay.updateTemp(dataPoint, DateTime(year, month, day));          
+          avgDay.updateTemp(dataPoint, DateTime(year, month, day));
 
-          bool yearExists = years.any((element) => element.year == year && element.profile.target!.id == profile.id);
+          bool yearExists = years.any((element) =>
+              element.year == year && element.profile.target!.id == profile.id);
           if (yearExists) {
             var yearBucket =
                 years.singleWhere((element) => element.year == year);
             yearBucket.updateCounts(categoryId, profileId);
 
-            bool monthExists =
-                yearBucket.months.any((element) => element.month == month && element.profile.target!.id == profile.id);
+            bool monthExists = yearBucket.months.any((element) =>
+                element.month == month &&
+                element.profile.target!.id == profile.id);
 
             if (monthExists) {
               var monthBucket = yearBucket.months
                   .singleWhere((element) => element.month == month);
               monthBucket.updateCounts(categoryId, profileId);
 
-              bool dayExists =
-                  monthBucket.days.any((element) => element.day == day && element.profile.target!.id == profile.id);
+              bool dayExists = monthBucket.days.any((element) =>
+                  element.day == day &&
+                  element.profile.target!.id == profile.id);
               if (dayExists) {
                 var dayBucket = monthBucket.days
                     .singleWhere((element) => element.day == day);
                 dayBucket.updateCounts(categoryId, profileId);
                 dayBucket.dataPoints.add(dataPoint);
 
-                bool hourExists =
-                    dayBucket.hours.any((element) => element.hour == hour && element.profile.target!.id == profile.id);
+                bool hourExists = dayBucket.hours.any((element) =>
+                    element.hour == hour &&
+                    element.profile.target!.id == profile.id);
                 if (hourExists) {
                   var hourBucket = dayBucket.hours
                       .singleWhere((element) => element.hour == hour);
