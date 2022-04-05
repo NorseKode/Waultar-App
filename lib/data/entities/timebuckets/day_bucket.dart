@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:objectbox/objectbox.dart';
+import 'package:waultar/core/helpers/json_helper.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/entities/timebuckets/hour_bucket.dart';
 import 'package:waultar/data/entities/timebuckets/month_bucket.dart';
@@ -66,14 +67,14 @@ class DayBucket {
       'day': day,
       'dateTime': dateTime.millisecondsSinceEpoch,
       'total': total,
-      'categoryMap': categoryMap,
-      // 'profileMap': profileMap,
-      // 'months': month.targetId,
-      // 'hours': hours.map((element) => element.id).toList(),
-      // 'dataPoints': dataPoints.map((element) => element.id).toList(),
-      // 'dbDateTime': dbDateTime,
-      // 'dbCategoryMap': dbCategoryMap,
-      // 'dbServiceMap': dbServiceMap,
+      'categoryMap': categoryMap.map((key, value) => MapEntry(key.toString(), value)),
+      'profileMap': JsonHelper.convertIntIntMap(profileMap),
+      'months': month.targetId,
+      'hours': JsonHelper.convertToManyToJson(hours),
+      'dataPoints': JsonHelper.convertToManyToJson(dataPoints),
+      'dbDateTime': dbDateTime,
+      'dbCategoryMap': dbCategoryMap,
+      'dbServiceMap': dbServiceMap,
     };
   }
 }
