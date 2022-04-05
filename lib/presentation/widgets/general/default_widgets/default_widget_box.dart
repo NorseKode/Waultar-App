@@ -27,7 +27,7 @@ class _DefaultWidgetBoxState extends State<DefaultWidgetBox> {
             borderRadius: BorderRadius.circular(10),
             color: themeProvider.themeData().primaryColor),
         child: Padding(
-            padding: widget.padding ?? EdgeInsets.all(20),
+            padding: widget.padding ?? const EdgeInsets.all(20),
             child: widget.child));
   }
 }

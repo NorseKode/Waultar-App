@@ -1,7 +1,5 @@
-import 'dart:ffi';
 
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
@@ -22,14 +20,14 @@ class _TopPanelState extends State<TopPanel> {
   Widget build(BuildContext context) {
     themeProvider = Provider.of<ThemeProvider>(context);
     return Container(
-      constraints: BoxConstraints(maxHeight: 40),
+      constraints: const BoxConstraints(maxHeight: 40),
       color: themeProvider.themeData().scaffoldBackgroundColor,
       child: Row(
         children: [
           _dayDisplay(),
-          SizedBox(width: 20),
-          SearchBarButton(),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
+          const SearchBarButton(),
+          const SizedBox(width: 20),
           _profileBar(),
         ],
       ),
@@ -43,14 +41,14 @@ class _TopPanelState extends State<TopPanel> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Today",
+            const Text("Today",
                 style: TextStyle(
                     fontSize: 9,
                     color: Colors.grey,
                     fontWeight: FontWeight.w400)),
             Text(
-              "${DateFormat('EE, MMM d. yyy').format(DateTime.now())}",
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+              DateFormat('EE, MMM d. yyy').format(DateTime.now()),
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
             )
           ],
         ));
@@ -67,11 +65,11 @@ class _TopPanelState extends State<TopPanel> {
               decoration: BoxDecoration(
                   color: themeProvider.themeMode().themeColor,
                   borderRadius: BorderRadius.circular(5))),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            children: const [
               Text("John Doe",
                   style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400)),
               Text("john.doe@gmail.com", style: TextStyle(fontSize: 9)),

@@ -12,7 +12,6 @@ import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/startup.dart';
-import 'dart:developer';
 
 class SentimentService extends ISentimentService {
   final _dataRepo = locator.get<DataPointRepository>(instanceName: 'dataRepo');

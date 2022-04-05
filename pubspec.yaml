@@ -81,6 +81,7 @@ dependencies:
   # charts package
   syncfusion_flutter_charts: ^19.4.56
   syncfusion_flutter_treemap: ^19.4.56-beta
+  translator: ^0.1.7
 
 dev_dependencies:
   flutter_test:
