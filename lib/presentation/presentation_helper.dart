@@ -19,14 +19,14 @@ class PresentationHelper {
   static final IUtilityRepository _utilsRepo =
       locator.get<IUtilityRepository>(instanceName: 'utilsRepo');
   static final BaseLogger _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
-  static final _appSettingsRepo =
-      locator.get<IAppSettingsRepository>(instanceName: 'appSettingsRepo');
-  static final _serviceRepo = locator.get<IServiceRepository>(instanceName: 'serviceRepo');
+  // static final _appSettingsRepo =
+  //     locator.get<IAppSettingsRepository>(instanceName: 'appSettingsRepo');
+  // static final _serviceRepo = locator.get<IServiceRepository>(instanceName: 'serviceRepo');
   static final _profileRepo = locator.get<ProfileRepository>(instanceName: 'profileRepo');
   static final _categoryRepo = locator.get<DataCategoryRepository>(instanceName: "categoryRepo");
   static final _nameRepo = locator.get<DataPointNameRepository>(instanceName: "nameRepo");
   static final _dataRepo = locator.get<DataPointRepository>(instanceName: "dataRepo");
-  static final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
+  // static final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
   static final _bucketsRepo = locator.get<IBucketsRepository>(instanceName: 'bucketsRepo');
   static final _fileSavePath = locator.get<String>(instanceName: 'performance_folder');
 
@@ -54,18 +54,20 @@ class PresentationHelper {
   }
 
   static void dumpDbAsJson() {
-    // _writeEntitiesToJsonFile(
-    //     "dataPoints", jsonEncode(_dataRepo.readAll().map((e) => e.toMap()).toList()));
-    // _writeEntitiesToJsonFile("dataCategory",
-    //     jsonEncode(_categoryRepo.getAllCategories().map((e) => e.toMap()).toList()));
-    // _writeEntitiesToJsonFile(
-    //     "dataPointName", jsonEncode(_dataRepo.readAll().map((e) => e.toMap()).toList()));
     _writeEntitiesToJsonFile(
-        "dayBucket", jsonEncode(_bucketsRepo.getAllDayBuckets().map((e) => e.toMap()).toList()));
-    // _writeEntitiesToJsonFile("monthBucket",
-    //     jsonEncode(_bucketsRepo.getAllMonthBuckets().map((e) => e.toMap()).toList()));
-    // _writeEntitiesToJsonFile(
-    //     "yearBucket", jsonEncode(_bucketsRepo.getAllYearBuckets().map((e) => e.toMap()).toList()));
+        "profiles", jsonEncode(_profileRepo.getAll().map((e) => e.toMap()).toList()));
+    _writeEntitiesToJsonFile(
+        "dataPoints", jsonEncode(_dataRepo.readAll().map((e) => e.toMap()).toList()));
+    _writeEntitiesToJsonFile("dataCategories",
+        jsonEncode(_categoryRepo.getAllCategories().map((e) => e.toMap()).toList()));
+    _writeEntitiesToJsonFile(
+        "dataPointNames", jsonEncode(_nameRepo.getAll().map((e) => e.toMap()).toList()));
+    _writeEntitiesToJsonFile(
+        "dayBuckets", jsonEncode(_bucketsRepo.getAllDayBuckets().map((e) => e.toMap()).toList()));
+    _writeEntitiesToJsonFile("monthBuckets",
+        jsonEncode(_bucketsRepo.getAllMonthBuckets().map((e) => e.toMap()).toList()));
+    _writeEntitiesToJsonFile(
+        "yearBuckets", jsonEncode(_bucketsRepo.getAllYearBuckets().map((e) => e.toMap()).toList()));
   }
 
   static void _writeEntitiesToJsonFile(String filename, String entitiesJson) {

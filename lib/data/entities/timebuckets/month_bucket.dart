@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:objectbox/objectbox.dart';
+import 'package:waultar/core/helpers/json_helper.dart';
 import 'package:waultar/data/entities/timebuckets/day_bucket.dart';
 import 'package:waultar/data/entities/timebuckets/year_bucket.dart';
 
@@ -63,10 +64,10 @@ class MonthBucket {
       'month': month,
       'dateTime': dateTime.millisecondsSinceEpoch,
       'total': total,
-      'categoryMap': categoryMap,
-      'profileMap': profileMap,
+      'categoryMap': JsonHelper.convertIntIntMap(categoryMap),
+      'profileMap': JsonHelper.convertIntIntMap(profileMap),
       'year': year.targetId,
-      'days': days.map((element) => element.id).toList(),
+      'days': JsonHelper.convertToManyToJson(days),
       'dbDateTime': dbDateTime,
       'dbCategoryMap': dbCategoryMap,
       'dbServiceMap': dbServiceMap,

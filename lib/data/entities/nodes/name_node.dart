@@ -1,4 +1,5 @@
 import 'package:objectbox/objectbox.dart';
+import 'package:waultar/core/helpers/json_helper.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'category_node.dart';
 import 'datapoint_node.dart';
@@ -33,8 +34,8 @@ class DataPointName {
       'name': name,
       'dataCategory': dataCategory.targetId,
       'profile': profile.targetId,
-      'dataPoints': dataPoints.map((element) => element.id),
-      'children': children.map((element) => element.id),
+      'dataPoints': JsonHelper.convertToManyToJson(dataPoints),
+      'children': JsonHelper.convertToManyToJson(children),
       'parent': parent.targetId,
     };
   }
