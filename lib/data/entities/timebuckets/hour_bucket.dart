@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:objectbox/objectbox.dart';
+import 'package:waultar/core/helpers/json_helper.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/entities/timebuckets/day_bucket.dart';
 
@@ -34,18 +35,16 @@ class HourBucket {
     dateTime = DateTime.fromMicrosecondsSinceEpoch(value, isUtc: false);
   }
 
-  String get dbCategoryMap =>
-      jsonEncode(categoryMap.map((key, value) => MapEntry('$key', value)));
-  String get dbServiceMap =>
-      jsonEncode(profileMap.map((key, value) => MapEntry('$key', value)));
+  String get dbCategoryMap => jsonEncode(categoryMap.map((key, value) => MapEntry('$key', value)));
+  String get dbServiceMap => jsonEncode(profileMap.map((key, value) => MapEntry('$key', value)));
   set dbCategoryMap(String json) {
-    categoryMap = Map.from(jsonDecode(json)
-        .map((key, value) => MapEntry(int.parse(key), value as int)));
+    categoryMap =
+        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
   }
 
   set dbServiceMap(String json) {
-    profileMap = Map.from(jsonDecode(json)
-        .map((key, value) => MapEntry(int.parse(key), value as int)));
+    profileMap =
+        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
   }
 
   void updateCounts(int categoryId, int serviceId) {
@@ -54,9 +53,25 @@ class HourBucket {
       return 1;
     });
     profileMap.update(serviceId, (value) => value + 1, ifAbsent: () {
-      profileMap.addAll({serviceId:1});
+      profileMap.addAll({serviceId: 1});
       return 1;
     });
     total = total + 1;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'hour': hour,
+      'dateTime': dateTime.millisecondsSinceEpoch,
+      'total': total,
+      'categoryMap': JsonHelper.convertIntIntMap(categoryMap),
+      'profileMap': JsonHelper.convertIntIntMap(profileMap),
+      'day': day.targetId,
+      'dataPoints': JsonHelper.convertToManyToJson(dataPoints),
+      'dbDateTime': dbDateTime,
+      'dbCategoryMap': dbCategoryMap,
+      'dbServiceMap': dbServiceMap,
+    };
   }
 }

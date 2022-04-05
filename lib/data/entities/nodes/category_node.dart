@@ -1,4 +1,3 @@
-
 import 'package:objectbox/objectbox.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
@@ -38,5 +37,18 @@ class DataCategory {
     category = index >= 0 && index < CategoryEnum.values.length
         ? CategoryEnum.values[index]
         : CategoryEnum.unknown;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'count': count,
+      'matchingFoldersFacebook': matchingFoldersFacebook,
+      'matchingFoldersInstagram': matchingFoldersInstagram,
+      'category': category.categoryName,
+      'profile': profile.targetId,
+      'dataPointNames': dataPointNames.map((element) => element.id).toList(),
+      'dbCategory': dbCategory,
+    };
   }
 }
