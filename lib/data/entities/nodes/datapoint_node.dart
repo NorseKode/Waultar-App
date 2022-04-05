@@ -93,11 +93,12 @@ class DataPoint {
 
     searchTerms = sb.toString();
     createdAt = DateTime.now();
-    sentimentText = _getSentimentText(dataCategory, json, targetProfile);
+    sentimentText =
+        _getSentimentText(dataCategory, json, targetProfile, parentName);
   }
 
-  String? _getSentimentText(
-      DataCategory dataCategory, dynamic json, ProfileDocument profile) {
+  String? _getSentimentText(DataCategory dataCategory, dynamic json,
+      ProfileDocument profile, DataPointName parent) {
     switch (profile.service.target!.serviceName) {
       case "Facebook":
         switch (dataCategory.category) {
@@ -105,15 +106,46 @@ class DataPoint {
             if (json is Map<String, dynamic> && json.containsKey("content")) {
               return json["content"];
             }
+            break;
+          case CategoryEnum.posts:
+            if (json is Map<String, dynamic> &&
+                json.containsKey("description")) {
+              return json["description"];
+            }
+            break;
+          case CategoryEnum.comments:
+            if (json is Map<String, dynamic> && json.containsKey("comment")) {
+              return json["comment"];
+            }
+            break;
         }
         break;
 
       case "Instagram":
         switch (dataCategory.category) {
           case CategoryEnum.messaging:
-            if (json is Map<String, dynamic> && json.containsKey("content")) {
-              return json["content"];
+            if (parent.name == "messages" && json is Map<String, dynamic>) {
+              if (json.containsKey("content")) {
+                return json["content"];
+              }
             }
+            break;
+
+          case CategoryEnum.posts:
+            if (json is Map<String, dynamic> &&
+                json.containsKey("media") &&
+                json["media"].first.containsKey("title")) {
+              return (json["media"].first)["title"];
+            }
+            break;
+
+          case CategoryEnum.comments:
+            if (json is Map<String, dynamic> &&
+                json.containsKey("string_list_data") &&
+                json["string_list_data"].first.containsKey("value")) {
+              return ((json["string_list_data"]).first)["value"];
+            }
+            break;
         }
         break;
     }
@@ -191,7 +223,8 @@ class DataPoint {
     sb.write("ID: $id \n");
 
     if (dataPointName.hasValue) {
-      sb.write("DataPoint relation target name: ${dataPointName.target!.name}\n");
+      sb.write(
+          "DataPoint relation target name: ${dataPointName.target!.name}\n");
     }
 
     sb.write("Data:\n");

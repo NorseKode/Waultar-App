@@ -25,19 +25,21 @@ import 'json_decider.dart';
 
 class TreeParser {
   final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
-  final _profileRepo = locator.get<ProfileRepository>(instanceName: 'profileRepo');
+  final _profileRepo =
+      locator.get<ProfileRepository>(instanceName: 'profileRepo');
   final DataCategoryRepository _categoryRepo =
       locator.get<DataCategoryRepository>(instanceName: 'categoryRepo');
   final DataPointNameRepository _nameRepo =
       locator.get<DataPointNameRepository>(instanceName: 'nameRepo');
-  final DataPointRepository _dataRepo = locator.get<DataPointRepository>(instanceName: 'dataRepo');
+  final DataPointRepository _dataRepo =
+      locator.get<DataPointRepository>(instanceName: 'dataRepo');
   final PerformanceHelper _performanceGlobal =
       locator.get<PerformanceHelper>(instanceName: 'performance');
   late PerformanceHelper _performance;
 
   TreeParser() {
-    _performance =
-        PerformanceHelper(pathToPerformanceFile: _performanceGlobal.pathToPerformanceFile);
+    _performance = PerformanceHelper(
+        pathToPerformanceFile: _performanceGlobal.pathToPerformanceFile);
   }
 
   late String formerFileName;
@@ -45,9 +47,10 @@ class TreeParser {
 
   late String basePathToFiles;
 
-  Stream<int> parseManyPaths(List<String> paths, ProfileDocument profile) async* {
+  Stream<int> parseManyPaths(
+      List<String> paths, ProfileDocument profile) async* {
     var fileCount = 0;
-    
+
     if (ISPERFORMANCETRACKING) {
       _performance.init(newParentKey: "Parser");
       _performance.startReading(_performance.parentKey);
@@ -91,7 +94,7 @@ class TreeParser {
       if (ISPERFORMANCETRACKING) {
         _performance.startReading(key);
       }
-      
+
       var service = profile.service.target!;
 
       var key2 = "getFromFolderName";
@@ -100,7 +103,8 @@ class TreeParser {
       }
       var category = _categoryRepo.getFromFolderName(path, profile);
       if (ISPERFORMANCETRACKING) {
-        _performance.addReading(_performance.parentKey, key2, _performance.stopReading(key2));
+        _performance.addReading(
+            _performance.parentKey, key2, _performance.stopReading(key2));
       }
 
       var key3 = "cleanFileName";
@@ -114,16 +118,19 @@ class TreeParser {
       var dirtyInitialName = path_dart.basename(path);
       var cleanInitialName = dirtyInitialName.replaceAll(".json", "");
       if (ISPERFORMANCETRACKING) {
-        _performance.addReading(_performance.parentKey, key3, _performance.stopReading(key3));
+        _performance.addReading(
+            _performance.parentKey, key3, _performance.stopReading(key3));
       }
 
       var key4 = "parseName";
       if (ISPERFORMANCETRACKING) {
         _performance.startReading(key4);
       }
-      var name = parseName(json, category, cleanInitialName, profile, service, null);
+      var name =
+          parseName(json, category, cleanInitialName, profile, service, null);
       if (ISPERFORMANCETRACKING) {
-        _performance.addReading(_performance.parentKey, key4, _performance.stopReading(key4));
+        _performance.addReading(
+            _performance.parentKey, key4, _performance.stopReading(key4));
       }
 
       var key5 = "addCategory";
@@ -134,11 +141,13 @@ class TreeParser {
       _categoryRepo.updateCategory(category);
       _profileRepo.add(profile);
       if (ISPERFORMANCETRACKING) {
-        _performance.addReading(_performance.parentKey, key5, _performance.stopReading(key5));
+        _performance.addReading(
+            _performance.parentKey, key5, _performance.stopReading(key5));
       }
 
       if (ISPERFORMANCETRACKING) {
-        _performance.addReading(_performance.parentKey, key, _performance.stopReading(key));
+        _performance.addReading(
+            _performance.parentKey, key, _performance.stopReading(key));
       }
 
       return name;
@@ -148,13 +157,18 @@ class TreeParser {
   }
 
   // ! when this method returns, make sure to add the returned datapointname as child to the category parameter
-  DataPointName parseName(dynamic json, DataCategory category, String initialName,
-      ProfileDocument profile, ServiceDocument service, DataPointName? parent) {
+  DataPointName parseName(
+      dynamic json,
+      DataCategory category,
+      String initialName,
+      ProfileDocument profile,
+      ServiceDocument service,
+      DataPointName? parent) {
     parent ??= DataPointName(name: _cleanName(initialName));
 
     if (json is Map<String, dynamic> && json.length == 1) {
-      return parseName(
-          json.values.first, category, _cleanName(json.keys.first), profile, service, null);
+      return parseName(json.values.first, category, _cleanName(json.keys.first),
+          profile, service, null);
     }
 
     // it's a map with several entries and each entry should either be embedded as direct datapoint leaf
@@ -178,8 +192,8 @@ class TreeParser {
 
         // if the key-value pair is {string:complex} - the decider saw, that the value was map or list
         if (decision == Decision.linkAsNewName) {
-          parent.children
-              .add(parseName(entry.value, category, _cleanName(entry.key), profile, service, null));
+          parent.children.add(parseName(entry.value, category,
+              _cleanName(entry.key), profile, service, null));
         }
 
         if (decision == Decision.linkAsDataPoint) {
@@ -191,8 +205,8 @@ class TreeParser {
             basePathToFiles,
           );
 
-          _appLogger.logger
-              .info("Parsed Decision: Direct Data Point: ${directDataPoint.toString()}");
+          _appLogger.logger.info(
+              "Parsed Decision: Direct Data Point: ${directDataPoint.toString()}");
 
           parent.dataPoints.add(directDataPoint);
         }
@@ -228,15 +242,16 @@ class TreeParser {
           if (item is Map<String, dynamic>) {
             var nameBasedOnTitle = item['title'];
             if (nameBasedOnTitle != null && nameBasedOnTitle is String) {
-              parent.children
-                  .add(parseName(item, category, nameBasedOnTitle, profile, service, null));
+              parent.children.add(parseName(
+                  item, category, nameBasedOnTitle, profile, service, null));
             }
             var nameBasedOnName = item['name'];
             if (nameBasedOnName != null && nameBasedOnName is String) {
-              parent.children
-                  .add(parseName(item, category, nameBasedOnName, profile, service, null));
+              parent.children.add(parseName(
+                  item, category, nameBasedOnName, profile, service, null));
             } else {
-              parent.children.add(parseName(item, category, initialName, profile, service, null));
+              parent.children.add(parseName(
+                  item, category, initialName, profile, service, null));
             }
           }
         }
@@ -293,8 +308,9 @@ class TreeParser {
   String _cleanName(String filename) {
     String temp = filename.split("_").fold(
         "",
-        (previousValue, element) =>
-            _isNumeric(element) ? previousValue + " " : previousValue + element + " ");
+        (previousValue, element) => _isNumeric(element)
+            ? previousValue + " "
+            : previousValue + element + " ");
 
     if (temp.trim().endsWith("v2")) return temp.replaceAll("v2", "").trim();
 
