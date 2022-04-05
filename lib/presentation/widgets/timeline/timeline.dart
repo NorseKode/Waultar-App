@@ -167,7 +167,9 @@ class _TimelineState extends State<Timeline> {
     return SfCartesianChart(
       series: _getAverageChartSeries(),
       tooltipBehavior: TooltipBehavior(enable: true,),
-      primaryXAxis: CategoryAxis(),
+      primaryXAxis: CategoryAxis(
+        desiredIntervals: 7,
+      ),
       primaryYAxis: NumericAxis(
         title: AxisTitle(
           text: 'Average per weekday',
@@ -265,6 +267,8 @@ class _TimelineState extends State<Timeline> {
         yValueMapper: (WeekDayWithAverage model, index) => model.average,
         dataLabelMapper: (WeekDayWithAverage model, index) => entry.key.categoryName,
         name: entry.key.categoryName,
+        width: 1.0,
+        spacing: 0.0,
       );
       returnList.add(output);
     }
