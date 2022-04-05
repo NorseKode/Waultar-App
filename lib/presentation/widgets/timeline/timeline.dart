@@ -5,6 +5,7 @@ import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
+import 'package:waultar/data/entities/timebuckets/weekday_average_bucket.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 import 'package:waultar/startup.dart';
@@ -24,6 +25,7 @@ class _TimelineState extends State<Timeline> {
   );
 
   late List<TimeModel> _timeSeries;
+  late List<WeekDayAverageComputed> _weekDayAverages;
   late TooltipBehavior _tooltipBehavior;
   late ChartSeriesType _chosenChartType;
   late DateTimeIntervalType _currentTimeInterval;
@@ -46,9 +48,11 @@ class _TimelineState extends State<Timeline> {
     if (_profiles.isNotEmpty) {
       _chosenProfile = _profiles.first;
       _timeSeries = _timelineService.getAllYears(_chosenProfile!);
+      _weekDayAverages = _timelineService.getAverages(_chosenProfile!);
     } else {
       _chosenProfile = null;
       _timeSeries = [];
+      _weekDayAverages = [];
     }
     _tooltipBehavior = TooltipBehavior(enable: true);
     _chosenChartType = ChartSeriesType.stackedColumns;
@@ -75,26 +79,37 @@ class _TimelineState extends State<Timeline> {
           style: _themeProvider.themeData().textTheme.headline3,
         ),
         const SizedBox(height: 30),
-        _timeSeries.isEmpty ? 
-        Container()
-        : Row(
-          children: [
-            _chartTypeSelector(),
-            const SizedBox(width: 20),
-            _profileSelector(),
-            const SizedBox(width: 20),
-            _resetButton(),
-          ],
-        ),
+        _timeSeries.isEmpty
+            ? Container()
+            : Row(
+                children: [
+                  _chartTypeSelector(),
+                  const SizedBox(width: 20),
+                  _profileSelector(),
+                  const SizedBox(width: 20),
+                  _resetButton(),
+                ],
+              ),
         // _chartTypeSelector(),
         const SizedBox(height: 30),
-        Expanded(
-          child: _timeSeries.isEmpty
-              ? const Center(
-                  child: Text('No datapoints found'),
-                )
-              : _chart(),
-        ),
+        _timeSeries.isEmpty
+            ? const Center(
+                child: Text('No datapoints found'),
+              )
+            : Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: _timelineChart(),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: _averageChart(),
+                    )
+                  ],
+                ),
+              ),
       ],
     );
   }
@@ -148,7 +163,20 @@ class _TimelineState extends State<Timeline> {
     );
   }
 
-  _chart() {
+  Widget _averageChart() {
+    return SfCartesianChart(
+      series: _getAverageChartSeries(),
+      tooltipBehavior: TooltipBehavior(enable: true,),
+      primaryXAxis: CategoryAxis(),
+      primaryYAxis: NumericAxis(
+        title: AxisTitle(
+          text: 'Average per weekday',
+        )
+      ),
+    );
+  }
+
+  Widget _timelineChart() {
     return SfCartesianChart(
       key: GlobalKey<State>(),
       onActualRangeChanged: _currentTimeInterval == TimeIntervalType.days
@@ -170,7 +198,7 @@ class _TimelineState extends State<Timeline> {
           : null,
       tooltipBehavior: _tooltipBehavior,
       zoomPanBehavior: _zoomPanBehavior,
-      legend: Legend(isVisible: true),
+      legend: Legend(isVisible: true, position: LegendPosition.left,),
       trackballBehavior: TrackballBehavior(
         enable: true,
         activationMode: ActivationMode.longPress,
@@ -207,95 +235,6 @@ class _TimelineState extends State<Timeline> {
     );
   }
 
-  Widget getloadMoreIndicatorBuilder(
-      BuildContext context, ChartSwipeDirection direction) {
-    if (direction == ChartSwipeDirection.end) {
-      isNeedToUpdateView = true;
-      globalKey = GlobalKey<State>();
-      return StatefulBuilder(
-          key: globalKey,
-          builder: (BuildContext context, StateSetter stateSetter) {
-            Widget widget;
-            if (isNeedToUpdateView) {
-              widget = getProgressIndicator();
-              _updateView();
-              isDataUpdated = true;
-            } else {
-              widget = Container();
-            }
-            return widget;
-          });
-    } else if (direction == ChartSwipeDirection.start) {
-      return SizedBox.fromSize(size: Size.zero);
-    } else {
-      return SizedBox.fromSize(size: Size.zero);
-    }
-  }
-
-  //Adding new data to the chart.
-  void _updateData() {
-    var newData = _timelineService.getDaysFrom(_timeSeries.last.dateTime);
-    _timeSeries.addAll(newData);
-    isLoadMoreView = true;
-    _seriesController?.updateDataSource(
-        addedDataIndexes: getIndexes(newData.length));
-  }
-
-  getIndexes(int lenght) {
-    List<int> indexes = <int>[];
-    for (int i = lenght - 1; i >= 0; i--) {
-      indexes.add(_timeSeries.length - 1 - i);
-    }
-    return indexes;
-  }
-
-  // Redrawing the chart with updated data by calling the chart state.
-  Future<void> _updateView() async {
-    await Future<void>.delayed(const Duration(seconds: 1), () {
-      isNeedToUpdateView = false;
-      if (isDataUpdated) {
-        _updateData();
-        isDataUpdated = false;
-      }
-      setState(() {});
-    });
-  }
-
-  Widget getProgressIndicator() {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 22),
-        child: Container(
-          width: 50,
-          alignment: Alignment.centerRight,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: _themeProvider.isLightTheme
-                  ? <Color>[
-                      Colors.white.withOpacity(0.0),
-                      Colors.white.withOpacity(0.74)
-                    ]
-                  : const <Color>[
-                      Color.fromRGBO(33, 33, 33, 0.0),
-                      Color.fromRGBO(33, 33, 33, 0.74)
-                    ],
-              stops: const <double>[0.0, 1],
-            ),
-          ),
-          child: const SizedBox(
-            height: 35,
-            width: 35,
-            child: CircularProgressIndicator(
-              backgroundColor: Colors.transparent,
-              strokeWidth: 3,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   void _setCurrentXIntervalEnum() {
     var currentFirst = _timeSeries.first;
     switch (currentFirst.runtimeType) {
@@ -314,6 +253,22 @@ class _TimelineState extends State<Timeline> {
       default:
         _currentTimeInterval = DateTimeIntervalType.auto;
     }
+  }
+
+  List<ChartSeries> _getAverageChartSeries() {
+    var returnList = <ChartSeries>[];
+    var categoryMap = _generateObjectsForAverageChart();
+    for (var entry in categoryMap.entries) {
+      var output = BarSeries(
+        dataSource: entry.value,
+        xValueMapper: (WeekDayWithAverage model, index) => model.weekDay,
+        yValueMapper: (WeekDayWithAverage model, index) => model.average,
+        dataLabelMapper: (WeekDayWithAverage model, index) => entry.key.categoryName,
+        name: entry.key.categoryName,
+      );
+      returnList.add(output);
+    }
+    return returnList;
   }
 
   List<ChartSeries> _getChartSeries() {
@@ -488,6 +443,35 @@ class _TimelineState extends State<Timeline> {
     return map;
   }
 
+  Map<CategoryEnum, List<WeekDayWithAverage>>
+      _generateObjectsForAverageChart() {
+    var map = <CategoryEnum, List<WeekDayWithAverage>>{};
+    for (var catEnum in CategoryEnum.values) {
+      map.addAll({catEnum: <WeekDayWithAverage>[]});
+    }
+
+    for (var weekDay in _weekDayAverages) {
+      for (var key in map.keys) {
+        if (weekDay.averageCategoryMap.containsKey(key)) {
+          var averageFound = weekDay.averageCategoryMap[key]!;
+          map.update(key, (value) {
+            value.add(WeekDayWithAverage(
+                average: averageFound, weekDay: weekDay.weekDay.WeekDayName));
+            return value;
+          });
+        }
+      }
+    }
+
+    // remove all the entries where all elements in list have total == 0
+    map.removeWhere((key, value) {
+      var listWith0Total = value.where((element) => element.average == 0);
+      return listWith0Total.length == value.length;
+    });
+
+    return map;
+  }
+
   Map<CategoryEnum, List<TimeUnitWithTotal>> _generateCategoryChartObjects() {
     var map = <CategoryEnum, List<TimeUnitWithTotal>>{};
 
@@ -535,6 +519,95 @@ class _TimelineState extends State<Timeline> {
 
     return map;
   }
+
+  Widget getloadMoreIndicatorBuilder(
+      BuildContext context, ChartSwipeDirection direction) {
+    if (direction == ChartSwipeDirection.end) {
+      isNeedToUpdateView = true;
+      globalKey = GlobalKey<State>();
+      return StatefulBuilder(
+          key: globalKey,
+          builder: (BuildContext context, StateSetter stateSetter) {
+            Widget widget;
+            if (isNeedToUpdateView) {
+              widget = getProgressIndicator();
+              _updateView();
+              isDataUpdated = true;
+            } else {
+              widget = Container();
+            }
+            return widget;
+          });
+    } else if (direction == ChartSwipeDirection.start) {
+      return SizedBox.fromSize(size: Size.zero);
+    } else {
+      return SizedBox.fromSize(size: Size.zero);
+    }
+  }
+
+  //Adding new data to the chart.
+  void _updateData() {
+    var newData = _timelineService.getDaysFrom(_timeSeries.last.dateTime);
+    _timeSeries.addAll(newData);
+    isLoadMoreView = true;
+    _seriesController?.updateDataSource(
+        addedDataIndexes: getIndexes(newData.length));
+  }
+
+  getIndexes(int lenght) {
+    List<int> indexes = <int>[];
+    for (int i = lenght - 1; i >= 0; i--) {
+      indexes.add(_timeSeries.length - 1 - i);
+    }
+    return indexes;
+  }
+
+  // Redrawing the chart with updated data by calling the chart state.
+  Future<void> _updateView() async {
+    await Future<void>.delayed(const Duration(seconds: 1), () {
+      isNeedToUpdateView = false;
+      if (isDataUpdated) {
+        _updateData();
+        isDataUpdated = false;
+      }
+      setState(() {});
+    });
+  }
+
+  Widget getProgressIndicator() {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 22),
+        child: Container(
+          width: 50,
+          alignment: Alignment.centerRight,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: _themeProvider.isLightTheme
+                  ? <Color>[
+                      Colors.white.withOpacity(0.0),
+                      Colors.white.withOpacity(0.74)
+                    ]
+                  : const <Color>[
+                      Color.fromRGBO(33, 33, 33, 0.0),
+                      Color.fromRGBO(33, 33, 33, 0.74)
+                    ],
+              stops: const <double>[0.0, 1],
+            ),
+          ),
+          child: const SizedBox(
+            height: 35,
+            width: 35,
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.transparent,
+              strokeWidth: 3,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 // Im afraid we will have to project the timeModels to this class
@@ -552,6 +625,40 @@ class TimeUnitWithTotal {
     return 'timeValue -> ${timeValue.toString()} total -> $total';
   }
 }
+
+class WeekDayWithAverage {
+  String weekDay;
+  double average;
+  WeekDayWithAverage({
+    required this.average,
+    required this.weekDay,
+  });
+}
+
+enum WeekDayValue {
+  monday,
+  tuesday,
+  wednesday,
+  thursday,
+  friday,
+  saturday,
+  sunday,
+}
+
+extension WeekDayHelper on int {
+  static const namesMap = {
+    1: 'Monday',
+    2: 'Tuesday',
+    3: 'Wednesday',
+    4: 'Thursday',
+    5: 'Friday',
+    6: 'Saturday',
+    7: 'Sunday',
+  };
+
+  String get WeekDayName => namesMap[this] ?? 'Unkown';
+}
+
 
 enum ChartSeriesType {
   stackedColumns,

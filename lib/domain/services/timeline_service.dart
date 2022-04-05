@@ -2,6 +2,7 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repositor
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
+import 'package:waultar/data/entities/timebuckets/weekday_average_bucket.dart';
 import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/startup.dart';
 
@@ -60,6 +61,11 @@ class TimeLineService implements ITimelineService {
       default:
         return [];        
     }
+  }
+
+  @override
+  List<WeekDayAverageComputed> getAverages(ProfileDocument profile) {
+    return _bucketsRepo.getAverages(profile);
   }
 
 
