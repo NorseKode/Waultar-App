@@ -93,12 +93,11 @@ class DataPoint {
 
     searchTerms = sb.toString();
     createdAt = DateTime.now();
-    sentimentText =
-        _getSentimentText(dataCategory, json, targetProfile, parentName);
+    sentimentText = _getSentimentText(dataCategory, json, targetProfile, parentName);
   }
 
-  String? _getSentimentText(DataCategory dataCategory, dynamic json,
-      ProfileDocument profile, DataPointName parent) {
+  String? _getSentimentText(
+      DataCategory dataCategory, dynamic json, ProfileDocument profile, DataPointName parent) {
     switch (profile.service.target!.serviceName) {
       case "Facebook":
         switch (dataCategory.category) {
@@ -111,18 +110,11 @@ class DataPoint {
             break;
 
           case CategoryEnum.posts:
-            if (json is Map<String, dynamic>) {
-              // your_posts
-              if (parent.name.contains("your_posts_") json.containsKey("data") &&
-                (json["data"]).first.containsKey("post")) {
+            if (json is Map<String, dynamic> &&
+                json.containsKey("data") &&
+                (json["data"]).isNotEmpty() && (json["data"]).first.containsKey("post")) {
               return (json["data"]).first["post"];
-
-                }
             }
-            // if (json is Map<String, dynamic> &&
-            //     json.containsKey("data") &&
-            //     (json["data"]).first.containsKey("post")) {
-            // }
             break;
 
           case CategoryEnum.comments:
@@ -236,8 +228,7 @@ class DataPoint {
     sb.write("ID: $id \n");
 
     if (dataPointName.hasValue) {
-      sb.write(
-          "DataPoint relation target name: ${dataPointName.target!.name}\n");
+      sb.write("DataPoint relation target name: ${dataPointName.target!.name}\n");
     }
 
     sb.write("Data:\n");
@@ -275,6 +266,7 @@ class DataPoint {
       'dataPointName': dataPointName.targetId,
       'stringName': stringName,
       'sentimentScore': sentimentScore,
+      'sentimentText': sentimentText ?? "",
       'category': category.targetId,
       'profile': profile.targetId,
       'images': images.map((element) => element.id).toList(),
