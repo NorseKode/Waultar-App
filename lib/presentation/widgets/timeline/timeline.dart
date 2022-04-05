@@ -4,6 +4,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/core/models/timeline/time_models.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/startup.dart';
 
@@ -30,6 +31,8 @@ class _TimelineState extends State<Timeline> {
   double? oldAxisVisibleMin, oldAxisVisibleMax;
   late ZoomPanBehavior _zoomPanBehavior;
   late GlobalKey<State> globalKey;
+  late List<ProfileDocument> _profiles;
+  late ProfileDocument _chosenProfile;
 
   @override
   void initState() {
@@ -39,6 +42,8 @@ class _TimelineState extends State<Timeline> {
 
   void initVariables() {
     _timeSeries = _timelineService.getDaysFrom(DateTime(2019));
+    _profiles = _timelineService.getAllProfiles();
+    _chosenProfile = _profiles.first;
     _tooltipBehavior = TooltipBehavior(enable: true);
     _chosenChartType = ChartSeriesType.stackedColumns;
     _chosenTimeInterval = TimeIntervalType.days;
@@ -69,6 +74,8 @@ class _TimelineState extends State<Timeline> {
             _chartTypeSelector(),
             const SizedBox(width: 20),
             _timeIntervalSelector(),
+            const SizedBox(width: 20),
+            _profileSelector(),
           ],
         ),
         // _chartTypeSelector(),
@@ -81,6 +88,25 @@ class _TimelineState extends State<Timeline> {
               : _chart(),
         ),
       ],
+    );
+  }
+
+  Widget _profileSelector() {
+    return DropdownButton(
+      value: _chosenProfile,
+      items: List.generate(
+        _profiles.length,
+        (index) => DropdownMenuItem(
+          child: Text(
+              '${_profiles[index].name} - ${_profiles[index].service.target!.companyName}'),
+          value: _profiles[index],
+        ),
+      ),
+      onChanged: (ProfileDocument? profile) {
+        setState(() {
+          _chosenProfile = profile ?? _profiles.first;
+        });
+      },
     );
   }
 
@@ -313,10 +339,6 @@ class _TimelineState extends State<Timeline> {
             onRendererCreated: (ChartSeriesController controller) {
               _seriesController = controller;
             },
-            onPointTap: (ChartPointDetails details) {
-              print(details.dataPoints!.length);
-              // print(details.);
-            }
           );
 
           returnList.add(outPut);
@@ -327,16 +349,17 @@ class _TimelineState extends State<Timeline> {
       case StackedColumn100Series:
         for (var entry in categoryMap.entries) {
           var outPut = StackedColumn100Series(
-              dataSource: entry.value,
-              xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-              yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-              dataLabelMapper: (TimeUnitWithTotal model, _) =>
-                  entry.key.categoryName,
-              legendIconType: LegendIconType.rectangle,
-              name: entry.key.categoryName,
-              onRendererCreated: (ChartSeriesController controller) {
-                _seriesController = controller;
-              });
+            dataSource: entry.value,
+            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
+            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+            dataLabelMapper: (TimeUnitWithTotal model, _) =>
+                entry.key.categoryName,
+            legendIconType: LegendIconType.rectangle,
+            name: entry.key.categoryName,
+            onRendererCreated: (ChartSeriesController controller) {
+              _seriesController = controller;
+            },
+          );
 
           returnList.add(outPut);
         }
@@ -345,16 +368,17 @@ class _TimelineState extends State<Timeline> {
       case StackedBarSeries:
         for (var entry in categoryMap.entries) {
           var outPut = StackedBarSeries(
-              dataSource: entry.value,
-              xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-              yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-              dataLabelMapper: (TimeUnitWithTotal model, _) =>
-                  entry.key.categoryName,
-              legendIconType: LegendIconType.rectangle,
-              name: entry.key.categoryName,
-              onRendererCreated: (ChartSeriesController controller) {
-                _seriesController = controller;
-              });
+            dataSource: entry.value,
+            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
+            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+            dataLabelMapper: (TimeUnitWithTotal model, _) =>
+                entry.key.categoryName,
+            legendIconType: LegendIconType.rectangle,
+            name: entry.key.categoryName,
+            onRendererCreated: (ChartSeriesController controller) {
+              _seriesController = controller;
+            },
+          );
 
           returnList.add(outPut);
         }
@@ -363,16 +387,17 @@ class _TimelineState extends State<Timeline> {
       case StackedBar100Series:
         for (var entry in categoryMap.entries) {
           var outPut = StackedBar100Series(
-              dataSource: entry.value,
-              xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-              yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-              dataLabelMapper: (TimeUnitWithTotal model, _) =>
-                  entry.key.categoryName,
-              legendIconType: LegendIconType.rectangle,
-              name: entry.key.categoryName,
-              onRendererCreated: (ChartSeriesController controller) {
-                _seriesController = controller;
-              });
+            dataSource: entry.value,
+            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
+            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+            dataLabelMapper: (TimeUnitWithTotal model, _) =>
+                entry.key.categoryName,
+            legendIconType: LegendIconType.rectangle,
+            name: entry.key.categoryName,
+            onRendererCreated: (ChartSeriesController controller) {
+              _seriesController = controller;
+            },
+          );
 
           returnList.add(outPut);
         }
@@ -381,16 +406,17 @@ class _TimelineState extends State<Timeline> {
       case LineSeries:
         for (var entry in categoryMap.entries) {
           var outPut = LineSeries(
-              dataSource: entry.value,
-              xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-              yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-              dataLabelMapper: (TimeUnitWithTotal model, _) =>
-                  entry.key.categoryName,
-              legendIconType: LegendIconType.rectangle,
-              name: entry.key.categoryName,
-              onRendererCreated: (ChartSeriesController controller) {
-                _seriesController = controller;
-              });
+            dataSource: entry.value,
+            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
+            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+            dataLabelMapper: (TimeUnitWithTotal model, _) =>
+                entry.key.categoryName,
+            legendIconType: LegendIconType.rectangle,
+            name: entry.key.categoryName,
+            onRendererCreated: (ChartSeriesController controller) {
+              _seriesController = controller;
+            },
+          );
 
           returnList.add(outPut);
         }
@@ -400,16 +426,17 @@ class _TimelineState extends State<Timeline> {
       case ColumnSeries:
         for (var entry in categoryMap.entries) {
           var outPut = ColumnSeries(
-              dataSource: entry.value,
-              xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-              yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-              dataLabelMapper: (TimeUnitWithTotal model, _) =>
-                  entry.key.categoryName,
-              legendIconType: LegendIconType.rectangle,
-              name: entry.key.categoryName,
-              onRendererCreated: (ChartSeriesController controller) {
-                _seriesController = controller;
-              });
+            dataSource: entry.value,
+            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
+            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+            dataLabelMapper: (TimeUnitWithTotal model, _) =>
+                entry.key.categoryName,
+            legendIconType: LegendIconType.rectangle,
+            name: entry.key.categoryName,
+            onRendererCreated: (ChartSeriesController controller) {
+              _seriesController = controller;
+            },
+          );
 
           returnList.add(outPut);
         }
@@ -425,14 +452,15 @@ class _TimelineState extends State<Timeline> {
     var profileMap = _generateProfileChartObjects();
     for (var entry in profileMap.entries) {
       var outPut = LineSeries(
-          dataSource: entry.value,
-          xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-          yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-          name: '${entry.key} total',
-          legendIconType: LegendIconType.horizontalLine,
-          onRendererCreated: (ChartSeriesController controller) {
-            _seriesController = controller;
-          });
+        dataSource: entry.value,
+        xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
+        yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+        name: '${entry.key} total',
+        legendIconType: LegendIconType.horizontalLine,
+        onRendererCreated: (ChartSeriesController controller) {
+          _seriesController = controller;
+        },
+      );
       returnList.add(outPut);
     }
     return returnList;

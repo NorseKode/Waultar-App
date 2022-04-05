@@ -30,6 +30,9 @@ Future<void> main() async {
 
       var yearBuckets = _bucketsRepo.getAllYears();
       expect(yearBuckets.length, 5);
+      for (var year in yearBuckets) {
+        expect(year.profile.target!.name, 'Test Profile Name');
+      }
 
       var year2022 = _bucketsRepo.getYear(2022)!;
       expect(year2022.months.length, 2);

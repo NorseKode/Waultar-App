@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:objectbox/objectbox.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/timebuckets/day_bucket.dart';
 import 'package:waultar/data/entities/timebuckets/year_bucket.dart';
 
@@ -12,12 +13,12 @@ class MonthBucket {
   DateTime dateTime;
   int total;
 
-
   late Map<int, int> categoryMap;
   late Map<int, int> profileMap;
 
   final year = ToOne<YearBucket>();
   final days = ToMany<DayBucket>();
+  final profile = ToOne<ProfileDocument>();
 
   MonthBucket({
     this.id = 0,
@@ -54,10 +55,9 @@ class MonthBucket {
       return 1;
     });
     profileMap.update(serviceId, (value) => value + 1, ifAbsent: () {
-      profileMap.addAll({serviceId:1});
+      profileMap.addAll({serviceId: 1});
       return 1;
     });
     total = total + 1;
   }
-  
 }

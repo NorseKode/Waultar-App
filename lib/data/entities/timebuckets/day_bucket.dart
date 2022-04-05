@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:objectbox/objectbox.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/entities/timebuckets/hour_bucket.dart';
 import 'package:waultar/data/entities/timebuckets/month_bucket.dart';
@@ -8,6 +9,7 @@ import 'package:waultar/data/entities/timebuckets/month_bucket.dart';
 class DayBucket {
   int id;
   int day;
+  int weekDay;
 
   @Property(type: PropertyType.dateNano)
   DateTime dateTime;
@@ -20,11 +22,13 @@ class DayBucket {
   final month = ToOne<MonthBucket>();
   final hours = ToMany<HourBucket>();
   final dataPoints = ToMany<DataPoint>();
+  final profile = ToOne<ProfileDocument>();
 
   DayBucket({
     this.id = 0,
     this.total = 0,
     required this.day,
+    required this.weekDay,
     required this.dateTime,
   }) {
     categoryMap = {};

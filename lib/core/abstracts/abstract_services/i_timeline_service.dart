@@ -1,4 +1,5 @@
 import 'package:waultar/core/models/timeline/time_models.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 abstract class ITimelineService {
   /// returns all years in sorted order
   List<YearModel> getAllYears();
@@ -11,4 +12,5 @@ abstract class ITimelineService {
   List<DayModel> getDaysFromMonth(MonthModel month);
   /// return all hours (max 24) from the given day in sorted order
   List<HourModel> getHoursFromDay(DayModel day);
+  List<ProfileDocument> getAllProfiles();
 }
