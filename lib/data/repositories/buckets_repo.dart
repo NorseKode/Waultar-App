@@ -71,7 +71,7 @@ class BucketsRepository extends IBucketsRepository {
   }
 
   @override
-  List<YearModel> getAllYearModels() {
+  List<YearModel> getAllYearModels(ProfileDocument profile) {
     var listToReturn = <YearModel>[];
     _context.store.runInTransaction(TxMode.read, () {
       var years = _yearBox.getAll();
@@ -107,7 +107,7 @@ class BucketsRepository extends IBucketsRepository {
   }
 
   @override
-  List<MonthModel> getAllMonthModels() {
+  List<MonthModel> getAllMonthModels(ProfileDocument profile) {
     var listToReturn = <MonthModel>[];
     _context.store.runInTransaction(TxMode.read, () {
       var months = _monthBox.getAll();

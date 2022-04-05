@@ -1,4 +1,5 @@
 import 'package:waultar/core/models/timeline/time_models.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/entities/timebuckets/day_bucket.dart';
 import 'package:waultar/data/entities/timebuckets/month_bucket.dart';
@@ -13,8 +14,8 @@ abstract class IBucketsRepository {
   List<DayBucket> getDaysFromMonth(MonthBucket month);
   List<DayBucket> getDaysFromMonthId(int monthId);
   List<DataPoint> getDataPointsFromDay(DayBucket day);
-  List<YearModel> getAllYearModels();
-  List<MonthModel> getAllMonthModels();
+  List<YearModel> getAllYearModels(ProfileDocument profile);
+  List<MonthModel> getAllMonthModels(ProfileDocument profile);
   List<DayModel> getAllDayModels();
   List<DayModel> getDaysFrom(DateTime from);
   List<MonthModel> getMonthModelsFromYear(YearModel yearModel);

@@ -144,17 +144,17 @@ class _TimelineState extends State<Timeline> {
 
           switch (_chosenTimeInterval.intervalType) {
             case YearModel:
-              _timeSeries = _timelineService.getAllYears();
+              _timeSeries = _timelineService.getAllYears(_chosenProfile);
               break;
             case MonthModel:
-              _timeSeries = _timelineService.getAllMonths();
+              _timeSeries = _timelineService.getAllMonths(_chosenProfile);
               break;
             case DayModel:
               _timeSeries =
                   _timelineService.getDaysFrom(_timeSeries.first.dateTime);
               break;
             default:
-              _timeSeries = _timelineService.getAllYears();
+              _timeSeries = _timelineService.getAllYears(_chosenProfile);
           }
         });
       },

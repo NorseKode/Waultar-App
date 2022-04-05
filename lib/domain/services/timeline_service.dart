@@ -11,18 +11,13 @@ class TimeLineService implements ITimelineService {
   TimeLineService();
   
   @override
-  List<YearModel> getAllYears() {
-    return _bucketsRepo.getAllYearModels();
+  List<YearModel> getAllYears(ProfileDocument profile) {
+    return _bucketsRepo.getAllYearModels(profile);
   }
 
   @override
-  List<MonthModel> getAllMonths() {
-    return _bucketsRepo.getAllMonthModels();
-  }
-
-  @override
-  List<DayModel> getAllDays() {
-    return _bucketsRepo.getAllDayModels();
+  List<MonthModel> getAllMonths(ProfileDocument profile) {
+    return _bucketsRepo.getAllMonthModels(profile);
   }
 
   @override
