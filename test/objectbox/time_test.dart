@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repository.dart';
+import 'package:waultar/data/configs/objectbox.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/startup.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 
@@ -10,6 +12,7 @@ import '../test_helper.dart';
 Future<void> main() async {
   late final IBucketsRepository _bucketsRepo;
   late final DateTime parsedAt;
+  late final ProfileDocument testProfile;
 
   tearDownAll(() async {
     await TestHelper.tearDownServices();
@@ -19,7 +22,7 @@ Future<void> main() async {
     await TestHelper.runStartupScript();
     _bucketsRepo = locator.get<IBucketsRepository>(instanceName: 'bucketsRepo');
     parsedAt = DateTime.now();
-    TestHelper.seedForTimeBuckets();
+    testProfile = TestHelper.seedForTimeBuckets();
     await _bucketsRepo.createBuckets(parsedAt);
   });
 
@@ -30,6 +33,9 @@ Future<void> main() async {
 
       var yearBuckets = _bucketsRepo.getAllYears();
       expect(yearBuckets.length, 5);
+      for (var year in yearBuckets) {
+        expect(year.profile.target!.name, 'Test Profile Name');
+      }
 
       var year2022 = _bucketsRepo.getYear(2022)!;
       expect(year2022.months.length, 2);
@@ -53,7 +59,7 @@ Future<void> main() async {
     });
 
     test(' - test bucket repo returning yearModels', () async {
-      var yearModels = _bucketsRepo.getAllYearModels();
+      var yearModels = _bucketsRepo.getAllYearModels(testProfile);
       expect(yearModels.length, 5);
       var year2022 = yearModels.last;
       expect(year2022.timeValue, 2022);
@@ -65,7 +71,7 @@ Future<void> main() async {
     });
 
     test(' - test bucket repo returning monthModels', () async {
-      var yearModels = _bucketsRepo.getAllYearModels();
+      var yearModels = _bucketsRepo.getAllYearModels(testProfile);
       var year2022 = yearModels.last;
       var months = _bucketsRepo.getMonthModelsFromYear(year2022);
       expect(months.length, 2); // jan, mar, mar
@@ -77,7 +83,7 @@ Future<void> main() async {
     });
 
     test(' - test bucket repo returning dayModels', () async {
-      var yearModels = _bucketsRepo.getAllYearModels();
+      var yearModels = _bucketsRepo.getAllYearModels(testProfile);
       var year2022 = yearModels.last;
       var months = _bucketsRepo.getMonthModelsFromYear(year2022);
 

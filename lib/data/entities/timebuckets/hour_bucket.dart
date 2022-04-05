@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:objectbox/objectbox.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/core/helpers/json_helper.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/entities/timebuckets/day_bucket.dart';
@@ -19,6 +20,7 @@ class HourBucket {
 
   final day = ToOne<DayBucket>();
   final dataPoints = ToMany<DataPoint>();
+  final profile = ToOne<ProfileDocument>();
 
   HourBucket({
     this.id = 0,

@@ -4,7 +4,9 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/core/models/timeline/time_models.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
+import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 import 'package:waultar/startup.dart';
 
 class Timeline extends StatefulWidget {
@@ -15,43 +17,73 @@ class Timeline extends StatefulWidget {
 }
 
 class _TimelineState extends State<Timeline> {
-
-  late ThemeProvider themeProvider;
+  late ThemeProvider _themeProvider;
 
   final ITimelineService _timelineService = locator.get<ITimelineService>(
     instanceName: 'timeService',
   );
+
   late List<TimeModel> _timeSeries;
   late TooltipBehavior _tooltipBehavior;
   late ChartSeriesType _chosenChartType;
-  late TimeIntervalType _chosenTimeInterval;
+  late DateTimeIntervalType _currentTimeInterval;
+  ChartSeriesController? _seriesController;
+  late bool isLoadMoreView, isNeedToUpdateView, isDataUpdated;
+  double? oldAxisVisibleMin, oldAxisVisibleMax;
+  late ZoomPanBehavior _zoomPanBehavior;
+  late GlobalKey<State> globalKey;
+  late List<ProfileDocument> _profiles;
+  late ProfileDocument? _chosenProfile;
 
   @override
   void initState() {
-    _timeSeries = _timelineService.getAllYears();
+    initVariables();
+    super.initState();
+  }
+
+  void initVariables() {
+    _profiles = _timelineService.getAllProfiles();
+    if (_profiles.isNotEmpty) {
+      _chosenProfile = _profiles.first;
+      _timeSeries = _timelineService.getAllYears(_chosenProfile!);
+    } else {
+      _chosenProfile = null;
+      _timeSeries = [];
+    }
     _tooltipBehavior = TooltipBehavior(enable: true);
     _chosenChartType = ChartSeriesType.stackedColumns;
-    _chosenTimeInterval = TimeIntervalType.years;
-    super.initState();
+    _currentTimeInterval = DateTimeIntervalType.years;
+    isLoadMoreView = false;
+    isNeedToUpdateView = false;
+    isDataUpdated = true;
+    globalKey = GlobalKey<State>();
+    _zoomPanBehavior = ZoomPanBehavior(
+      enablePanning: true,
+      zoomMode: ZoomMode.x,
+      enableMouseWheelZooming: _chosenChartType.canZoom,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    themeProvider = Provider.of<ThemeProvider>(context);
-
+    _themeProvider = Provider.of<ThemeProvider>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           "Timeline",
-          style: themeProvider.themeData().textTheme.headline3,
+          style: _themeProvider.themeData().textTheme.headline3,
         ),
         const SizedBox(height: 30),
-        Row(
+        _timeSeries.isEmpty ? 
+        Container()
+        : Row(
           children: [
             _chartTypeSelector(),
             const SizedBox(width: 20),
-            _timeIntervalSelector(),
+            _profileSelector(),
+            const SizedBox(width: 20),
+            _resetButton(),
           ],
         ),
         // _chartTypeSelector(),
@@ -64,6 +96,25 @@ class _TimelineState extends State<Timeline> {
               : _chart(),
         ),
       ],
+    );
+  }
+
+  Widget _profileSelector() {
+    return DropdownButton(
+      value: _chosenProfile,
+      items: List.generate(
+        _profiles.length,
+        (index) => DropdownMenuItem(
+          child: Text(
+              '${_profiles[index].name} - ${_profiles[index].service.target!.serviceName}'),
+          value: _profiles[index],
+        ),
+      ),
+      onChanged: (ProfileDocument? profile) {
+        setState(() {
+          _chosenProfile = profile ?? _profiles.first;
+        });
+      },
     );
   }
 
@@ -85,68 +136,41 @@ class _TimelineState extends State<Timeline> {
     );
   }
 
-  Widget _timeIntervalSelector() {
-    return DropdownButton(
-      value: _chosenTimeInterval,
-      items: List.generate(
-        TimeIntervalType.values.length,
-        (index) => DropdownMenuItem(
-          child: Text(TimeIntervalType.values[index].timeIntervalName),
-          value: TimeIntervalType.values[index],
-        ),
-      ),
-      onChanged: (TimeIntervalType? timeInterval) {
+  Widget _resetButton() {
+    return DefaultButton(
+      onPressed: () {
         setState(() {
-          _chosenTimeInterval = timeInterval ?? TimeIntervalType.years;
-
-          switch (_chosenTimeInterval.intervalType) {
-            case YearModel:
-              _timeSeries = _timelineService.getAllYears();
-              break;
-            case MonthModel:
-              _timeSeries = _timelineService.getAllMonths();
-              break;
-            case DayModel:
-              _timeSeries = _timelineService.getAllDays();
-              break;
-
-            default:
-              _timeSeries = _timelineService.getAllYears();
-          }
+          _timeSeries = _timelineService.getAllYears(_chosenProfile!);
+          _setCurrentXIntervalEnum();
         });
       },
+      text: 'Reset',
     );
   }
 
   _chart() {
     return SfCartesianChart(
+      key: GlobalKey<State>(),
+      onActualRangeChanged: _currentTimeInterval == TimeIntervalType.days
+          ? (ActualRangeChangedArgs args) {
+              if (args.orientation == AxisOrientation.horizontal) {
+                if (isLoadMoreView) {
+                  args.visibleMin = oldAxisVisibleMin;
+                  args.visibleMax = oldAxisVisibleMax;
+                }
+                oldAxisVisibleMin = args.visibleMin as double;
+                oldAxisVisibleMax = args.visibleMax as double;
+              }
+              isLoadMoreView = false;
+            }
+          : null,
+      loadMoreIndicatorBuilder: _currentTimeInterval == TimeIntervalType.days
+          ? (BuildContext context, ChartSwipeDirection direction) =>
+              getloadMoreIndicatorBuilder(context, direction)
+          : null,
       tooltipBehavior: _tooltipBehavior,
+      zoomPanBehavior: _zoomPanBehavior,
       legend: Legend(isVisible: true),
-      primaryXAxis: DateTimeCategoryAxis(
-        // edgeLabelPlacement: EdgeLabelPlacement.shift,
-        placeLabelsNearAxisLine: true,
-        title: AxisTitle(
-          text: 'Time',
-        ),
-        autoScrollingDeltaType: DateTimeIntervalType.auto,
-        // autoScrollingDelta: 3,
-        autoScrollingMode: AutoScrollingMode.start,
-        labelIntersectAction: AxisLabelIntersectAction.rotate45,
-        intervalType: _getCurrentXIntervalEnum(),
-        minimum: _timeSeries.first.dateTime,
-        maximum: _timeSeries.last.dateTime,
-      ),
-      zoomPanBehavior: ZoomPanBehavior(
-        enablePanning: true,
-        enableMouseWheelZooming: _chosenChartType.canZoom,
-        zoomMode: ZoomMode.x,
-      ),
-      primaryYAxis: NumericAxis(
-        title: AxisTitle(
-          text: 'Amount of Datapoints',
-        ),
-      ),
-      series: _getChartSeries(),
       trackballBehavior: TrackballBehavior(
         enable: true,
         activationMode: ActivationMode.longPress,
@@ -154,25 +178,141 @@ class _TimelineState extends State<Timeline> {
         lineColor: Colors.transparent,
         // we can use the builder to hide values where total == 0
       ),
+      primaryYAxis: NumericAxis(
+        title: AxisTitle(
+          text: 'Amount of Datapoints',
+        ),
+      ),
+      onAxisLabelTapped: (AxisLabelTapArgs args) {
+        var index = args.value;
+        var model = _timeSeries[index as int];
+        if (model.runtimeType != HourModel) {
+          setState(() {
+            _timeSeries = _timelineService.getInnerValues(model);
+            _setCurrentXIntervalEnum();
+          });
+        }
+      },
+      primaryXAxis: DateTimeCategoryAxis(
+        placeLabelsNearAxisLine: true,
+        title: AxisTitle(
+          text: 'Time',
+        ),
+        labelIntersectAction: AxisLabelIntersectAction.rotate45,
+        intervalType: _currentTimeInterval,
+        minimum: _timeSeries.first.dateTime,
+        maximum: _timeSeries.last.dateTime,
+      ),
+      series: _getChartSeries(),
     );
   }
 
-  DateTimeIntervalType _getCurrentXIntervalEnum() {
-    switch (_chosenTimeInterval.intervalType) {
+  Widget getloadMoreIndicatorBuilder(
+      BuildContext context, ChartSwipeDirection direction) {
+    if (direction == ChartSwipeDirection.end) {
+      isNeedToUpdateView = true;
+      globalKey = GlobalKey<State>();
+      return StatefulBuilder(
+          key: globalKey,
+          builder: (BuildContext context, StateSetter stateSetter) {
+            Widget widget;
+            if (isNeedToUpdateView) {
+              widget = getProgressIndicator();
+              _updateView();
+              isDataUpdated = true;
+            } else {
+              widget = Container();
+            }
+            return widget;
+          });
+    } else if (direction == ChartSwipeDirection.start) {
+      return SizedBox.fromSize(size: Size.zero);
+    } else {
+      return SizedBox.fromSize(size: Size.zero);
+    }
+  }
+
+  //Adding new data to the chart.
+  void _updateData() {
+    var newData = _timelineService.getDaysFrom(_timeSeries.last.dateTime);
+    _timeSeries.addAll(newData);
+    isLoadMoreView = true;
+    _seriesController?.updateDataSource(
+        addedDataIndexes: getIndexes(newData.length));
+  }
+
+  getIndexes(int lenght) {
+    List<int> indexes = <int>[];
+    for (int i = lenght - 1; i >= 0; i--) {
+      indexes.add(_timeSeries.length - 1 - i);
+    }
+    return indexes;
+  }
+
+  // Redrawing the chart with updated data by calling the chart state.
+  Future<void> _updateView() async {
+    await Future<void>.delayed(const Duration(seconds: 1), () {
+      isNeedToUpdateView = false;
+      if (isDataUpdated) {
+        _updateData();
+        isDataUpdated = false;
+      }
+      setState(() {});
+    });
+  }
+
+  Widget getProgressIndicator() {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 22),
+        child: Container(
+          width: 50,
+          alignment: Alignment.centerRight,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: _themeProvider.isLightTheme
+                  ? <Color>[
+                      Colors.white.withOpacity(0.0),
+                      Colors.white.withOpacity(0.74)
+                    ]
+                  : const <Color>[
+                      Color.fromRGBO(33, 33, 33, 0.0),
+                      Color.fromRGBO(33, 33, 33, 0.74)
+                    ],
+              stops: const <double>[0.0, 1],
+            ),
+          ),
+          child: const SizedBox(
+            height: 35,
+            width: 35,
+            child: CircularProgressIndicator(
+              backgroundColor: Colors.transparent,
+              strokeWidth: 3,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _setCurrentXIntervalEnum() {
+    var currentFirst = _timeSeries.first;
+    switch (currentFirst.runtimeType) {
       case YearModel:
-        return DateTimeIntervalType.years;
-
+        _currentTimeInterval = DateTimeIntervalType.years;
+        break;
       case MonthModel:
-        return DateTimeIntervalType.months;
-
+        _currentTimeInterval = DateTimeIntervalType.months;
+        break;
       case DayModel:
-        return DateTimeIntervalType.days;
-
+        _currentTimeInterval = DateTimeIntervalType.days;
+        break;
       case HourModel:
-        return DateTimeIntervalType.hours;
-
+        _currentTimeInterval = DateTimeIntervalType.hours;
+        break;
       default:
-        return DateTimeIntervalType.auto;
+        _currentTimeInterval = DateTimeIntervalType.auto;
     }
   }
 
@@ -191,6 +331,9 @@ class _TimelineState extends State<Timeline> {
                 entry.key.categoryName,
             legendIconType: LegendIconType.rectangle,
             name: entry.key.categoryName,
+            onRendererCreated: (ChartSeriesController controller) {
+              _seriesController = controller;
+            },
           );
 
           returnList.add(outPut);
@@ -208,6 +351,9 @@ class _TimelineState extends State<Timeline> {
                 entry.key.categoryName,
             legendIconType: LegendIconType.rectangle,
             name: entry.key.categoryName,
+            onRendererCreated: (ChartSeriesController controller) {
+              _seriesController = controller;
+            },
           );
 
           returnList.add(outPut);
@@ -224,6 +370,9 @@ class _TimelineState extends State<Timeline> {
                 entry.key.categoryName,
             legendIconType: LegendIconType.rectangle,
             name: entry.key.categoryName,
+            onRendererCreated: (ChartSeriesController controller) {
+              _seriesController = controller;
+            },
           );
 
           returnList.add(outPut);
@@ -240,6 +389,9 @@ class _TimelineState extends State<Timeline> {
                 entry.key.categoryName,
             legendIconType: LegendIconType.rectangle,
             name: entry.key.categoryName,
+            onRendererCreated: (ChartSeriesController controller) {
+              _seriesController = controller;
+            },
           );
 
           returnList.add(outPut);
@@ -256,6 +408,9 @@ class _TimelineState extends State<Timeline> {
                 entry.key.categoryName,
             legendIconType: LegendIconType.rectangle,
             name: entry.key.categoryName,
+            onRendererCreated: (ChartSeriesController controller) {
+              _seriesController = controller;
+            },
           );
 
           returnList.add(outPut);
@@ -273,6 +428,9 @@ class _TimelineState extends State<Timeline> {
                 entry.key.categoryName,
             legendIconType: LegendIconType.rectangle,
             name: entry.key.categoryName,
+            onRendererCreated: (ChartSeriesController controller) {
+              _seriesController = controller;
+            },
           );
 
           returnList.add(outPut);
@@ -294,6 +452,9 @@ class _TimelineState extends State<Timeline> {
         yValueMapper: (TimeUnitWithTotal model, _) => model.total,
         name: '${entry.key} total',
         legendIconType: LegendIconType.horizontalLine,
+        onRendererCreated: (ChartSeriesController controller) {
+          _seriesController = controller;
+        },
       );
       returnList.add(outPut);
     }
@@ -444,13 +605,13 @@ extension TimeIntervalTypeHelper on TimeIntervalType {
   static const namesMap = {
     TimeIntervalType.years: 'Years',
     TimeIntervalType.months: 'Months',
-    // TimeIntervalType.days: 'Days',
+    TimeIntervalType.days: 'Days',
   };
 
   static const intervalMap = {
     TimeIntervalType.years: YearModel,
     TimeIntervalType.months: MonthModel,
-    // TimeIntervalType.days: DayModel,
+    TimeIntervalType.days: DayModel,
   };
 
   String get timeIntervalName => namesMap[this] ?? 'Unknown';

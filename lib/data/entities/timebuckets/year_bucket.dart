@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:objectbox/objectbox.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/core/helpers/json_helper.dart';
 import 'package:waultar/data/entities/timebuckets/month_bucket.dart';
 
@@ -19,6 +20,7 @@ class YearBucket {
   late Map<int, int> profileMap;
 
   final months = ToMany<MonthBucket>();
+  final profile = ToOne<ProfileDocument>();
 
   YearBucket({
     this.id = 0,

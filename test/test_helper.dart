@@ -43,7 +43,8 @@ class TestHelper {
     var profile = ProfileDocument(name: 'Test Profile Name');
     profile.service.target = service;
     int created = box.put(profile);
-    return box.get(created)!;
+    var entity = box.get(created)!;
+    return entity;
   }
 
   static ServiceModel facebook = ServiceModel(
@@ -96,7 +97,7 @@ class TestHelper {
     await deleteTestFolders();
   }
 
-  static void seedForTimeBuckets() {
+  static ProfileDocument seedForTimeBuckets() {
     var context = locator.get<ObjectBox>(instanceName: 'context');
     var timestamps = <int>[
       1647774619, // Sun Mar 20 2022 12:10:19 GMT
@@ -161,5 +162,6 @@ class TestHelper {
     comments.dataPointNames.add(yourComments);
     posts.dataPointNames.add(yourPosts);
     _categoryBox.putMany([posts, comments]);
+    return testProfile;
   }
 }

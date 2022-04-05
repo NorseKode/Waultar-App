@@ -145,7 +145,7 @@ Future<void> setupServices({
       instanceName: 'parser',
     );
     locator.registerSingleton<ITimelineService>(
-      TimeLineService(_bucketsRepo),
+      TimeLineService(),
       instanceName: 'timeService',
     );
     locator.registerSingleton<IParserService>(
