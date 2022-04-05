@@ -33,7 +33,7 @@ class _TimelineState extends State<Timeline> {
   late ZoomPanBehavior _zoomPanBehavior;
   late GlobalKey<State> globalKey;
   late List<ProfileDocument> _profiles;
-  late ProfileDocument _chosenProfile;
+  late ProfileDocument? _chosenProfile;
 
   @override
   void initState() {
@@ -43,8 +43,13 @@ class _TimelineState extends State<Timeline> {
 
   void initVariables() {
     _profiles = _timelineService.getAllProfiles();
-    _chosenProfile = _profiles.first;
-    _timeSeries = _timelineService.getAllYears(_chosenProfile);
+    if (_profiles.isNotEmpty) {
+      _chosenProfile = _profiles.first;
+      _timeSeries = _timelineService.getAllYears(_chosenProfile!);
+    } else {
+      _chosenProfile = null;
+      _timeSeries = [];
+    }
     _tooltipBehavior = TooltipBehavior(enable: true);
     _chosenChartType = ChartSeriesType.stackedColumns;
     _currentTimeInterval = DateTimeIntervalType.years;
@@ -70,7 +75,9 @@ class _TimelineState extends State<Timeline> {
           style: _themeProvider.themeData().textTheme.headline3,
         ),
         const SizedBox(height: 30),
-        Row(
+        _timeSeries.isEmpty ? 
+        Container()
+        : Row(
           children: [
             _chartTypeSelector(),
             const SizedBox(width: 20),
@@ -133,7 +140,7 @@ class _TimelineState extends State<Timeline> {
     return DefaultButton(
       onPressed: () {
         setState(() {
-          _timeSeries = _timelineService.getAllYears(_chosenProfile);
+          _timeSeries = _timelineService.getAllYears(_chosenProfile!);
           _setCurrentXIntervalEnum();
         });
       },
