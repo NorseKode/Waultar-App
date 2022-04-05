@@ -2,7 +2,6 @@ import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 
 import 'package:waultar/core/ai/sentiment_classifier.dart';
-import 'package:waultar/core/helpers/performance_helper2.dart';
 import 'package:waultar/data/repositories/datapoint_repo.dart';
 
 import 'package:waultar/data/entities/misc/profile_document.dart';
@@ -35,35 +34,36 @@ class SentimentService extends ISentimentService {
 
   @override
   int connotateTextsFromCategory(List<DataCategory> categories) {
-    var performance =
-        locator.get<PerformanceHelper2>(instanceName: "performance2");
-    if (ISPERFORMANCETRACKING) {
-      performance.reInit(newParentKey: "sentimentanal");
-      performance.start("sentimentanal");
-    }
+    // var performance =
+    //     locator.get<PerformanceHelper>(instanceName: "performance");
+
+    // if (ISPERFORMANCETRACKING) {
+    //   performance.reInit(newParentKey: "sentimentanal");
+    //   performance.start("sentimentanal");
+    // }
+
     var updated = 0;
-    //Timeline.startSync("connotation");
     for (var category in categories) {
       List<DataPoint> dataPoints = _dataRepo.readAllFromCategory(category);
       for (var point in dataPoints) {
         if (point.sentimentText == null) continue;
-        if (ISPERFORMANCETRACKING) performance.startReading("classify");
+        // if (ISPERFORMANCETRACKING) performance.startReading("classify");
         var text = point.sentimentText!;
         if (text.length > 256) text = text.substring(0, 256);
         var sentimentScore = _textClassifier.classify(text);
-        if (ISPERFORMANCETRACKING) {
-          performance.addReading("sentimentanal", "classify");
-        }
+        // if (ISPERFORMANCETRACKING) {
+        //   performance.addReading("sentimentanal", "classify");
+        // }
         point.sentimentScore = sentimentScore.last; //0-1
         _dataRepo.addDataPoint(point);
         updated++;
       }
     }
-    if (ISPERFORMANCETRACKING) {
-      performance.addParentReading();
-      performance.summary("sentimentanal");
-    }
-    //Timeline.finishSync();
+    // if (ISPERFORMANCETRACKING) {
+    //   performance.addParentReading();
+    //   performance.summary("sentimentanal");
+    // }
+
     return updated;
   }
 
