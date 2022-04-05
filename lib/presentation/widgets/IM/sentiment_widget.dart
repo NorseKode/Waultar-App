@@ -24,9 +24,9 @@ class _SentimentWidgetState extends State<SentimentWidget> {
   late List<ProfileDocument> profiles;
 
   List<DataCategory> chosenCategories = [];
-  int connotated = 0;
   int timeEstimateSeconds = 0;
   bool analyzing = false;
+  String message = "Analyzing ...";
 
   @override
   Widget build(BuildContext context) {
@@ -36,30 +36,33 @@ class _SentimentWidgetState extends State<SentimentWidget> {
     return DefaultWidget(
         constraints: const BoxConstraints(maxWidth: 300),
         title: "Sentiment Analysis",
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Analyze the invoked sentiment in your data.",
-            ),
-            //const SizedBox(height: 10),
-            const Text(
-              "Choose what data to run analysis on :",
-            ),
-            const SizedBox(height: 10),
-            SingleChildScrollView(child: Column(children: _profileList())),
-            const SizedBox(height: 10),
-            Divider(
-                height: 2,
-                thickness: 2,
-                color: themeProvider.themeMode().tonedColor),
+        child: analyzing
+            ? Column(
+                children: [Text(message), const CircularProgressIndicator()],
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Analyze the invoked sentiment in your data.",
+                  ),
+                  //const SizedBox(height: 10),
+                  const Text(
+                    "Choose what data to run analysis on :",
+                  ),
+                  const SizedBox(height: 10),
+                  SingleChildScrollView(
+                      child: Column(children: _profileList())),
+                  const SizedBox(height: 10),
+                  Divider(
+                      height: 2,
+                      thickness: 2,
+                      color: themeProvider.themeMode().tonedColor),
 
-            const SizedBox(height: 10),
-            _analyzeBar(),
-
-            connotated != 0 ? Text("done: $connotated") : Container(),
-          ],
-        ));
+                  const SizedBox(height: 10),
+                  _analyzeBar(),
+                ],
+              ));
   }
 
   Widget _analyzeBar() {
@@ -82,12 +85,20 @@ class _SentimentWidgetState extends State<SentimentWidget> {
             onPressed: profiles.isEmpty
                 ? null
                 : () {
-                    connotated = sentimentService
-                        .connotateOwnTextsFromCategory(chosenCategories);
-                    setState(() => {});
+                    analyzing = true;
+                    sentimentService.connotateOwnTextsFromCategory(
+                        chosenCategories, _sentimentAnalyzingProgress);
+                    setState(() {});
                   })
       ],
     ));
+  }
+
+  _sentimentAnalyzingProgress(String message, bool isDone) {
+    analyzing = !isDone;
+    if (isDone) {
+      setState(() {});
+    }
   }
 
   String formatTime(int seconds) {

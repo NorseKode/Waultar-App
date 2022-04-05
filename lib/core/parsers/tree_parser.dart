@@ -298,8 +298,8 @@ class TreeParser {
   }
 
   Future<dynamic> getJson(File file) async {
-    var json = await file.readAsString();
-    return jsonDecode(json);
+    var jsonBytes = await file.readAsBytes();
+    return jsonDecode(utf8.decode(jsonBytes));
   }
 
   bool _isNumeric(String s) => double.tryParse(s) != null;

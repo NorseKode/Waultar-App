@@ -1,6 +1,5 @@
 import 'dart:io';
 
-
 // Import tflite_flutter
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
@@ -36,13 +35,13 @@ class SentimentClassifier extends IMLModel {
     init();
   }
 
-  _loadModel() async {
+  _loadModel() {
     // Creating the interpreter using Interpreter.fromAsset
     _interpreter = Interpreter.fromFile(File(modelPath));
   }
 
-  _loadDictionary() async {
-    final vocab = await File(vocabPath).readAsString();
+  _loadDictionary() {
+    final vocab = File(vocabPath).readAsStringSync();
     var dict = <String, int>{};
     final vocabList = vocab.split('\n');
     for (var i = 0; i < vocabList.length; i++) {
