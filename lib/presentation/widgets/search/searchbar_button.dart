@@ -66,59 +66,65 @@ class _SearchBarButtonState extends State<SearchBarButton> {
                 const SizedBox(width: 20),
                 Expanded(
                   flex: 4,
-                  child: Container(
-                      child: Dialog(
-                    backgroundColor: Colors.transparent,
-                    insetPadding: EdgeInsets.zero,
-                    alignment: Alignment.topLeft,
-                    child: Column(
-                      children: [
-                        Container(
-                          constraints: const BoxConstraints(maxHeight: 40),
-                          child: TextField(
-                            controller: serachController,
-                            autofocus: true,
-                            decoration: InputDecoration(
-                                hoverColor: Colors.transparent,
-                                contentPadding: const EdgeInsets.only(left: 15),
-                                border: const OutlineInputBorder(
-                                    borderSide: BorderSide.none,
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(10),
-                                        topRight: Radius.circular(10))),
-                                fillColor:
-                                    themeProvider.themeData().primaryColor,
-                                filled: true,
-                                hintText: "serach ..."),
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              color: serachController.text.isEmpty
-                                  ? themeProvider.themeMode().tonedTextColor
-                                  : Colors.white,
-                              fontSize: 12,
+                  child: Column(
+                    children: [
+                      Container(
+                          child: Dialog(
+                        backgroundColor: Colors.transparent,
+                        insetPadding: EdgeInsets.zero,
+                        alignment: Alignment.topLeft,
+                        child: Column(
+                          children: [
+                            Container(
+                              constraints: const BoxConstraints(maxHeight: 40),
+                              child: TextField(
+                                controller: serachController,
+                                autofocus: true,
+                                decoration: InputDecoration(
+                                    hoverColor: Colors.transparent,
+                                    contentPadding:
+                                        const EdgeInsets.only(left: 15),
+                                    border: const OutlineInputBorder(
+                                        borderSide: BorderSide.none,
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10))),
+                                    fillColor:
+                                        themeProvider.themeData().primaryColor,
+                                    filled: true,
+                                    hintText: "serach ..."),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: serachController.text.isEmpty
+                                      ? themeProvider.themeMode().tonedTextColor
+                                      : Colors.white,
+                                  fontSize: 12,
+                                ),
+                              ),
                             ),
-                          ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  color: themeProvider.themeData().primaryColor,
+                                  borderRadius: const BorderRadius.only(
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10))),
+                              padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 5),
+                                  _categorySerachList(),
+                                  _serachResults(),
+                                  Row()
+                                ],
+                              ),
+                            )
+                          ],
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                              color: themeProvider.themeData().primaryColor,
-                              borderRadius: const BorderRadius.only(
-                                  bottomLeft: Radius.circular(10),
-                                  bottomRight: Radius.circular(10))),
-                          padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(height: 5),
-                              _categorySerachList(),
-                              _serachResults(),
-                              Row()
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  )),
+                      )),
+                      Expanded(child: Container())
+                    ],
+                  ),
                 ),
                 const SizedBox(width: 20),
                 Expanded(flex: 2, child: Container()),
