@@ -6,6 +6,7 @@ import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart
 import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
+import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 import 'package:waultar/startup.dart';
 
 class Timeline extends StatefulWidget {
@@ -73,9 +74,9 @@ class _TimelineState extends State<Timeline> {
           children: [
             _chartTypeSelector(),
             const SizedBox(width: 20),
-            // _timeIntervalSelector(),
-            const SizedBox(width: 20),
             _profileSelector(),
+            const SizedBox(width: 20),
+            _resetButton(),
           ],
         ),
         // _chartTypeSelector(),
@@ -128,38 +129,16 @@ class _TimelineState extends State<Timeline> {
     );
   }
 
-  // Widget _timeIntervalSelector() {
-  //   return DropdownButton(
-  //     value: _currentTimeInterval,
-  //     items: List.generate(
-  //       TimeIntervalType.values.length,
-  //       (index) => DropdownMenuItem(
-  //         child: Text(TimeIntervalType.values[index].timeIntervalName),
-  //         value: TimeIntervalType.values[index],
-  //       ),
-  //     ),
-  //     onChanged: (TimeIntervalType? timeInterval) {
-  //       setState(() {
-  //         _currentTimeInterval = timeInterval ?? TimeIntervalType.years;
-
-  //         switch (_currentTimeInterval.intervalType) {
-  //           case YearModel:
-  //             _timeSeries = _timelineService.getAllYears(_chosenProfile);
-  //             break;
-  //           case MonthModel:
-  //             _timeSeries = _timelineService.getAllMonths(_chosenProfile);
-  //             break;
-  //           case DayModel:
-  //             _timeSeries =
-  //                 _timelineService.getDaysFrom(_timeSeries.first.dateTime);
-  //             break;
-  //           default:
-  //             _timeSeries = _timelineService.getAllYears(_chosenProfile);
-  //         }
-  //       });
-  //     },
-  //   );
-  // }
+  Widget _resetButton() {
+    return DefaultButton(
+      onPressed: () {
+        setState(() {
+          _timeSeries = _timelineService.getAllYears(_chosenProfile);
+        });
+      },
+      text: 'Reset',
+    );
+  }
 
   _chart() {
     return SfCartesianChart(
