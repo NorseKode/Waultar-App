@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
@@ -60,6 +62,10 @@ class SentimentService extends ISentimentService {
         var isOwnData = _isOwnData(point, username, profileName);
 
         if (point.sentimentText == null) continue;
+        var temp = utf8.decode(point.sentimentText!.codeUnits);
+        if (temp.contains("oliver")) {
+          print(temp);
+        }
 
         // if (ISPERFORMANCETRACKING) performance.startReading("classify");
         var text = point.sentimentText!;
