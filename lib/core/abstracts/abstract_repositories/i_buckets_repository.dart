@@ -3,6 +3,7 @@ import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/entities/timebuckets/day_bucket.dart';
 import 'package:waultar/data/entities/timebuckets/month_bucket.dart';
+import 'package:waultar/data/entities/timebuckets/weekday_average_bucket.dart';
 import 'package:waultar/data/entities/timebuckets/year_bucket.dart';
 
 abstract class IBucketsRepository {
@@ -16,7 +17,6 @@ abstract class IBucketsRepository {
   List<DataPoint> getDataPointsFromDay(DayBucket day);
   List<YearModel> getAllYearModels(ProfileDocument profile);
   List<MonthModel> getAllMonthModels(ProfileDocument profile);
-  List<DayModel> getAllDayModels();
   List<DayModel> getDaysFrom(DateTime from);
   List<MonthModel> getMonthModelsFromYear(YearModel yearModel);
   List<DayModel> getDayModelsFromMonth(MonthModel monthModel);
@@ -24,4 +24,5 @@ abstract class IBucketsRepository {
   List<DayBucket> getAllDayBuckets();
   List<MonthBucket> getAllMonthBuckets();
   List<YearBucket> getAllYearBuckets();
+  List<WeekDayAverageComputed> getAverages(ProfileDocument profile);
 }
