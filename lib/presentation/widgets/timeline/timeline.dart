@@ -134,6 +134,7 @@ class _TimelineState extends State<Timeline> {
       onPressed: () {
         setState(() {
           _timeSeries = _timelineService.getAllYears(_chosenProfile);
+          _setCurrentXIntervalEnum();
         });
       },
       text: 'Reset',
@@ -178,10 +179,12 @@ class _TimelineState extends State<Timeline> {
       onAxisLabelTapped: (AxisLabelTapArgs args) {
         var index = args.value;
         var model = _timeSeries[index as int];
-        setState(() {
-          _timeSeries = _timelineService.getInnerValues(model);
-          _setCurrentXIntervalEnum();
-        });
+        if (model.runtimeType != HourModel) {
+          setState(() {
+            _timeSeries = _timelineService.getInnerValues(model);
+            _setCurrentXIntervalEnum();
+          });
+        }
       },
       primaryXAxis: DateTimeCategoryAxis(
         placeLabelsNearAxisLine: true,
@@ -285,25 +288,6 @@ class _TimelineState extends State<Timeline> {
       ),
     );
   }
-
-  // DateTimeIntervalType _getCurrentXIntervalEnum() {
-  //   switch (_currentTimeInterval.intervalType) {
-  //     case YearModel:
-  //       return DateTimeIntervalType.years;
-
-  //     case MonthModel:
-  //       return DateTimeIntervalType.months;
-
-  //     case DayModel:
-  //       return DateTimeIntervalType.days;
-
-  //     case HourModel:
-  //       return DateTimeIntervalType.hours;
-
-  //     default:
-  //       return DateTimeIntervalType.auto;
-  //   }
-  // }
 
   void _setCurrentXIntervalEnum() {
     var currentFirst = _timeSeries.first;
