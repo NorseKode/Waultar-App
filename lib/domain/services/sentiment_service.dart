@@ -1,4 +1,3 @@
-import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 
 import 'package:waultar/core/ai/sentiment_classifier.dart';
@@ -9,7 +8,6 @@ import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/startup.dart';
-import 'dart:developer';
 
 class SentimentService extends ISentimentService {
   final _dataRepo = locator.get<DataPointRepository>(instanceName: 'dataRepo');

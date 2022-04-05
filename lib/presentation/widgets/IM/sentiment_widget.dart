@@ -70,12 +70,12 @@ class _SentimentWidgetState extends State<SentimentWidget> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text("Time estimate",
+            const Text("Time estimate",
                 style: TextStyle(fontSize: 9, fontWeight: FontWeight.w400)),
-            Text("$timeEstimate", style: TextStyle(fontSize: 12))
+            Text(timeEstimate, style: const TextStyle(fontSize: 12))
           ],
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         DefaultButton(
             text: "          Analyze          ",
             onPressed: profiles.isEmpty
@@ -95,9 +95,9 @@ class _SentimentWidgetState extends State<SentimentWidget> {
 
   String _timeEstimateOnCat() {
     int timeEstimate = 0;
-    chosenCategories.forEach((element) {
+    for (var element in chosenCategories) {
       timeEstimate += (element.count * 0.0005).ceil();
-    });
+    }
     return formatTime(timeEstimate);
   }
 
@@ -115,9 +115,9 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                     children: [
                       Text(
                         profiles[index].service.target!.serviceName,
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                        style: const TextStyle(fontWeight: FontWeight.w500),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       _categoryList(profiles[index]),
                     ],
                   ),
@@ -126,7 +126,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
 
   Widget _categoryList(ProfileDocument profile) {
     return Container(
-      constraints: BoxConstraints(maxHeight: 150),
+      constraints: const BoxConstraints(maxHeight: 150),
       child: SingleChildScrollView(
         child: Column(
             children: List.generate(
@@ -159,7 +159,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                                   );
                                 }),
                             Text(profile.categories[index].category.name,
-                                style: TextStyle(fontSize: 12)),
+                                style: const TextStyle(fontSize: 12)),
                           ],
                         ),
                         Text(profile.categories[index].count.toString())

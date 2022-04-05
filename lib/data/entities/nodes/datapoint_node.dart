@@ -117,6 +117,7 @@ class DataPoint {
         }
         break;
     }
+    return null;
   }
 
   void _createRelations(String basePathToMedia, StringBuffer sb) {
