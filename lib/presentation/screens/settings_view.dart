@@ -11,6 +11,7 @@ import 'package:waultar/presentation/widgets/general/menu_panel.dart';
 import 'package:waultar/presentation/widgets/general/top_panel.dart';
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:waultar/presentation/widgets/snackbar_custom.dart';
 import 'package:waultar/startup.dart';
 
 class SettingsView extends StatefulWidget {
@@ -70,6 +71,15 @@ class _SettingsViewState extends State<SettingsView> {
             text: "Delete Image Tags",
             onPressed: () {
               locator.get<MediaRepository>(instanceName: 'mediaRepo').deleteAllImageTags();
+            },
+          ),
+          const Divider(),
+          DefaultButton(
+            text: 'Dump Database As Json',
+            onPressed: () {
+              SnackBarCustom.useSnackbarOfContext(
+                  context, "Started writing dump, it may take some time");
+              PresentationHelper.dumpDbAsJson();
             },
           ),
         ],

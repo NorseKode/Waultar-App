@@ -89,11 +89,9 @@ class _BrowseState extends State<Browse> {
           await _parserService.parseIsolates(
             zipFile,
             _onUploadProgress,
-            files.item2,
-            ProfileDocument(name: "temp test name"),
+            files.item3,
+            ProfileDocument(name: files.item2),
           );
-          // await _parserService.parseMain(zipFile, files.item2);
-
         }
       },
       text: localizer.upload,

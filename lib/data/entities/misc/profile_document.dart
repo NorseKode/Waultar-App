@@ -1,4 +1,5 @@
 import 'package:objectbox/objectbox.dart';
+import 'package:waultar/core/helpers/json_helper.dart';
 import 'package:waultar/data/entities/media/image_document.dart';
 import 'package:waultar/data/entities/misc/service_document.dart';
 import 'package:waultar/data/entities/nodes/category_node.dart';
@@ -20,4 +21,15 @@ class ProfileDocument {
     this.id = 0,
     required this.name,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'service': service.targetId,
+      'dataPoints': JsonHelper.convertToManyToJson(dataPoints),
+      'profilePicture': profilePicture.targetId,
+      'categories': JsonHelper.convertToManyToJson(categories),
+    };
+  }
 }

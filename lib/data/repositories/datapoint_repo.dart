@@ -20,10 +20,10 @@ class DataPointRepository {
   List<DataPoint> readAll() => _dataBox.getAll();
   int count() => _dataBox.count();
 
-  updateDataPoint(DataPoint datapoint) => {};
-
   List<DataPoint> readAllFromCategory(DataCategory category) {
-    return [];
+    var query =
+        _dataBox.query(DataPoint_.category.equals(category.id)).build().find();
+    return query;
   }
 
   List<UIDTO> search(

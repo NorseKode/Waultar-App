@@ -24,7 +24,10 @@ class DataPoint {
 
   // ui most important info field about the datapoint
   late String stringName;
-  late double sentimentScore;
+
+  double? sentimentScore;
+
+  String? sentimentText;
 
   final category = ToOne<DataCategory>();
   final profile = ToOne<ProfileDocument>();
@@ -87,10 +90,33 @@ class DataPoint {
     sb.write('${parentName.name} ');
 
     _createRelations(basePathToMedia, sb);
-    
+
     searchTerms = sb.toString();
     createdAt = DateTime.now();
-    sentimentScore = 0;
+    sentimentText = _getSentimentText(dataCategory, json, targetProfile);
+  }
+
+  String? _getSentimentText(
+      DataCategory dataCategory, dynamic json, ProfileDocument profile) {
+    switch (profile.service.target!.serviceName) {
+      case "Facebook":
+        switch (dataCategory.category) {
+          case CategoryEnum.messaging:
+            if (json is Map<String, dynamic> && json.containsKey("content")) {
+              return json["content"];
+            }
+        }
+        break;
+
+      case "Instagram":
+        switch (dataCategory.category) {
+          case CategoryEnum.messaging:
+            if (json is Map<String, dynamic> && json.containsKey("content")) {
+              return json["content"];
+            }
+        }
+        break;
+    }
   }
 
   void _createRelations(String basePathToMedia, StringBuffer sb) {
@@ -165,8 +191,7 @@ class DataPoint {
     sb.write("ID: $id \n");
 
     if (dataPointName.hasValue) {
-      sb.write(
-          "DataPoint relation target name: ${dataPointName.target!.name}\n");
+      sb.write("DataPoint relation target name: ${dataPointName.target!.name}\n");
     }
 
     sb.write("Data:\n");
@@ -186,13 +211,37 @@ class DataPoint {
     sb.write('${category.target!.category.categoryName}/');
     var appendList = <String>[];
     var parent = dataPointName.target;
-    while(parent != null) {
+    while (parent != null) {
       appendList.add('${parent.name}/');
       parent = parent.parent.target;
     }
-    appendList.reversed.forEach((element) => sb.write(element));
+    for (var element in appendList.reversed) {
+      sb.write(element);
+    }
     return sb.toString();
   }
 
   UIDTO get getUIDTO => UIDTO(dataPoint: this);
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'dataPointName': dataPointName.targetId,
+      'stringName': stringName,
+      'sentimentScore': sentimentScore,
+      'category': category.targetId,
+      'profile': profile.targetId,
+      'images': images.map((element) => element.id).toList(),
+      'videos': videos.map((element) => element.id).toList(),
+      'files': files.map((element) => element.id).toList(),
+      'links': links.map((element) => element.id).toList(),
+      'searchTerms': searchTerms,
+      'values': values,
+      'createdAt': createdAt.millisecondsSinceEpoch,
+      'dbCreatedAt': dbCreatedAt,
+      'asMap': asMap,
+      'path': path,
+      'getUIDTO': getUIDTO.toMap(),
+    };
+  }
 }

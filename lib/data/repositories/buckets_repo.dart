@@ -602,4 +602,19 @@ class BucketsRepository extends IBucketsRepository {
   }
 
   ProfileDocument _getProfile(int id) => _profileBox.get(id)!;
+
+  @override
+  List<DayBucket> getAllDayBuckets() {
+    return _dayBox.getAll();
+  }
+
+  @override
+  List<MonthBucket> getAllMonthBuckets() {
+    return _monthBox.getAll();
+  }
+
+  @override
+  List<YearBucket> getAllYearBuckets() {
+    return _yearBox.getAll();
+  }
 }
