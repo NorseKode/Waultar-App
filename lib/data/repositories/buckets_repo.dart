@@ -79,6 +79,7 @@ class BucketsRepository extends IBucketsRepository {
       ..link(WeekDayAverageComputed_.profile,
           ProfileDocument_.id.equals(profile.id));
     var weekDays = builder.build().find();
+    weekDays.sort((a, b) => a.weekDay.compareTo(b.weekDay));
     return weekDays;
   }
 
@@ -323,7 +324,7 @@ class BucketsRepository extends IBucketsRepository {
   }
 
   @override
-  Future createBuckets(DateTime dataPointsCreatedAfter) async {
+  Future createBuckets(DateTime dataPointsCreatedAfter, ProfileDocument profile) async {
     var createdSince = dataPointsCreatedAfter.microsecondsSinceEpoch;
 
     var years = _yearBox.getAll();
@@ -342,10 +343,11 @@ class BucketsRepository extends IBucketsRepository {
      */
 
     // streams all datapoints that have been created after createdSince
-    var toBeProcessedQuery = _context.store
+    var toBeProcessedLink = _context.store
         .box<DataPoint>()
         .query(DataPoint_.dbCreatedAt.greaterThan(createdSince))
-        .build();
+        ..link(DataPoint_.profile, ProfileDocument_.id.equals(profile.id));
+    var toBeProcessedQuery = toBeProcessedLink.build();
 
     List<WeekDayAverageComputed> avgList = [];
     for (int i = 1; i < 8; i++) {
@@ -373,7 +375,7 @@ class BucketsRepository extends IBucketsRepository {
           int weekDay = timestamp.weekday;
 
           var avgDay = avgList.singleWhere((avg) => avg.weekDay == weekDay);
-          avgDay.profile.target = profile;
+          // avgDay.profile.target = profile;
           avgDay.updateTemp(dataPoint, DateTime(year, month, day));
 
           bool yearExists = years.any((element) =>
@@ -538,6 +540,7 @@ class BucketsRepository extends IBucketsRepository {
 
     for (var avg in avgList) {
       avg.calculateAverages();
+      avg.profile.target = profile;
     }
     _averageBox.putMany(avgList);
     // when the stream has processed each element we update all the buckets via the root bucket in a single transaction

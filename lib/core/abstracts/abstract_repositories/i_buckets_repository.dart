@@ -7,7 +7,7 @@ import 'package:waultar/data/entities/timebuckets/weekday_average_bucket.dart';
 import 'package:waultar/data/entities/timebuckets/year_bucket.dart';
 
 abstract class IBucketsRepository {
-  Future createBuckets(DateTime dataPointsCreatedAfter);
+  Future createBuckets(DateTime dataPointsCreatedAfter, ProfileDocument profile);
   List<YearBucket> getAllYears();
   YearBucket? getYear(int year);
   List<MonthBucket> getMonthsFromYearValue(int year);

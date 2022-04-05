@@ -33,11 +33,11 @@ class WeekDayAverageComputed {
   }
 
   String get dbAverageCategoryMap =>
-      jsonEncode(averageCategoryMap.map((key, value) => MapEntry('$key', value)));
+      jsonEncode(averageCategoryMap.map((key, value) => MapEntry('${key.index}', value)));
 
   set dbAverageCategoryMap(String json) {
     averageCategoryMap =
-        Map.from(jsonDecode(json).map((key, value) => MapEntry(key, value as double)));
+        Map.from(jsonDecode(json).map((key, value) => MapEntry(CategoryEnum.values[int.parse(key)], value as double)));
   }
 
   void updateTemp(DataPoint datapoint, DateTime day) {
