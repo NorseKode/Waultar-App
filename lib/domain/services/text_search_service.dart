@@ -1,5 +1,4 @@
 import 'package:waultar/configs/globals/category_enums.dart';
-import 'package:waultar/configs/globals/search_categories_enum.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_text_search_service.dart';
 import 'package:waultar/data/repositories/datapoint_repo.dart';
 import 'package:waultar/core/models/ui_model.dart';

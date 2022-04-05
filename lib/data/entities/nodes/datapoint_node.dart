@@ -189,7 +189,9 @@ class DataPoint {
       appendList.add('${parent.name}/');
       parent = parent.parent.target;
     }
-    appendList.reversed.forEach((element) => sb.write(element));
+    for (var element in appendList.reversed) {
+      sb.write(element);
+    }
     return sb.toString();
   }
 
@@ -209,8 +211,6 @@ class DataPoint {
       'links': links.map((element) => element.id).toList(),
       'searchTerms': searchTerms,
       'values': values,
-      // TODO-Lukas: is valuesmap used?
-      // 'valuesMap': valuesMap,
       'createdAt': createdAt.millisecondsSinceEpoch,
       'dbCreatedAt': dbCreatedAt,
       'asMap': asMap,
