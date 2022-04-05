@@ -25,7 +25,7 @@ class _TimelineState extends State<Timeline> {
   late List<TimeModel> _timeSeries;
   late TooltipBehavior _tooltipBehavior;
   late ChartSeriesType _chosenChartType;
-  late TimeIntervalType _chosenTimeInterval;
+  late DateTimeIntervalType _currentTimeInterval;
   ChartSeriesController? _seriesController;
   late bool isLoadMoreView, isNeedToUpdateView, isDataUpdated;
   double? oldAxisVisibleMin, oldAxisVisibleMax;
@@ -46,7 +46,7 @@ class _TimelineState extends State<Timeline> {
     _timeSeries = _timelineService.getAllYears(_chosenProfile);
     _tooltipBehavior = TooltipBehavior(enable: true);
     _chosenChartType = ChartSeriesType.stackedColumns;
-    _chosenTimeInterval = TimeIntervalType.years;
+    _currentTimeInterval = DateTimeIntervalType.years;
     isLoadMoreView = false;
     isNeedToUpdateView = false;
     isDataUpdated = true;
@@ -73,7 +73,7 @@ class _TimelineState extends State<Timeline> {
           children: [
             _chartTypeSelector(),
             const SizedBox(width: 20),
-            _timeIntervalSelector(),
+            // _timeIntervalSelector(),
             const SizedBox(width: 20),
             _profileSelector(),
           ],
@@ -128,43 +128,43 @@ class _TimelineState extends State<Timeline> {
     );
   }
 
-  Widget _timeIntervalSelector() {
-    return DropdownButton(
-      value: _chosenTimeInterval,
-      items: List.generate(
-        TimeIntervalType.values.length,
-        (index) => DropdownMenuItem(
-          child: Text(TimeIntervalType.values[index].timeIntervalName),
-          value: TimeIntervalType.values[index],
-        ),
-      ),
-      onChanged: (TimeIntervalType? timeInterval) {
-        setState(() {
-          _chosenTimeInterval = timeInterval ?? TimeIntervalType.years;
+  // Widget _timeIntervalSelector() {
+  //   return DropdownButton(
+  //     value: _currentTimeInterval,
+  //     items: List.generate(
+  //       TimeIntervalType.values.length,
+  //       (index) => DropdownMenuItem(
+  //         child: Text(TimeIntervalType.values[index].timeIntervalName),
+  //         value: TimeIntervalType.values[index],
+  //       ),
+  //     ),
+  //     onChanged: (TimeIntervalType? timeInterval) {
+  //       setState(() {
+  //         _currentTimeInterval = timeInterval ?? TimeIntervalType.years;
 
-          switch (_chosenTimeInterval.intervalType) {
-            case YearModel:
-              _timeSeries = _timelineService.getAllYears(_chosenProfile);
-              break;
-            case MonthModel:
-              _timeSeries = _timelineService.getAllMonths(_chosenProfile);
-              break;
-            case DayModel:
-              _timeSeries =
-                  _timelineService.getDaysFrom(_timeSeries.first.dateTime);
-              break;
-            default:
-              _timeSeries = _timelineService.getAllYears(_chosenProfile);
-          }
-        });
-      },
-    );
-  }
+  //         switch (_currentTimeInterval.intervalType) {
+  //           case YearModel:
+  //             _timeSeries = _timelineService.getAllYears(_chosenProfile);
+  //             break;
+  //           case MonthModel:
+  //             _timeSeries = _timelineService.getAllMonths(_chosenProfile);
+  //             break;
+  //           case DayModel:
+  //             _timeSeries =
+  //                 _timelineService.getDaysFrom(_timeSeries.first.dateTime);
+  //             break;
+  //           default:
+  //             _timeSeries = _timelineService.getAllYears(_chosenProfile);
+  //         }
+  //       });
+  //     },
+  //   );
+  // }
 
   _chart() {
     return SfCartesianChart(
       key: GlobalKey<State>(),
-      onActualRangeChanged: _chosenTimeInterval == TimeIntervalType.days
+      onActualRangeChanged: _currentTimeInterval == TimeIntervalType.days
           ? (ActualRangeChangedArgs args) {
               if (args.orientation == AxisOrientation.horizontal) {
                 if (isLoadMoreView) {
@@ -177,7 +177,7 @@ class _TimelineState extends State<Timeline> {
               isLoadMoreView = false;
             }
           : null,
-      loadMoreIndicatorBuilder: _chosenTimeInterval == TimeIntervalType.days
+      loadMoreIndicatorBuilder: _currentTimeInterval == TimeIntervalType.days
           ? (BuildContext context, ChartSwipeDirection direction) =>
               getloadMoreIndicatorBuilder(context, direction)
           : null,
@@ -197,7 +197,12 @@ class _TimelineState extends State<Timeline> {
         ),
       ),
       onAxisLabelTapped: (AxisLabelTapArgs args) {
-        print(args.value);
+        var index = args.value;
+        var model = _timeSeries[index as int];
+        setState(() {
+          _timeSeries = _timelineService.getInnerValues(model);
+          _setCurrentXIntervalEnum();
+        });
       },
       primaryXAxis: DateTimeCategoryAxis(
         placeLabelsNearAxisLine: true,
@@ -205,7 +210,7 @@ class _TimelineState extends State<Timeline> {
           text: 'Time',
         ),
         labelIntersectAction: AxisLabelIntersectAction.rotate45,
-        intervalType: _getCurrentXIntervalEnum(),
+        intervalType: _currentTimeInterval,
         minimum: _timeSeries.first.dateTime,
         maximum: _timeSeries.last.dateTime,
       ),
@@ -302,22 +307,42 @@ class _TimelineState extends State<Timeline> {
     );
   }
 
-  DateTimeIntervalType _getCurrentXIntervalEnum() {
-    switch (_chosenTimeInterval.intervalType) {
+  // DateTimeIntervalType _getCurrentXIntervalEnum() {
+  //   switch (_currentTimeInterval.intervalType) {
+  //     case YearModel:
+  //       return DateTimeIntervalType.years;
+
+  //     case MonthModel:
+  //       return DateTimeIntervalType.months;
+
+  //     case DayModel:
+  //       return DateTimeIntervalType.days;
+
+  //     case HourModel:
+  //       return DateTimeIntervalType.hours;
+
+  //     default:
+  //       return DateTimeIntervalType.auto;
+  //   }
+  // }
+
+  void _setCurrentXIntervalEnum() {
+    var currentFirst = _timeSeries.first;
+    switch (currentFirst.runtimeType) {
       case YearModel:
-        return DateTimeIntervalType.years;
-
+        _currentTimeInterval = DateTimeIntervalType.years;
+        break;
       case MonthModel:
-        return DateTimeIntervalType.months;
-
+        _currentTimeInterval = DateTimeIntervalType.months;
+        break;
       case DayModel:
-        return DateTimeIntervalType.days;
-
+        _currentTimeInterval = DateTimeIntervalType.days;
+        break;
       case HourModel:
-        return DateTimeIntervalType.hours;
-
+        _currentTimeInterval = DateTimeIntervalType.hours;
+        break;
       default:
-        return DateTimeIntervalType.auto;
+        _currentTimeInterval = DateTimeIntervalType.auto;
     }
   }
 
