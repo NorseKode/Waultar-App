@@ -15,7 +15,7 @@ class _SearchState extends State<Search> {
   final _controller = TextEditingController();
   final _textSearchService = TextSearchService();
   final _scrollController = ScrollController();
-  
+
   var _chosenCategories = <CategoryEnum, bool>{};
   var _contents = <UIModel>[];
 
@@ -24,12 +24,15 @@ class _SearchState extends State<Search> {
 
   _serach(bool isAppend) {
     setState(() {
-      var categories = _chosenCategories.entries.where((element) => element.value).map((e) => e.key).toList();
+      var categories = _chosenCategories.entries
+          .where((element) => element.value)
+          .map((e) => e.key)
+          .toList();
       isAppend
-          ? _contents +=
-              _textSearchService.search(categories, _controller.text, _offset, _limit)
-          : _contents =
-              _textSearchService.search(categories, _controller.text, _offset, _limit);
+          ? _contents += _textSearchService.search(
+              categories, _controller.text, _offset, _limit)
+          : _contents = _textSearchService.search(
+              categories, _controller.text, _offset, _limit);
     });
   }
 
