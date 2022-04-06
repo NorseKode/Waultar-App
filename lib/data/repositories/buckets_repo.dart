@@ -645,6 +645,7 @@ class BucketsRepository extends IBucketsRepository {
     for (var year in years) {
       await year.updateSentiment();
     }
+    yearBox.putMany(years);
   }
 
   static Future _calculateSentimentInIsolateMonths(
@@ -657,6 +658,7 @@ class BucketsRepository extends IBucketsRepository {
     for (var month in months) {
       await month.updateSentiment();
     }
+    monthBox.putMany(months);
   }
 
   static Future _calculateSentimentInIsolateDays(
@@ -669,6 +671,7 @@ class BucketsRepository extends IBucketsRepository {
     for (var day in days) {
       await day.updateSentiment();
     }
+    dayBox.putMany(days);
   }
 
   static Future _calculateSentimentInIsolateHours(
@@ -681,6 +684,7 @@ class BucketsRepository extends IBucketsRepository {
     for (var hour in hours) {
       await hour.updateSentiment();
     }
+    hourBox.putMany(hours);
   }
 
   @override
