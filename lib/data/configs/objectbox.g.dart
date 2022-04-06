@@ -240,7 +240,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(5, 3400447797065390625),
       name: 'DayBucket',
-      lastPropertyId: const IdUid(10, 2679177240119806243),
+      lastPropertyId: const IdUid(11, 7101062850470252740),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -295,6 +295,11 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(10, 2679177240119806243),
             name: 'dbServiceMap',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(11, 7101062850470252740),
+            name: 'dbCategorySentimentAverage',
             type: 9,
             flags: 0)
       ],
@@ -360,7 +365,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(7, 7472009443197869544),
       name: 'HourBucket',
-      lastPropertyId: const IdUid(9, 5385935575769146287),
+      lastPropertyId: const IdUid(10, 5602002167842252285),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -410,6 +415,11 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(9, 5385935575769146287),
             name: 'dbServiceMap',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(10, 5602002167842252285),
+            name: 'dbCategorySentimentAverage',
             type: 9,
             flags: 0)
       ],
@@ -519,7 +529,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(10, 1279055715132364075),
       name: 'MonthBucket',
-      lastPropertyId: const IdUid(9, 1862250458887837441),
+      lastPropertyId: const IdUid(10, 5342661506874610366),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -569,6 +579,11 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(9, 1862250458887837441),
             name: 'dbServiceMap',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(10, 5342661506874610366),
+            name: 'dbCategorySentimentAverage',
             type: 9,
             flags: 0)
       ],
@@ -706,7 +721,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(14, 7538433076249109789),
       name: 'YearBucket',
-      lastPropertyId: const IdUid(8, 492326733171450953),
+      lastPropertyId: const IdUid(9, 1717671496265545641),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -750,6 +765,11 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(8, 492326733171450953),
             name: 'dbServiceMap',
+            type: 9,
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(9, 1717671496265545641),
+            name: 'dbCategorySentimentAverage',
             type: 9,
             flags: 0)
       ],
@@ -1061,7 +1081,9 @@ ModelDefinition getObjectBoxModel() {
         objectToFB: (DayBucket object, fb.Builder fbb) {
           final dbCategoryMapOffset = fbb.writeString(object.dbCategoryMap);
           final dbServiceMapOffset = fbb.writeString(object.dbServiceMap);
-          fbb.startTable(11);
+          final dbCategorySentimentAverageOffset =
+              fbb.writeString(object.dbCategorySentimentAverage);
+          fbb.startTable(12);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.day);
           fbb.addInt64(2, object.weekDay);
@@ -1072,6 +1094,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addInt64(7, object.dbDateTime);
           fbb.addOffset(8, dbCategoryMapOffset);
           fbb.addOffset(9, dbServiceMapOffset);
+          fbb.addOffset(10, dbCategorySentimentAverageOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1095,7 +1118,10 @@ ModelDefinition getObjectBoxModel() {
             ..dbCategoryMap = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 20, '')
             ..dbServiceMap = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 22, '');
+                .vTableGet(buffer, rootOffset, 22, '')
+            ..dbCategorySentimentAverage =
+                const fb.StringReader(asciiOptimization: true)
+                    .vTableGet(buffer, rootOffset, 24, '');
           object.month.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
           object.month.attach(store);
@@ -1169,7 +1195,9 @@ ModelDefinition getObjectBoxModel() {
         objectToFB: (HourBucket object, fb.Builder fbb) {
           final dbCategoryMapOffset = fbb.writeString(object.dbCategoryMap);
           final dbServiceMapOffset = fbb.writeString(object.dbServiceMap);
-          fbb.startTable(10);
+          final dbCategorySentimentAverageOffset =
+              fbb.writeString(object.dbCategorySentimentAverage);
+          fbb.startTable(11);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.hour);
           fbb.addInt64(2, object.dateTime.microsecondsSinceEpoch * 1000);
@@ -1179,6 +1207,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addInt64(6, object.dbDateTime);
           fbb.addOffset(7, dbCategoryMapOffset);
           fbb.addOffset(8, dbServiceMapOffset);
+          fbb.addOffset(9, dbCategorySentimentAverageOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1200,7 +1229,10 @@ ModelDefinition getObjectBoxModel() {
             ..dbCategoryMap = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 18, '')
             ..dbServiceMap = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 20, '');
+                .vTableGet(buffer, rootOffset, 20, '')
+            ..dbCategorySentimentAverage =
+                const fb.StringReader(asciiOptimization: true)
+                    .vTableGet(buffer, rootOffset, 22, '');
           object.day.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
           object.day.attach(store);
@@ -1326,7 +1358,9 @@ ModelDefinition getObjectBoxModel() {
         objectToFB: (MonthBucket object, fb.Builder fbb) {
           final dbCategoryMapOffset = fbb.writeString(object.dbCategoryMap);
           final dbServiceMapOffset = fbb.writeString(object.dbServiceMap);
-          fbb.startTable(10);
+          final dbCategorySentimentAverageOffset =
+              fbb.writeString(object.dbCategorySentimentAverage);
+          fbb.startTable(11);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.month);
           fbb.addInt64(2, object.dateTime.microsecondsSinceEpoch * 1000);
@@ -1336,6 +1370,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addInt64(6, object.dbDateTime);
           fbb.addOffset(7, dbCategoryMapOffset);
           fbb.addOffset(8, dbServiceMapOffset);
+          fbb.addOffset(9, dbCategorySentimentAverageOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1357,7 +1392,10 @@ ModelDefinition getObjectBoxModel() {
             ..dbCategoryMap = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 18, '')
             ..dbServiceMap = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 20, '');
+                .vTableGet(buffer, rootOffset, 20, '')
+            ..dbCategorySentimentAverage =
+                const fb.StringReader(asciiOptimization: true)
+                    .vTableGet(buffer, rootOffset, 22, '');
           object.year.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
           object.year.attach(store);
@@ -1521,7 +1559,9 @@ ModelDefinition getObjectBoxModel() {
         objectToFB: (YearBucket object, fb.Builder fbb) {
           final dbCategoryMapOffset = fbb.writeString(object.dbCategoryMap);
           final dbServiceMapOffset = fbb.writeString(object.dbServiceMap);
-          fbb.startTable(9);
+          final dbCategorySentimentAverageOffset =
+              fbb.writeString(object.dbCategorySentimentAverage);
+          fbb.startTable(10);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.year);
           fbb.addInt64(2, object.dateTime.microsecondsSinceEpoch * 1000);
@@ -1530,6 +1570,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addInt64(5, object.dbDateTime);
           fbb.addOffset(6, dbCategoryMapOffset);
           fbb.addOffset(7, dbServiceMapOffset);
+          fbb.addOffset(8, dbCategorySentimentAverageOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1551,7 +1592,10 @@ ModelDefinition getObjectBoxModel() {
             ..dbCategoryMap = const fb.StringReader(asciiOptimization: true)
                 .vTableGet(buffer, rootOffset, 16, '')
             ..dbServiceMap = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 18, '');
+                .vTableGet(buffer, rootOffset, 18, '')
+            ..dbCategorySentimentAverage =
+                const fb.StringReader(asciiOptimization: true)
+                    .vTableGet(buffer, rootOffset, 20, '');
           object.profile.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
           object.profile.attach(store);
@@ -1770,6 +1814,10 @@ class DayBucket_ {
   static final dbServiceMap =
       QueryStringProperty<DayBucket>(_entities[4].properties[9]);
 
+  /// see [DayBucket.dbCategorySentimentAverage]
+  static final dbCategorySentimentAverage =
+      QueryStringProperty<DayBucket>(_entities[4].properties[10]);
+
   /// see [DayBucket.hours]
   static final hours =
       QueryRelationToMany<DayBucket, HourBucket>(_entities[4].relations[0]);
@@ -1847,6 +1895,10 @@ class HourBucket_ {
   /// see [HourBucket.dbServiceMap]
   static final dbServiceMap =
       QueryStringProperty<HourBucket>(_entities[6].properties[8]);
+
+  /// see [HourBucket.dbCategorySentimentAverage]
+  static final dbCategorySentimentAverage =
+      QueryStringProperty<HourBucket>(_entities[6].properties[9]);
 
   /// see [HourBucket.dataPoints]
   static final dataPoints =
@@ -1952,6 +2004,10 @@ class MonthBucket_ {
   /// see [MonthBucket.dbServiceMap]
   static final dbServiceMap =
       QueryStringProperty<MonthBucket>(_entities[9].properties[8]);
+
+  /// see [MonthBucket.dbCategorySentimentAverage]
+  static final dbCategorySentimentAverage =
+      QueryStringProperty<MonthBucket>(_entities[9].properties[9]);
 
   /// see [MonthBucket.days]
   static final days =
@@ -2069,6 +2125,10 @@ class YearBucket_ {
   /// see [YearBucket.dbServiceMap]
   static final dbServiceMap =
       QueryStringProperty<YearBucket>(_entities[13].properties[7]);
+
+  /// see [YearBucket.dbCategorySentimentAverage]
+  static final dbCategorySentimentAverage =
+      QueryStringProperty<YearBucket>(_entities[13].properties[8]);
 
   /// see [YearBucket.months]
   static final months =

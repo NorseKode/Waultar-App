@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:objectbox/objectbox.dart';
+import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/core/helpers/json_helper.dart';
 import 'package:waultar/data/entities/timebuckets/day_bucket.dart';
@@ -13,6 +14,8 @@ class MonthBucket {
   @Property(type: PropertyType.dateNano)
   DateTime dateTime;
   int total;
+
+  late Map<CategoryEnum, double> categorySentimentAverage;
 
   late Map<int, int> categoryMap;
   late Map<int, int> profileMap;
@@ -29,6 +32,7 @@ class MonthBucket {
   }) {
     categoryMap = {};
     profileMap = {};
+    categorySentimentAverage = {};
   }
 
   int get dbDateTime => dateTime.microsecondsSinceEpoch;
@@ -36,16 +40,25 @@ class MonthBucket {
     dateTime = DateTime.fromMicrosecondsSinceEpoch(value, isUtc: false);
   }
 
-  String get dbCategoryMap => jsonEncode(categoryMap.map((key, value) => MapEntry('$key', value)));
-  String get dbServiceMap => jsonEncode(profileMap.map((key, value) => MapEntry('$key', value)));
+  String get dbCategorySentimentAverage => jsonEncode(categorySentimentAverage
+      .map((key, value) => MapEntry('${key.index}', value)));
+  set dbCategorySentimentAverage(String json) {
+    categorySentimentAverage = Map.from(jsonDecode(json).map((key, value) =>
+        MapEntry(CategoryEnum.values[int.parse(key)], value as double)));
+  }
+
+  String get dbCategoryMap =>
+      jsonEncode(categoryMap.map((key, value) => MapEntry('$key', value)));
+  String get dbServiceMap =>
+      jsonEncode(profileMap.map((key, value) => MapEntry('$key', value)));
   set dbCategoryMap(String json) {
-    categoryMap =
-        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
+    categoryMap = Map.from(jsonDecode(json)
+        .map((key, value) => MapEntry(int.parse(key), value as int)));
   }
 
   set dbServiceMap(String json) {
-    profileMap =
-        Map.from(jsonDecode(json).map((key, value) => MapEntry(int.parse(key), value as int)));
+    profileMap = Map.from(jsonDecode(json)
+        .map((key, value) => MapEntry(int.parse(key), value as int)));
   }
 
   void updateCounts(int categoryId, int serviceId) {
