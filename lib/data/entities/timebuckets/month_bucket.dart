@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'package:objectbox/objectbox.dart';
+import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/core/helpers/json_helper.dart';
+import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/entities/timebuckets/day_bucket.dart';
 import 'package:waultar/data/entities/timebuckets/year_bucket.dart';
 
@@ -22,6 +24,7 @@ class MonthBucket {
 
   final year = ToOne<YearBucket>();
   final days = ToMany<DayBucket>();
+  final dataPoints = ToMany<DataPoint>();
   final profile = ToOne<ProfileDocument>();
 
   MonthBucket({
@@ -71,6 +74,33 @@ class MonthBucket {
       return 1;
     });
     total = total + 1;
+  }
+
+  Future updateSentiment() async {
+    var stream = Stream.fromIterable(
+        dataPoints.where((datapoint) => datapoint.sentimentScore != null));
+
+    Map<CategoryEnum, Tuple2<int, double>> _tempSentimentMap = {};
+
+    await for (final datapoint in stream) {
+      var catEnum = datapoint.category.target!.category;
+
+      _tempSentimentMap.update(catEnum, (value) {
+        var updated = value
+            .withItem1(value.item1 + 1)
+            .withItem2(value.item2 + datapoint.sentimentScore!);
+        return updated;
+      }, ifAbsent: () {
+        return Tuple2(1, datapoint.sentimentScore!);
+      });
+    }
+
+    for (var entry in _tempSentimentMap.entries) {
+      categorySentimentAverage
+          .addAll({entry.key: entry.value.item2 / entry.value.item1});
+    }
+
+    _tempSentimentMap.clear();
   }
 
   Map<String, dynamic> toMap() {

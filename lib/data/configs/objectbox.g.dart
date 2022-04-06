@@ -591,7 +591,11 @@ final _entities = <ModelEntity>[
         ModelRelation(
             id: const IdUid(8, 3907346699493606433),
             name: 'days',
-            targetId: const IdUid(5, 3400447797065390625))
+            targetId: const IdUid(5, 3400447797065390625)),
+        ModelRelation(
+            id: const IdUid(11, 5620472904408501199),
+            name: 'dataPoints',
+            targetId: const IdUid(3, 8467492853650059893))
       ],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
@@ -777,7 +781,11 @@ final _entities = <ModelEntity>[
         ModelRelation(
             id: const IdUid(10, 8258379157713928626),
             name: 'months',
-            targetId: const IdUid(10, 1279055715132364075))
+            targetId: const IdUid(10, 1279055715132364075)),
+        ModelRelation(
+            id: const IdUid(12, 1753973278279751880),
+            name: 'dataPoints',
+            targetId: const IdUid(3, 8467492853650059893))
       ],
       backlinks: <ModelBacklink>[]),
   ModelEntity(
@@ -835,7 +843,7 @@ ModelDefinition getObjectBoxModel() {
       entities: _entities,
       lastEntityId: const IdUid(15, 5531187511291422360),
       lastIndexId: const IdUid(28, 2627664810646818872),
-      lastRelationId: const IdUid(10, 8258379157713928626),
+      lastRelationId: const IdUid(12, 1753973278279751880),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [],
@@ -1349,8 +1357,10 @@ ModelDefinition getObjectBoxModel() {
     MonthBucket: EntityDefinition<MonthBucket>(
         model: _entities[9],
         toOneRelations: (MonthBucket object) => [object.year, object.profile],
-        toManyRelations: (MonthBucket object) =>
-            {RelInfo<MonthBucket>.toMany(8, object.id): object.days},
+        toManyRelations: (MonthBucket object) => {
+              RelInfo<MonthBucket>.toMany(8, object.id): object.days,
+              RelInfo<MonthBucket>.toMany(11, object.id): object.dataPoints
+            },
         getId: (MonthBucket object) => object.id,
         setId: (MonthBucket object, int id) {
           object.id = id;
@@ -1406,6 +1416,11 @@ ModelDefinition getObjectBoxModel() {
               object.days,
               store,
               RelInfo<MonthBucket>.toMany(8, object.id),
+              store.box<MonthBucket>());
+          InternalToManyAccess.setRelInfo(
+              object.dataPoints,
+              store,
+              RelInfo<MonthBucket>.toMany(11, object.id),
               store.box<MonthBucket>());
           return object;
         }),
@@ -1550,8 +1565,10 @@ ModelDefinition getObjectBoxModel() {
     YearBucket: EntityDefinition<YearBucket>(
         model: _entities[13],
         toOneRelations: (YearBucket object) => [object.profile],
-        toManyRelations: (YearBucket object) =>
-            {RelInfo<YearBucket>.toMany(10, object.id): object.months},
+        toManyRelations: (YearBucket object) => {
+              RelInfo<YearBucket>.toMany(10, object.id): object.months,
+              RelInfo<YearBucket>.toMany(12, object.id): object.dataPoints
+            },
         getId: (YearBucket object) => object.id,
         setId: (YearBucket object, int id) {
           object.id = id;
@@ -1603,6 +1620,11 @@ ModelDefinition getObjectBoxModel() {
               object.months,
               store,
               RelInfo<YearBucket>.toMany(10, object.id),
+              store.box<YearBucket>());
+          InternalToManyAccess.setRelInfo(
+              object.dataPoints,
+              store,
+              RelInfo<YearBucket>.toMany(12, object.id),
               store.box<YearBucket>());
           return object;
         }),
@@ -2012,6 +2034,10 @@ class MonthBucket_ {
   /// see [MonthBucket.days]
   static final days =
       QueryRelationToMany<MonthBucket, DayBucket>(_entities[9].relations[0]);
+
+  /// see [MonthBucket.dataPoints]
+  static final dataPoints =
+      QueryRelationToMany<MonthBucket, DataPoint>(_entities[9].relations[1]);
 }
 
 /// [ProfileDocument] entity fields to define ObjectBox queries.
@@ -2133,6 +2159,10 @@ class YearBucket_ {
   /// see [YearBucket.months]
   static final months =
       QueryRelationToMany<YearBucket, MonthBucket>(_entities[13].relations[0]);
+
+  /// see [YearBucket.dataPoints]
+  static final dataPoints =
+      QueryRelationToMany<YearBucket, DataPoint>(_entities[13].relations[1]);
 }
 
 /// [WeekDayAverageComputed] entity fields to define ObjectBox queries.

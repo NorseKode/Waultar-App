@@ -324,29 +324,17 @@ class BucketsRepository extends IBucketsRepository {
   }
 
   @override
-  Future createBuckets(DateTime dataPointsCreatedAfter, ProfileDocument profile) async {
+  Future createBuckets(
+      DateTime dataPointsCreatedAfter, ProfileDocument profile) async {
     var createdSince = dataPointsCreatedAfter.microsecondsSinceEpoch;
 
     var years = _yearBox.getAll();
-
-    // TODO
-    /*
-      - create the avg slots for each category
-        - should be per day
-        - and also hour intervals
-
-      - the output should be able to show avg total per category with respect to weekday
-      - the output should be able to show avg total per category with respect to morning, midday, evening, night 
-     
-      - List<Tuple3<weekDay, List<DateTime(year, month, day>, total>>
-        - for each weekDay key, divide the total value with the length of the list
-     */
 
     // streams all datapoints that have been created after createdSince
     var toBeProcessedLink = _context.store
         .box<DataPoint>()
         .query(DataPoint_.dbCreatedAt.greaterThan(createdSince))
-        ..link(DataPoint_.profile, ProfileDocument_.id.equals(profile.id));
+      ..link(DataPoint_.profile, ProfileDocument_.id.equals(profile.id));
     var toBeProcessedQuery = toBeProcessedLink.build();
 
     List<WeekDayAverageComputed> avgList = [];
@@ -375,7 +363,6 @@ class BucketsRepository extends IBucketsRepository {
           int weekDay = timestamp.weekday;
 
           var avgDay = avgList.singleWhere((avg) => avg.weekDay == weekDay);
-          // avgDay.profile.target = profile;
           avgDay.updateTemp(dataPoint, DateTime(year, month, day));
 
           bool yearExists = years.any((element) =>
@@ -384,6 +371,7 @@ class BucketsRepository extends IBucketsRepository {
             var yearBucket =
                 years.singleWhere((element) => element.year == year);
             yearBucket.updateCounts(categoryId, profileId);
+            yearBucket.dataPoints.add(dataPoint);
 
             bool monthExists = yearBucket.months.any((element) =>
                 element.month == month &&
@@ -393,6 +381,7 @@ class BucketsRepository extends IBucketsRepository {
               var monthBucket = yearBucket.months
                   .singleWhere((element) => element.month == month);
               monthBucket.updateCounts(categoryId, profileId);
+              monthBucket.dataPoints.add(dataPoint);
 
               bool dayExists = monthBucket.days.any((element) =>
                   element.day == day &&
@@ -459,6 +448,7 @@ class BucketsRepository extends IBucketsRepository {
               monthBucket.categoryMap = {categoryId: 1};
               monthBucket.profileMap = {profileId: 1};
               monthBucket.profile.target = profile;
+              monthBucket.dataPoints.add(dataPoint);
 
               var dayBucket = DayBucket(
                 day: day,
@@ -497,6 +487,7 @@ class BucketsRepository extends IBucketsRepository {
             yearBucket.categoryMap = {categoryId: 1};
             yearBucket.profileMap = {profileId: 1};
             yearBucket.profile.target = profile;
+            yearBucket.dataPoints.add(dataPoint);
 
             var monthBucket = MonthBucket(
               month: month,
@@ -506,6 +497,7 @@ class BucketsRepository extends IBucketsRepository {
             monthBucket.categoryMap = {categoryId: 1};
             monthBucket.profileMap = {profileId: 1};
             monthBucket.profile.target = profile;
+            monthBucket.dataPoints.add(dataPoint);
 
             var dayBucket = DayBucket(
               day: day,
@@ -614,6 +606,82 @@ class BucketsRepository extends IBucketsRepository {
   }
 
   ProfileDocument _getProfile(int id) => _profileBox.get(id)!;
+
+  @override
+  Future updateForSentiments(ProfileDocument profile) async {
+    await _context.store.runIsolated(
+      TxMode.write,
+      (store, profileId) => _calculateSentimentInIsolateYears(store, profileId),
+      profile.id,
+    );
+
+    await _context.store.runIsolated(
+      TxMode.write,
+      (store, profileId) =>
+          _calculateSentimentInIsolateMonths(store, profileId),
+      profile.id,
+    );
+
+    await _context.store.runIsolated(
+      TxMode.write,
+      (store, profileId) => _calculateSentimentInIsolateDays(store, profileId),
+      profile.id,
+    );
+
+    await _context.store.runIsolated(
+      TxMode.write,
+      (store, profileId) => _calculateSentimentInIsolateHours(store, profileId),
+      profile.id,
+    );
+  }
+
+  static Future _calculateSentimentInIsolateYears(
+      Store store, dynamic profileId) async {
+    var yearBox = store.box<YearBucket>();
+    var profile = profileId as int;
+    var builder = yearBox.query()
+      ..link(YearBucket_.profile, ProfileDocument_.id.equals(profile));
+    var years = builder.build().find();
+    for (var year in years) {
+      await year.updateSentiment();
+    }
+  }
+
+  static Future _calculateSentimentInIsolateMonths(
+      Store store, dynamic profileId) async {
+    var monthBox = store.box<MonthBucket>();
+    var profile = profileId as int;
+    var builder = monthBox.query()
+      ..link(MonthBucket_.profile, ProfileDocument_.id.equals(profile));
+    var months = builder.build().find();
+    for (var month in months) {
+      await month.updateSentiment();
+    }
+  }
+
+  static Future _calculateSentimentInIsolateDays(
+      Store store, dynamic profileId) async {
+    var dayBox = store.box<DayBucket>();
+    var profile = profileId as int;
+    var builder = dayBox.query()
+      ..link(DayBucket_.profile, ProfileDocument_.id.equals(profile));
+    var days = builder.build().find();
+    for (var day in days) {
+      await day.updateSentiment();
+    }
+  }
+
+  static Future _calculateSentimentInIsolateHours(
+      Store store, dynamic profileId) async {
+    var hourBox = store.box<HourBucket>();
+    var profile = profileId as int;
+    var builder = hourBox.query()
+      ..link(HourBucket_.profile, ProfileDocument_.id.equals(profile));
+    var hours = builder.build().find();
+    for (var hour in hours) {
+      await hour.updateSentiment();
+    }
+  }
 
   @override
   List<DayBucket> getAllDayBuckets() {
