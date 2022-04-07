@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/configs/globals/category_enums.dart';
 
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
@@ -23,9 +24,9 @@ class _SentimentWidgetState extends State<SentimentWidget> {
   late List<ProfileDocument> profiles;
 
   List<DataCategory> chosenCategories = [];
-  int connotated = 0;
   int timeEstimateSeconds = 0;
   bool analyzing = false;
+  String message = "Analyzing ...";
 
   @override
   Widget build(BuildContext context) {
@@ -35,30 +36,33 @@ class _SentimentWidgetState extends State<SentimentWidget> {
     return DefaultWidget(
         constraints: const BoxConstraints(maxWidth: 300),
         title: "Sentiment Analysis",
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Analyze the invoked sentiment in your data.",
-            ),
-            //const SizedBox(height: 10),
-            const Text(
-              "Choose what data to run analysis on :",
-            ),
-            const SizedBox(height: 10),
-            SingleChildScrollView(child: Column(children: _profileList())),
-            const SizedBox(height: 10),
-            Divider(
-                height: 2,
-                thickness: 2,
-                color: themeProvider.themeMode().tonedColor),
+        child: analyzing
+            ? Column(
+                children: [Text(message), const CircularProgressIndicator()],
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Analyze the invoked sentiment in your data.",
+                  ),
+                  //const SizedBox(height: 10),
+                  const Text(
+                    "Choose what data to run analysis on :",
+                  ),
+                  const SizedBox(height: 10),
+                  SingleChildScrollView(
+                      child: Column(children: _profileList())),
+                  const SizedBox(height: 10),
+                  Divider(
+                      height: 2,
+                      thickness: 2,
+                      color: themeProvider.themeMode().tonedColor),
 
-            const SizedBox(height: 10),
-            _analyzeBar(),
-
-            connotated != 0 ? Text("done: $connotated") : Container(),
-          ],
-        ));
+                  const SizedBox(height: 10),
+                  _analyzeBar(),
+                ],
+              ));
   }
 
   Widget _analyzeBar() {
@@ -70,23 +74,31 @@ class _SentimentWidgetState extends State<SentimentWidget> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Text("Time estimate",
+            const Text("Time estimate",
                 style: TextStyle(fontSize: 9, fontWeight: FontWeight.w400)),
-            Text("$timeEstimate", style: TextStyle(fontSize: 12))
+            Text(timeEstimate, style: const TextStyle(fontSize: 12))
           ],
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         DefaultButton(
             text: "          Analyze          ",
             onPressed: profiles.isEmpty
                 ? null
                 : () {
-                    connotated = sentimentService
-                        .connotateTextsFromCategory(chosenCategories);
-                    setState(() => {});
+                    analyzing = true;
+                    sentimentService.connotateOwnTextsFromCategory(
+                        chosenCategories, _sentimentAnalyzingProgress);
+                    setState(() {});
                   })
       ],
     ));
+  }
+
+  _sentimentAnalyzingProgress(String message, bool isDone) {
+    analyzing = !isDone;
+    if (isDone) {
+      setState(() {});
+    }
   }
 
   String formatTime(int seconds) {
@@ -95,9 +107,9 @@ class _SentimentWidgetState extends State<SentimentWidget> {
 
   String _timeEstimateOnCat() {
     int timeEstimate = 0;
-    chosenCategories.forEach((element) {
+    for (var element in chosenCategories) {
       timeEstimate += (element.count * 0.0005).ceil();
-    });
+    }
     return formatTime(timeEstimate);
   }
 
@@ -115,9 +127,9 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                     children: [
                       Text(
                         profiles[index].service.target!.serviceName,
-                        style: TextStyle(fontWeight: FontWeight.w500),
+                        style: const TextStyle(fontWeight: FontWeight.w500),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       _categoryList(profiles[index]),
                     ],
                   ),
@@ -126,47 +138,57 @@ class _SentimentWidgetState extends State<SentimentWidget> {
 
   Widget _categoryList(ProfileDocument profile) {
     return Container(
-      constraints: BoxConstraints(maxHeight: 150),
+      constraints: const BoxConstraints(maxHeight: 150),
       child: SingleChildScrollView(
         child: Column(
             children: List.generate(
                 profile.categories.length,
-                (index) => Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Checkbox(
-                                activeColor:
-                                    themeProvider.themeMode().themeColor,
-                                value: chosenCategories
-                                    .where((element) =>
-                                        element.id ==
-                                        profile.categories[index].id)
-                                    .toList()
-                                    .isNotEmpty,
-                                onChanged: (value) {
-                                  !value!
-                                      ? chosenCategories.remove(chosenCategories
-                                          .firstWhere((element) =>
-                                              element.id ==
-                                              profile.categories[index].id))
-                                      : chosenCategories
-                                          .add(profile.categories[index]);
+                (index) => profile.categories[index].category ==
+                            CategoryEnum.messaging ||
+                        profile.categories[index].category ==
+                            CategoryEnum.posts ||
+                        profile.categories[index].category ==
+                            CategoryEnum.comments
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Checkbox(
+                                  activeColor:
+                                      themeProvider.themeMode().themeColor,
+                                  value: chosenCategories
+                                      .where((element) =>
+                                          element.id ==
+                                          profile.categories[index].id)
+                                      .toList()
+                                      .isNotEmpty,
+                                  onChanged: (value) {
+                                    !value!
+                                        ? chosenCategories.remove(
+                                            chosenCategories
+                                                .firstWhere((element) =>
+                                                    element.id ==
+                                                    profile
+                                                        .categories[index].id))
+                                        : chosenCategories
+                                            .add(profile.categories[index]);
 
-                                  setState(
-                                    () {},
-                                  );
-                                }),
-                            Text(profile.categories[index].category.name,
-                                style: TextStyle(fontSize: 12)),
-                          ],
-                        ),
-                        Text(profile.categories[index].count.toString())
-                      ],
-                    ))),
+                                    setState(
+                                      () {},
+                                    );
+                                  }),
+                              Text(profile.categories[index].category.name,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                  )),
+                            ],
+                          ),
+                          Text(profile.categories[index].count.toString())
+                        ],
+                      )
+                    : Container())),
       ),
     );
-
   }
 }

@@ -4,6 +4,8 @@ import 'package:path/path.dart' as dart_path;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:translator/translator.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_translator_service.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repository.dart';
@@ -28,6 +30,7 @@ import 'package:waultar/domain/services/appsettings_service.dart';
 import 'package:waultar/domain/services/collections_service.dart';
 import 'package:waultar/domain/services/parser_service.dart';
 import 'package:waultar/domain/services/timeline_service.dart';
+import 'package:waultar/domain/services/translator_service.dart';
 import 'configs/globals/app_logger.dart';
 import 'configs/globals/os_enum.dart';
 
@@ -51,17 +54,31 @@ Future<void> setupServices({
 }) async {
   await initApplicationPaths(testing: testing, waultarPath: waultarPath)
       .whenComplete(() async {
-    locator.registerSingleton<String>(_waultarPath,
-        instanceName: 'waultar_root_directory');
-    locator.registerSingleton<String>(_dbFolderPath, instanceName: 'db_folder');
-    locator.registerSingleton<String>(_extractsFolderPath,
-        instanceName: 'extracts_folder');
-    locator.registerSingleton<String>(_logFolderPath,
-        instanceName: 'log_folder');
-    locator.registerSingleton<String>(_performanceFolderPath,
-        instanceName: 'performance_folder');
-    locator.registerSingleton<String>(_pathToAIFolder,
-        instanceName: 'ai_folder');
+    
+    locator.registerSingleton<String>(
+      _waultarPath,
+      instanceName: 'waultar_root_directory',
+    );
+    locator.registerSingleton<String>(
+      _dbFolderPath,
+      instanceName: 'db_folder',
+    );
+    locator.registerSingleton<String>(
+      _extractsFolderPath,
+      instanceName: 'extracts_folder',
+    );
+    locator.registerSingleton<String>(
+      _logFolderPath,
+      instanceName: 'log_folder',
+    );
+    locator.registerSingleton<String>(
+      _performanceFolderPath,
+      instanceName: 'performance_folder',
+    );
+    locator.registerSingleton<String>(
+      _pathToAIFolder,
+      instanceName: 'ai_folder',
+    );
 
     os = detectPlatform();
     locator.registerSingleton<OS>(os, instanceName: 'platform');
@@ -96,14 +113,21 @@ Future<void> setupServices({
     // each repo gets injected the context (to access the relevant store)
     // and the objectboxDirector to map from models to entities
     locator.registerSingleton<IAppSettingsRepository>(
-        AppSettingsRepository(_context),
-        instanceName: 'appSettingsRepo');
-    locator.registerSingleton<IServiceRepository>(ServiceRepository(_context),
-        instanceName: 'serviceRepo');
-    locator.registerSingleton<IUtilityRepository>(UtilityRepository(_context),
-        instanceName: 'utilsRepo');
-    locator.registerSingleton<ProfileRepository>(ProfileRepository(_context),
-        instanceName: 'profileRepo');
+      AppSettingsRepository(_context),
+      instanceName: 'appSettingsRepo',
+    );
+    locator.registerSingleton<IServiceRepository>(
+      ServiceRepository(_context),
+      instanceName: 'serviceRepo',
+    );
+    locator.registerSingleton<IUtilityRepository>(
+      UtilityRepository(_context),
+      instanceName: 'utilsRepo',
+    );
+    locator.registerSingleton<ProfileRepository>(
+      ProfileRepository(_context),
+      instanceName: 'profileRepo',
+    );
 
     final _bucketsRepo = BucketsRepository(_context);
     final _categoryRepo = DataCategoryRepository(_context);
@@ -151,6 +175,13 @@ Future<void> setupServices({
     locator.registerSingleton<IParserService>(
       ParserService(),
       instanceName: 'parserService',
+    );
+
+    // Translation
+    final _translator = GoogleTranslator();
+    locator.registerSingleton<ITranslatorService>(
+      GoogleTranslatorService(translator: _translator),
+      instanceName: 'translator',
     );
   });
 }

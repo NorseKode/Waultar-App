@@ -8,9 +8,9 @@ class TextSearchService extends ITextSearchService {
   final _dataRepo = locator.get<DataPointRepository>(instanceName: 'dataRepo');
 
   @override
-  List<UIModel> search(List<CategoryEnum> categories, String search, int offset, int limit) {
+  List<UIModel> search(
+      List<CategoryEnum> categories, String search, int offset, int limit) {
     var ids = categories.map((e) => e.index).toList();
     return _dataRepo.search(ids, search, offset, limit);
   }
-
 }

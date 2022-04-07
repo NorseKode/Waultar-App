@@ -8,7 +8,7 @@ import 'package:waultar/data/entities/timebuckets/year_bucket.dart';
 
 abstract class IBucketsRepository {
   Future createBuckets(DateTime dataPointsCreatedAfter, ProfileDocument profile);
-  Future updateForSentiments(ProfileDocument profile);
+  void updateForSentiments(ProfileDocument profile);
   List<YearBucket> getAllYears();
   YearBucket? getYear(int year);
   List<MonthBucket> getMonthsFromYearValue(int year);

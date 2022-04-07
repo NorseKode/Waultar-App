@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
-import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
-import 'package:waultar/data/entities/timebuckets/weekday_average_bucket.dart';
 import 'package:waultar/domain/services/timeline_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
@@ -30,7 +27,6 @@ class _TimelineState extends State<Timeline> {
   late ChartSeriesType _chosenChartType;
   late bool isLoadMoreView, isNeedToUpdateView, isDataUpdated;
   double? oldAxisVisibleMin, oldAxisVisibleMax;
-  // late GlobalKey<State> globalKey;
   // ChartSeriesController? _seriesController;
 
   @override
@@ -46,7 +42,6 @@ class _TimelineState extends State<Timeline> {
     isLoadMoreView = false;
     isNeedToUpdateView = false;
     isDataUpdated = true;
-    // globalKey = GlobalKey<State>();
   }
 
   @override

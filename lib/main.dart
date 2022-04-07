@@ -13,8 +13,6 @@ import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/core/ai/image_classifier.dart';
 import 'package:waultar/core/ai/image_classifier_mobilenetv3.dart';
-import 'package:waultar/core/ai/sentiment_classifier.dart';
-import 'package:waultar/core/ai/sentiment_classifier_textClassification.dart';
 import 'package:waultar/domain/services/ml_service.dart';
 import 'package:waultar/domain/services/sentiment_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
@@ -24,14 +22,11 @@ import 'startup.dart';
 
 void main() async {
   await setupServices();
-  locator.registerSingleton<ImageClassifier>(
-    ImageClassifierMobileNetV3(),
-    instanceName: 'imageClassifier',
-  );
-  locator.registerSingleton<SentimentClassifier>(
-    SentimentClassifierTextClassifierTFLite(),
-    instanceName: 'sentimentClassifier',
-  );
+  // locator.registerSingleton<ImageClassifier>(
+  //   ImageClassifierMobileNetV3(),
+  //   instanceName: 'imageClassifier',
+  // );
+
   locator.registerSingleton<IMLService>(
     MLService(),
     instanceName: 'mlService',

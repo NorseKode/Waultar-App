@@ -94,38 +94,70 @@ class DataPoint {
 
     searchTerms = sb.toString();
     createdAt = DateTime.now();
-    sentimentText = _getSentimentText(dataCategory, json, targetProfile);
-
-    // TODO - remove this when done implementing the chart
-    var catEnum = category.target!.category;
-    if (catEnum == CategoryEnum.posts ||
-        catEnum == CategoryEnum.comments ||
-        catEnum == CategoryEnum.messaging) {
-          sentimentScore = Random().nextDouble();
-        }
+    sentimentText = _getSentimentText(dataCategory, json, targetProfile, parentName);
   }
 
   String? _getSentimentText(
-      DataCategory dataCategory, dynamic json, ProfileDocument profile) {
+      DataCategory dataCategory, dynamic json, ProfileDocument profile, DataPointName parent) {
     switch (profile.service.target!.serviceName) {
       case "Facebook":
         switch (dataCategory.category) {
           case CategoryEnum.messaging:
-            if (json is Map<String, dynamic> && json.containsKey("content")) {
+            if (parent.name == "messages" &&
+                json is Map<String, dynamic> &&
+                json.containsKey("content")) {
               return json["content"];
             }
+            break;
+
+          case CategoryEnum.posts:
+            if (json is Map<String, dynamic> &&
+                json.containsKey("data") &&
+                json["data"] != null &&
+                (json["data"]).isNotEmpty &&
+                (json["data"]) is List<dynamic> &&
+                (json["data"]).first.containsKey("post")) {
+              return (json["data"]).first["post"];
+            }
+            break;
+
+          case CategoryEnum.comments:
+            if (json is Map<String, dynamic> && json.containsKey("comment")) {
+              return json["comment"];
+            }
+            break;
         }
         break;
 
       case "Instagram":
         switch (dataCategory.category) {
           case CategoryEnum.messaging:
-            if (json is Map<String, dynamic> && json.containsKey("content")) {
-              return json["content"];
+            if (parent.name == "messages" && json is Map<String, dynamic>) {
+              if (json.containsKey("content")) {
+                return json["content"];
+              }
             }
+            break;
+
+          case CategoryEnum.posts:
+            if (json is Map<String, dynamic> &&
+                json.containsKey("media") &&
+                json["media"].first.containsKey("title")) {
+              return (json["media"].first)["title"];
+            }
+            break;
+
+          case CategoryEnum.comments:
+            if (json is Map<String, dynamic> &&
+                json.containsKey("string_list_data") &&
+                json["string_list_data"].first.containsKey("value")) {
+              return ((json["string_list_data"]).first)["value"];
+            }
+            break;
         }
         break;
     }
+    return null;
   }
 
   void _createRelations(String basePathToMedia, StringBuffer sb) {
@@ -239,6 +271,7 @@ class DataPoint {
       'dataPointName': dataPointName.targetId,
       'stringName': stringName,
       'sentimentScore': sentimentScore,
+      'sentimentText': sentimentText ?? "",
       'category': category.targetId,
       'profile': profile.targetId,
       'images': images.map((element) => element.id).toList(),

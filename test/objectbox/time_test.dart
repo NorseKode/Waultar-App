@@ -111,7 +111,8 @@ Future<void> main() async {
     });
 
     test(' - updating sentiment in buckets via repo', () async {
-      await _bucketsRepo.updateForSentiments(testProfile);
+      _bucketsRepo.updateForSentiments(testProfile);
+      await Future.delayed(const Duration(seconds: 3));
       var years = _bucketsRepo.getAllYears();
 
       var year2022 = years.first; // <== 2022 - three posts

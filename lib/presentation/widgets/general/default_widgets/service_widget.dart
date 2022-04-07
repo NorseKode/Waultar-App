@@ -1,8 +1,6 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:waultar/core/models/misc/service_model.dart';
 import 'package:waultar/data/entities/misc/service_document.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 
@@ -34,9 +32,9 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                    color: Color(0xFF5D97FF),
+                    color: const Color(0xFF5D97FF),
                     borderRadius: BorderRadius.circular(5)),
-                child: Container(
+                child: SizedBox(
                   child: Container(),
                   width: 25,
                   height: 25,
@@ -53,9 +51,9 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                     flex: 3,
                     child: Container(
                       height: 5,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Color(0xFF5D97FF),
-                        borderRadius: const BorderRadius.only(
+                        borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10),
                           bottomLeft: Radius.circular(10),
                         ),
@@ -81,10 +79,10 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                 children: [
                   Text(
                     "${widget.service.totalDatapoints} data points",
-                    style: TextStyle(color: Color(0xFFABAAB8), fontSize: 12),
+                    style: const TextStyle(color: Color(0xFFABAAB8), fontSize: 12),
                   ),
                   Text("${_sizeOfService(widget.service)} GB",
-                      style: TextStyle(fontSize: 12))
+                      style: const TextStyle(fontSize: 12))
                 ],
               ),
             ],

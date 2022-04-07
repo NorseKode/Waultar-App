@@ -3,10 +3,12 @@ import 'package:waultar/assets/assets_helper.dart';
 import 'package:waultar/core/ai/sentiment_classifier.dart';
 
 class SentimentClassifierTextClassifierTFLite extends SentimentClassifier {
-  SentimentClassifierTextClassifierTFLite()
+  SentimentClassifierTextClassifierTFLite({String? aiFolderPath})
       : super(
-            modelPath: path_dart.join(AssetsHelper.getPathToAILib(),
+            modelPath: path_dart.join(
+                aiFolderPath ?? AssetsHelper.getPathToAILib(),
                 "text_classification.tflite"), //text_classifitcation.tflite
-            vocabPath: path_dart.join(AssetsHelper.getPathToAILib(),
+            vocabPath: path_dart.join(
+                aiFolderPath ?? AssetsHelper.getPathToAILib(),
                 "text_classification_vocab.txt"));
 }

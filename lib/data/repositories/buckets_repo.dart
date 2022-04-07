@@ -620,27 +620,27 @@ class BucketsRepository extends IBucketsRepository {
   ProfileDocument _getProfile(int id) => _profileBox.get(id)!;
 
   @override
-  Future updateForSentiments(ProfileDocument profile) async {
-    await _context.store.runIsolated(
+  void updateForSentiments(ProfileDocument profile) {
+    _context.store.runIsolated(
       TxMode.write,
       (store, profileId) => _calculateSentimentInIsolateYears(store, profileId),
       profile.id,
     );
 
-    await _context.store.runIsolated(
+    _context.store.runIsolated(
       TxMode.write,
       (store, profileId) =>
           _calculateSentimentInIsolateMonths(store, profileId),
       profile.id,
     );
 
-    await _context.store.runIsolated(
+    _context.store.runIsolated(
       TxMode.write,
       (store, profileId) => _calculateSentimentInIsolateDays(store, profileId),
       profile.id,
     );
 
-    await _context.store.runIsolated(
+    _context.store.runIsolated(
       TxMode.write,
       (store, profileId) => _calculateSentimentInIsolateHours(store, profileId),
       profile.id,
