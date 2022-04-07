@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:objectbox/objectbox.dart';
 import 'package:pretty_json/pretty_json.dart';
@@ -94,6 +95,14 @@ class DataPoint {
     searchTerms = sb.toString();
     createdAt = DateTime.now();
     sentimentText = _getSentimentText(dataCategory, json, targetProfile);
+
+    // TODO - remove this when done implementing the chart
+    var catEnum = category.target!.category;
+    if (catEnum == CategoryEnum.posts ||
+        catEnum == CategoryEnum.comments ||
+        catEnum == CategoryEnum.messaging) {
+          sentimentScore = Random().nextDouble();
+        }
   }
 
   String? _getSentimentText(
@@ -191,7 +200,8 @@ class DataPoint {
     sb.write("ID: $id \n");
 
     if (dataPointName.hasValue) {
-      sb.write("DataPoint relation target name: ${dataPointName.target!.name}\n");
+      sb.write(
+          "DataPoint relation target name: ${dataPointName.target!.name}\n");
     }
 
     sb.write("Data:\n");

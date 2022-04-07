@@ -111,13 +111,18 @@ class BucketsRepository extends IBucketsRepository {
           total: year.total,
           dateTime: year.dateTime,
           categoryCount: categoryTuples,
-          profileCount: profileTuples,
+          sentimentScores: year.categorySentimentAverage.entries
+              .map((e) => Tuple2(e.key, e.value))
+              .toList(),
         );
 
         listToReturn.add(model);
       }
     });
     listToReturn.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+    // for (var item in listToReturn) {
+    //   print(item.dateTime.toString());
+    // }
     return listToReturn;
   }
 
@@ -149,7 +154,9 @@ class BucketsRepository extends IBucketsRepository {
           total: month.total,
           dateTime: month.dateTime,
           categoryCount: categoryTuples,
-          profileCount: profileTuples,
+          sentimentScores: month.categorySentimentAverage.entries
+              .map((e) => Tuple2(e.key, e.value))
+              .toList(),
         );
 
         listToReturn.add(model);
@@ -188,14 +195,15 @@ class BucketsRepository extends IBucketsRepository {
           total: day.total,
           dateTime: day.dateTime,
           categoryCount: categoryTuples,
-          profileCount: profileTuples,
-          dataPoints: day.dataPoints.map((d) => d.getUIDTO).toList(),
+          sentimentScores: day.categorySentimentAverage.entries
+              .map((e) => Tuple2(e.key, e.value))
+              .toList(),
         );
         listToReturn.add(model);
       }
     });
 
-    listToReturn.sort((a, b) => a.timeValue.compareTo(b.timeValue));
+    listToReturn.sort((a, b) => a.dateTime.compareTo(b.dateTime));
     return listToReturn;
   }
 
@@ -228,14 +236,15 @@ class BucketsRepository extends IBucketsRepository {
           total: hour.total,
           dateTime: hour.dateTime,
           categoryCount: categoryTuples,
-          profileCount: profileTuples,
-          dataPoints: hour.dataPoints.map((d) => d.getUIDTO).toList(),
+          sentimentScores: hour.categorySentimentAverage.entries
+              .map((e) => Tuple2(e.key, e.value))
+              .toList(),
         );
         listToReturn.add(model);
       }
     });
 
-    listToReturn.sort((a, b) => a.timeValue.compareTo(b.timeValue));
+    listToReturn.sort((a, b) => a.dateTime.compareTo(b.dateTime));
     return listToReturn;
   }
 
@@ -273,8 +282,9 @@ class BucketsRepository extends IBucketsRepository {
           total: day.total,
           dateTime: day.dateTime,
           categoryCount: categoryTuples,
-          profileCount: profileTuples,
-          dataPoints: day.dataPoints.map((d) => d.getUIDTO).toList(),
+          sentimentScores: day.categorySentimentAverage.entries
+              .map((e) => Tuple2(e.key, e.value))
+              .toList(),
         );
         listToReturn.add(model);
       }
@@ -313,7 +323,9 @@ class BucketsRepository extends IBucketsRepository {
           total: month.total,
           dateTime: month.dateTime,
           categoryCount: categoryTuples,
-          profileCount: profileTuples,
+          sentimentScores: month.categorySentimentAverage.entries
+              .map((e) => Tuple2(e.key, e.value))
+              .toList(),
         );
         listToReturn.add(model);
       }
