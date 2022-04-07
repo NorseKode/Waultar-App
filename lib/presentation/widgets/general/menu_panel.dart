@@ -37,9 +37,9 @@ class _MenuPanelState extends State<MenuPanel> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   "Waultar App",
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontSize: 12, fontWeight: FontWeight.w400),
                 ),
                 const SizedBox(height: 3),

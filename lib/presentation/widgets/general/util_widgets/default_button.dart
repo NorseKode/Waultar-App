@@ -38,7 +38,7 @@ class _DefaultButtonState extends State<DefaultButton> {
       decoration: BoxDecoration(
           color: widget.onPressed != null
               ? (widget.color ?? themeProvider.themeMode().themeColor)
-              : Color.fromARGB(255, 114, 130, 161),
+              : const Color.fromARGB(255, 114, 130, 161),
           borderRadius: widget.icon != null && widget.text == null
               ? BorderRadius.circular(100)
               : BorderRadius.circular(5)),

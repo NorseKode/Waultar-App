@@ -21,7 +21,7 @@ import 'package:waultar/startup.dart';
 class ParserService implements IParserService {
   var _totalCount = 0;
   var _pathsToParse = <String>[];
-  late final DateTime _parsingStartedAt;
+  late DateTime _parsingStartedAt;
 
   final String _waultarPath = locator.get<String>(
     instanceName: 'waultar_root_directory',
@@ -35,7 +35,9 @@ class ParserService implements IParserService {
   final IServiceRepository _serviceRepo = locator.get<IServiceRepository>(
     instanceName: 'serviceRepo',
   );
-  final IBucketsRepository _bucketsRepo = locator.get<IBucketsRepository>(instanceName: 'bucketsRepo',);
+  final IBucketsRepository _bucketsRepo = locator.get<IBucketsRepository>(
+    instanceName: 'bucketsRepo',
+  );
   ParserService();
   final _performance = locator.get<PerformanceHelper>(
     instanceName: 'performance',

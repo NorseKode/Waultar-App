@@ -72,21 +72,21 @@ class ThemeProvider with ChangeNotifier {
 
   PersonalTheme themeMode() {
     return PersonalTheme(
-        themeColor: Color(0xFF02A9F2),
+        themeColor: const Color(0xFF02A9F2),
         iconColor:
             isLightTheme ? const Color(0xFF65696F) : const Color(0xFFE0E0E0),
         secondaryColor:
-            isLightTheme ? const Color(0xFFFFFFFF) : Color(0xFF272837),
+            isLightTheme ? const Color(0xFFFFFFFF) : const Color(0xFF272837),
         highlightColor:
-            isLightTheme ? const Color(0xFFFFFFFF) : Color(0xFF363747),
-        tonedColor: isLightTheme ? const Color(0xFFFFFFFF) : Color(0xFF424354),
+            isLightTheme ? const Color(0xFFFFFFFF) : const Color(0xFF363747),
+        tonedColor: isLightTheme ? const Color(0xFFFFFFFF) : const Color(0xFF424354),
         iconSize: 12,
         menuHeaderStyle: const TextStyle(
             color: Color(0xFFAEAFBB),
             fontFamily: "Poppins",
             fontSize: 12,
             fontWeight: FontWeight.w400),
-        tonedTextColor: Color(0xFFAEAFBB));
+        tonedTextColor: const Color(0xFFAEAFBB));
   }
 }
 
