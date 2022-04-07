@@ -52,13 +52,33 @@ Future<void> setupServices({
   SendPort? sendPort,
   String? waultarPath,
 }) async {
-  await initApplicationPaths(testing: testing, waultarPath: waultarPath).whenComplete(() async {
-    locator.registerSingleton<String>(_waultarPath, instanceName: 'waultar_root_directory');
-    locator.registerSingleton<String>(_dbFolderPath, instanceName: 'db_folder');
-    locator.registerSingleton<String>(_extractsFolderPath, instanceName: 'extracts_folder');
-    locator.registerSingleton<String>(_logFolderPath, instanceName: 'log_folder');
-    locator.registerSingleton<String>(_performanceFolderPath, instanceName: 'performance_folder');
-    locator.registerSingleton<String>(_pathToAIFolder, instanceName: 'ai_folder');
+  await initApplicationPaths(testing: testing, waultarPath: waultarPath)
+      .whenComplete(() async {
+    
+    locator.registerSingleton<String>(
+      _waultarPath,
+      instanceName: 'waultar_root_directory',
+    );
+    locator.registerSingleton<String>(
+      _dbFolderPath,
+      instanceName: 'db_folder',
+    );
+    locator.registerSingleton<String>(
+      _extractsFolderPath,
+      instanceName: 'extracts_folder',
+    );
+    locator.registerSingleton<String>(
+      _logFolderPath,
+      instanceName: 'log_folder',
+    );
+    locator.registerSingleton<String>(
+      _performanceFolderPath,
+      instanceName: 'performance_folder',
+    );
+    locator.registerSingleton<String>(
+      _pathToAIFolder,
+      instanceName: 'ai_folder',
+    );
 
     os = detectPlatform();
     locator.registerSingleton<OS>(os, instanceName: 'platform');
@@ -92,14 +112,22 @@ Future<void> setupServices({
     // register all abstract repositories with their concrete implementations
     // each repo gets injected the context (to access the relevant store)
     // and the objectboxDirector to map from models to entities
-    locator.registerSingleton<IAppSettingsRepository>(AppSettingsRepository(_context),
-        instanceName: 'appSettingsRepo');
-    locator.registerSingleton<IServiceRepository>(ServiceRepository(_context),
-        instanceName: 'serviceRepo');
-    locator.registerSingleton<IUtilityRepository>(UtilityRepository(_context),
-        instanceName: 'utilsRepo');
-    locator.registerSingleton<ProfileRepository>(ProfileRepository(_context),
-        instanceName: 'profileRepo');
+    locator.registerSingleton<IAppSettingsRepository>(
+      AppSettingsRepository(_context),
+      instanceName: 'appSettingsRepo',
+    );
+    locator.registerSingleton<IServiceRepository>(
+      ServiceRepository(_context),
+      instanceName: 'serviceRepo',
+    );
+    locator.registerSingleton<IUtilityRepository>(
+      UtilityRepository(_context),
+      instanceName: 'utilsRepo',
+    );
+    locator.registerSingleton<ProfileRepository>(
+      ProfileRepository(_context),
+      instanceName: 'profileRepo',
+    );
 
     final _bucketsRepo = BucketsRepository(_context);
     final _categoryRepo = DataCategoryRepository(_context);

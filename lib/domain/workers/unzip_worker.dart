@@ -22,7 +22,7 @@ Future unzipWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
 
       // using inputFileStream to access zip without storing it in memory
       final inputStream = InputFileStream(data.pathToZip);
-      final profileName = data.profileName;
+      final profileName = data.profileName.trim();
 
       // decode the zip via the stream - the archive will have the contents of the zip
       // without having to store it in memory

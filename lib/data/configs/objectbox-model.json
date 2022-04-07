@@ -210,7 +210,7 @@
     },
     {
       "id": "5:3400447797065390625",
-      "lastPropertyId": "10:2679177240119806243",
+      "lastPropertyId": "11:7101062850470252740",
       "name": "DayBucket",
       "properties": [
         {
@@ -268,6 +268,11 @@
         {
           "id": "10:2679177240119806243",
           "name": "dbServiceMap",
+          "type": 9
+        },
+        {
+          "id": "11:7101062850470252740",
+          "name": "dbCategorySentimentAverage",
           "type": 9
         }
       ],
@@ -336,7 +341,7 @@
     },
     {
       "id": "7:7472009443197869544",
-      "lastPropertyId": "9:5385935575769146287",
+      "lastPropertyId": "10:5602002167842252285",
       "name": "HourBucket",
       "properties": [
         {
@@ -389,6 +394,11 @@
         {
           "id": "9:5385935575769146287",
           "name": "dbServiceMap",
+          "type": 9
+        },
+        {
+          "id": "10:5602002167842252285",
+          "name": "dbCategorySentimentAverage",
           "type": 9
         }
       ],
@@ -502,7 +512,7 @@
     },
     {
       "id": "10:1279055715132364075",
-      "lastPropertyId": "9:1862250458887837441",
+      "lastPropertyId": "10:5342661506874610366",
       "name": "MonthBucket",
       "properties": [
         {
@@ -556,6 +566,11 @@
           "id": "9:1862250458887837441",
           "name": "dbServiceMap",
           "type": 9
+        },
+        {
+          "id": "10:5342661506874610366",
+          "name": "dbCategorySentimentAverage",
+          "type": 9
         }
       ],
       "relations": [
@@ -563,6 +578,11 @@
           "id": "8:3907346699493606433",
           "name": "days",
           "targetId": "5:3400447797065390625"
+        },
+        {
+          "id": "11:5620472904408501199",
+          "name": "dataPoints",
+          "targetId": "3:8467492853650059893"
         }
       ]
     },
@@ -695,7 +715,7 @@
     },
     {
       "id": "14:7538433076249109789",
-      "lastPropertyId": "8:492326733171450953",
+      "lastPropertyId": "9:1717671496265545641",
       "name": "YearBucket",
       "properties": [
         {
@@ -743,6 +763,11 @@
           "id": "8:492326733171450953",
           "name": "dbServiceMap",
           "type": 9
+        },
+        {
+          "id": "9:1717671496265545641",
+          "name": "dbCategorySentimentAverage",
+          "type": 9
         }
       ],
       "relations": [
@@ -750,6 +775,11 @@
           "id": "10:8258379157713928626",
           "name": "months",
           "targetId": "10:1279055715132364075"
+        },
+        {
+          "id": "12:1753973278279751880",
+          "name": "dataPoints",
+          "targetId": "3:8467492853650059893"
         }
       ]
     },
@@ -788,7 +818,7 @@
   ],
   "lastEntityId": "15:5531187511291422360",
   "lastIndexId": "28:2627664810646818872",
-  "lastRelationId": "10:8258379157713928626",
+  "lastRelationId": "12:1753973278279751880",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
