@@ -126,6 +126,9 @@ class DataPoint {
               return json["comment"];
             }
             break;
+
+          default:
+            break;
         }
         break;
 
@@ -153,6 +156,9 @@ class DataPoint {
                 json["string_list_data"].first.containsKey("value")) {
               return ((json["string_list_data"]).first)["value"];
             }
+            break;
+
+          default:
             break;
         }
         break;

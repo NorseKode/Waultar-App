@@ -223,11 +223,6 @@ class TimeLineService implements ITimelineService {
       },
     );
 
-    print('sentiment datapoints in buckets -> ${updatedSentimentList.length}');
-    for (var item in updatedSentimentList) {
-      print(item.category.categoryName);
-    }
-
     _mainChartSeries = updatedMainList;
     _sentimentChartSeries = updatedSentimentList;
     _profileTotalChartSeries = updatedProfileChartObject;

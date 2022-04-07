@@ -38,7 +38,7 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
           .forEach((element) {
         if (element.name == "profile user") {
           element.dataPoints.forEach((element) {
-            username = ((element.asMap["string_map_data"])["Brugernavn"])["value"];
+            username = ((element.asMap["string_map_data"])["Username"])["value"];
           });
         }
       });

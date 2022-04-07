@@ -182,21 +182,63 @@ class _TimelineState extends State<Timeline> {
     );
   }
 
+  List<ChartSeries> _getAverageChartSeries() {
+    var returnList = <ChartSeries>[];
+    var plotPoints = _timelineService.averageWeekDayChartSeries;
+    for (var plotPoint in plotPoints) {
+      var output = StackedBarSeries(
+        dataSource: plotPoint.chartDataPoints,
+        xValueMapper: (WeekDayWithAverage model, _) => model.weekDay,
+        yValueMapper: (WeekDayWithAverage model, _) => model.average,
+        dataLabelMapper: (x, _) => plotPoint.category.categoryName,
+        name: plotPoint.category.categoryName,
+      );
+      returnList.add(output);
+    }
+    return returnList;
+  }
+
   Widget _sentimentChart() {
     return SfCartesianChart(
       title: ChartTitle(
         text: '${_timelineService.currentProfile!.name} sentiment over time',
       ),
       plotAreaBorderWidth: 0,
+      tooltipBehavior: TooltipBehavior(
+        enable: true,
+      ),
       primaryYAxis: NumericAxis(
         majorGridLines: const MajorGridLines(width: 0),
-        minimum: 0.0,
-        maximum: 1.0,
+        // minimum: 0.0,
+        // maximum: 1.0,
       ),
       primaryXAxis: DateTimeCategoryAxis(
         majorGridLines: const MajorGridLines(width: 0),
+        labelIntersectAction: AxisLabelIntersectAction.rotate45,
+        intervalType: _timelineService.currentXAxisInterval,
+        interval: 1,
+        minimum: _timelineService.minimum,
+        maximum: _timelineService.maximum,
       ),
+      series: _getSentimentChartSeries(),
     );
+  }
+
+  List<ChartSeries> _getSentimentChartSeries() {
+    var returnList = <ChartSeries>[];
+    var plotPoints = _timelineService.sentimentChartSeries;
+    for (var plotPoint in plotPoints) {
+      var output = ColumnSeries(
+        dataSource: plotPoint.chartDataPoints,
+        xValueMapper: (SentimentWithAverage model, _) => model.timeValue,
+        yValueMapper: (SentimentWithAverage model, _) => model.score,
+        dataLabelMapper: (x, _) => plotPoint.category.categoryName,
+        name: plotPoint.category.categoryName,
+      );
+      returnList.add(output);
+    }
+
+    return returnList;
   }
 
   Widget _timelineChart() {
@@ -259,23 +301,6 @@ class _TimelineState extends State<Timeline> {
       ),
       series: _getMainChartSeries(),
     );
-  }
-
-  List<ChartSeries> _getAverageChartSeries() {
-    var returnList = <ChartSeries>[];
-    var plotPoints = _timelineService.averageWeekDayChartSeries;
-    for (var plotPoint in plotPoints) {
-      var output = StackedBarSeries(
-        dataSource: plotPoint.chartDataPoints,
-        xValueMapper: (WeekDayWithAverage model, index) => model.weekDay,
-        yValueMapper: (WeekDayWithAverage model, index) => model.average,
-        dataLabelMapper: (WeekDayWithAverage model, index) =>
-            plotPoint.category.categoryName,
-        name: plotPoint.category.categoryName,
-      );
-      returnList.add(output);
-    }
-    return returnList;
   }
 
   List<ChartSeries> _getMainChartSeries() {
