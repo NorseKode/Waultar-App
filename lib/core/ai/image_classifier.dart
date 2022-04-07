@@ -56,12 +56,12 @@ class ImageClassifier extends IMLModel {
     required this.labelsLength,
     required this.preProcessNormalizeOp,
     required this.postProcessNormalizeOp,
-    required this.interpreterOptions,
+    this.interpreterOptions,
   }) {
     init();
   }
 
-  void _loadModel() async {
+  void _loadModel() {
     _interpreter = Interpreter.fromFile(File(modelPath), options: interpreterOptions);
 
     var outputTensors = _interpreter.getOutputTensors();

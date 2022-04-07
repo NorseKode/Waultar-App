@@ -26,7 +26,6 @@ class MLService extends IMLService {
 
     var initiator = IsolateImageClassifyStartPackage(
       waultarPath: locator.get<String>(instanceName: 'waultar_root_directory'),
-      aiFolder: locator.get<String>(instanceName: 'ai_folder'),
       limit: limitAmount,
       isPerformanceTracking: ISTRACKALL,
     );

@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:translator/translator.dart';
+import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_translator_service.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
@@ -202,20 +203,12 @@ Future initApplicationPaths({bool testing = false, String? waultarPath}) async {
   _extractsFolderPath = dart_path.normalize(_waultarPath + '/extracts/');
   _logFolderPath = dart_path.normalize(_waultarPath + '/logs/');
   _performanceFolderPath = dart_path.normalize(_waultarPath + '/performance/');
-  _pathToAIFolder = dart_path
-      .normalize(
-        dart_path.join(
-          dart_path.dirname(Platform.script.path),
-          "lib",
-          "assets",
-          "ai_models",
-        ),
-      )
-      .substring(1);
-
+  _pathToAIFolder = dart_path.normalize(_waultarPath + '/ai_models/');
+ 
   var dbFolderDir = Directory(_dbFolderPath);
   var extractsFolderDir = Directory(_extractsFolderPath);
   var logFolderDir = Directory(_logFolderPath);
+  var aiFolderDir = Directory(_pathToAIFolder);
 
   var extractsFolderExists = await extractsFolderDir.exists();
   if (!extractsFolderExists) {
@@ -228,5 +221,24 @@ Future initApplicationPaths({bool testing = false, String? waultarPath}) async {
   var dbFolderExists = await dbFolderDir.exists();
   if (!dbFolderExists) {
     await dbFolderDir.create(recursive: true);
+  }
+  var aiFolderExists = await aiFolderDir.exists();
+  if (!aiFolderExists) {
+    await aiFolderDir.create(recursive: true);
+    var aiDir = Directory(dart_path
+        .normalize(
+          dart_path.join(
+            dart_path.dirname(Platform.script.path),
+            "lib",
+            "assets",
+            "ai_models",
+          ),
+        )
+        .substring(1));
+
+      for (var ai_model_system in aiDir.listSync(followLinks: false)) {
+        var file = File(ai_model_system.path);
+        await file.copy(dart_path.join(_pathToAIFolder, dart_path.basename(file.path)));
+      }
   }
 }
