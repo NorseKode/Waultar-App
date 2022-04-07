@@ -45,8 +45,8 @@ class SentimentService extends ISentimentService {
   }
 
   @override
-  void connotateOwnTextsFromCategory(List<DataCategory> categories,
-      Function(String message, bool isDone) callback) {
+  Future<void> connotateOwnTextsFromCategory(List<DataCategory> categories,
+      Function(String message, bool isDone) callback) async {
     var initiator = IsolateSentimentStartPackage(
       waultarPath: locator.get<String>(instanceName: 'waultar_root_directory'),
       aiFolder: locator.get<String>(instanceName: 'ai_folder'),
@@ -61,6 +61,7 @@ class SentimentService extends ISentimentService {
 
           callback("", data.isDone);
           if (data.isDone) {
+            print('sentiment is done');
             _bucketsRepo.updateForSentiments(
               categories.first.profile.target!,
             );

@@ -51,7 +51,7 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
       bool _isOwnData(DataPoint point, String profileUsername, String profileName) {
         switch (point.category.target!.category) {
           case CategoryEnum.messaging:
-            if (point.asMap["sender name"] == profileUsername) {
+            if (point.asMap["sender_name"] == profileUsername) {
               return true;
             }
             return false;

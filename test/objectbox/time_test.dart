@@ -112,6 +112,7 @@ Future<void> main() async {
 
     test(' - updating sentiment in buckets via repo', () async {
       _bucketsRepo.updateForSentiments(testProfile);
+      // let the islolates do their jobs before asserting
       await Future.delayed(const Duration(seconds: 3));
       var years = _bucketsRepo.getAllYears();
 
