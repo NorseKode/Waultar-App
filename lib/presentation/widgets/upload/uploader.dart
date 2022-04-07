@@ -68,7 +68,7 @@ class Uploader {
                         context,
                         Tuple3(
                           files.map((e) => e.path).toList(),
-                          usernameTextController.text,
+                          usernameTextController.text.trim(),
                           dropDownValue,
                         ),
                       );
