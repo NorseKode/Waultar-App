@@ -13,6 +13,7 @@ import 'package:waultar/data/entities/timebuckets/hour_bucket.dart';
 import 'package:waultar/data/entities/timebuckets/month_bucket.dart';
 import 'package:waultar/data/entities/timebuckets/weekday_average_bucket.dart';
 import 'package:waultar/data/entities/timebuckets/year_bucket.dart';
+import 'package:waultar/domain/services/timeline_service.dart';
 
 class BucketsRepository extends IBucketsRepository {
   final ObjectBox _context;
@@ -264,19 +265,36 @@ class BucketsRepository extends IBucketsRepository {
   }
 
   @override
-  Future createBuckets(
+  Future<void> createBuckets(
       DateTime dataPointsCreatedAfter, ProfileDocument profile) async {
-    var createdSince = dataPointsCreatedAfter.microsecondsSinceEpoch;
+    final package = BucketCreatorIsolatePackage(
+      profileId: profile.id,
+      createdAfter: dataPointsCreatedAfter.microsecondsSinceEpoch,
+    );
+
+    await _context.store.runIsolated(
+      TxMode.write,
+      (store, isolatePackage) async => await _createBucketsIsolate(store, isolatePackage),
+      package,
+    );
+  }
+
+  static Future<void> _createBucketsIsolate(
+      Store store, dynamic package) async {
+    final createdSince = package.createdAfter;
+    final profileId = package.profileId;
+    final _yearBox = store.box<YearBucket>();
+    final _averageBox = store.box<WeekDayAverageComputed>();
 
     var builder = _yearBox.query()
-      ..link(YearBucket_.profile, ProfileDocument_.id.equals(profile.id));
+      ..link(YearBucket_.profile, ProfileDocument_.id.equals(profileId));
     var years = builder.build().find();
 
     // streams all datapoints that have been created after createdSince
-    var toBeProcessedLink = _context.store
+    var toBeProcessedLink = store
         .box<DataPoint>()
         .query(DataPoint_.dbCreatedAt.greaterThan(createdSince))
-      ..link(DataPoint_.profile, ProfileDocument_.id.equals(profile.id));
+      ..link(DataPoint_.profile, ProfileDocument_.id.equals(profileId));
     var toBeProcessedQuery = toBeProcessedLink.build();
 
     List<WeekDayAverageComputed> avgList = [];
@@ -286,7 +304,7 @@ class BucketsRepository extends IBucketsRepository {
 
     var toBeProcessed = toBeProcessedQuery.stream();
     // process each datapoint from the stream
-    await for (final dataPoint in toBeProcessed.distinct()) {
+    await for (final dataPoint in toBeProcessed) {
       var profile = dataPoint.profile.target!;
       var timestamps = _scrapeUniqueTimestamps(dataPoint);
 
@@ -464,7 +482,7 @@ class BucketsRepository extends IBucketsRepository {
 
     for (var avg in avgList) {
       avg.calculateAverages();
-      avg.profile.target = profile;
+      avg.profile.targetId = profileId;
     }
     _averageBox.putMany(avgList);
     // when the stream has processed each element we update all the buckets via the root bucket in a single transaction
@@ -472,7 +490,7 @@ class BucketsRepository extends IBucketsRepository {
     _yearBox.putMany(years);
   }
 
-  List<DateTime> _scrapeUniqueTimestamps(DataPoint dataPoint) {
+  static List<DateTime> _scrapeUniqueTimestamps(DataPoint dataPoint) {
     var timestampsSet = <DateTime>{};
     aux(dynamic data) {
       if (data is Map<String, dynamic>) {
@@ -499,7 +517,7 @@ class BucketsRepository extends IBucketsRepository {
     return timestampsSet.toList();
   }
 
-  DateTime? tryParse(dynamic value) {
+  static DateTime? tryParse(dynamic value) {
     if (value is int) {
       if (value <= 0) return null;
 
@@ -517,27 +535,13 @@ class BucketsRepository extends IBucketsRepository {
     return null;
   }
 
-  Tuple4<int, int, int, int> _dissectDateTime(DateTime timestamp) {
+  static Tuple4<int, int, int, int> _dissectDateTime(DateTime timestamp) {
     int year = timestamp.year;
     int month = timestamp.month;
     int day = timestamp.day;
     int hour = timestamp.hour;
     return Tuple4(year, month, day, hour);
   }
-
-  DataCategory _getCategory(int id) {
-    var category = _categoryBox.get(id);
-    if (category == null) {
-      return _categoryBox
-          .query(DataCategory_.dbCategory.equals(CategoryEnum.unknown.index))
-          .build()
-          .findUnique()!;
-    } else {
-      return category;
-    }
-  }
-
-  ProfileDocument _getProfile(int id) => _profileBox.get(id)!;
 
   @override
   void updateForSentiments(ProfileDocument profile) {
@@ -633,4 +637,13 @@ class BucketsRepository extends IBucketsRepository {
   List<YearBucket> getAllYearBuckets() {
     return _yearBox.getAll();
   }
+}
+
+class BucketCreatorIsolatePackage {
+  int profileId;
+  int createdAfter;
+  BucketCreatorIsolatePackage({
+    required this.profileId,
+    required this.createdAfter,
+  });
 }

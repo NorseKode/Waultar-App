@@ -126,11 +126,18 @@ class ParserService implements IParserService {
       switch (data.runtimeType) {
         case MainParsedProgressPackage:
           data as MainParsedProgressPackage;
-          callback("Parsing ${data.parsedCount}/${_pathsToParse.length}",
-              data.isDone);
+
+          if (!data.isDone) {
+            callback("Parsing ${data.parsedCount}/${_pathsToParse.length}",
+                data.isDone);
+          }
 
           if (data.isDone) {
-            _bucketsRepo.createBuckets(_parsingStartedAt, profile);
+            callback("Creating timeline ...", false);
+            _bucketsRepo.createBuckets(_parsingStartedAt, profile).whenComplete(
+                () => callback(
+                    "Parsing ${data.parsedCount}/${_pathsToParse.length}",
+                    data.isDone));
           }
 
           if (data.isDone && ISPERFORMANCETRACKING && ISTRACKALL) {

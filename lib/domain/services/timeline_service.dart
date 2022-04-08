@@ -86,9 +86,10 @@ class TimeLineService implements ITimelineService {
   void updateProfile(ProfileDocument profile) {
     if (profile.id != _currentProfile!.id) {
       _currentProfile = profile;
-      _setChartSeries();
+      reset();
       _setAverageChartSeries();
-      _setCurrentXIntervalEnum();
+      // _setChartSeries();
+      // _setCurrentXIntervalEnum();
     }
   }
 

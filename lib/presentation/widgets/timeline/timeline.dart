@@ -73,7 +73,8 @@ class _TimelineState extends State<Timeline> {
   }
 
   Widget _chartArea() {
-    if (_timelineService.allProfiles.isEmpty) {
+    if (_timelineService.allProfiles.isEmpty ||
+        _timelineService.mainChartCategorySeries.isEmpty) {
       return const Center(
         child: Text('No datapoints found'),
       );
