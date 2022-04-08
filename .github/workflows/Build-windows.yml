@@ -32,6 +32,11 @@
 #           flutter-version: '2.5.3'
 #           channel: 'stable' # 'dev', 'alpha', 'beta'
 
+#      - name: Setup the flutter environment.
+#        uses: subosito/flutter-action@v1
+#        with:
+#          channel: 'stable' # 'dev', 'alpha', 'beta'
+
 #       - name: Enable Desktop
 #         run: flutter config --enable-windows-desktop
         
@@ -71,3 +76,56 @@
 #           asset_path: build/windows/runner/Release/
 #           asset_name: Waultar.msi
 #           asset_content_type: application/msi
+
+      #- name: Build msi
+        #run: flutter pub run msix:create
+      
+#      - name: Zip files
+#        uses: papeloto/action-zip@v1
+#        with: 
+#          files: build/windows/runner/Release/
+#          dest: waultar-windows.zip
+
+#      - uses: actions/upload-artifact@v2
+#        with:
+#          name: waultar-windows.zip
+#          path: build/windows/runner/Release/
+      
+       # Upload generated apk to the artifacts, is included in the github
+       # action build
+      #- uses: actions/upload-artifact@v2
+        #with:
+          #name: Waultar.msi
+          #path: build/windows/runner/Release/
+      
+#      - name: release
+#        uses: actions/create-release@v1
+#        id: create_release
+#        with:
+#          draft: true
+#          prerelease: true
+#          release_name: ${{ steps.version.outputs.version }}
+#          tag_name: ${{ github.ref }}
+#        env:
+#          GITHUB_TOKEN: ${{ github.token }}
+
+      #- name: upload windows msi
+        #uses: actions/upload-release-asset@v1
+        #env:
+          #GITHUB_TOKEN: ${{ github.token }}
+        #with:
+          #upload_url: ${{ steps.create_release.outputs.upload_url }}
+          #asset_path: build/windows/runner/Release/
+          #asset_name: Waultar.msi
+          #asset_content_type: application/msi
+
+#      - name: upload windows zip
+#        uses: actions/upload-release-asset@v1
+#        env:
+#          GITHUB_TOKEN: ${{ github.token }}
+#        with:
+#          upload_url: ${{ steps.create_release.outputs.upload_url }}
+#          asset_path: build/windows/runner/Release/
+#          asset_name: waultar-windows.zip
+#          asset_content_type: application/zip
+
