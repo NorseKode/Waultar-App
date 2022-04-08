@@ -59,8 +59,8 @@ class SentimentService extends ISentimentService {
       switch (data.runtimeType) {
         case MainSentimentClassifyProgressPackage:
           data as MainSentimentClassifyProgressPackage;
-
           callback("", data.isDone);
+
           if (data.isDone) {
             print('sentiment is done');
             _bucketsRepo.updateForSentiments(

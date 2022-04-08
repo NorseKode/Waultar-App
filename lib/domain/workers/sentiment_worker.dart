@@ -30,31 +30,49 @@ Future sentimentWorkerBody(
       var dataRepo = locator.get<DataPointRepository>(instanceName: 'dataRepo');
       var translator =
           locator.get<ITranslatorService>(instanceName: 'translator');
-      var sentimentClassifier =
-          SentimentClassifierTextClassifierTFLite(aiFolderPath: data.aiFolder);
+      var sentimentClassifier = SentimentClassifierTextClassifierTFLite();
 
+      if (data.isPerformanceTracking) {
+        performance.init(newParentKey: "Sentiment classification");
+        performance.startReading(performance.parentKey);
+      }
+
+      if (data.isPerformanceTracking) {
+        performance.startReading("Setup");
+      }
       var categories = data.categoriesIds
           .map((e) => categoryRepo.getCategoryById(e)!)
           .toList();
 
       var username = "";
-      var profileName = categories.first.profile.target!.name;
+      var profile = categories.first.profile.target!;
       var profileData = categories.first.profile.target!.categories
           .firstWhere((element) => element.category == CategoryEnum.profile)
           .dataPointNames
           .forEach((element) {
-        if (element.name == "profile user") {
-          element.dataPoints.forEach((element) {
-            username =
-                ((element.asMap["string_map_data"])["Username"])["value"];
-          });
+        if (profile.service.target!.serviceName == "Instagram") {
+          if (element.name == "profile user") {
+            for (var point in element.dataPoints) {
+              username =
+                  ((point.asMap["string_map_data"])["Username"])["value"];
+            }
+          }
+        } else {
+          if (element.name == "profile") {
+            for (var pointName in element.children) {
+              for (var point in pointName.dataPoints) {
+                if (point.asMap.containsKey("full name")) {
+                  username = point.asMap["full name"];
+                }
+              }
+            }
+          }
         }
       });
-
-      // if (ISPERFORMANCETRACKING) {
-      //   performance.reInit(newParentKey: "sentimentanal");
-      //   performance.start("sentimentanal");
-      // }
+      if (data.isPerformanceTracking) {
+        performance.addReading(
+            performance.parentKey, "Setup", performance.stopReading("Setup"));
+      }
 
       bool _isOwnData(
           DataPoint point, String profileUsername, String profileName) {
@@ -82,26 +100,43 @@ Future sentimentWorkerBody(
       for (var category in categories) {
         List<DataPoint> dataPoints = dataRepo.readAllFromCategory(category);
         for (var point in dataPoints) {
-          var isOwnData = _isOwnData(point, username, profileName);
+          if (data.isPerformanceTracking)
+            performance.startReading("_isOwnData");
+          var isOwnData = _isOwnData(point, username, profile.name);
+          if (data.isPerformanceTracking)
+            performance.addReading(performance.parentKey, "_isOwnData",
+                performance.stopReading(performance.parentKey));
 
           if (isOwnData &&
               point.sentimentText != null &&
               point.sentimentText!.isNotEmpty) {
-            // if (ISPERFORMANCETRACKING) performance.startReading("classify");
-            var text = _cleanText(point.sentimentText!);
-            // await translator.translate(
-            //     input: point.sentimentText!, outputLanguage: 'en');
+            if (data.isPerformanceTracking)
+              performance.startReading("classify all");
 
+            // if (data.isPerformanceTracking) performance.startReading("translate");
+            // await translator.translate(input: point.sentimentText!, outputLanguage: 'en');
+            // if (data.isPerformanceTracking)
+            //   performance.addReading(
+            //       performance.parentKey, "translate", performance.stopReading("translate"));
+
+            if (data.isPerformanceTracking)
+              performance.startReading("classify");
+            var text = _cleanText(point.sentimentText!);
             if (data.translate)
-              await translator.translate(
-                  input: point.sentimentText!, outputLanguage: 'en');
+              text =
+                  await translator.translate(input: text, outputLanguage: 'en');
             if (text.length > 256) text = text.substring(0, 256);
             var sentimentScore = sentimentClassifier.classify(text);
-            // if (ISPERFORMANCETRACKING) {
-            //   performance.addReading("sentimentanal", "classify");
-            // }
             point.sentimentScore = sentimentScore.last; //0-1
+            if (data.isPerformanceTracking)
+              performance.addReading(performance.parentKey, "classify",
+                  performance.stopReading("classify"));
+
+            if (data.isPerformanceTracking) performance.startReading("repo");
             dataRepo.addDataPoint(point);
+            if (data.isPerformanceTracking)
+              performance.addReading(performance.parentKey, "repo",
+                  performance.stopReading("repo"));
 
             _logger.logger.info(
                 "Gave DataPoint with id ${point.id} a score of ${point.sentimentScore}");
@@ -114,8 +149,17 @@ Future sentimentWorkerBody(
 
       _logger.logger.info("Finished sentiment scoring");
 
-      mainSendPort.send(
-          MainSentimentClassifyProgressPackage(amountTagged: 0, isDone: true));
+      if (data.isPerformanceTracking)
+        performance.addData(performance.parentKey,
+            duration: performance.stopReading(performance.parentKey));
+
+      mainSendPort.send(MainSentimentClassifyProgressPackage(
+        amountTagged: 0,
+        isDone: true,
+        performanceDataPoint: data.isPerformanceTracking
+            ? jsonEncode(performance.parentDataPoint)
+            : "",
+      ));
     } catch (e, stacktrace) {
       mainSendPort.send(LogRecordPackage(e.toString(), stacktrace.toString()));
     } finally {
