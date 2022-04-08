@@ -46,11 +46,12 @@ class SentimentService extends ISentimentService {
 
   @override
   Future<void> connotateOwnTextsFromCategory(List<DataCategory> categories,
-      Function(String message, bool isDone) callback) async {
+      Function(String message, bool isDone) callback, bool translate) async {
     var initiator = IsolateSentimentStartPackage(
       waultarPath: locator.get<String>(instanceName: 'waultar_root_directory'),
       aiFolder: locator.get<String>(instanceName: 'ai_folder'),
       categoriesIds: categories.map((e) => e.id).toList(),
+      translate: translate,
       isPerformanceTracking: ISTRACKALL,
     );
 
