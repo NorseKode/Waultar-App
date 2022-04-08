@@ -112,7 +112,9 @@ class DataPoint {
           case CategoryEnum.posts:
             if (json is Map<String, dynamic> &&
                 json.containsKey("data") &&
-                (json["data"]).isNotEmpty() && (json["data"]).first.containsKey("post")) {
+                json["data"] != null &&
+                (json["data"]).isNotEmpty &&
+                (json["data"]).first.containsKey("post")) {
               return (json["data"]).first["post"];
             }
             break;
