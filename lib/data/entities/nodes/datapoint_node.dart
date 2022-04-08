@@ -88,7 +88,6 @@ class DataPoint {
     stringName = parentName.name;
     profile.target = targetProfile;
     valuesJsonBytes = utf8.encode(utf8.decode(jsonEncode(json).codeUnits));
-    if (values.contains("naughty")) print(asMap.toString());
 
     final StringBuffer sb = StringBuffer();
     sb.write('${parentName.name} ');

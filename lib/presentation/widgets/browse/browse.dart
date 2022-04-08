@@ -76,7 +76,6 @@ class _BrowseState extends State<Browse> {
   uploadButton() {
     return DefaultButton(
       onPressed: () async {
-        print("here1 : " + Platform.script.path);
         var files = await Uploader.uploadDialogue(context);
         if (files != null) {
           SnackBarCustom.useSnackbarOfContext(context, localizer.startedLoadingOfData);
@@ -94,7 +93,6 @@ class _BrowseState extends State<Browse> {
             files.item3,
             ProfileDocument(name: files.item2),
           );
-        print("here2: " + Platform.script.path);
         }
       },
       text: localizer.upload,

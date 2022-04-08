@@ -20,7 +20,6 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
       if (data.isPerformanceTracking) {
         performance.startReading("Setup of classifier");
       }
-      print("here: " + locator.get<String>(instanceName: 'ai_folder'));
       var classifier = ImageClassifierMobileNetV3();
       if (data.isPerformanceTracking) {
         var key = "Setup of classifier";

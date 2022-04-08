@@ -62,7 +62,6 @@ class SentimentService extends ISentimentService {
           callback("", data.isDone);
 
           if (data.isDone) {
-            print('sentiment is done');
             _bucketsRepo.updateForSentiments(
               categories.first.profile.target!,
             );
