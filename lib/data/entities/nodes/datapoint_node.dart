@@ -94,7 +94,11 @@ class DataPoint {
 
     searchTerms = sb.toString();
     createdAt = DateTime.now();
-    sentimentText = _getSentimentText(dataCategory, json, targetProfile, parentName);
+
+    var temp = _getSentimentText(dataCategory, json, targetProfile, parentName);
+    if (temp != null) {
+      sentimentText = utf8.decode(temp.codeUnits);
+    }
   }
 
   String? _getSentimentText(
