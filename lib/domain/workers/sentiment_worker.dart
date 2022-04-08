@@ -14,6 +14,7 @@ import 'package:waultar/data/repositories/datapoint_repo.dart';
 import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:path/path.dart' as dart_path;
 import 'package:waultar/startup.dart';
+import 'package:remove_emoji/remove_emoji.dart';
 
 Future sentimentWorkerBody(
     dynamic data, SendPort mainSendPort, Function onError) async {
@@ -67,6 +68,12 @@ Future sentimentWorkerBody(
         }
       }
 
+      String _cleanText(String text) {
+        var clean = RemoveEmoji().removemoji(text);
+        clean = clean.replaceAll(RegExp(r'#\w+\h*'), '');
+        return clean;
+      }
+
       for (var category in categories) {
         List<DataPoint> dataPoints = dataRepo.readAllFromCategory(category);
         for (var point in dataPoints) {
@@ -77,7 +84,7 @@ Future sentimentWorkerBody(
               point.sentimentText!.isNotEmpty) continue;
 
           // if (ISPERFORMANCETRACKING) performance.startReading("classify");
-          var text = point.sentimentText!;
+          var text = _cleanText(point.sentimentText!);
           // await translator.translate(
           //     input: point.sentimentText!, outputLanguage: 'en');
           if (text.length > 256) text = text.substring(0, 256);
