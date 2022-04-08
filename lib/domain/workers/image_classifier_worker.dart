@@ -20,7 +20,8 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
       if (data.isPerformanceTracking) {
         performance.startReading("Setup of classifier");
       }
-      var classifier = ImageClassifierMobileNetV3(aiFolder: data.aiFolder);
+      print("here: " + locator.get<String>(instanceName: 'ai_folder'));
+      var classifier = ImageClassifierMobileNetV3();
       if (data.isPerformanceTracking) {
         var key = "Setup of classifier";
         performance.addReading(performance.parentKey, key, performance.stopReading(key));
@@ -82,7 +83,7 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
       mainSendPort.send(MainImageClassifyProgressPackage(
         amountTagged: step,
         isDone: true,
-        performanceDataPoint: jsonEncode(performance.parentDataPoint.toMap()),
+        performanceDataPoint: data.isPerformanceTracking ? jsonEncode(performance.parentDataPoint.toMap()) : "",
       ));
 
       if (data.isPerformanceTracking) {
@@ -107,13 +108,11 @@ Future<void> setupIsolate(SendPort sendPort, InitiatorPackage setupData, String 
 
 class IsolateImageClassifyStartPackage extends InitiatorPackage {
   String waultarPath;
-  String aiFolder;
   int? limit;
   bool isPerformanceTracking;
 
   IsolateImageClassifyStartPackage({
     required this.waultarPath,
-    required this.aiFolder,
     this.limit,
     required this.isPerformanceTracking,
   });

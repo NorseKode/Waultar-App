@@ -22,10 +22,6 @@ import 'startup.dart';
 
 void main() async {
   await setupServices();
-  // locator.registerSingleton<ImageClassifier>(
-  //   ImageClassifierMobileNetV3(),
-  //   instanceName: 'imageClassifier',
-  // );
 
   locator.registerSingleton<IMLService>(
     MLService(),
