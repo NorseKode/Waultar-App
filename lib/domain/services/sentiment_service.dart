@@ -18,12 +18,10 @@ import 'package:waultar/startup.dart';
 
 class SentimentService extends ISentimentService {
   final _dataRepo = locator.get<DataPointRepository>(instanceName: 'dataRepo');
-  final _profileRepo =
-      locator.get<ProfileRepository>(instanceName: 'profileRepo');
+  final _profileRepo = locator.get<ProfileRepository>(instanceName: 'profileRepo');
   // final _textClassifier =
   //     locator.get<SentimentClassifier>(instanceName: 'sentimentClassifier');
-  final _translator =
-      locator.get<ITranslatorService>(instanceName: 'translator');
+  final _translator = locator.get<ITranslatorService>(instanceName: 'translator');
 
   @override
   Future<void> connotateAllTextSeparateThreadFromDB() {
@@ -37,8 +35,8 @@ class SentimentService extends ISentimentService {
   }
 
   @override
-  void connotateOwnTextsFromCategory(List<DataCategory> categories,
-      Function(String message, bool isDone) callback) {
+  void connotateOwnTextsFromCategory(
+      List<DataCategory> categories, Function(String message, bool isDone) callback) {
     var initiator = IsolateSentimentStartPackage(
       waultarPath: locator.get<String>(instanceName: 'waultar_root_directory'),
       aiFolder: locator.get<String>(instanceName: 'ai_folder'),
@@ -50,13 +48,12 @@ class SentimentService extends ISentimentService {
       switch (data.runtimeType) {
         case MainSentimentClassifyProgressPackage:
           data as MainSentimentClassifyProgressPackage;
-
           callback("", data.isDone);
+          if (ISPERFORMANCETRACKING) {}
       }
     }
 
-    var classifyWorker =
-        BaseWorker(initiator: initiator, mainHandler: _listenSentimentClassify);
+    var classifyWorker = BaseWorker(initiator: initiator, mainHandler: _listenSentimentClassify);
     classifyWorker.init(sentimentWorkerBody);
 
     // var username = "";

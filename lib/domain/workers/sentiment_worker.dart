@@ -46,19 +46,19 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
           .forEach((element) {
         if (profile.service.target!.serviceName == "Instagram") {
           if (element.name == "profile user") {
-            element.dataPoints.forEach((element) {
-              username = ((element.asMap["string_map_data"])["Username"])["value"];
-            });
+            for (var point in element.dataPoints) {
+              username = ((point.asMap["string_map_data"])["Username"])["value"];
+            }
           }
         } else {
           if (element.name == "profile") {
-            element.children.forEach((element) {
-              element.dataPoints.forEach((e) {
-                if (e.asMap.containsKey("full name")) {
-                  username = e.asMap["full name"];
+            for (var pointName in element.children) {
+              for (var point in pointName.dataPoints) {
+                if (point.asMap.containsKey("full name")) {
+                  username = point.asMap["full name"];
                 }
-              });
-            });
+              }
+            }
           }
         }
       });
@@ -69,7 +69,7 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
       bool _isOwnData(DataPoint point, String profileUsername, String profileName) {
         switch (point.category.target!.category) {
           case CategoryEnum.messaging:
-            if (point.asMap["sender name"] == profileUsername) {
+            if (point.asMap["sender_name"] == profileUsername) {
               return true;
             }
             return false;
