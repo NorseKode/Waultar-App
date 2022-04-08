@@ -296,11 +296,6 @@ final _entities = <ModelEntity>[
             id: const IdUid(10, 5100752458338080013),
             name: 'dbCategoryMap',
             type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(11, 5807312061455243648),
-            name: 'dbServiceMap',
-            type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[
@@ -415,11 +410,6 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(9, 3685749717645235118),
             name: 'dbCategoryMap',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(10, 2485776444139753123),
-            name: 'dbServiceMap',
             type: 9,
             flags: 0)
       ],
@@ -579,11 +569,6 @@ final _entities = <ModelEntity>[
         ModelProperty(
             id: const IdUid(9, 7248762090614003930),
             name: 'dbCategoryMap',
-            type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(10, 1893456898890427833),
-            name: 'dbServiceMap',
             type: 9,
             flags: 0)
       ],
@@ -800,11 +785,6 @@ final _entities = <ModelEntity>[
             id: const IdUid(8, 2912960482341603053),
             name: 'dbCategoryMap',
             type: 9,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(9, 4274862220034290897),
-            name: 'dbServiceMap',
-            type: 9,
             flags: 0)
       ],
       relations: <ModelRelation>[
@@ -846,7 +826,12 @@ ModelDefinition getObjectBoxModel() {
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [3293177775563472600],
-      retiredPropertyUids: const [],
+      retiredPropertyUids: const [
+        5807312061455243648,
+        2485776444139753123,
+        1893456898890427833,
+        4274862220034290897
+      ],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -1091,7 +1076,6 @@ ModelDefinition getObjectBoxModel() {
           final dbCategorySentimentAverageOffset =
               fbb.writeString(object.dbCategorySentimentAverage);
           final dbCategoryMapOffset = fbb.writeString(object.dbCategoryMap);
-          final dbServiceMapOffset = fbb.writeString(object.dbServiceMap);
           fbb.startTable(12);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.day);
@@ -1103,7 +1087,6 @@ ModelDefinition getObjectBoxModel() {
           fbb.addInt64(7, object.dbDateTime);
           fbb.addOffset(8, dbCategorySentimentAverageOffset);
           fbb.addOffset(9, dbCategoryMapOffset);
-          fbb.addOffset(10, dbServiceMapOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1128,9 +1111,7 @@ ModelDefinition getObjectBoxModel() {
                 const fb.StringReader(asciiOptimization: true)
                     .vTableGet(buffer, rootOffset, 20, '')
             ..dbCategoryMap = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 22, '')
-            ..dbServiceMap = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 24, '');
+                .vTableGet(buffer, rootOffset, 22, '');
           object.month.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
           object.month.attach(store);
@@ -1205,7 +1186,6 @@ ModelDefinition getObjectBoxModel() {
           final dbCategorySentimentAverageOffset =
               fbb.writeString(object.dbCategorySentimentAverage);
           final dbCategoryMapOffset = fbb.writeString(object.dbCategoryMap);
-          final dbServiceMapOffset = fbb.writeString(object.dbServiceMap);
           fbb.startTable(11);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.hour);
@@ -1216,7 +1196,6 @@ ModelDefinition getObjectBoxModel() {
           fbb.addInt64(6, object.dbDateTime);
           fbb.addOffset(7, dbCategorySentimentAverageOffset);
           fbb.addOffset(8, dbCategoryMapOffset);
-          fbb.addOffset(9, dbServiceMapOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1239,9 +1218,7 @@ ModelDefinition getObjectBoxModel() {
                 const fb.StringReader(asciiOptimization: true)
                     .vTableGet(buffer, rootOffset, 18, '')
             ..dbCategoryMap = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 20, '')
-            ..dbServiceMap = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 22, '');
+                .vTableGet(buffer, rootOffset, 20, '');
           object.day.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
           object.day.attach(store);
@@ -1370,7 +1347,6 @@ ModelDefinition getObjectBoxModel() {
           final dbCategorySentimentAverageOffset =
               fbb.writeString(object.dbCategorySentimentAverage);
           final dbCategoryMapOffset = fbb.writeString(object.dbCategoryMap);
-          final dbServiceMapOffset = fbb.writeString(object.dbServiceMap);
           fbb.startTable(11);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.month);
@@ -1381,7 +1357,6 @@ ModelDefinition getObjectBoxModel() {
           fbb.addInt64(6, object.dbDateTime);
           fbb.addOffset(7, dbCategorySentimentAverageOffset);
           fbb.addOffset(8, dbCategoryMapOffset);
-          fbb.addOffset(9, dbServiceMapOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1404,9 +1379,7 @@ ModelDefinition getObjectBoxModel() {
                 const fb.StringReader(asciiOptimization: true)
                     .vTableGet(buffer, rootOffset, 18, '')
             ..dbCategoryMap = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 20, '')
-            ..dbServiceMap = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 22, '');
+                .vTableGet(buffer, rootOffset, 20, '');
           object.year.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
           object.year.attach(store);
@@ -1613,7 +1586,6 @@ ModelDefinition getObjectBoxModel() {
           final dbCategorySentimentAverageOffset =
               fbb.writeString(object.dbCategorySentimentAverage);
           final dbCategoryMapOffset = fbb.writeString(object.dbCategoryMap);
-          final dbServiceMapOffset = fbb.writeString(object.dbServiceMap);
           fbb.startTable(10);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.year);
@@ -1623,7 +1595,6 @@ ModelDefinition getObjectBoxModel() {
           fbb.addInt64(5, object.dbDateTime);
           fbb.addOffset(6, dbCategorySentimentAverageOffset);
           fbb.addOffset(7, dbCategoryMapOffset);
-          fbb.addOffset(8, dbServiceMapOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1646,9 +1617,7 @@ ModelDefinition getObjectBoxModel() {
                 const fb.StringReader(asciiOptimization: true)
                     .vTableGet(buffer, rootOffset, 16, '')
             ..dbCategoryMap = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 18, '')
-            ..dbServiceMap = const fb.StringReader(asciiOptimization: true)
-                .vTableGet(buffer, rootOffset, 20, '');
+                .vTableGet(buffer, rootOffset, 18, '');
           object.profile.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
           object.profile.attach(store);
@@ -1837,10 +1806,6 @@ class DayBucket_ {
   static final dbCategoryMap =
       QueryStringProperty<DayBucket>(_entities[4].properties[9]);
 
-  /// see [DayBucket.dbServiceMap]
-  static final dbServiceMap =
-      QueryStringProperty<DayBucket>(_entities[4].properties[10]);
-
   /// see [DayBucket.hours]
   static final hours =
       QueryRelationToMany<DayBucket, HourBucket>(_entities[4].relations[0]);
@@ -1918,10 +1883,6 @@ class HourBucket_ {
   /// see [HourBucket.dbCategoryMap]
   static final dbCategoryMap =
       QueryStringProperty<HourBucket>(_entities[6].properties[8]);
-
-  /// see [HourBucket.dbServiceMap]
-  static final dbServiceMap =
-      QueryStringProperty<HourBucket>(_entities[6].properties[9]);
 
   /// see [HourBucket.dataPoints]
   static final dataPoints =
@@ -2027,10 +1988,6 @@ class MonthBucket_ {
   /// see [MonthBucket.dbCategoryMap]
   static final dbCategoryMap =
       QueryStringProperty<MonthBucket>(_entities[9].properties[8]);
-
-  /// see [MonthBucket.dbServiceMap]
-  static final dbServiceMap =
-      QueryStringProperty<MonthBucket>(_entities[9].properties[9]);
 
   /// see [MonthBucket.days]
   static final days =
@@ -2172,10 +2129,6 @@ class YearBucket_ {
   /// see [YearBucket.dbCategoryMap]
   static final dbCategoryMap =
       QueryStringProperty<YearBucket>(_entities[14].properties[7]);
-
-  /// see [YearBucket.dbServiceMap]
-  static final dbServiceMap =
-      QueryStringProperty<YearBucket>(_entities[14].properties[8]);
 
   /// see [YearBucket.months]
   static final months =

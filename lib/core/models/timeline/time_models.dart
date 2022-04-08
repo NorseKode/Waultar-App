@@ -1,15 +1,11 @@
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
-import 'package:waultar/data/entities/misc/profile_document.dart';
-import 'package:waultar/core/models/ui_model.dart';
-import 'package:waultar/data/entities/nodes/category_node.dart';
-
 abstract class TimeModel {
   int id;
   int timeValue; // x value
   int total; // y total value
   DateTime dateTime;
-  List<Tuple2<DataCategory, int>> categoryCount;
+  List<Tuple2<CategoryEnum, int>> categoryCount;
   List<Tuple2<CategoryEnum, double>> sentimentScores;
 
   TimeModel(
@@ -28,7 +24,7 @@ class YearModel extends TimeModel {
     required int year,
     required int total,
     required DateTime dateTime,
-    required List<Tuple2<DataCategory, int>> categoryCount,
+    required List<Tuple2<CategoryEnum, int>> categoryCount,
     required List<Tuple2<CategoryEnum, double>> sentimentScores,
   }) : super(
           id,
@@ -46,7 +42,7 @@ class MonthModel extends TimeModel {
     required int month,
     required int total,
     required DateTime dateTime,
-    required List<Tuple2<DataCategory, int>> categoryCount,
+    required List<Tuple2<CategoryEnum, int>> categoryCount,
     required List<Tuple2<CategoryEnum, double>> sentimentScores,
   }) : super(
           id,
@@ -64,7 +60,7 @@ class DayModel extends TimeModel {
     required int day,
     required int total,
     required DateTime dateTime,
-    required List<Tuple2<DataCategory, int>> categoryCount,
+    required List<Tuple2<CategoryEnum, int>> categoryCount,
     required List<Tuple2<CategoryEnum, double>> sentimentScores,
   }) : super(
           id,
@@ -82,7 +78,7 @@ class HourModel extends TimeModel {
     required int hour,
     required int total,
     required DateTime dateTime,
-    required List<Tuple2<DataCategory, int>> categoryCount,
+    required List<Tuple2<CategoryEnum, int>> categoryCount,
     required List<Tuple2<CategoryEnum, double>> sentimentScores,
   }) : super(
           id,

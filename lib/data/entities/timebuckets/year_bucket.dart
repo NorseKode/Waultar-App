@@ -20,8 +20,7 @@ class YearBucket {
 
   late Map<CategoryEnum, double> categorySentimentAverage;
 
-  late Map<int, int> categoryMap;
-  late Map<int, int> profileMap;
+  late Map<CategoryEnum, int> categoryMap;
 
   final months = ToMany<MonthBucket>();
   final dataPoints = ToMany<DataPoint>();
@@ -34,7 +33,6 @@ class YearBucket {
     required this.dateTime,
   }) {
     categoryMap = {};
-    profileMap = {};
     categorySentimentAverage = {};
   }
 
@@ -51,26 +49,15 @@ class YearBucket {
   }
 
   String get dbCategoryMap =>
-      jsonEncode(categoryMap.map((key, value) => MapEntry('$key', value)));
-  String get dbServiceMap =>
-      jsonEncode(profileMap.map((key, value) => MapEntry('$key', value)));
+      jsonEncode(categoryMap.map((key, value) => MapEntry('${key.index}', value)));
   set dbCategoryMap(String json) {
     categoryMap = Map.from(jsonDecode(json)
-        .map((key, value) => MapEntry(int.parse(key), value as int)));
+        .map((key, value) => MapEntry(CategoryEnum.values[int.parse(key)], value as int)));
   }
 
-  set dbServiceMap(String json) {
-    profileMap = Map.from(jsonDecode(json)
-        .map((key, value) => MapEntry(int.parse(key), value as int)));
-  }
-
-  void updateCounts(int categoryId, int serviceId) {
-    categoryMap.update(categoryId, (value) => value + 1, ifAbsent: () {
-      categoryMap.addAll({categoryId: 1});
-      return 1;
-    });
-    profileMap.update(serviceId, (value) => value + 1, ifAbsent: () {
-      profileMap.addAll({serviceId: 1});
+  void updateCounts(CategoryEnum category, int serviceId) {
+    categoryMap.update(category, (value) => value + 1, ifAbsent: () {
+      categoryMap.addAll({category: 1});
       return 1;
     });
     total = total + 1;
@@ -109,12 +96,10 @@ class YearBucket {
       'year': year,
       'dateTime': dateTime.millisecondsSinceEpoch,
       'total': total,
-      'categoryMap': JsonHelper.convertIntIntMap(categoryMap),
-      'profileMap': JsonHelper.convertIntIntMap(profileMap),
+      // 'categoryMap': JsonHelper.convertIntIntMap(categoryMap),
       'months': JsonHelper.convertToManyToJson(months),
       'dbDateTime': dbDateTime,
       'dbCategoryMap': dbCategoryMap,
-      'dbServiceMap': dbServiceMap,
     };
   }
 }

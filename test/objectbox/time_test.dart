@@ -60,7 +60,7 @@ Future<void> main() async {
       expect(year2022.timeValue, 2022);
       expect(year2022.total, 3);
       expect(year2022.categoryCount.length, 1);
-      expect(year2022.categoryCount.first.item1.category.categoryName, 'Posts');
+      expect(year2022.categoryCount.first.item1.categoryName, 'Posts');
       expect(year2022.categoryCount.first.item2, 3);
     });
 
@@ -92,7 +92,7 @@ Future<void> main() async {
       var fridayMarch = days.first;
       expect(fridayMarch.categoryCount.length, 1);
       expect(
-          fridayMarch.categoryCount.first.item1.category.categoryName, 'Posts');
+          fridayMarch.categoryCount.first.item1.categoryName, 'Posts');
 
       var hour12_10 = _bucketsRepo.getHourModelsFromDay(fridayMarch);
       expect(hour12_10.length, 1);

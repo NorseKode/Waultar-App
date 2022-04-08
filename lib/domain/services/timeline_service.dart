@@ -166,9 +166,9 @@ class TimeLineService implements ITimelineService {
 
       for (var item in updatedMainList) {
         if (timeModel.categoryCount.any(
-            (element) => element.item1.category.index == item.category.index)) {
+            (element) => element.item1.index == item.category.index)) {
           var tuple = timeModel.categoryCount.singleWhere(
-              (element) => element.item1.category.index == item.category.index);
+              (element) => element.item1.index == item.category.index);
           item.chartDataPoints.add(
             TimeUnitWithTotal(
               timeValue: timeModel.dateTime,

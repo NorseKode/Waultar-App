@@ -269,11 +269,6 @@
           "id": "10:5100752458338080013",
           "name": "dbCategoryMap",
           "type": 9
-        },
-        {
-          "id": "11:5807312061455243648",
-          "name": "dbServiceMap",
-          "type": 9
         }
       ],
       "relations": [
@@ -394,11 +389,6 @@
         {
           "id": "9:3685749717645235118",
           "name": "dbCategoryMap",
-          "type": 9
-        },
-        {
-          "id": "10:2485776444139753123",
-          "name": "dbServiceMap",
           "type": 9
         }
       ],
@@ -565,11 +555,6 @@
         {
           "id": "9:7248762090614003930",
           "name": "dbCategoryMap",
-          "type": 9
-        },
-        {
-          "id": "10:1893456898890427833",
-          "name": "dbServiceMap",
           "type": 9
         }
       ],
@@ -793,11 +778,6 @@
           "id": "8:2912960482341603053",
           "name": "dbCategoryMap",
           "type": 9
-        },
-        {
-          "id": "9:4274862220034290897",
-          "name": "dbServiceMap",
-          "type": 9
         }
       ],
       "relations": [
@@ -824,7 +804,12 @@
   "retiredIndexUids": [
     3293177775563472600
   ],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    5807312061455243648,
+    2485776444139753123,
+    1893456898890427833,
+    4274862220034290897
+  ],
   "retiredRelationUids": [],
   "version": 1
 }
