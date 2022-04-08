@@ -1,9 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:waultar/configs/globals/file_type_enum.dart';
-import 'package:waultar/configs/globals/globals.dart';
-import '../../configs/globals/media_extensions.dart';
 
 /// A static class that provides functionality used by many of the parser
 /// classes

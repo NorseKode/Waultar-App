@@ -8,8 +8,6 @@ import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/exceptions/ai_exception.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
-import 'package:waultar/configs/globals/globals.dart';
-import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/core/ai/i_ml_model.dart';
 import 'package:waultar/startup.dart';
 
@@ -32,7 +30,6 @@ class ImageClassifier extends IMLModel {
   late List<List<int>> _outputShapes;
   late List<TfLiteType> _outputTypes;
   final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
-  PerformanceHelper? _performance;
 
   @override
   dispose() {
@@ -59,13 +56,15 @@ class ImageClassifier extends IMLModel {
     required this.labelsLength,
     required this.preProcessNormalizeOp,
     required this.postProcessNormalizeOp,
-    required this.interpreterOptions,
+    this.interpreterOptions,
   }) {
     init();
   }
 
   void _loadModel() async {
-    _interpreter = Interpreter.fromFile(File(modelPath), options: interpreterOptions);
+    var path = locator.get<String>(instanceName: 'ai_folder');
+    _interpreter =
+        Interpreter.fromFile(File(modelPath), path, options: interpreterOptions);
 
     var outputTensors = _interpreter.getOutputTensors();
     _outputShapes = [];
@@ -81,7 +80,8 @@ class ImageClassifier extends IMLModel {
     _outputType = _interpreter.getOutputTensor(0).type;
 
     _outputBuffer = TensorBuffer.createFixedSize(_outputShape, _outputType);
-    _probabilityProcessor = TensorProcessorBuilder().add(postProcessNormalizeOp).build();
+    _probabilityProcessor =
+        TensorProcessorBuilder().add(postProcessNormalizeOp).build();
   }
 
   void _loadLabels() {
@@ -97,24 +97,28 @@ class ImageClassifier extends IMLModel {
 
     return ImageProcessorBuilder()
         .add(ResizeWithCropOrPadOp(cropSize, cropSize))
-        .add(ResizeOp(_inputShape[1], _inputShape[2], ResizeMethod.NEAREST_NEIGHBOUR))
+        .add(ResizeOp(
+            _inputShape[1], _inputShape[2], ResizeMethod.NEAREST_NEIGHBOUR))
         .add(preProcessNormalizeOp)
         .build()
         .process(_inputImage);
   }
 
-  List<Tuple2<String, double>> predict(String imagePath, int amountOfTopCategories) {
-    _appLogger.logger.info("Predicting image with path: $imagePath, and returning $amountOfTopCategories categories");
+  List<Tuple2<String, double>> predict(
+      String imagePath, int amountOfTopCategories) {
+    _appLogger.logger.info(
+        "Predicting image with path: $imagePath, and returning $amountOfTopCategories categories");
 
-    if (ISPERFORMANCETRACKING) {
-      _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
-      _performance!.resetChild();
-      _performance!.startChild();
-    }
+    // if (ISPERFORMANCETRACKING) {
+    //   _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
+    //   _performance!.resetChild();
+    //   _performance!.startChild();
+    // }
 
     var image = img.decodeImage(File(imagePath).readAsBytesSync());
     if (image == null) {
-      throw AIException("Couldn't locate image from path: $imagePath", this, image);
+      throw AIException(
+          "Couldn't locate image from path: $imagePath", this, image);
     }
 
     _inputImage = TensorImage(_inputType);
@@ -123,9 +127,9 @@ class ImageClassifier extends IMLModel {
 
     _interpreter.run(_inputImage.buffer, _outputBuffer.getBuffer());
 
-    Map<String, double> labeledProb =
-        TensorLabel.fromList(_labels, _probabilityProcessor.process(_outputBuffer))
-            .getMapWithFloatValue();
+    Map<String, double> labeledProb = TensorLabel.fromList(
+            _labels, _probabilityProcessor.process(_outputBuffer))
+        .getMapWithFloatValue();
     final pred = _getProbability(labeledProb).toList();
 
     var results = <Tuple2<String, double>>[];
@@ -136,14 +140,15 @@ class ImageClassifier extends IMLModel {
       }
     }
 
-    if (ISPERFORMANCETRACKING) {
-      _performance!.addChildReading(metadata: {"path": imagePath});
-    }
+    // if (ISPERFORMANCETRACKING) {
+    //   _performance!.addChildReading(metadata: {"path": imagePath});
+    // }
 
     return results;
   }
 
-  PriorityQueue<MapEntry<String, double>> _getProbability(Map<String, double> labeledProb) {
+  PriorityQueue<MapEntry<String, double>> _getProbability(
+      Map<String, double> labeledProb) {
     var pq = PriorityQueue<MapEntry<String, double>>(_compare);
     pq.addAll(labeledProb.entries);
 

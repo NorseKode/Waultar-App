@@ -1,19 +1,25 @@
 import 'package:tuple/tuple.dart';
-import 'package:waultar/core/inodes/profile_document.dart';
-import 'package:waultar/core/inodes/service_document.dart';
-import 'package:waultar/core/inodes/tree_nodes.dart';
+import 'package:waultar/configs/globals/category_enums.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/core/models/ui_model.dart';
+import 'package:waultar/data/entities/nodes/category_node.dart';
 
 abstract class TimeModel {
   int id;
-  int timeValue;
-  int total;
+  int timeValue; // x value
+  int total; // y total value
+  DateTime dateTime;
   List<Tuple2<DataCategory, int>> categoryCount;
-  List<Tuple2<ProfileDocument, int>> profileCount;
-  List<UIModel> dataPoints;
+  List<Tuple2<CategoryEnum, double>> sentimentScores;
 
-  TimeModel(this.id, this.timeValue, this.total, this.categoryCount,
-      this.profileCount, this.dataPoints);
+  TimeModel(
+    this.id,
+    this.timeValue,
+    this.total,
+    this.dateTime,
+    this.categoryCount,
+    this.sentimentScores,
+  );
 }
 
 class YearModel extends TimeModel {
@@ -21,15 +27,16 @@ class YearModel extends TimeModel {
     required int id,
     required int year,
     required int total,
+    required DateTime dateTime,
     required List<Tuple2<DataCategory, int>> categoryCount,
-    required List<Tuple2<ProfileDocument, int>> profileCount,
+    required List<Tuple2<CategoryEnum, double>> sentimentScores,
   }) : super(
           id,
           year,
           total,
+          dateTime,
           categoryCount,
-          profileCount,
-          [],
+          sentimentScores,
         );
 }
 
@@ -38,15 +45,16 @@ class MonthModel extends TimeModel {
     required int id,
     required int month,
     required int total,
+    required DateTime dateTime,
     required List<Tuple2<DataCategory, int>> categoryCount,
-    required List<Tuple2<ProfileDocument, int>> profileCount,
+    required List<Tuple2<CategoryEnum, double>> sentimentScores,
   }) : super(
           id,
           month,
           total,
+          dateTime,
           categoryCount,
-          profileCount,
-          [],
+          sentimentScores,
         );
 }
 
@@ -55,16 +63,16 @@ class DayModel extends TimeModel {
     required int id,
     required int day,
     required int total,
+    required DateTime dateTime,
     required List<Tuple2<DataCategory, int>> categoryCount,
-    required List<Tuple2<ProfileDocument, int>> profileCount,
-    required List<UIModel> dataPoints,
+    required List<Tuple2<CategoryEnum, double>> sentimentScores,
   }) : super(
           id,
           day,
           total,
+          dateTime,
           categoryCount,
-          profileCount,
-          dataPoints,
+          sentimentScores,
         );
 }
 
@@ -73,15 +81,15 @@ class HourModel extends TimeModel {
     required int id,
     required int hour,
     required int total,
+    required DateTime dateTime,
     required List<Tuple2<DataCategory, int>> categoryCount,
-    required List<Tuple2<ProfileDocument, int>> profileCount,
-    required List<UIModel> dataPoints,
+    required List<Tuple2<CategoryEnum, double>> sentimentScores,
   }) : super(
           id,
           hour,
           total,
+          dateTime,
           categoryCount,
-          profileCount,
-          dataPoints,
+          sentimentScores,
         );
 }

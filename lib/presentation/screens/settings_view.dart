@@ -4,13 +4,14 @@ import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/configs/navigation/screen.dart';
 import 'package:logging/logging.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
-import 'package:waultar/core/inodes/media_repo.dart';
+import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:waultar/presentation/presentation_helper.dart';
 import 'package:waultar/presentation/screens/shared/waultar_desktop_main.dart';
 import 'package:waultar/presentation/widgets/general/menu_panel.dart';
 import 'package:waultar/presentation/widgets/general/top_panel.dart';
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:waultar/presentation/widgets/snackbar_custom.dart';
 import 'package:waultar/startup.dart';
 
 class SettingsView extends StatefulWidget {
@@ -37,7 +38,7 @@ class _SettingsViewState extends State<SettingsView> {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Developer Tools"),
+          const Text("Developer Tools"),
           const Divider(),
           DefaultButton(
             text: localizer.nukeDatabase,
@@ -45,7 +46,6 @@ class _SettingsViewState extends State<SettingsView> {
               PresentationHelper.nukeDatabase();
             },
           ),
-          const Divider(),
           Row(
             children: [
               const Text("Enable performance mode"),
@@ -65,13 +65,25 @@ class _SettingsViewState extends State<SettingsView> {
               ),
             ],
           ),
-          const Divider(),
           DefaultButton(
             text: "Delete Image Tags",
             onPressed: () {
               locator.get<MediaRepository>(instanceName: 'mediaRepo').deleteAllImageTags();
             },
           ),
+          DefaultButton(
+            text: 'Dump Database As Json',
+            onPressed: () {
+              SnackBarCustom.useSnackbarOfContext(
+                  context, "Started writing dump, it may take some time");
+              PresentationHelper.dumpDbAsJson();
+            },
+          ),
+          DefaultButton(
+            text: "Delete all sentiment scores",
+            onPressed: () => PresentationHelper.deleteAllSentimentScores(),
+          ),
+          const Divider(),
         ],
       ),
     );

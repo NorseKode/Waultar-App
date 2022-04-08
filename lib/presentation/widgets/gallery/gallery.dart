@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/configs/globals/file_type_enum.dart';
-import 'package:waultar/core/inodes/media_documents.dart';
-import 'package:waultar/core/inodes/media_repo.dart';
+import 'package:waultar/data/entities/media/image_document.dart';
+import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 import 'package:waultar/presentation/widgets/general/infinite_scroll.dart';
@@ -112,7 +112,7 @@ class _GalleryState extends State<Gallery> {
           SizedBox(
             width: 150,
             child: ListTile(
-              title: Text("Images"),
+              title: const Text("Images"),
               leading: Radio<FileType>(
                 value: FileType.image,
                 groupValue: _selectedMediaType,
@@ -128,7 +128,7 @@ class _GalleryState extends State<Gallery> {
           SizedBox(
             width: 150,
             child: ListTile(
-              title: Text("Videos"),
+              title: const Text("Videos"),
               leading: Radio<FileType>(
                 value: FileType.video,
                 groupValue: _selectedMediaType,
@@ -144,7 +144,7 @@ class _GalleryState extends State<Gallery> {
           SizedBox(
             width: 150,
             child: ListTile(
-              title: Text("Files"),
+              title: const Text("Files"),
               leading: Radio<FileType>(
                 value: FileType.file,
                 groupValue: _selectedMediaType,

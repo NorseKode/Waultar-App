@@ -1,14 +1,15 @@
-import 'package:tflite_flutter/tflite_flutter.dart';
+// ignore: file_names
 import 'package:path/path.dart' as path_dart;
-import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
-import 'package:waultar/assets/assets_helper.dart';
 import 'package:waultar/core/ai/sentiment_classifier.dart';
+import 'package:waultar/startup.dart';
 
 class SentimentClassifierTextClassifierTFLite extends SentimentClassifier {
   SentimentClassifierTextClassifierTFLite()
       : super(
-            modelPath: path_dart.join(AssetsHelper.getPathToAILib(),
+            modelPath: path_dart.join(
+                locator.get<String>(instanceName: 'ai_folder'),
                 "text_classification.tflite"), //text_classifitcation.tflite
-            vocabPath: path_dart.join(AssetsHelper.getPathToAILib(),
+            vocabPath: path_dart.join(
+                locator.get<String>(instanceName: 'ai_folder'),
                 "text_classification_vocab.txt"));
 }

@@ -18,10 +18,14 @@ getWaultarDesktopMainBody(
           child: SizedBox(
             height: MediaQuery.of(context).size.height,
             child: Column(
-                crossAxisAlignment: crossAxisAlignment ?? CrossAxisAlignment.start,
+                crossAxisAlignment:
+                    crossAxisAlignment ?? CrossAxisAlignment.start,
                 mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.start,
                 children: [
-                  topPanel,
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                    child: topPanel,
+                  ),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
@@ -52,7 +56,8 @@ getWaultarDesktopMainBodyNotExpanded(
         SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Column(
-              crossAxisAlignment: crossAxisAlignment ?? CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  crossAxisAlignment ?? CrossAxisAlignment.start,
               mainAxisAlignment: mainAxisAlignment ?? MainAxisAlignment.start,
               children: [
                 topPanel,

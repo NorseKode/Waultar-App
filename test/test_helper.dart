@@ -1,12 +1,16 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:path/path.dart' as path_dart;
-import 'package:waultar/core/inodes/profile_document.dart';
-import 'package:waultar/core/inodes/service_document.dart';
-import 'package:waultar/core/inodes/tree_nodes.dart';
+import 'package:waultar/configs/globals/category_enums.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
+import 'package:waultar/data/entities/misc/service_document.dart';
 import 'package:waultar/core/models/misc/service_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
+import 'package:waultar/data/entities/nodes/category_node.dart';
+import 'package:waultar/data/entities/nodes/datapoint_node.dart';
+import 'package:waultar/data/entities/nodes/name_node.dart';
 import 'package:waultar/startup.dart';
 
 class TestHelper {
@@ -40,7 +44,8 @@ class TestHelper {
     var profile = ProfileDocument(name: 'Test Profile Name');
     profile.service.target = service;
     int created = box.put(profile);
-    return box.get(created)!;
+    var entity = box.get(created)!;
+    return entity;
   }
 
   static ServiceModel facebook = ServiceModel(
@@ -54,10 +59,10 @@ class TestHelper {
 
   static Future<void> deleteTestDb() async {
     final scriptDir = File(Platform.script.toFilePath()).parent;
-    final datafile =
-        File(path_dart.normalize('${scriptDir.path}/test/waultar/objectbox/data.mdb'));
-    final lockfile =
-        File(path_dart.normalize('${scriptDir.path}/test/waultar/objectbox/lock.mdb'));
+    final datafile = File(path_dart
+        .normalize('${scriptDir.path}/test/waultar/objectbox/data.mdb'));
+    final lockfile = File(path_dart
+        .normalize('${scriptDir.path}/test/waultar/objectbox/lock.mdb'));
     try {
       await datafile.delete();
       await lockfile.delete();
@@ -69,11 +74,16 @@ class TestHelper {
   /// deletes the test folders but not the logs file
   static Future<void> deleteTestFolders() async {
     final scriptDir = File(Platform.script.toFilePath()).parent;
-    final dbDir = Directory(path_dart.normalize('${scriptDir.path}/test/waultar/objectbox'));
-    final extractsDir = Directory(path_dart. normalize('${scriptDir.path}/test/waultar/extracts'));
+    final dbDir = Directory(
+        path_dart.normalize('${scriptDir.path}/test/waultar/objectbox'));
+    final extractsDir = Directory(
+        path_dart.normalize('${scriptDir.path}/test/waultar/extracts'));
+    final aiDir = Directory(
+        path_dart.normalize('${scriptDir.path}/test/waultar/ai_models'));
     try {
       await dbDir.delete(recursive: true);
       await extractsDir.delete(recursive: true);
+      await aiDir.delete(recursive: true);
     } catch (e) {
       // print(e);
       return;
@@ -91,7 +101,7 @@ class TestHelper {
     await deleteTestFolders();
   }
 
-  static void seedForTimeBuckets() {
+  static ProfileDocument seedForTimeBuckets() {
     var context = locator.get<ObjectBox>(instanceName: 'context');
     var timestamps = <int>[
       1647774619, // Sun Mar 20 2022 12:10:19 GMT
@@ -106,23 +116,23 @@ class TestHelper {
       1448169079, // Sun Nov 22 2015 06:11:19 GMT
     ];
     final testProfile = createTestProfile(context);
+    var posts = DataCategory(
+      matchingFoldersFacebook: [],
+      matchingFoldersInstagram: [],
+      category: CategoryEnum.posts,
+    );
+
+    var comments = DataCategory(
+      matchingFoldersFacebook: [],
+      matchingFoldersInstagram: [],
+      category: CategoryEnum.comments,
+    );
+
     final _categoryBox = context.store.box<DataCategory>();
-    var posts = _categoryBox
-        .query(DataCategory_.dbCategory.equals(CategoryEnum.posts.index))
-        .build()
-        .findUnique()!;
-    var comments = _categoryBox
-        .query(DataCategory_.dbCategory.equals(CategoryEnum.comments.index))
-        .build()
-        .findUnique()!;
-    var fbService = context.store
-        .box<ServiceDocument>()
-        .query(ServiceDocument_.serviceName.equals('Facebook'))
-        .build()
-        .findUnique()!;
-    
     var yourPosts = DataPointName(name: 'your posts');
     yourPosts.profile.target = testProfile;
+
+    var randomSentimentScore = Random();
 
     int i = 0;
     for (; i < timestamps.length / 2; i++) {
@@ -131,14 +141,12 @@ class TestHelper {
         'attachments': [],
         'data': {
           'post': 'this is a post',
-          'data': {
-            'created_timestamp': timestamps[i]
-          }
+          'data': {'created_timestamp': timestamps[i]}
         },
       };
-      var dataPoint =
-          DataPoint.parse(posts, yourPosts, testProfile, data, "");
+      var dataPoint = DataPoint.parse(posts, yourPosts, testProfile, data, "");
       yourPosts.dataPoints.add(dataPoint);
+      dataPoint.sentimentScore = randomSentimentScore.nextDouble();
     }
 
     var yourComments = DataPointName(name: 'your comments');
@@ -149,19 +157,19 @@ class TestHelper {
         'attachments': [],
         'data': {
           'post': 'this is a post',
-          'data': {
-            'created_timestamp': timestamps[i]
-          },
+          'data': {'created_timestamp': timestamps[i]},
           'timestamp': timestamps[i]
         },
-        'updated_timestamp': timestamps[i-1]
+        'updated_timestamp': timestamps[i - 1]
       };
       var dataPoint =
           DataPoint.parse(comments, yourComments, testProfile, data, "");
-      yourComments.dataPoints.add(dataPoint);    
+      yourComments.dataPoints.add(dataPoint);
+      dataPoint.sentimentScore = randomSentimentScore.nextDouble();
     }
     comments.dataPointNames.add(yourComments);
     posts.dataPointNames.add(yourPosts);
     _categoryBox.putMany([posts, comments]);
+    return testProfile;
   }
 }

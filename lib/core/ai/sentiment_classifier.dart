@@ -1,13 +1,8 @@
 import 'dart:io';
 
-import 'package:flutter/services.dart';
-import 'package:path/path.dart' as path_dart;
-
 // Import tflite_flutter
 import 'package:tflite_flutter/tflite_flutter.dart';
-import 'package:waultar/assets/assets_helper.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
-import 'package:waultar/configs/globals/helper/performance_helper.dart';
 import 'package:waultar/core/ai/i_ml_model.dart';
 import 'package:waultar/startup.dart';
 
@@ -40,13 +35,14 @@ class SentimentClassifier extends IMLModel {
     init();
   }
 
-  _loadModel() async {
+  _loadModel() {
     // Creating the interpreter using Interpreter.fromAsset
-    _interpreter = await Interpreter.fromFile(File(modelPath));
+    var path = locator.get<String>(instanceName: 'ai_folder');
+    _interpreter = Interpreter.fromFile(File(modelPath), path);
   }
 
-  _loadDictionary() async {
-    final vocab = await File(vocabPath).readAsString();
+  _loadDictionary() {
+    final vocab = File(vocabPath).readAsStringSync();
     var dict = <String, int>{};
     final vocabList = vocab.split('\n');
     for (var i = 0; i < vocabList.length; i++) {
