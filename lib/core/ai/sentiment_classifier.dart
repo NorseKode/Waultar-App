@@ -37,7 +37,8 @@ class SentimentClassifier extends IMLModel {
 
   _loadModel() {
     // Creating the interpreter using Interpreter.fromAsset
-    _interpreter = Interpreter.fromFile(File(modelPath));
+    var path = locator.get<String>(instanceName: 'ai_folder');
+    _interpreter = Interpreter.fromFile(File(modelPath), path);
   }
 
   _loadDictionary() {
