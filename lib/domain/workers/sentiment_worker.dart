@@ -122,9 +122,10 @@ Future sentimentWorkerBody(
             if (data.isPerformanceTracking)
               performance.startReading("classify");
             var text = _cleanText(point.sentimentText!);
-            if (data.translate)
+            if (data.translate) {
               text =
                   await translator.translate(input: text, outputLanguage: 'en');
+            }
             if (text.length > 256) text = text.substring(0, 256);
             var sentimentScore = sentimentClassifier.classify(text);
             point.sentimentScore = sentimentScore.last; //0-1
