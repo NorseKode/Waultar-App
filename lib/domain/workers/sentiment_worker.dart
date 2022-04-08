@@ -15,6 +15,7 @@ import 'package:waultar/data/repositories/datapoint_repo.dart';
 import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:path/path.dart' as dart_path;
 import 'package:waultar/startup.dart';
+import 'package:remove_emoji/remove_emoji.dart';
 
 Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError) async {
   if (data is IsolateSentimentStartPackage) {
@@ -79,6 +80,12 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
         }
       }
 
+      String _cleanText(String text) {
+        var clean = RemoveEmoji().removemoji(text);
+        clean = clean.replaceAll(RegExp(r'#\w+\h*'), '');
+        return clean;
+      }
+
       _logger.logger.info("Started sentiment scoring of ${data.categoriesIds.length} categories");
 
       for (var category in categories) {
@@ -102,6 +109,7 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
             //       performance.parentKey, "translate", performance.stopReading("translate"));
 
             if (data.isPerformanceTracking) performance.startReading("classify");
+            var text = _cleanText(point.sentimentText!);
             if (text.length > 256) text = text.substring(0, 256);
             var sentimentScore = sentimentClassifier.classify(text);
             point.sentimentScore = sentimentScore.last; //0-1

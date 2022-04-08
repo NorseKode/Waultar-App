@@ -8,12 +8,14 @@ class DefaultWidget extends StatefulWidget {
   final Widget child;
   final EdgeInsetsGeometry? edgeInsetsGeometry;
   final BoxConstraints? constraints;
+  final Color? color;
   const DefaultWidget({
     Key? key,
     required this.title,
     required this.child,
     this.edgeInsetsGeometry,
     this.constraints,
+    this.color,
   }) : super(key: key);
 
   @override
@@ -26,6 +28,7 @@ class _DefaultWidgetState extends State<DefaultWidget> {
   Widget build(BuildContext context) {
     themeProvider = Provider.of<ThemeProvider>(context);
     return DefaultWidgetBox(
+        color: widget.color,
         constraints: widget.constraints,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

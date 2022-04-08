@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:objectbox/objectbox.dart';
 import 'package:pretty_json/pretty_json.dart';
@@ -114,6 +115,7 @@ class DataPoint {
                 json.containsKey("data") &&
                 json["data"] != null &&
                 (json["data"]).isNotEmpty &&
+                (json["data"]) is List<dynamic> &&
                 (json["data"]).first.containsKey("post")) {
               return (json["data"]).first["post"];
             }
@@ -123,6 +125,9 @@ class DataPoint {
             if (json is Map<String, dynamic> && json.containsKey("comment")) {
               return json["comment"];
             }
+            break;
+
+          default:
             break;
         }
         break;
@@ -151,6 +156,9 @@ class DataPoint {
                 json["string_list_data"].first.containsKey("value")) {
               return ((json["string_list_data"]).first)["value"];
             }
+            break;
+
+          default:
             break;
         }
         break;
@@ -230,7 +238,8 @@ class DataPoint {
     sb.write("ID: $id \n");
 
     if (dataPointName.hasValue) {
-      sb.write("DataPoint relation target name: ${dataPointName.target!.name}\n");
+      sb.write(
+          "DataPoint relation target name: ${dataPointName.target!.name}\n");
     }
 
     sb.write("Data:\n");

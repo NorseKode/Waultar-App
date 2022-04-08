@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/configs/globals/globals.dart';
+import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_translator_service.dart';
 
@@ -17,11 +18,20 @@ import 'package:waultar/domain/workers/sentiment_worker.dart';
 import 'package:waultar/startup.dart';
 
 class SentimentService extends ISentimentService {
-  final _dataRepo = locator.get<DataPointRepository>(instanceName: 'dataRepo');
-  final _profileRepo = locator.get<ProfileRepository>(instanceName: 'profileRepo');
+  final _dataRepo = locator.get<DataPointRepository>(
+    instanceName: 'dataRepo',
+  );
+  final _profileRepo = locator.get<ProfileRepository>(
+    instanceName: 'profileRepo',
+  );
   // final _textClassifier =
   //     locator.get<SentimentClassifier>(instanceName: 'sentimentClassifier');
-  final _translator = locator.get<ITranslatorService>(instanceName: 'translator');
+  final _translator = locator.get<ITranslatorService>(
+    instanceName: 'translator',
+  );
+  final _bucketsRepo = locator.get<IBucketsRepository>(
+    instanceName: 'bucketsRepo',
+  );
 
   @override
   Future<void> connotateAllTextSeparateThreadFromDB() {
@@ -35,8 +45,8 @@ class SentimentService extends ISentimentService {
   }
 
   @override
-  void connotateOwnTextsFromCategory(
-      List<DataCategory> categories, Function(String message, bool isDone) callback) {
+  Future<void> connotateOwnTextsFromCategory(List<DataCategory> categories,
+      Function(String message, bool isDone) callback) async {
     var initiator = IsolateSentimentStartPackage(
       waultarPath: locator.get<String>(instanceName: 'waultar_root_directory'),
       aiFolder: locator.get<String>(instanceName: 'ai_folder'),
@@ -49,11 +59,20 @@ class SentimentService extends ISentimentService {
         case MainSentimentClassifyProgressPackage:
           data as MainSentimentClassifyProgressPackage;
           callback("", data.isDone);
-          if (ISPERFORMANCETRACKING) {}
+
+          if (data.isDone) {
+            print('sentiment is done');
+            _bucketsRepo.updateForSentiments(
+              categories.first.profile.target!,
+            );
+          }
       }
     }
 
-    var classifyWorker = BaseWorker(initiator: initiator, mainHandler: _listenSentimentClassify);
+    var classifyWorker = BaseWorker(
+      initiator: initiator,
+      mainHandler: _listenSentimentClassify,
+    );
     classifyWorker.init(sentimentWorkerBody);
 
     // var username = "";

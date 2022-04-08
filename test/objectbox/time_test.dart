@@ -5,7 +5,6 @@ import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/startup.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 
-
 import '../test_helper.dart';
 
 Future<void> main() async {
@@ -16,7 +15,7 @@ Future<void> main() async {
   tearDownAll(() async {
     await TestHelper.tearDownServices();
   });
-  
+
   setUpAll(() async {
     await TestHelper.runStartupScript();
     _bucketsRepo = locator.get<IBucketsRepository>(instanceName: 'bucketsRepo');
@@ -25,11 +24,8 @@ Future<void> main() async {
     await _bucketsRepo.createBuckets(parsedAt, testProfile);
   });
 
-
   group('Creation of buckets from parsed datapoints', () {
-
     test(' - test buckets creation', () async {
-
       var yearBuckets = _bucketsRepo.getAllYears();
       expect(yearBuckets.length, 5);
       for (var year in yearBuckets) {
@@ -66,7 +62,6 @@ Future<void> main() async {
       expect(year2022.categoryCount.length, 1);
       expect(year2022.categoryCount.first.item1.category.categoryName, 'Posts');
       expect(year2022.categoryCount.first.item2, 3);
-      expect(year2022.profileCount.length, 1);
     });
 
     test(' - test bucket repo returning monthModels', () async {
@@ -76,7 +71,6 @@ Future<void> main() async {
       expect(months.length, 2); // jan, mar, mar
 
       expect(months.first.total, 1);
-      expect(months.first.profileCount.length, 1);
       expect(months.first.timeValue, 1);
       expect(months.last.total, 2);
     });
@@ -96,11 +90,9 @@ Future<void> main() async {
       expect(days.last.timeValue, 20);
 
       var fridayMarch = days.first;
-      expect(fridayMarch.dataPoints.length, 1);
-      expect(fridayMarch.dataPoints.first.getAssociatedColor(), Colors.amber);
-      expect(fridayMarch.profileCount.length, 1);
       expect(fridayMarch.categoryCount.length, 1);
-      expect(fridayMarch.categoryCount.first.item1.category.categoryName, 'Posts');
+      expect(
+          fridayMarch.categoryCount.first.item1.category.categoryName, 'Posts');
 
       var hour12_10 = _bucketsRepo.getHourModelsFromDay(fridayMarch);
       expect(hour12_10.length, 1);
@@ -116,6 +108,24 @@ Future<void> main() async {
       expect(monday.profile.target!.name, 'Test Profile Name');
       var map = monday.averageCategoryMap;
       expect(map.length, 2);
+    });
+
+    test(' - updating sentiment in buckets via repo', () async {
+      _bucketsRepo.updateForSentiments(testProfile);
+      // let the islolates do their jobs before asserting
+      await Future.delayed(const Duration(seconds: 3));
+      var years = _bucketsRepo.getAllYears();
+
+      var year2022 = years.first; // <== 2022 - three posts
+      double totalScores = 0;
+      int total = 0;
+      for (var datapoint in year2022.dataPoints) {
+        totalScores += datapoint.sentimentScore!;
+        total++;
+      }
+
+      var postScore = year2022.categorySentimentAverage[CategoryEnum.posts]!;
+      expect(postScore, totalScores/total);
     });
   });
 }

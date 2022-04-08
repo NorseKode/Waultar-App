@@ -32,36 +32,36 @@ class WeekDayAverageComputed {
     _tempMap = {};
   }
 
-  String get dbAverageCategoryMap =>
-      jsonEncode(averageCategoryMap.map((key, value) => MapEntry('${key.index}', value)));
+  String get dbAverageCategoryMap => jsonEncode(
+      averageCategoryMap.map((key, value) => MapEntry('${key.index}', value)));
 
   set dbAverageCategoryMap(String json) {
-    averageCategoryMap =
-        Map.from(jsonDecode(json).map((key, value) => MapEntry(CategoryEnum.values[int.parse(key)], value as double)));
+    averageCategoryMap = Map.from(jsonDecode(json).map((key, value) =>
+        MapEntry(CategoryEnum.values[int.parse(key)], value as double)));
   }
 
   void updateTemp(DataPoint datapoint, DateTime day) {
     var categoryEnum = datapoint.category.target!.category;
-      _tempMap.update(categoryEnum, (value) {
-        var tuple = value;
-        if (tuple.item1.contains(day)) {
-          var updated = tuple.withItem2(tuple.item2 + 1);
-          return updated;
-        } else {
-          tuple.item1.add(day);
-          var updated = tuple.withItem2(tuple.item2 + 1);
-          return updated;
-        }
-      }, ifAbsent: () {
-        return Tuple2([day], 1);
-      });
+    _tempMap.update(categoryEnum, (value) {
+      var tuple = value;
+      if (tuple.item1.contains(day)) {
+        var updated = tuple.withItem2(tuple.item2 + 1);
+        return updated;
+      } else {
+        tuple.item1.add(day);
+        var updated = tuple.withItem2(tuple.item2 + 1);
+        return updated;
+      }
+    }, ifAbsent: () {
+      return Tuple2([day], 1);
+    });
   }
 
   void calculateAverages() {
     for (var entry in _tempMap.entries) {
       var category = entry.key;
       double average = entry.value.item2 / entry.value.item1.length;
-      averageCategoryMap.addAll({category:average});
+      averageCategoryMap.addAll({category: average});
     }
   }
 }
