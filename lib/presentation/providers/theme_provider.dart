@@ -63,7 +63,7 @@ class ThemeProvider with ChangeNotifier {
             fontSize: 12,
             fontWeight: FontWeight.w500),
         bodyText1: const TextStyle(
-            color: Colors.white, fontSize: 10, fontWeight: FontWeight.w500),
+            color: Colors.white, fontSize: 10, fontWeight: FontWeight.w400),
         bodyText2: const TextStyle(
             color: Colors.white, fontSize: 12, fontWeight: FontWeight.w200),
       ),
@@ -79,7 +79,8 @@ class ThemeProvider with ChangeNotifier {
             isLightTheme ? const Color(0xFFFFFFFF) : const Color(0xFF272837),
         highlightColor:
             isLightTheme ? const Color(0xFFFFFFFF) : const Color(0xFF363747),
-        tonedColor: isLightTheme ? const Color(0xFFFFFFFF) : const Color(0xFF424354),
+        tonedColor:
+            isLightTheme ? const Color(0xFFFFFFFF) : const Color(0xFF424354),
         iconSize: 12,
         menuHeaderStyle: const TextStyle(
             color: Color(0xFFAEAFBB),

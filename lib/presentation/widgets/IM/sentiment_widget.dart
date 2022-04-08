@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 
@@ -25,6 +26,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
 
   List<DataCategory> chosenCategories = [];
   int timeEstimateSeconds = 0;
+  bool translate = false;
   bool analyzing = false;
   String message = "Analyzing ...";
 
@@ -67,31 +69,69 @@ class _SentimentWidgetState extends State<SentimentWidget> {
 
   Widget _analyzeBar() {
     var timeEstimate = _timeEstimateOnCat();
-    return Container(
-        child: Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+    return Column(
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+        Container(
+            child: Row(children: [
+          Checkbox(
+              activeColor: themeProvider.themeMode().themeColor,
+              value: translate,
+              onChanged: (value) {
+                translate = value ?? false;
+                setState(() {});
+              }),
+          const Text("Translate text"),
+          SizedBox(width: 5),
+          Tooltip(
+              verticalOffset: 10,
+              preferBelow: false,
+              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              textStyle: themeProvider.themeData().textTheme.bodyText1,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: themeProvider.themeData().scaffoldBackgroundColor),
+              message:
+                  "Only english text can be analysed.\nTranslating will take extra time",
+              child: Container(
+                child: Icon(
+                  Iconsax.info_circle,
+                  size: 14,
+                ),
+              )),
+        ])),
+        Divider(
+            height: 22,
+            thickness: 2,
+            color: themeProvider.themeMode().tonedColor),
+        Container(
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            const Text("Time estimate",
-                style: TextStyle(fontSize: 9, fontWeight: FontWeight.w400)),
-            Text(timeEstimate, style: const TextStyle(fontSize: 12))
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                const Text("Time estimate",
+                    style: TextStyle(fontSize: 9, fontWeight: FontWeight.w400)),
+                Text(timeEstimate, style: const TextStyle(fontSize: 12))
+              ],
+            ),
+            const SizedBox(width: 10),
+            DefaultButton(
+                text: "          Analyze          ",
+                onPressed: profiles.isEmpty
+                    ? null
+                    : () async {
+                        analyzing = true;
+                        await sentimentService.connotateOwnTextsFromCategory(
+                            chosenCategories,
+                            _sentimentAnalyzingProgress,
+                            translate);
+                        setState(() {});
+                      })
           ],
-        ),
-        const SizedBox(width: 10),
-        DefaultButton(
-            text: "          Analyze          ",
-            onPressed: profiles.isEmpty
-                ? null
-                : () async {
-                    analyzing = true;
-                    await sentimentService.connotateOwnTextsFromCategory(
-                        chosenCategories, _sentimentAnalyzingProgress);
-                    setState(() {});
-                  })
+        )),
       ],
-    ));
+    );
   }
 
   _sentimentAnalyzingProgress(String message, bool isDone) {
