@@ -11,7 +11,6 @@ import 'package:waultar/data/entities/timebuckets/month_bucket.dart';
 class YearBucket {
   int id;
 
-  @Unique()
   int year;
 
   @Property(type: PropertyType.dateNano)
