@@ -56,7 +56,7 @@ class ImageClassifier extends IMLModel {
     required this.labelsLength,
     required this.preProcessNormalizeOp,
     required this.postProcessNormalizeOp,
-    required this.interpreterOptions,
+    this.interpreterOptions,
   }) {
     init();
   }
