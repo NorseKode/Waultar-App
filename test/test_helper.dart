@@ -78,9 +78,12 @@ class TestHelper {
         path_dart.normalize('${scriptDir.path}/test/waultar/objectbox'));
     final extractsDir = Directory(
         path_dart.normalize('${scriptDir.path}/test/waultar/extracts'));
+    final aiDir = Directory(
+        path_dart.normalize('${scriptDir.path}/test/waultar/ai_models'));
     try {
       await dbDir.delete(recursive: true);
       await extractsDir.delete(recursive: true);
+      await aiDir.delete(recursive: true);
     } catch (e) {
       // print(e);
       return;

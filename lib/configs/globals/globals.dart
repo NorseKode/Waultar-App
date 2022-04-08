@@ -10,3 +10,4 @@ var ISTRACKALL = false;
 const FACEBOOKDOWNLOADDATAURL = "https://www.facebook.com/dyi/?referrer=yfi_settings";
 const INSTAGRAMDOWNLOADDATAURL = "https://www.instagram.com/download/request/";
 Level LOGLEVEL = Level.INFO;
+var AIPATH = "";

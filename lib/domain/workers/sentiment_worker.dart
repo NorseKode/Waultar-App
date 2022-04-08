@@ -90,7 +90,8 @@ Future sentimentWorkerBody(
 
       String _cleanText(String text) {
         var clean = RemoveEmoji().removemoji(text);
-        clean = clean.replaceAll(RegExp(r'#\w+\h*'), '');
+        clean = clean.replaceAll(RegExp(r'#\w+\s\h*'), '');
+        clean = clean.replaceAll(RegExp(r'@\w+\s\h*'), '');
         return clean;
       }
 
@@ -113,6 +114,12 @@ Future sentimentWorkerBody(
             if (data.isPerformanceTracking)
               performance.startReading("classify all");
 
+            if (data.isPerformanceTracking) performance.startReading("classify");
+            var text = _cleanText(point.sentimentText!);
+            text = text.trim();
+            if (text.length > 256) text = text.substring(0, 256);
+
+            if (text.isNotEmpty) {
             // if (data.isPerformanceTracking) performance.startReading("translate");
             // await translator.translate(input: point.sentimentText!, outputLanguage: 'en');
             // if (data.isPerformanceTracking)
@@ -121,12 +128,11 @@ Future sentimentWorkerBody(
 
             if (data.isPerformanceTracking)
               performance.startReading("classify");
-            var text = _cleanText(point.sentimentText!);
             if (data.translate) {
               text =
                   await translator.translate(input: text, outputLanguage: 'en');
             }
-            if (text.length > 256) text = text.substring(0, 256);
+
             var sentimentScore = sentimentClassifier.classify(text);
             point.sentimentScore = sentimentScore.last; //0-1
             if (data.isPerformanceTracking)
@@ -139,8 +145,11 @@ Future sentimentWorkerBody(
               performance.addReading(performance.parentKey, "repo",
                   performance.stopReading("repo"));
 
-            _logger.logger.info(
-                "Gave DataPoint with id ${point.id} a score of ${point.sentimentScore}");
+            _logger.logger
+                .info("Gave DataPoint with id ${point.id} a score of ${point.sentimentScore}");
+            } else {
+              _logger.logger.info("DataPoint had an empty sentiment text");
+            }
           } else {
             _logger.logger.info(
                 "DataPoint with id: ${point.id} had a sentiment text that was either null, empty or not the users data");

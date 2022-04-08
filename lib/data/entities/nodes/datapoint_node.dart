@@ -42,8 +42,10 @@ class DataPoint {
   late String searchTerms;
 
   // the actual data stored in JSON format
-  late String values;
-
+  @Property(type: PropertyType.byteVector)
+  late List<int> valuesJsonBytes;
+  String get values => utf8.decode(valuesJsonBytes, allowMalformed: true);
+  
   @Transient()
   late Map<String, dynamic> valuesMap;
 
@@ -64,7 +66,7 @@ class DataPoint {
   }
 
   Map<String, dynamic> get asMap {
-    var decoded = jsonDecode(values);
+    var decoded = jsonDecode(utf8.decode(utf8.encode(values)));
     if (decoded is List<dynamic>) {
       return {'values': decoded};
     } else {
@@ -85,7 +87,8 @@ class DataPoint {
     dataPointName.target = parentName;
     stringName = parentName.name;
     profile.target = targetProfile;
-    values = jsonEncode(json);
+    valuesJsonBytes = utf8.encode(utf8.decode(jsonEncode(json).codeUnits));
+    if (values.contains("naughty")) print(asMap.toString());
 
     final StringBuffer sb = StringBuffer();
     sb.write('${parentName.name} ');
@@ -94,7 +97,11 @@ class DataPoint {
 
     searchTerms = sb.toString();
     createdAt = DateTime.now();
-    sentimentText = _getSentimentText(dataCategory, json, targetProfile, parentName);
+
+    var temp = _getSentimentText(dataCategory, json, targetProfile, parentName);
+    if (temp != null) {
+      sentimentText = utf8.decode(temp.codeUnits);
+    }
   }
 
   String? _getSentimentText(
@@ -285,6 +292,7 @@ class DataPoint {
       'files': files.map((element) => element.id).toList(),
       'links': links.map((element) => element.id).toList(),
       'searchTerms': searchTerms,
+      'valuesJsonBytes': valuesJsonBytes,
       'values': values,
       'createdAt': createdAt.millisecondsSinceEpoch,
       'dbCreatedAt': dbCreatedAt,

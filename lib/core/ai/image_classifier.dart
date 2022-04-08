@@ -56,13 +56,15 @@ class ImageClassifier extends IMLModel {
     required this.labelsLength,
     required this.preProcessNormalizeOp,
     required this.postProcessNormalizeOp,
-    required this.interpreterOptions,
+    this.interpreterOptions,
   }) {
     init();
   }
 
   void _loadModel() async {
-    _interpreter = Interpreter.fromFile(File(modelPath), options: interpreterOptions);
+    var path = locator.get<String>(instanceName: 'ai_folder');
+    _interpreter =
+        Interpreter.fromFile(File(modelPath), path, options: interpreterOptions);
 
     var outputTensors = _interpreter.getOutputTensors();
     _outputShapes = [];
@@ -78,7 +80,8 @@ class ImageClassifier extends IMLModel {
     _outputType = _interpreter.getOutputTensor(0).type;
 
     _outputBuffer = TensorBuffer.createFixedSize(_outputShape, _outputType);
-    _probabilityProcessor = TensorProcessorBuilder().add(postProcessNormalizeOp).build();
+    _probabilityProcessor =
+        TensorProcessorBuilder().add(postProcessNormalizeOp).build();
   }
 
   void _loadLabels() {
@@ -94,14 +97,17 @@ class ImageClassifier extends IMLModel {
 
     return ImageProcessorBuilder()
         .add(ResizeWithCropOrPadOp(cropSize, cropSize))
-        .add(ResizeOp(_inputShape[1], _inputShape[2], ResizeMethod.NEAREST_NEIGHBOUR))
+        .add(ResizeOp(
+            _inputShape[1], _inputShape[2], ResizeMethod.NEAREST_NEIGHBOUR))
         .add(preProcessNormalizeOp)
         .build()
         .process(_inputImage);
   }
 
-  List<Tuple2<String, double>> predict(String imagePath, int amountOfTopCategories) {
-    _appLogger.logger.info("Predicting image with path: $imagePath, and returning $amountOfTopCategories categories");
+  List<Tuple2<String, double>> predict(
+      String imagePath, int amountOfTopCategories) {
+    _appLogger.logger.info(
+        "Predicting image with path: $imagePath, and returning $amountOfTopCategories categories");
 
     // if (ISPERFORMANCETRACKING) {
     //   _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
@@ -111,7 +117,8 @@ class ImageClassifier extends IMLModel {
 
     var image = img.decodeImage(File(imagePath).readAsBytesSync());
     if (image == null) {
-      throw AIException("Couldn't locate image from path: $imagePath", this, image);
+      throw AIException(
+          "Couldn't locate image from path: $imagePath", this, image);
     }
 
     _inputImage = TensorImage(_inputType);
@@ -120,9 +127,9 @@ class ImageClassifier extends IMLModel {
 
     _interpreter.run(_inputImage.buffer, _outputBuffer.getBuffer());
 
-    Map<String, double> labeledProb =
-        TensorLabel.fromList(_labels, _probabilityProcessor.process(_outputBuffer))
-            .getMapWithFloatValue();
+    Map<String, double> labeledProb = TensorLabel.fromList(
+            _labels, _probabilityProcessor.process(_outputBuffer))
+        .getMapWithFloatValue();
     final pred = _getProbability(labeledProb).toList();
 
     var results = <Tuple2<String, double>>[];
@@ -140,7 +147,8 @@ class ImageClassifier extends IMLModel {
     return results;
   }
 
-  PriorityQueue<MapEntry<String, double>> _getProbability(Map<String, double> labeledProb) {
+  PriorityQueue<MapEntry<String, double>> _getProbability(
+      Map<String, double> labeledProb) {
     var pq = PriorityQueue<MapEntry<String, double>>(_compare);
     pq.addAll(labeledProb.entries);
 
