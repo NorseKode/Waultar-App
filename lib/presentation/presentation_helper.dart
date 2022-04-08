@@ -77,6 +77,7 @@ class PresentationHelper {
     );
 
     file.createSync(recursive: true);
-    file.writeAsStringSync(entitiesJson);
+    // file.writeAsStringSync(entitiesJson);
+    file.writeAsBytesSync(utf8.encode(entitiesJson));
   }
 }
