@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:path/path.dart' as path_dart;
 import 'package:waultar/configs/globals/category_enums.dart';
@@ -43,7 +44,8 @@ class TestHelper {
     var profile = ProfileDocument(name: 'Test Profile Name');
     profile.service.target = service;
     int created = box.put(profile);
-    return box.get(created)!;
+    var entity = box.get(created)!;
+    return entity;
   }
 
   static ServiceModel facebook = ServiceModel(
@@ -96,7 +98,7 @@ class TestHelper {
     await deleteTestFolders();
   }
 
-  static void seedForTimeBuckets() {
+  static ProfileDocument seedForTimeBuckets() {
     var context = locator.get<ObjectBox>(instanceName: 'context');
     var timestamps = <int>[
       1647774619, // Sun Mar 20 2022 12:10:19 GMT
@@ -127,6 +129,8 @@ class TestHelper {
     var yourPosts = DataPointName(name: 'your posts');
     yourPosts.profile.target = testProfile;
 
+    var randomSentimentScore = Random();
+
     int i = 0;
     for (; i < timestamps.length / 2; i++) {
       var data = {
@@ -139,6 +143,7 @@ class TestHelper {
       };
       var dataPoint = DataPoint.parse(posts, yourPosts, testProfile, data, "");
       yourPosts.dataPoints.add(dataPoint);
+      dataPoint.sentimentScore = randomSentimentScore.nextDouble();
     }
 
     var yourComments = DataPointName(name: 'your comments');
@@ -157,9 +162,11 @@ class TestHelper {
       var dataPoint =
           DataPoint.parse(comments, yourComments, testProfile, data, "");
       yourComments.dataPoints.add(dataPoint);
+      dataPoint.sentimentScore = randomSentimentScore.nextDouble();
     }
     comments.dataPointNames.add(yourComments);
     posts.dataPointNames.add(yourPosts);
     _categoryBox.putMany([posts, comments]);
+    return testProfile;
   }
 }

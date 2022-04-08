@@ -11,6 +11,7 @@ import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/entities/timebuckets/day_bucket.dart';
 import 'package:waultar/data/entities/timebuckets/hour_bucket.dart';
 import 'package:waultar/data/entities/timebuckets/month_bucket.dart';
+import 'package:waultar/data/entities/timebuckets/weekday_average_bucket.dart';
 import 'package:waultar/data/entities/timebuckets/year_bucket.dart';
 
 class BucketsRepository extends IBucketsRepository {
@@ -20,6 +21,7 @@ class BucketsRepository extends IBucketsRepository {
   late final Box<DayBucket> _dayBox;
   late final Box<DataCategory> _categoryBox;
   late final Box<ProfileDocument> _profileBox;
+  late final Box<WeekDayAverageComputed> _averageBox;
 
   BucketsRepository(this._context) {
     _yearBox = _context.store.box<YearBucket>();
@@ -27,6 +29,7 @@ class BucketsRepository extends IBucketsRepository {
     _dayBox = _context.store.box<DayBucket>();
     _categoryBox = _context.store.box<DataCategory>();
     _profileBox = _context.store.box<ProfileDocument>();
+    _averageBox = _context.store.box<WeekDayAverageComputed>();
   }
 
   @override
@@ -71,10 +74,22 @@ class BucketsRepository extends IBucketsRepository {
   }
 
   @override
-  List<YearModel> getAllYearModels() {
+  List<WeekDayAverageComputed> getAverages(ProfileDocument profile) {
+    var builder = _averageBox.query()
+      ..link(WeekDayAverageComputed_.profile,
+          ProfileDocument_.id.equals(profile.id));
+    var weekDays = builder.build().find();
+    weekDays.sort((a, b) => a.weekDay.compareTo(b.weekDay));
+    return weekDays;
+  }
+
+  @override
+  List<YearModel> getAllYearModels(ProfileDocument profile) {
     var listToReturn = <YearModel>[];
     _context.store.runInTransaction(TxMode.read, () {
-      var years = _yearBox.getAll();
+      var query = _yearBox.query()
+        ..link(YearBucket_.profile, ProfileDocument_.id.equals(profile.id));
+      var years = query.build().find();
       for (var year in years) {
         var categoryTuples = <Tuple2<DataCategory, int>>[];
         var profileTuples = <Tuple2<ProfileDocument, int>>[];
@@ -96,21 +111,28 @@ class BucketsRepository extends IBucketsRepository {
           total: year.total,
           dateTime: year.dateTime,
           categoryCount: categoryTuples,
-          profileCount: profileTuples,
+          sentimentScores: year.categorySentimentAverage.entries
+              .map((e) => Tuple2(e.key, e.value))
+              .toList(),
         );
 
         listToReturn.add(model);
       }
     });
     listToReturn.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+    // for (var item in listToReturn) {
+    //   print(item.dateTime.toString());
+    // }
     return listToReturn;
   }
 
   @override
-  List<MonthModel> getAllMonthModels() {
+  List<MonthModel> getAllMonthModels(ProfileDocument profile) {
     var listToReturn = <MonthModel>[];
     _context.store.runInTransaction(TxMode.read, () {
-      var months = _monthBox.getAll();
+      var query = _monthBox.query()
+        ..link(MonthBucket_.profile, ProfileDocument_.id.equals(profile.id));
+      var months = query.build().find();
       for (var month in months) {
         var categoryTuples = <Tuple2<DataCategory, int>>[];
         var profileTuples = <Tuple2<ProfileDocument, int>>[];
@@ -132,50 +154,15 @@ class BucketsRepository extends IBucketsRepository {
           total: month.total,
           dateTime: month.dateTime,
           categoryCount: categoryTuples,
-          profileCount: profileTuples,
+          sentimentScores: month.categorySentimentAverage.entries
+              .map((e) => Tuple2(e.key, e.value))
+              .toList(),
         );
 
         listToReturn.add(model);
       }
     });
     listToReturn.sort((a, b) => a.dateTime.compareTo(b.dateTime));
-    return listToReturn;
-  }
-
-  @override
-  List<DayModel> getAllDayModels() {
-    var listToReturn = <DayModel>[];
-    _context.store.runInTransaction(TxMode.read, () {
-      var days = _dayBox.getAll();
-      for (var day in days) {
-        var categoryTuples = <Tuple2<DataCategory, int>>[];
-        var profileTuples = <Tuple2<ProfileDocument, int>>[];
-        var categoryMap = day.categoryMap;
-        var profileMap = day.profileMap;
-
-        for (var entry in categoryMap.entries) {
-          DataCategory category = _getCategory(entry.key);
-          categoryTuples.add(Tuple2(category, entry.value));
-        }
-        for (var entry in profileMap.entries) {
-          ProfileDocument profile = _getProfile(entry.key);
-          profileTuples.add(Tuple2(profile, entry.value));
-        }
-
-        var model = DayModel(
-          id: day.id,
-          day: day.day,
-          total: day.total,
-          dateTime: day.dateTime,
-          categoryCount: categoryTuples,
-          profileCount: profileTuples,
-          dataPoints: day.dataPoints.map((d) => d.getUIDTO).toList(),
-        );
-
-        listToReturn.add(model);
-      }
-    });
-    listToReturn.sort((a, b) => a.timeValue.compareTo(b.timeValue));
     return listToReturn;
   }
 
@@ -208,14 +195,15 @@ class BucketsRepository extends IBucketsRepository {
           total: day.total,
           dateTime: day.dateTime,
           categoryCount: categoryTuples,
-          profileCount: profileTuples,
-          dataPoints: day.dataPoints.map((d) => d.getUIDTO).toList(),
+          sentimentScores: day.categorySentimentAverage.entries
+              .map((e) => Tuple2(e.key, e.value))
+              .toList(),
         );
         listToReturn.add(model);
       }
     });
 
-    listToReturn.sort((a, b) => a.timeValue.compareTo(b.timeValue));
+    listToReturn.sort((a, b) => a.dateTime.compareTo(b.dateTime));
     return listToReturn;
   }
 
@@ -248,14 +236,61 @@ class BucketsRepository extends IBucketsRepository {
           total: hour.total,
           dateTime: hour.dateTime,
           categoryCount: categoryTuples,
-          profileCount: profileTuples,
-          dataPoints: hour.dataPoints.map((d) => d.getUIDTO).toList(),
+          sentimentScores: hour.categorySentimentAverage.entries
+              .map((e) => Tuple2(e.key, e.value))
+              .toList(),
         );
         listToReturn.add(model);
       }
     });
 
-    listToReturn.sort((a, b) => a.timeValue.compareTo(b.timeValue));
+    listToReturn.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+    return listToReturn;
+  }
+
+  @override
+  List<DayModel> getDaysFrom(DateTime from) {
+    var listToReturn = <DayModel>[];
+    final fromFormatted = from.microsecondsSinceEpoch;
+    final toFormatted =
+        from.add(const Duration(days: 120)).microsecondsSinceEpoch;
+
+    _context.store.runInTransaction(TxMode.read, () {
+      var query = _dayBox
+          .query(DayBucket_.dbDateTime.between(fromFormatted, toFormatted))
+          .build();
+      var days = query.find();
+
+      for (var day in days) {
+        var categoryTuples = <Tuple2<DataCategory, int>>[];
+        var profileTuples = <Tuple2<ProfileDocument, int>>[];
+        var categoryMap = day.categoryMap;
+        var profileMap = day.profileMap;
+
+        for (var entry in categoryMap.entries) {
+          DataCategory category = _getCategory(entry.key);
+          categoryTuples.add(Tuple2(category, entry.value));
+        }
+        for (var entry in profileMap.entries) {
+          ProfileDocument profile = _getProfile(entry.key);
+          profileTuples.add(Tuple2(profile, entry.value));
+        }
+
+        var model = DayModel(
+          id: day.id,
+          day: day.day,
+          total: day.total,
+          dateTime: day.dateTime,
+          categoryCount: categoryTuples,
+          sentimentScores: day.categorySentimentAverage.entries
+              .map((e) => Tuple2(e.key, e.value))
+              .toList(),
+        );
+        listToReturn.add(model);
+      }
+    });
+
+    listToReturn.sort((a, b) => a.dateTime.compareTo(b.dateTime));
     return listToReturn;
   }
 
@@ -288,7 +323,9 @@ class BucketsRepository extends IBucketsRepository {
           total: month.total,
           dateTime: month.dateTime,
           categoryCount: categoryTuples,
-          profileCount: profileTuples,
+          sentimentScores: month.categorySentimentAverage.entries
+              .map((e) => Tuple2(e.key, e.value))
+              .toList(),
         );
         listToReturn.add(model);
       }
@@ -299,20 +336,28 @@ class BucketsRepository extends IBucketsRepository {
   }
 
   @override
-  Future createBuckets(DateTime dataPointsCreatedAfter) async {
+  Future createBuckets(
+      DateTime dataPointsCreatedAfter, ProfileDocument profile) async {
     var createdSince = dataPointsCreatedAfter.microsecondsSinceEpoch;
 
     var years = _yearBox.getAll();
 
     // streams all datapoints that have been created after createdSince
-    var toBeProcessedQuery = _context.store
+    var toBeProcessedLink = _context.store
         .box<DataPoint>()
         .query(DataPoint_.dbCreatedAt.greaterThan(createdSince))
-        .build();
+      ..link(DataPoint_.profile, ProfileDocument_.id.equals(profile.id));
+    var toBeProcessedQuery = toBeProcessedLink.build();
+
+    List<WeekDayAverageComputed> avgList = [];
+    for (int i = 1; i < 8; i++) {
+      avgList.add(WeekDayAverageComputed(weekDay: i));
+    }
 
     var toBeProcessed = toBeProcessedQuery.stream();
     // process each datapoint from the stream
     await for (final dataPoint in toBeProcessed.distinct()) {
+      var profile = dataPoint.profile.target!;
       var timestamps = _scrapeUniqueTimestamps(dataPoint);
 
       if (timestamps.isNotEmpty) {
@@ -327,31 +372,41 @@ class BucketsRepository extends IBucketsRepository {
           int month = dissected.item2;
           int day = dissected.item3;
           int hour = dissected.item4;
+          int weekDay = timestamp.weekday;
 
-          bool yearExists = years.any((element) => element.year == year);
+          var avgDay = avgList.singleWhere((avg) => avg.weekDay == weekDay);
+          avgDay.updateTemp(dataPoint, DateTime(year, month, day));
+
+          bool yearExists = years.any((element) =>
+              element.year == year && element.profile.target!.id == profile.id);
           if (yearExists) {
             var yearBucket =
                 years.singleWhere((element) => element.year == year);
             yearBucket.updateCounts(categoryId, profileId);
+            yearBucket.dataPoints.add(dataPoint);
 
-            bool monthExists =
-                yearBucket.months.any((element) => element.month == month);
+            bool monthExists = yearBucket.months.any((element) =>
+                element.month == month &&
+                element.profile.target!.id == profile.id);
 
             if (monthExists) {
               var monthBucket = yearBucket.months
                   .singleWhere((element) => element.month == month);
               monthBucket.updateCounts(categoryId, profileId);
+              monthBucket.dataPoints.add(dataPoint);
 
-              bool dayExists =
-                  monthBucket.days.any((element) => element.day == day);
+              bool dayExists = monthBucket.days.any((element) =>
+                  element.day == day &&
+                  element.profile.target!.id == profile.id);
               if (dayExists) {
                 var dayBucket = monthBucket.days
                     .singleWhere((element) => element.day == day);
                 dayBucket.updateCounts(categoryId, profileId);
                 dayBucket.dataPoints.add(dataPoint);
 
-                bool hourExists =
-                    dayBucket.hours.any((element) => element.hour == hour);
+                bool hourExists = dayBucket.hours.any((element) =>
+                    element.hour == hour &&
+                    element.profile.target!.id == profile.id);
                 if (hourExists) {
                   var hourBucket = dayBucket.hours
                       .singleWhere((element) => element.hour == hour);
@@ -365,6 +420,7 @@ class BucketsRepository extends IBucketsRepository {
                   );
                   hourBucket.categoryMap = {categoryId: 1};
                   hourBucket.profileMap = {profileId: 1};
+                  hourBucket.profile.target = profile;
                   hourBucket.dataPoints.add(dataPoint);
 
                   dayBucket.hours.add(hourBucket);
@@ -374,9 +430,11 @@ class BucketsRepository extends IBucketsRepository {
                   day: day,
                   total: 1,
                   dateTime: DateTime(year, month, day),
+                  weekDay: weekDay,
                 );
                 dayBucket.categoryMap = {categoryId: 1};
                 dayBucket.profileMap = {profileId: 1};
+                dayBucket.profile.target = profile;
                 dayBucket.dataPoints.add(dataPoint);
 
                 var hourBucket = HourBucket(
@@ -386,6 +444,7 @@ class BucketsRepository extends IBucketsRepository {
                 );
                 hourBucket.categoryMap = {categoryId: 1};
                 hourBucket.profileMap = {profileId: 1};
+                hourBucket.profile.target = profile;
                 hourBucket.dataPoints.add(dataPoint);
 
                 // create the relation in bottom-up order
@@ -400,14 +459,18 @@ class BucketsRepository extends IBucketsRepository {
               );
               monthBucket.categoryMap = {categoryId: 1};
               monthBucket.profileMap = {profileId: 1};
+              monthBucket.profile.target = profile;
+              monthBucket.dataPoints.add(dataPoint);
 
               var dayBucket = DayBucket(
                 day: day,
                 total: 1,
                 dateTime: DateTime(year, month, day),
+                weekDay: weekDay,
               );
               dayBucket.categoryMap = {categoryId: 1};
               dayBucket.profileMap = {profileId: 1};
+              dayBucket.profile.target = profile;
               dayBucket.dataPoints.add(dataPoint);
 
               var hourBucket = HourBucket(
@@ -417,6 +480,7 @@ class BucketsRepository extends IBucketsRepository {
               );
               hourBucket.categoryMap = {categoryId: 1};
               hourBucket.profileMap = {profileId: 1};
+              hourBucket.profile.target = profile;
               hourBucket.dataPoints.add(dataPoint);
 
               // create the relation in bottom-up order
@@ -434,6 +498,8 @@ class BucketsRepository extends IBucketsRepository {
             );
             yearBucket.categoryMap = {categoryId: 1};
             yearBucket.profileMap = {profileId: 1};
+            yearBucket.profile.target = profile;
+            yearBucket.dataPoints.add(dataPoint);
 
             var monthBucket = MonthBucket(
               month: month,
@@ -442,14 +508,18 @@ class BucketsRepository extends IBucketsRepository {
             );
             monthBucket.categoryMap = {categoryId: 1};
             monthBucket.profileMap = {profileId: 1};
+            monthBucket.profile.target = profile;
+            monthBucket.dataPoints.add(dataPoint);
 
             var dayBucket = DayBucket(
               day: day,
               total: 1,
               dateTime: DateTime(year, month, day, hour),
+              weekDay: weekDay,
             );
             dayBucket.categoryMap = {categoryId: 1};
             dayBucket.profileMap = {profileId: 1};
+            dayBucket.profile.target = profile;
             dayBucket.dataPoints.add(dataPoint);
 
             var hourBucket = HourBucket(
@@ -459,6 +529,7 @@ class BucketsRepository extends IBucketsRepository {
             );
             hourBucket.categoryMap = {categoryId: 1};
             hourBucket.profileMap = {profileId: 1};
+            hourBucket.profile.target = profile;
             hourBucket.dataPoints.add(dataPoint);
 
             // create the relation in bottom-up order
@@ -471,6 +542,11 @@ class BucketsRepository extends IBucketsRepository {
       }
     }
 
+    for (var avg in avgList) {
+      avg.calculateAverages();
+      avg.profile.target = profile;
+    }
+    _averageBox.putMany(avgList);
     // when the stream has processed each element we update all the buckets via the root bucket in a single transaction
     toBeProcessedQuery.close();
     _yearBox.putMany(years);
@@ -479,14 +555,15 @@ class BucketsRepository extends IBucketsRepository {
   List<DateTime> _scrapeUniqueTimestamps(DataPoint dataPoint) {
     var timestampsSet = <DateTime>{};
     aux(dynamic data) {
-
       if (data is Map<String, dynamic>) {
         for (var entry in data.entries) {
-          if ((entry.key.contains('time') || entry.key.contains('date')) && entry.value is int) {
+          if ((entry.key.contains('time') || entry.key.contains('date')) &&
+              entry.value is int) {
             var timestamp = tryParse(entry.value);
-            if (timestamp != null) timestampsSet.add(timestamp);    
+            if (timestamp != null) timestampsSet.add(timestamp);
           }
-          if (entry.value is Map<String, dynamic> || entry.value is List<dynamic>) {
+          if (entry.value is Map<String, dynamic> ||
+              entry.value is List<dynamic>) {
             aux(entry.value);
           }
         }
@@ -541,6 +618,86 @@ class BucketsRepository extends IBucketsRepository {
   }
 
   ProfileDocument _getProfile(int id) => _profileBox.get(id)!;
+
+  @override
+  void updateForSentiments(ProfileDocument profile) {
+    _context.store.runIsolated(
+      TxMode.write,
+      (store, profileId) => _calculateSentimentInIsolateYears(store, profileId),
+      profile.id,
+    );
+
+    _context.store.runIsolated(
+      TxMode.write,
+      (store, profileId) =>
+          _calculateSentimentInIsolateMonths(store, profileId),
+      profile.id,
+    );
+
+    _context.store.runIsolated(
+      TxMode.write,
+      (store, profileId) => _calculateSentimentInIsolateDays(store, profileId),
+      profile.id,
+    );
+
+    _context.store.runIsolated(
+      TxMode.write,
+      (store, profileId) => _calculateSentimentInIsolateHours(store, profileId),
+      profile.id,
+    );
+  }
+
+  static Future _calculateSentimentInIsolateYears(
+      Store store, dynamic profileId) async {
+    var yearBox = store.box<YearBucket>();
+    var profile = profileId as int;
+    var builder = yearBox.query()
+      ..link(YearBucket_.profile, ProfileDocument_.id.equals(profile));
+    var years = builder.build().find();
+    for (var year in years) {
+      await year.updateSentiment();
+    }
+    yearBox.putMany(years);
+  }
+
+  static Future _calculateSentimentInIsolateMonths(
+      Store store, dynamic profileId) async {
+    var monthBox = store.box<MonthBucket>();
+    var profile = profileId as int;
+    var builder = monthBox.query()
+      ..link(MonthBucket_.profile, ProfileDocument_.id.equals(profile));
+    var months = builder.build().find();
+    for (var month in months) {
+      await month.updateSentiment();
+    }
+    monthBox.putMany(months);
+  }
+
+  static Future _calculateSentimentInIsolateDays(
+      Store store, dynamic profileId) async {
+    var dayBox = store.box<DayBucket>();
+    var profile = profileId as int;
+    var builder = dayBox.query()
+      ..link(DayBucket_.profile, ProfileDocument_.id.equals(profile));
+    var days = builder.build().find();
+    for (var day in days) {
+      await day.updateSentiment();
+    }
+    dayBox.putMany(days);
+  }
+
+  static Future _calculateSentimentInIsolateHours(
+      Store store, dynamic profileId) async {
+    var hourBox = store.box<HourBucket>();
+    var profile = profileId as int;
+    var builder = hourBox.query()
+      ..link(HourBucket_.profile, ProfileDocument_.id.equals(profile));
+    var hours = builder.build().find();
+    for (var hour in hours) {
+      await hour.updateSentiment();
+    }
+    hourBox.putMany(hours);
+  }
 
   @override
   List<DayBucket> getAllDayBuckets() {

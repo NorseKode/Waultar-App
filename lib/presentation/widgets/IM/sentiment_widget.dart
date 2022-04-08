@@ -84,9 +84,9 @@ class _SentimentWidgetState extends State<SentimentWidget> {
             text: "          Analyze          ",
             onPressed: profiles.isEmpty
                 ? null
-                : () {
+                : () async {
                     analyzing = true;
-                    sentimentService.connotateOwnTextsFromCategory(
+                    await sentimentService.connotateOwnTextsFromCategory(
                         chosenCategories, _sentimentAnalyzingProgress);
                     setState(() {});
                   })
