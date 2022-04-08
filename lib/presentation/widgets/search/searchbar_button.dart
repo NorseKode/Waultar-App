@@ -8,6 +8,7 @@ import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/domain/services/text_search_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 
 class SearchBarButton extends StatefulWidget {
   const SearchBarButton({Key? key}) : super(key: key);
@@ -278,12 +279,21 @@ class _SearchBarButtonState extends State<SearchBarButton> {
         controller: _scrollController,
         itemCount: _contents.length,
         itemBuilder: (_, index) => Container(
-          height: 50,
-          color: _contents[index].getAssociatedColor(),
-          child: Column(
-            children: [
-              Text(_contents[index].getMostInformativeField()),
-            ],
+          child: Container(
+            child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _contents[index].getMostInformativeField(),
+                        style: themeProvider.themeData().textTheme.headline1,
+                      ),
+                      SizedBox(height: 15),
+                      Text(
+                        _contents[index].toString(),
+                      )
+                    ])),
           ),
         ),
       ),
