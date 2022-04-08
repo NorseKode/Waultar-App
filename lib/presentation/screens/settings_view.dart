@@ -46,7 +46,6 @@ class _SettingsViewState extends State<SettingsView> {
               PresentationHelper.nukeDatabase();
             },
           ),
-          const Divider(),
           Row(
             children: [
               const Text("Enable performance mode"),
@@ -66,14 +65,12 @@ class _SettingsViewState extends State<SettingsView> {
               ),
             ],
           ),
-          const Divider(),
           DefaultButton(
             text: "Delete Image Tags",
             onPressed: () {
               locator.get<MediaRepository>(instanceName: 'mediaRepo').deleteAllImageTags();
             },
           ),
-          const Divider(),
           DefaultButton(
             text: 'Dump Database As Json',
             onPressed: () {
@@ -82,6 +79,11 @@ class _SettingsViewState extends State<SettingsView> {
               PresentationHelper.dumpDbAsJson();
             },
           ),
+          DefaultButton(
+            text: "Delete all sentiment scores",
+            onPressed: () => PresentationHelper.deleteAllSentimentScores(),
+          ),
+          const Divider(),
         ],
       ),
     );

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repository.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_utility_repostitory.dart';
+import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/repositories/data_category_repo.dart';
 import 'package:waultar/data/repositories/datapoint_name_repo.dart';
 import 'package:waultar/data/repositories/datapoint_repo.dart';
@@ -79,5 +80,12 @@ class PresentationHelper {
     file.createSync(recursive: true);
     // file.writeAsStringSync(entitiesJson);
     file.writeAsBytesSync(utf8.encode(entitiesJson));
+  }
+
+  static void deleteAllSentimentScores() {
+    var updatedDataPoints = _dataRepo.readAll().map<DataPoint>((e) {
+      e.sentimentScore = null;
+      return e;
+    });
   }
 }
