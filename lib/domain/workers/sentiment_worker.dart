@@ -27,7 +27,7 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
       var dataRepo = locator.get<DataPointRepository>(instanceName: 'dataRepo');
       var translator = locator.get<ITranslatorService>(instanceName: 'translator');
       var sentimentClassifier =
-          SentimentClassifierTextClassifierTFLite(aiFolderPath: data.aiFolder);
+          SentimentClassifierTextClassifierTFLite();
 
       if (data.isPerformanceTracking) {
         performance.init(newParentKey: "Sentiment classification");
@@ -99,8 +99,6 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
 
           if (isOwnData && point.sentimentText != null && point.sentimentText!.isNotEmpty) {
             if (data.isPerformanceTracking) performance.startReading("classify all");
-
-            var text = point.sentimentText!;
 
             // if (data.isPerformanceTracking) performance.startReading("translate");
             // await translator.translate(input: point.sentimentText!, outputLanguage: 'en');
