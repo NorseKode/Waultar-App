@@ -43,7 +43,7 @@ class ImageClassifier extends IMLModel {
   init() {
     _appLogger.logger.info("Init of image classifier called");
 
-    interpreterOptions = InterpreterOptions();
+    // interpreterOptions = InterpreterOptions();
     _loadModel();
     _loadLabels();
 
