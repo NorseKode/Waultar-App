@@ -1,13 +1,14 @@
 import json
 import os
 
-def taggedImageReadingToConsole(path):
+def sentimentReadingToConsole(path):
     taggedImages = json.load(open(path))
 
     totalTime = taggedImages["elapsedTime"]
-    bucketRepoUpdateCount = 0
-    bucketRepoUpdateTime = 0
-    sentimentClassificationTime = taggedImages["childs"][0]["elapsedTime"]
+    childs = taggedImages["childs"]
+    bucketRepoUpdateCount = 1
+    bucketRepoUpdateTime = childs[0]["elapsedTime"]
+    sentimentClassificationTime = childs[1]["elapsedTime"]
     setupTime = 0
     _isOwnDataCount = 0
     _isOwnDataTime = 0
@@ -17,9 +18,9 @@ def taggedImageReadingToConsole(path):
     classifyTime = 0
     repoCount = 0
     repoTime = 0
-    info = taggedImages["childs"][1]["childs"]
+    childs = taggedImages["childs"][1]["childs"]
 
-    for point in info["childs"]:
+    for point in childs:
         if point["key"] == "Setup":
             setupTime = point["elapsedTime"]
         if point["key"] == "_isOwnData":
@@ -35,8 +36,11 @@ def taggedImageReadingToConsole(path):
             repoCount = repoCount + 1
             repoTime = repoTime + point["elapsedTime"]
 
-    print(f"Image tagging took {sentimentClassificationTime / 100000} seconds")
-    print((f"\tWith the setup taking {setupTime / sentimentClassificationTime}"))
-    print((f"\tWith the _isOwnData taking {_isOwnDataTime / sentimentClassificationTime}"))
-    print((f"\tWith the clean text taking {cleanTextTime / sentimentClassificationTime}"))
-    print((f"\tWith the classify taking {cleanTextTime / sentimentClassificationTime}"))
+    print(f"Sentiment classification took {totalTime / 100000} seconds")
+    print(f"\tWith the update of buckets repo taking {bucketRepoUpdateTime / totalTime}% of the time")
+    print(f"\tWith the sentiment classification taking {sentimentClassificationTime / totalTime}% of the time")
+    print("\tIn sentiment sentiment classification:")
+    print(f"\t\tThe setup took {setupTime / sentimentClassificationTime}% and was called {1} times")
+    print(f"\t\tThe _isOwnData taking {_isOwnDataTime / sentimentClassificationTime}% and was called {_isOwnDataCount} times")
+    print(f"\t\tThe clean text taking {cleanTextTime / sentimentClassificationTime}% and was called {cleanTextCount} times")
+    print(f"\t\tThe classify taking {classifyTime / sentimentClassificationTime}% and was called {classifyCount} times")

@@ -1,6 +1,7 @@
 import os
 import code.image_tagging as it
 import code.parser as p
+import code.sentiment as s
 
 folder = "readings";
 
@@ -19,5 +20,5 @@ imageData = os.path.join(folder, "1649508359604-Tagging of images only total.jso
 # print("###### Image Tagging - End ######\n")
 
 print("##### Sentiment - Start #####")
-it.taggedImageReadingToConsole(sentimentData)
+s.sentimentReadingToConsole(sentimentData)
 print("###### Sentiment - End ######\n")
