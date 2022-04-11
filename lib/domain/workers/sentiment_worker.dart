@@ -17,19 +17,15 @@ import 'package:path/path.dart' as dart_path;
 import 'package:waultar/startup.dart';
 import 'package:remove_emoji/remove_emoji.dart';
 
-Future sentimentWorkerBody(
-    dynamic data, SendPort mainSendPort, Function onError) async {
+Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError) async {
   if (data is IsolateSentimentStartPackage) {
     try {
       await setupIsolate(mainSendPort, data, data.waultarPath);
       var _logger = locator.get<BaseLogger>(instanceName: 'logger');
-      var performance =
-          locator.get<PerformanceHelper>(instanceName: 'performance');
-      var categoryRepo =
-          locator.get<DataCategoryRepository>(instanceName: 'categoryRepo');
+      var performance = locator.get<PerformanceHelper>(instanceName: 'performance');
+      var categoryRepo = locator.get<DataCategoryRepository>(instanceName: 'categoryRepo');
       var dataRepo = locator.get<DataPointRepository>(instanceName: 'dataRepo');
-      var translator =
-          locator.get<ITranslatorService>(instanceName: 'translator');
+      var translator = locator.get<ITranslatorService>(instanceName: 'translator');
       var sentimentClassifier = SentimentClassifierTextClassifierTFLite();
 
       if (data.isPerformanceTracking) {
@@ -40,9 +36,7 @@ Future sentimentWorkerBody(
       if (data.isPerformanceTracking) {
         performance.startReading("Setup");
       }
-      var categories = data.categoriesIds
-          .map((e) => categoryRepo.getCategoryById(e)!)
-          .toList();
+      var categories = data.categoriesIds.map((e) => categoryRepo.getCategoryById(e)!).toList();
 
       var username = "";
       var profile = categories.first.profile.target!;
@@ -53,8 +47,7 @@ Future sentimentWorkerBody(
         if (profile.service.target!.serviceName == "Instagram") {
           if (element.name == "profile user") {
             for (var point in element.dataPoints) {
-              username =
-                  ((point.asMap["string_map_data"])["Username"])["value"];
+              username = ((point.asMap["string_map_data"])["Username"])["value"];
             }
           }
         } else {
@@ -70,12 +63,10 @@ Future sentimentWorkerBody(
         }
       });
       if (data.isPerformanceTracking) {
-        performance.addReading(
-            performance.parentKey, "Setup", performance.stopReading("Setup"));
+        performance.addReading(performance.parentKey, "Setup", performance.stopReading("Setup"));
       }
 
-      bool _isOwnData(
-          DataPoint point, String profileUsername, String profileName) {
+      bool _isOwnData(DataPoint point, String profileUsername, String profileName) {
         switch (point.category.target!.category) {
           case CategoryEnum.messaging:
             if (point.asMap["sender_name"] == profileUsername) {
@@ -95,58 +86,50 @@ Future sentimentWorkerBody(
         return clean;
       }
 
-      _logger.logger.info(
-          "Started sentiment scoring of ${data.categoriesIds.length} categories");
+      _logger.logger.info("Started sentiment scoring of ${data.categoriesIds.length} categories");
 
       for (var category in categories) {
         List<DataPoint> dataPoints = dataRepo.readAllFromCategory(category);
         for (var point in dataPoints) {
-          if (data.isPerformanceTracking)
-            performance.startReading("_isOwnData");
+          if (data.isPerformanceTracking) performance.startReading("_isOwnData");
           var isOwnData = _isOwnData(point, username, profile.name);
           if (data.isPerformanceTracking)
             performance.addReading(performance.parentKey, "_isOwnData",
                 performance.stopReading(performance.parentKey));
 
-          if (isOwnData &&
-              point.sentimentText != null &&
-              point.sentimentText!.isNotEmpty) {
-            if (data.isPerformanceTracking)
-              performance.startReading("classify all");
-
-            if (data.isPerformanceTracking) performance.startReading("classify");
+          if (isOwnData && point.sentimentText != null && point.sentimentText!.isNotEmpty) {
+            if (data.isPerformanceTracking) performance.startReading("_cleanText");
             var text = _cleanText(point.sentimentText!);
             text = text.trim();
             if (text.length > 256) text = text.substring(0, 256);
+            if (data.isPerformanceTracking)
+              performance.addReading(
+                  performance.parentKey, "clean text", performance.stopReading("_cleanText"));
 
             if (text.isNotEmpty) {
-            // if (data.isPerformanceTracking) performance.startReading("translate");
-            // await translator.translate(input: point.sentimentText!, outputLanguage: 'en');
-            // if (data.isPerformanceTracking)
-            //   performance.addReading(
-            //       performance.parentKey, "translate", performance.stopReading("translate"));
+              if (data.translate) {
+                if (data.isPerformanceTracking) performance.startReading("translate");
+                text = await translator.translate(input: text, outputLanguage: 'en');
+                if (data.isPerformanceTracking)
+                  performance.addReading(
+                      performance.parentKey, "translate", performance.stopReading("translate"));
+              }
 
-            if (data.isPerformanceTracking)
-              performance.startReading("classify");
-            if (data.translate) {
-              text =
-                  await translator.translate(input: text, outputLanguage: 'en');
-            }
+            if (data.isPerformanceTracking) performance.startReading("classify");
+              var sentimentScore = sentimentClassifier.classify(text);
+              point.sentimentScore = sentimentScore.last; //0-1
+              if (data.isPerformanceTracking)
+                performance.addReading(
+                    performance.parentKey, "classify", performance.stopReading("classify"));
 
-            var sentimentScore = sentimentClassifier.classify(text);
-            point.sentimentScore = sentimentScore.last; //0-1
-            if (data.isPerformanceTracking)
-              performance.addReading(performance.parentKey, "classify",
-                  performance.stopReading("classify"));
+              if (data.isPerformanceTracking) performance.startReading("repo");
+              dataRepo.addDataPoint(point);
+              if (data.isPerformanceTracking)
+                performance.addReading(
+                    performance.parentKey, "repo", performance.stopReading("repo"));
 
-            if (data.isPerformanceTracking) performance.startReading("repo");
-            dataRepo.addDataPoint(point);
-            if (data.isPerformanceTracking)
-              performance.addReading(performance.parentKey, "repo",
-                  performance.stopReading("repo"));
-
-            _logger.logger
-                .info("Gave DataPoint with id ${point.id} a score of ${point.sentimentScore}");
+              _logger.logger
+                  .info("Gave DataPoint with id ${point.id} a score of ${point.sentimentScore}");
             } else {
               _logger.logger.info("DataPoint had an empty sentiment text");
             }
@@ -166,9 +149,8 @@ Future sentimentWorkerBody(
       mainSendPort.send(MainSentimentClassifyProgressPackage(
         amountTagged: 0,
         isDone: true,
-        performanceDataPoint: data.isPerformanceTracking
-            ? jsonEncode(performance.parentDataPoint)
-            : "",
+        performanceDataPoint:
+            data.isPerformanceTracking ? jsonEncode(performance.parentDataPoint.toMap()) : "",
       ));
     } catch (e, stacktrace) {
       mainSendPort.send(LogRecordPackage(e.toString(), stacktrace.toString()));
@@ -182,13 +164,9 @@ Future sentimentWorkerBody(
 // run setupServices with configuration
 // this call enables you to use all normal dependencies, the logger and objectbox
 // - it abstracts away that the code being executed is in its own memory space
-Future<void> setupIsolate(
-    SendPort sendPort, InitiatorPackage setupData, String waultarPath) async {
+Future<void> setupIsolate(SendPort sendPort, InitiatorPackage setupData, String waultarPath) async {
   await setupServices(
-      testing: setupData.testing,
-      isolate: true,
-      sendPort: sendPort,
-      waultarPath: waultarPath);
+      testing: setupData.testing, isolate: true, sendPort: sendPort, waultarPath: waultarPath);
 }
 
 class IsolateSentimentStartPackage extends InitiatorPackage {
