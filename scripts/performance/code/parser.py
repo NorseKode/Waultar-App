@@ -16,6 +16,7 @@ def parserPerformanceToConsole(path):
     cleanFileNameTotalTime = 0
 
     for point in parseData["childs"]:
+        # print(f"\nStart: {point} End\n")
         if point["key"] == "getFromFolderName":
             getFromFolderNameCount = getFromFolderNameCount + 1
             getFromFolderNameTotalTime = getFromFolderNameTotalTime + point["elapsedTime"] 

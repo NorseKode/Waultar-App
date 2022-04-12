@@ -48,7 +48,7 @@ plt.scatter(centroids[:, 0], centroids[:, 1], c='red', s=50)
 plotPath = pathToFile + "scatterPlot.pdf"
 plt.savefig(plotPath)
 
-# saveFilePath = pathToFile + "similar_values.json"
-# print(f"Writing a json file of similar values at: {saveFilePath}")
-# saveFile = open(saveFilePath, 'w', encoding="utf8")
-# json.dump(similar_values, saveFile, ensure_ascii=False)
+saveFilePath = pathToFile + "similar_values.json"
+print(f"Writing a json file of similar values at: {saveFilePath}")
+saveFile = open(saveFilePath, 'w', encoding="utf8")
+json.dump(similar_values, saveFile, ensure_ascii=False)

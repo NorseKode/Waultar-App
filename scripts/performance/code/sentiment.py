@@ -20,6 +20,11 @@ def sentimentReadingToConsole(path):
     repoTime = 0
     childs = taggedImages["childs"][1]["childs"]
 
+    # Cluster
+    x_list = []
+    y_list = []
+    similar_values = []
+
     for point in childs:
         if point["key"] == "Setup":
             setupTime = point["elapsedTime"]
