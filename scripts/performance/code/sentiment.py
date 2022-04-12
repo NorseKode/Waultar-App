@@ -20,11 +20,6 @@ def sentimentReadingToConsole(path):
     repoTime = 0
     childs = taggedImages["childs"][1]["childs"]
 
-    # Cluster
-    x_list = []
-    y_list = []
-    similar_values = []
-
     for point in childs:
         if point["key"] == "Setup":
             setupTime = point["elapsedTime"]
@@ -41,7 +36,7 @@ def sentimentReadingToConsole(path):
             repoCount = repoCount + 1
             repoTime = repoTime + point["elapsedTime"]
 
-    print(f"Sentiment classification took {totalTime / 100000} seconds")
+    print(f"Sentiment classification took {totalTime / 1000000} seconds")
     print(f"\tWith the update of buckets repo taking {bucketRepoUpdateTime / totalTime}% of the time")
     print(f"\tWith the sentiment classification taking {sentimentClassificationTime / totalTime}% of the time")
     print("\tIn sentiment sentiment classification:")

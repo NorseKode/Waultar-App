@@ -67,7 +67,7 @@ class ParserService implements IParserService {
   _startExtracting(String zipPath, Function callback, ProfileDocument profile) {
     var initiator = IsolateUnzipStartPackage(
       pathToZip: zipPath,
-      isPerformanceTracking: ISTRACKALL,
+      isPerformanceTracking: ISPERFORMANCETRACKING,
       profileName: profile.name,
       waultarPath: _waultarPath,
     );

@@ -21,13 +21,21 @@ class DataPointRepository {
   int count() => _dataBox.count();
 
   List<DataPoint> readAllFromCategory(DataCategory category) {
-    var query =
-        _dataBox.query(DataPoint_.category.equals(category.id)).build().find();
+    var query = _dataBox.query(DataPoint_.category.equals(category.id)).build().find();
     return query;
   }
 
-  List<UIDTO> search(
-      List<int> categoryIds, String searchString, int offset, int limit) {
+  List<DataPoint> readAllFromCategoryPagination(DataCategory category, int offset, int limit) {
+    var query = _dataBox.query(DataPoint_.category.equals(category.id)).build();
+
+    query
+      ..offset = offset
+      ..limit = limit;
+
+    return query.find();
+  }
+
+  List<UIDTO> search(List<int> categoryIds, String searchString, int offset, int limit) {
     var builder = _dataBox.query(
       DataPoint_.searchTerms.contains(
         searchString,
@@ -45,7 +53,6 @@ class DataPointRepository {
       ..limit = limit;
     return query.find().map((e) => e.getUIDTO).toList();
   }
-
 }
 
 class UIDTO implements UIModel {

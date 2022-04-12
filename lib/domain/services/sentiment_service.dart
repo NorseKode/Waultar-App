@@ -60,7 +60,7 @@ class SentimentService extends ISentimentService {
       aiFolder: locator.get<String>(instanceName: 'ai_folder'),
       categoriesIds: categories.map((e) => e.id).toList(),
       translate: translate,
-      isPerformanceTracking: ISTRACKALL,
+      isPerformanceTracking: ISPERFORMANCETRACKING,
     );
 
     _listenSentimentClassify(dynamic data) {

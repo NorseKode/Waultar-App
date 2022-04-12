@@ -89,55 +89,73 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
       _logger.logger.info("Started sentiment scoring of ${data.categoriesIds.length} categories");
 
       for (var category in categories) {
-        List<DataPoint> dataPoints = dataRepo.readAllFromCategory(category);
-        for (var point in dataPoints) {
-          if (data.isPerformanceTracking) performance.startReading("_isOwnData");
-          var isOwnData = _isOwnData(point, username, profile.name);
-          if (data.isPerformanceTracking)
-            performance.addReading(performance.parentKey, "_isOwnData",
-                performance.stopReading("_isOwnData"));
-
-          if (isOwnData && point.sentimentText != null && point.sentimentText!.isNotEmpty) {
-            if (data.isPerformanceTracking) performance.startReading("_cleanText");
-            var text = _cleanText(point.sentimentText!);
-            text = text.trim();
-            point.sentimentText = text;
-            if (text.length > 256) text = text.substring(0, 256);
+        aux(List<DataPoint> dataPoints) async {
+          for (var point in dataPoints) {
+            if (data.isPerformanceTracking) performance.startReading("_isOwnData");
+            var isOwnData = _isOwnData(point, username, profile.name);
             if (data.isPerformanceTracking)
-              performance.addReading(
-                  performance.parentKey, "clean text", performance.stopReading("_cleanText"));
+              performance.addReading(performance.parentKey, "_isOwnData",
+                  performance.stopReading("_isOwnData"));
 
-            if (text.isNotEmpty) {
-              if (data.translate) {
-                if (data.isPerformanceTracking) performance.startReading("translate");
-                text = await translator.translate(input: text, outputLanguage: 'en');
+            if (isOwnData && point.sentimentText != null && point.sentimentText!.isNotEmpty) {
+              if (data.isPerformanceTracking) performance.startReading("_cleanText");
+              var text = "";
+              if (point.sentimentText!.contains("#") || point.sentimentText!.contains("#")) {
+                var text = _cleanText(point.sentimentText!);
+                text = text.trim();
+              } else {
+                text = point.sentimentText!;
+              }
+              if (text.length > 256) text = text.substring(0, 256);
+              if (data.isPerformanceTracking)
+                performance.addReading(
+                    performance.parentKey, "clean text", performance.stopReading("_cleanText"));
+
+              if (text.isNotEmpty) {
+                if (data.translate) {
+                  if (data.isPerformanceTracking) performance.startReading("translate");
+                  text = await translator.translate(input: text, outputLanguage: 'en');
+                  if (data.isPerformanceTracking)
+                    performance.addReading(
+                        performance.parentKey, "translate", performance.stopReading("translate"));
+                }
+
+              if (data.isPerformanceTracking) performance.startReading("classify");
+                var sentimentScore = sentimentClassifier.classify(text);
+                point.sentimentScore = sentimentScore.last; //0-1
                 if (data.isPerformanceTracking)
                   performance.addReading(
-                      performance.parentKey, "translate", performance.stopReading("translate"));
+                      performance.parentKey, "classify", performance.stopReading("classify"));
+
+                if (data.isPerformanceTracking) performance.startReading("repo");
+                dataRepo.addDataPoint(point);
+                if (data.isPerformanceTracking)
+                  performance.addReading(
+                      performance.parentKey, "repo", performance.stopReading("repo"));
+
+                _logger.logger
+                    .info("Gave DataPoint with id ${point.id} a score of ${point.sentimentScore}");
+              } else {
+                _logger.logger.info("DataPoint had an empty sentiment text");
               }
-
-            if (data.isPerformanceTracking) performance.startReading("classify");
-              var sentimentScore = sentimentClassifier.classify(text);
-              point.sentimentScore = sentimentScore.last; //0-1
-              if (data.isPerformanceTracking)
-                performance.addReading(
-                    performance.parentKey, "classify", performance.stopReading("classify"));
-
-              if (data.isPerformanceTracking) performance.startReading("repo");
-              dataRepo.addDataPoint(point);
-              if (data.isPerformanceTracking)
-                performance.addReading(
-                    performance.parentKey, "repo", performance.stopReading("repo"));
-
-              _logger.logger
-                  .info("Gave DataPoint with id ${point.id} a score of ${point.sentimentScore}");
             } else {
-              _logger.logger.info("DataPoint had an empty sentiment text");
+              _logger.logger.info(
+                  "DataPoint with id: ${point.id} had a sentiment text that was either null, empty or not the users data");
             }
-          } else {
-            _logger.logger.info(
-                "DataPoint with id: ${point.id} had a sentiment text that was either null, empty or not the users data");
           }
+        }
+
+        const step = 20;
+        int offset = 0;
+        int limit = step;
+
+        List<DataPoint> dataPoints = dataRepo.readAllFromCategoryPagination(category, offset, limit);
+        
+        while (dataPoints.isNotEmpty) {
+          await aux(dataPoints);
+
+          dataPoints = dataRepo.readAllFromCategoryPagination(category, offset, limit);
+          offset += step;
         }
       }
 
