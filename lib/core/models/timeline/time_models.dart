@@ -1,7 +1,5 @@
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
-import 'package:waultar/data/entities/misc/profile_document.dart';
-import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/data/entities/nodes/category_node.dart';
 
 abstract class TimeModel {
