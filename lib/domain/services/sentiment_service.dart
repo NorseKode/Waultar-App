@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repository.dart';
