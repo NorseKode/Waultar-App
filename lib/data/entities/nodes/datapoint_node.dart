@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:objectbox/objectbox.dart';
 import 'package:pretty_json/pretty_json.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
+import 'package:waultar/core/helpers/parse_helper.dart';
 import 'package:waultar/data/repositories/datapoint_repo.dart';
 import 'package:waultar/data/entities/media/file_document.dart';
 import 'package:waultar/data/entities/media/image_document.dart';
@@ -30,6 +30,9 @@ class DataPoint {
 
   String? sentimentText;
 
+  @Property(type: PropertyType.dateNano)
+  DateTime? timestamp;
+
   final category = ToOne<DataCategory>();
   final profile = ToOne<ProfileDocument>();
 
@@ -45,7 +48,7 @@ class DataPoint {
   @Property(type: PropertyType.byteVector)
   late List<int> valuesJsonBytes;
   String get values => utf8.decode(valuesJsonBytes, allowMalformed: true);
-  
+
   @Transient()
   late Map<String, dynamic> valuesMap;
 
@@ -96,6 +99,13 @@ class DataPoint {
 
     searchTerms = sb.toString();
     createdAt = DateTime.now();
+
+    var tempTimestamps = ParseHelper.scrapeUniqueTimestamps(json);
+    if (tempTimestamps.isNotEmpty) {
+      if (tempTimestamps.length > 1) {
+        tempTimestamps.sort();
+      }
+      timestamp = tempTimestamps.first;}
 
     var temp = _getSentimentText(dataCategory, json, targetProfile, parentName);
     if (temp != null) {
@@ -244,8 +254,7 @@ class DataPoint {
     sb.write("ID: $id \n");
 
     if (dataPointName.hasValue) {
-      sb.write(
-          "DataPoint relation target name: ${dataPointName.target!.name}\n");
+      sb.write("DataPoint relation target name: ${dataPointName.target!.name}\n");
     }
 
     sb.write("Data:\n");

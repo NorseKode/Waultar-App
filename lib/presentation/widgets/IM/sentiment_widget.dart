@@ -81,11 +81,11 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                 setState(() {});
               }),
           const Text("Translate text"),
-          SizedBox(width: 5),
+          const SizedBox(width: 5),
           Tooltip(
               verticalOffset: 10,
               preferBelow: false,
-              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
               textStyle: themeProvider.themeData().textTheme.bodyText1,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
@@ -93,7 +93,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
               message:
                   "Only english text can be analysed.\nTranslating will take extra time",
               child: Container(
-                child: Icon(
+                child: const Icon(
                   Iconsax.info_circle,
                   size: 14,
                 ),
@@ -219,7 +219,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                                     );
                                   }),
                               Text(profile.categories[index].category.name,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 12,
                                   )),
                             ],

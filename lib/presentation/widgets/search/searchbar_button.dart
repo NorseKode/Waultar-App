@@ -1,6 +1,4 @@
-import 'dart:collection';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +6,6 @@ import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/domain/services/text_search_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
-import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 
 class SearchBarButton extends StatefulWidget {
   const SearchBarButton({Key? key}) : super(key: key);
@@ -289,7 +286,7 @@ class _SearchBarButtonState extends State<SearchBarButton> {
                         _contents[index].getMostInformativeField(),
                         style: themeProvider.themeData().textTheme.headline1,
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       Text(
                         _contents[index].toString(),
                       )

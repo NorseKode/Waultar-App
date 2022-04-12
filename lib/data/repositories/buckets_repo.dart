@@ -2,6 +2,7 @@
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repository.dart';
+import 'package:waultar/core/helpers/parse_helper.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/data/configs/objectbox.dart';
@@ -347,7 +348,7 @@ class BucketsRepository extends IBucketsRepository {
     // process each datapoint from the stream
     await for (final dataPoint in toBeProcessed.distinct()) {
       var profile = dataPoint.profile.target!;
-      var timestamps = _scrapeUniqueTimestamps(dataPoint);
+      var timestamps = ParseHelper.scrapeUniqueTimestampsFromDataPoint(dataPoint);
 
       if (timestamps.isNotEmpty) {
         int categoryId = dataPoint.category.targetId;
@@ -532,49 +533,6 @@ class BucketsRepository extends IBucketsRepository {
     // when the stream has processed each element we update all the buckets via the root bucket in a single transaction
     toBeProcessedQuery.close();
     _yearBox.putMany(years);
-  }
-
-  List<DateTime> _scrapeUniqueTimestamps(DataPoint dataPoint) {
-    var timestampsSet = <DateTime>{};
-    aux(dynamic data) {
-      if (data is Map<String, dynamic>) {
-        for (var entry in data.entries) {
-          if ((entry.key.contains('time') || entry.key.contains('date')) && entry.value is int) {
-            var timestamp = tryParse(entry.value);
-            if (timestamp != null) timestampsSet.add(timestamp);
-          }
-          if (entry.value is Map<String, dynamic> || entry.value is List<dynamic>) {
-            aux(entry.value);
-          }
-        }
-      }
-      if (data is List<dynamic>) {
-        for (var item in data) {
-          aux(item);
-        }
-      }
-    }
-
-    aux(dataPoint.asMap);
-    return timestampsSet.toList();
-  }
-
-  DateTime? tryParse(dynamic value) {
-    if (value is int) {
-      if (value <= 0) return null;
-
-      var length = '$value'.length;
-      if (length >= 10 && length < 12) // <== seconds
-        return DateTime.fromMillisecondsSinceEpoch(value * 1000);
-
-      if (length >= 12 && length < 15) // <== milliseconds
-        return DateTime.fromMillisecondsSinceEpoch(value);
-
-      if (length >= 15 && length < 23) // <== microseconds and nano
-        return DateTime.fromMicrosecondsSinceEpoch(value);
-    }
-
-    return null;
   }
 
   Tuple4<int, int, int, int> _dissectDateTime(DateTime timestamp) {

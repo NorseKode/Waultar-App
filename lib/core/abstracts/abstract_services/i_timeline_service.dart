@@ -1,7 +1,5 @@
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
-import 'package:waultar/data/entities/timebuckets/weekday_average_bucket.dart';
 import 'package:waultar/domain/services/timeline_service.dart';
 abstract class ITimelineService {
   /// returns all years in sorted order
