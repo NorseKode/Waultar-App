@@ -49,7 +49,7 @@ class PerformanceHelper extends IPerformanceHelper {
 
     parentDataPoint = PerformanceDataPoint(
       key: parentKey,
-      timeformat: "milliseconds",
+      timeformat: "microseconds",
       metaData: <String, dynamic>{},
     );
   }
@@ -60,7 +60,7 @@ class PerformanceHelper extends IPerformanceHelper {
       _timers.addAll({key: Stopwatch()});
     }
 
-    _reset(key);
+    reset(key);
     _start(key);
   }
 
@@ -75,7 +75,7 @@ class PerformanceHelper extends IPerformanceHelper {
     return specificTimer.elapsed;
   }
 
-  void _reset(String key) {
+  void reset(String key) {
     _getSpecificTimer(key).reset();
   }
 
@@ -178,7 +178,7 @@ class PerformanceHelper extends IPerformanceHelper {
       dart_path.normalize(
         dart_path.join(
           pathToPerformanceFile,
-          "${DateTime.now().millisecondsSinceEpoch.toString()}-$summaryFileName.json",
+          "${DateTime.now().microsecondsSinceEpoch.toString()}-$summaryFileName.json",
         ),
       ),
     );
@@ -224,7 +224,7 @@ class PerformanceDataPoint {
     if (timeformat != null) {
       timeFormat = timeformat;
     } else {
-      timeFormat = "milliseconds";
+      timeFormat = "microseconds";
     }
     
     if (inputTime != null) {
@@ -249,7 +249,7 @@ class PerformanceDataPoint {
   PerformanceDataPoint.fromMap(Map<String, dynamic> jsonMap)
       : key = jsonMap["key"],
         timeFormat = jsonMap["timeFormat"],
-        elapsedTime = Duration(milliseconds: jsonMap["elapsedTime"]),
+        elapsedTime = Duration(microseconds: jsonMap["elapsedTime"]),
         childs = jsonMap["childs"] != null
             ? (jsonMap["childs"])
                 .map<PerformanceDataPoint>((e) => PerformanceDataPoint.fromMap(e))
@@ -260,7 +260,7 @@ class PerformanceDataPoint {
   Map<String, dynamic> toMap() {
     return {
       'key': key,
-      'elapsedTime': elapsedTime.inMilliseconds,
+      'elapsedTime': elapsedTime.inMicroseconds,
       'timeFormat': timeFormat,
       'metadata': metadata,
       'childs': childs.map((e) => e.toMap()).toList(),
