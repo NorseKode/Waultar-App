@@ -81,8 +81,8 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
 
       String _cleanText(String text) {
         var clean = RemoveEmoji().removemoji(text);
-        clean = clean.replaceAll(RegExp(r'#\w+\s\h*'), '');
-        clean = clean.replaceAll(RegExp(r'@\w+\s\h*'), '');
+        clean = clean.replaceAll(RegExp(r'#\w+'), '');
+        clean = clean.replaceAll(RegExp(r'(@(?:\w|\.)+)'), '');
         return clean;
       }
 
@@ -95,12 +95,13 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
           var isOwnData = _isOwnData(point, username, profile.name);
           if (data.isPerformanceTracking)
             performance.addReading(performance.parentKey, "_isOwnData",
-                performance.stopReading(performance.parentKey));
+                performance.stopReading("_isOwnData"));
 
           if (isOwnData && point.sentimentText != null && point.sentimentText!.isNotEmpty) {
             if (data.isPerformanceTracking) performance.startReading("_cleanText");
             var text = _cleanText(point.sentimentText!);
             text = text.trim();
+            point.sentimentText = text;
             if (text.length > 256) text = text.substring(0, 256);
             if (data.isPerformanceTracking)
               performance.addReading(
