@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/configs/globals/globals.dart';
@@ -6,7 +5,6 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repositor
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_translator_service.dart';
 
-import 'package:waultar/core/ai/sentiment_classifier.dart';
 import 'package:waultar/core/base_worker/base_worker.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/data/repositories/datapoint_repo.dart';

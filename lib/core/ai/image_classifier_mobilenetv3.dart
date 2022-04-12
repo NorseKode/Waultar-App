@@ -1,4 +1,3 @@
-import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:path/path.dart' as path_dart;
 import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
 import 'package:waultar/core/ai/image_classifier.dart';
