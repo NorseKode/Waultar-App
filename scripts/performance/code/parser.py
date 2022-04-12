@@ -1,4 +1,5 @@
 import json
+from pandas import DataFrame, Series
 
 def parserPerformanceToConsole(path):
     parseData = json.load(open(path))
@@ -32,8 +33,12 @@ def parserPerformanceToConsole(path):
             cleanFileNameCount = cleanFileNameCount + 1
             cleanFileNameTotalTime = cleanFileNameTotalTime + point["elapsedTime"]
 
+    prasePathPercentage = parsePathTotalTime / totalTime
+
+    series = Series()
+
     print(f"Tree Parser took {totalTime / 1000000} seconds to parse {parsePathCount} files")
-    print(f"\tparsePath function used {parsePathTotalTime / totalTime}%, but it is the top function so it makes sense")
+    print(f"\tparsePath function used {prasePathPercentage}%, but it is the top function so it makes sense")
     print(f"\tgetFromFolderName function used {getFromFolderNameTotalTime / totalTime}% and was called {getFromFolderNameCount} times")
     print(f"\tparseName function used {parseNameTotalTime / totalTime}% and was called {parseNameCount} times")
     print(f"\tcleanFileName function used {cleanFileNameTotalTime / totalTime}% and was called {cleanFileNameCount} times")
