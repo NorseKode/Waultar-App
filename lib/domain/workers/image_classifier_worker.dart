@@ -79,6 +79,8 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
             duration: performance.stopReading(performance.parentKey));
       }
 
+      classifier.dispose();
+
       mainSendPort.send(MainImageClassifyProgressPackage(
         amountTagged: step,
         isDone: true,

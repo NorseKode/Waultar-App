@@ -60,7 +60,7 @@ class PerformanceHelper extends IPerformanceHelper {
       _timers.addAll({key: Stopwatch()});
     }
 
-    _reset(key);
+    reset(key);
     _start(key);
   }
 
@@ -75,7 +75,7 @@ class PerformanceHelper extends IPerformanceHelper {
     return specificTimer.elapsed;
   }
 
-  void _reset(String key) {
+  void reset(String key) {
     _getSpecificTimer(key).reset();
   }
 

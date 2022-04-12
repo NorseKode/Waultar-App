@@ -16,7 +16,6 @@ def parserPerformanceToConsole(path):
     cleanFileNameTotalTime = 0
 
     for point in parseData["childs"]:
-        # print(f"\nStart: {point} End\n")
         if point["key"] == "getFromFolderName":
             getFromFolderNameCount = getFromFolderNameCount + 1
             getFromFolderNameTotalTime = getFromFolderNameTotalTime + point["elapsedTime"] 
@@ -33,7 +32,7 @@ def parserPerformanceToConsole(path):
             cleanFileNameCount = cleanFileNameCount + 1
             cleanFileNameTotalTime = cleanFileNameTotalTime + point["elapsedTime"]
 
-    print(f"Tree Parser took {totalTime / 100000} seconds to parse {parsePathCount} files")
+    print(f"Tree Parser took {totalTime / 1000000} seconds to parse {parsePathCount} files")
     print(f"\tparsePath function used {parsePathTotalTime / totalTime}%, but it is the top function so it makes sense")
     print(f"\tgetFromFolderName function used {getFromFolderNameTotalTime / totalTime}% and was called {getFromFolderNameCount} times")
     print(f"\tparseName function used {parseNameTotalTime / totalTime}% and was called {parseNameCount} times")

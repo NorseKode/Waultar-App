@@ -23,10 +23,10 @@ def taggedImageReadingToConsole(path):
             loadingOfImagesCount = loadingOfImagesCount + 1
             loadingOfImagesTime = loadingOfImagesTime + point["elapsedTime"]
 
-    print(f"Image tagging took {totalTime / 100000} seconds")
+    print(f"Image tagging took {totalTime / 1000000} seconds")
     print(f"With image classifying taking {classifyingTime / totalTime}% of the time")
-    print(f"\tWith {len(imagesTagged)} images tagged in {summedImagesTaggedTime / 100000} second");
+    print(f"\tWith {len(imagesTagged)} images tagged in {summedImagesTaggedTime / 1000000} second");
     print(f"\t\tSetup of classifier took {setupClassifierTime / classifyingTime * 100}% of the classifying time")
     print(f"\t\tLoading of images from the database took {loadingOfImagesTime / classifyingTime * 100}% of the classifying time")
     print(f"\t\tClassifying of images took {summedImagesTaggedTime / classifyingTime * 100}% of the classifying time used")
-    print(f"\t\tThat's an average tagging time of {(summedImagesTaggedTime / len(imagesTagged)) / 100000} seconds per image")
+    print(f"\t\tThat's an average tagging time of {(summedImagesTaggedTime / len(imagesTagged)) / 1000000} seconds per image")
