@@ -26,7 +26,7 @@ def sentimentReadingToConsole(path):
         if point["key"] == "_isOwnData":
             _isOwnDataCount = _isOwnDataCount + 1
             _isOwnDataTime = _isOwnDataTime + point["elapsedTime"]
-        if point["key"] == "cleanText":
+        if point["key"] == "clean text":
             cleanTextCount = cleanTextCount + 1
             cleanTextTime = cleanTextTime + point["elapsedTime"]
         if point["key"] == "classify":
