@@ -38,12 +38,17 @@ class ThemeProvider with ChangeNotifier {
 
       textTheme: TextTheme(
         headline1: TextStyle(
-          color:
-              isLightTheme ? const Color(0xFF65696F) : const Color(0xFFE0E0E0),
-          fontFamily: "Poppins",
-          fontSize: 15,
-          fontWeight: FontWeight.w600,
-        ),
+            color: Colors.white,
+            fontFamily: "Poppins",
+            fontSize: 14,
+            fontWeight: FontWeight.w500),
+        // TextStyle(
+        //   color:
+        //       isLightTheme ? const Color(0xFF65696F) : const Color(0xFFE0E0E0),
+        //   fontFamily: "Poppins",
+        //   fontSize: 15,
+        //   fontWeight: FontWeight.w600,
+        // ),
         headline2: TextStyle(
           color:
               isLightTheme ? const Color(0xFF65696F) : const Color(0xFFE0E0E0),

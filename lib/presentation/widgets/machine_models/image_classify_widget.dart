@@ -66,7 +66,6 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
 
   Widget _mainBody() {
     return DefaultWidget(
-      constraints: const BoxConstraints(maxWidth: 300),
       title: "Image Classification",
       child: _isLoading
           ? _loadingScreen()
@@ -80,15 +79,21 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
-                      decoration: const InputDecoration(
-                        hintText: "Enter a number",
-                        label: Text("How many images to tag?"),
-                      ),
-                      controller: _amountToTagTextController,
                       keyboardType: TextInputType.number,
+                      controller: _amountToTagTextController,
+                      decoration: const InputDecoration(
+                          contentPadding: EdgeInsets.zero,
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                          ),
+                          hintText: "Enter a number ..."),
+                      style: const TextStyle(
+                        fontSize: 14,
+                      ),
                     ),
                     Text("Untagged Images Count: $_imagesToTagCount"),
-                    Text("Estimated Time To Tag All: ${(_imagesToTagCount * 0.4) / 60} minuets"),
+                    Text(
+                        "Estimated Time To Tag All: ${(_imagesToTagCount * 0.4) / 60} minuets"),
                     const SizedBox(height: 10),
                     Divider(
                       height: 2,

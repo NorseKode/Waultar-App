@@ -36,16 +36,17 @@ class _DefaultWidgetState extends State<DefaultWidget> {
             Text(widget.title,
                 style: themeProvider.themeData().textTheme.headline1),
             const SizedBox(height: 10),
-            Container(
-                decoration: BoxDecoration(
-                    border: Border(
-                  top: BorderSide(
-                      color: themeProvider.themeMode().tonedColor, width: 2),
-                )),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: widget.child,
-                )),
+            widget.child
+            // Container(
+            //     // decoration: BoxDecoration(
+            //     //     border: Border(
+            //     //   top: BorderSide(
+            //     //       color: themeProvider.themeMode().tonedColor, width: 2),
+            //     // )),
+            //     child: Padding(
+            //   padding: const EdgeInsets.only(top: 10),
+            //   child: widget.child,
+            // )),
           ],
         ));
   }

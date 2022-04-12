@@ -36,7 +36,6 @@ class _SentimentWidgetState extends State<SentimentWidget> {
     themeProvider = Provider.of<ThemeProvider>(context);
 
     return DefaultWidget(
-        constraints: const BoxConstraints(maxWidth: 300),
         title: "Sentiment Analysis",
         child: analyzing
             ? Column(
@@ -47,10 +46,20 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                 children: [
                   const Text(
                     "Analyze the invoked sentiment in your data.",
+                    style: TextStyle(
+                        color: Color(0xFFAEAFBB),
+                        fontFamily: "Poppins",
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400),
                   ),
                   //const SizedBox(height: 10),
                   const Text(
                     "Choose what data to run analysis on :",
+                    style: TextStyle(
+                        color: Color(0xFFAEAFBB),
+                        fontFamily: "Poppins",
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400),
                   ),
                   const SizedBox(height: 10),
                   SingleChildScrollView(
@@ -167,7 +176,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                     children: [
                       Text(
                         profiles[index].service.target!.serviceName,
-                        style: const TextStyle(fontWeight: FontWeight.w500),
+                        style: const TextStyle(fontWeight: FontWeight.w400),
                       ),
                       const SizedBox(height: 5),
                       _categoryList(profiles[index]),

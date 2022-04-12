@@ -1,11 +1,11 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/misc/service_document.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 
 class ServiceWidget extends StatefulWidget {
-  final ServiceDocument service;
+  final ProfileDocument service;
   const ServiceWidget({Key? key, required this.service}) : super(key: key);
 
   @override
@@ -19,7 +19,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
   Widget build(BuildContext context) {
     themeProvider = Provider.of<ThemeProvider>(context);
     return Container(
-        width: 200,
+        constraints: BoxConstraints(minWidth: 200, maxWidth: 200),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: themeProvider.themeData().primaryColor),
@@ -42,7 +42,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
               ),
               const SizedBox(height: 15),
               Text(
-                widget.service.serviceName,
+                widget.service.service.target!.serviceName,
                 style: const TextStyle(fontSize: 12),
               ),
               const SizedBox(height: 15),
@@ -78,10 +78,11 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
                   Text(
-                    "${widget.service.totalDatapoints} data points",
-                    style: const TextStyle(color: Color(0xFFABAAB8), fontSize: 12),
+                    "${widget.service.dataPoints.length} data points",
+                    style:
+                        const TextStyle(color: Color(0xFFABAAB8), fontSize: 12),
                   ),
-                  Text("${_sizeOfService(widget.service)} GB",
+                  Text("${_sizeOfProfile(widget.service)} GB",
                       style: const TextStyle(fontSize: 12))
                 ],
               ),
@@ -90,7 +91,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
         ));
   }
 
-  double _sizeOfService(ServiceDocument service) {
-    return 0.0;
+  double _sizeOfProfile(ProfileDocument service) {
+    return 4.0;
   }
 }
