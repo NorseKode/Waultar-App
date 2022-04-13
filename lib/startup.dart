@@ -167,7 +167,8 @@ Future<void> setupServices({
       instanceName: 'collectionsService',
     );
     locator.registerSingleton<IDashboardService>(
-      DashboardService(_profileRepo, _categoryRepo, _nameRepo, _dataRepo),
+      DashboardService(
+          _bucketsRepo, _profileRepo, _categoryRepo, _nameRepo, _dataRepo),
       instanceName: 'dashboardService',
     );
     locator.registerSingleton<TreeParser>(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/misc/service_document.dart';
@@ -32,7 +33,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                    color: Colors.pink, //widget.service.service.target!.color,
+                    color: Colors.white, //widget.service.service.target!.color,
                     borderRadius: BorderRadius.circular(5)),
                 child: SizedBox(
                   child: Container(),
@@ -42,7 +43,8 @@ class _ServiceWidgetState extends State<ServiceWidget> {
               ),
               const SizedBox(height: 15),
               Text(
-                widget.service.service.target!.serviceName,
+                "${widget.service.service.target!.serviceName} - ${widget.service.name}",
+                softWrap: true,
                 style: const TextStyle(fontSize: 12),
               ),
               const SizedBox(height: 15),
@@ -52,8 +54,8 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                     child: Container(
                       height: 5,
                       decoration: const BoxDecoration(
-                        color:
-                            Colors.pink, //widget.service.service.target!.color,
+                        color: Colors
+                            .white, //widget.service.service.target!.color,
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10),
                           bottomLeft: Radius.circular(10),
@@ -79,20 +81,19 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
                   Text(
-                    "${widget.service.dataPoints.length} data points",
-                    style:
-                        const TextStyle(color: Color(0xFFABAAB8), fontSize: 12),
+                    "${NumberFormat.compact().format(145342)} points", //"${widget.service.dataPoints.length} points",
+
+                    style: const TextStyle(
+                        color: Color.fromARGB(255, 149, 150, 159),
+                        fontFamily: "Poppins",
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400),
                   ),
-                  Text("${_sizeOfProfile(widget.service)} GB",
-                      style: const TextStyle(fontSize: 12))
+                  const Text("4.3 GB", style: TextStyle(fontSize: 12))
                 ],
               ),
             ],
           ),
         ));
-  }
-
-  double _sizeOfProfile(ProfileDocument service) {
-    return 4.0;
   }
 }
