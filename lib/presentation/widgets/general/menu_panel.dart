@@ -39,8 +39,7 @@ class _MenuPanelState extends State<MenuPanel> {
               children: [
                 const Text(
                   "Waultar App",
-                  style: TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.w400),
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
                 ),
                 const SizedBox(height: 3),
                 Row(
@@ -82,12 +81,11 @@ class _MenuPanelState extends State<MenuPanel> {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: TextButton(
         style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all(
-              (themeProvider.themeMode().secondaryColor)),
+          overlayColor: MaterialStateProperty.all((const Color(0xFF323346))),
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0))),
           backgroundColor: MaterialStateProperty.all(widget.active == screen
-              ? (themeProvider.themeMode().secondaryColor)
+              ? (const Color(0xFF323346))
               : Colors.black.withOpacity(0.0)),
         ),
         onPressed: () async {

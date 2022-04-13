@@ -100,6 +100,7 @@ class _SearchBarButtonState extends State<SearchBarButton> {
                   borderRadius: BorderRadius.all(Radius.circular(10))),
               fillColor: themeProvider.themeData().primaryColor,
               filled: true,
+              hoverColor: const Color(0xFF323346),
               hintText: "serach ..."),
           style: TextStyle(
             color: themeProvider.themeMode().tonedTextColor,

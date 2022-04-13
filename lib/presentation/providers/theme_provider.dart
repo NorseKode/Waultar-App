@@ -41,7 +41,9 @@ class ThemeProvider with ChangeNotifier {
             color: Colors.white,
             fontFamily: "Poppins",
             fontSize: 14,
+            letterSpacing: 0.5,
             fontWeight: FontWeight.w500),
+
         // TextStyle(
         //   color:
         //       isLightTheme ? const Color(0xFF65696F) : const Color(0xFFE0E0E0),
@@ -63,21 +65,26 @@ class ThemeProvider with ChangeNotifier {
             fontSize: 20,
             fontWeight: FontWeight.w500),
         headline4: const TextStyle(
-            color: Color(0xFFAEAFBB),
+            color: Color.fromARGB(255, 149, 150, 159), //Color(0xFFAEAFBB),
             fontFamily: "Poppins",
             fontSize: 12,
             fontWeight: FontWeight.w500),
         bodyText1: const TextStyle(
-            color: Colors.white, fontSize: 10, fontWeight: FontWeight.w400),
+            color: Colors.pink,
+            fontSize: 10,
+            fontWeight: FontWeight.w400), //not used
         bodyText2: const TextStyle(
-            color: Colors.white, fontSize: 12, fontWeight: FontWeight.w200),
+            color: Colors.white,
+            fontSize: 12,
+            fontWeight: FontWeight.w200,
+            letterSpacing: 0.2),
       ),
     );
   }
 
   PersonalTheme themeMode() {
     return PersonalTheme(
-        themeColor: const Color(0xFF02A9F2),
+        themeColor: const Color(0xFF3975FB), //const Color(0xFF02A9F2),
         iconColor:
             isLightTheme ? const Color(0xFF65696F) : const Color(0xFFE0E0E0),
         secondaryColor:

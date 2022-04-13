@@ -67,6 +67,7 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
   Widget _mainBody() {
     return DefaultWidget(
       title: "Image Classification",
+      description: "Analyse the content of your images.",
       child: _isLoading
           ? _loadingScreen()
           : _imagesToTagCount == 0
@@ -74,45 +75,75 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "Analyse the content of your images.",
+                    SizedBox(
+                      height: 10,
                     ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      keyboardType: TextInputType.number,
-                      controller: _amountToTagTextController,
-                      decoration: const InputDecoration(
-                          contentPadding: EdgeInsets.zero,
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                          ),
-                          hintText: "Enter a number ..."),
-                      style: const TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
-                    Text("Untagged Images Count: $_imagesToTagCount"),
                     Text(
-                        "Estimated Time To Tag All: ${(_imagesToTagCount * 0.4) / 60} minuets"),
-                    const SizedBox(height: 10),
-                    Divider(
-                      height: 2,
-                      thickness: 2,
-                      color: themeProvider.themeMode().tonedColor,
+                      "How many images to tag?",
+                      style:
+                          TextStyle(fontWeight: FontWeight.w400, fontSize: 11),
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10),
                     Container(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          DefaultButton(
-                            text: "       Tag Images       ",
-                            onPressed: () {
-                              _tagImages();
-                            },
-                          ),
-                        ],
-                      ),
+                      height: 40,
+                      child: TextFormField(
+                          style: TextStyle(fontSize: 12),
+                          cursorWidth: 1,
+                          keyboardType: TextInputType.number,
+                          controller: _amountToTagTextController,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.only(left: 15),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5.0),
+                              borderSide: BorderSide.none,
+                            ),
+                            filled: true,
+                            fillColor: (const Color(0xFF323346)),
+                            hintText: "Enter a number ...",
+                            hintStyle: TextStyle(letterSpacing: 0.3),
+                          )),
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("Untagged Images Count: ",
+                            style: const TextStyle(
+                                color: Color.fromARGB(255, 149, 150, 159),
+                                fontFamily: "Poppins",
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500)),
+                        Text("$_imagesToTagCount",
+                            style: TextStyle(fontSize: 11)),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Estimated Time To Tag All: ",
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 149, 150, 159),
+                              fontFamily: "Poppins",
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          "${(_imagesToTagCount * 0.4) / 60} min",
+                          style: TextStyle(fontSize: 11),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        DefaultButton(
+                          text: "Tag Images",
+                          onPressed: () {
+                            _tagImages();
+                          },
+                        ),
+                      ],
                     )
                   ],
                 ),

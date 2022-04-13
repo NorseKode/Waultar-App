@@ -101,7 +101,7 @@ class _DashboardState extends State<Dashboard> {
         const SizedBox(width: 20),
         Expanded(
           child: _analysis(),
-        )
+        ),
       ],
     );
   }
@@ -158,7 +158,7 @@ class _DashboardState extends State<Dashboard> {
         title: "Top Message Count",
         child: Expanded(
           child: Container(
-            color: Colors.red,
+            //color: Colors.red,
             height: 400,
           ),
         ));
@@ -170,8 +170,8 @@ class _DashboardState extends State<Dashboard> {
           title: "Data overview",
           child: Expanded(
             child: Container(
-              color: Colors.red,
-            ),
+                //color: Colors.red,
+                ),
           )),
     );
   }
@@ -182,8 +182,8 @@ class _DashboardState extends State<Dashboard> {
           title: "Data overview",
           child: Expanded(
             child: Container(
-              color: Colors.red,
-            ),
+                //color: Colors.red,
+                ),
           )),
     );
   }

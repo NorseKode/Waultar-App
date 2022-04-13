@@ -37,6 +37,8 @@ class _SentimentWidgetState extends State<SentimentWidget> {
 
     return DefaultWidget(
         title: "Sentiment Analysis",
+        description:
+            "Analyze the invoked sentiment in your data.\nChoose what data to run analysis on :",
         child: analyzing
             ? Column(
                 children: [Text(message), const CircularProgressIndicator()],
@@ -44,33 +46,10 @@ class _SentimentWidgetState extends State<SentimentWidget> {
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Analyze the invoked sentiment in your data.",
-                    style: TextStyle(
-                        color: Color(0xFFAEAFBB),
-                        fontFamily: "Poppins",
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400),
-                  ),
-                  //const SizedBox(height: 10),
-                  const Text(
-                    "Choose what data to run analysis on :",
-                    style: TextStyle(
-                        color: Color(0xFFAEAFBB),
-                        fontFamily: "Poppins",
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400),
-                  ),
                   const SizedBox(height: 10),
                   SingleChildScrollView(
                       child: Column(children: _profileList())),
-                  const SizedBox(height: 10),
-                  Divider(
-                      height: 2,
-                      thickness: 2,
-                      color: themeProvider.themeMode().tonedColor),
-
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 0),
                   _analyzeBar(),
                 ],
               ));
@@ -80,53 +59,53 @@ class _SentimentWidgetState extends State<SentimentWidget> {
     var timeEstimate = _timeEstimateOnCat();
     return Column(
       children: [
-        Container(
-            child: Row(children: [
-          Checkbox(
-              activeColor: themeProvider.themeMode().themeColor,
-              value: translate,
-              onChanged: (value) {
-                translate = value ?? false;
-                setState(() {});
-              }),
-          const Text("Translate text"),
-          const SizedBox(width: 5),
-          Tooltip(
-              verticalOffset: 10,
-              preferBelow: false,
-              padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-              textStyle: themeProvider.themeData().textTheme.bodyText1,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: themeProvider.themeData().scaffoldBackgroundColor),
-              message:
-                  "Only english text can be analysed.\nTranslating will take extra time",
-              child: Container(
-                child: const Icon(
-                  Iconsax.info_circle,
-                  size: 14,
-                ),
-              )),
-        ])),
-        Divider(
-            height: 22,
-            thickness: 2,
-            color: themeProvider.themeMode().tonedColor),
-        Container(
-            child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                const Text("Time estimate",
-                    style: TextStyle(fontSize: 9, fontWeight: FontWeight.w400)),
-                Text(timeEstimate, style: const TextStyle(fontSize: 12))
-              ],
+            Text(
+              "Translate text",
+              style: const TextStyle(
+                  color: Color.fromARGB(255, 149, 150, 159),
+                  fontFamily: "Poppins",
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500),
             ),
-            const SizedBox(width: 10),
+            SizedBox(
+                height: 20,
+                width: 20,
+                child: Transform.scale(
+                    scale: 0.8,
+                    child: Checkbox(
+                        activeColor: themeProvider.themeMode().themeColor,
+                        value: translate,
+                        onChanged: (value) {
+                          translate = value ?? false;
+                          setState(() {});
+                        })))
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Estimated Time To Tag: ",
+              style: const TextStyle(
+                  color: Color.fromARGB(255, 149, 150, 159),
+                  fontFamily: "Poppins",
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500),
+            ),
+            Text(
+              timeEstimate,
+              style: TextStyle(fontSize: 11),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20),
+        Row(
+          children: [
             DefaultButton(
-                text: "          Analyze          ",
+                text: "Analyze",
                 onPressed: profiles.isEmpty
                     ? null
                     : () async {
@@ -136,9 +115,9 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                             _sentimentAnalyzingProgress,
                             translate);
                         setState(() {});
-                      })
+                      }),
           ],
-        )),
+        )
       ],
     );
   }
@@ -155,11 +134,13 @@ class _SentimentWidgetState extends State<SentimentWidget> {
   }
 
   String _timeEstimateOnCat() {
-    int timeEstimate = 0;
+    var timeEstimate = 0;
     for (var element in chosenCategories) {
-      timeEstimate += (element.count * 0.0005).ceil();
+      timeEstimate += (element.count * 0.001).ceil();
+      ;
     }
-    return formatTime(timeEstimate);
+
+    return "${formatTime(timeEstimate)} sec";
   }
 
   List<Widget> _profileList() {
@@ -175,11 +156,13 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        profiles[index].service.target!.serviceName,
-                        style: const TextStyle(fontWeight: FontWeight.w400),
+                        "${profiles[index].service.target!.serviceName} - ${profiles[index].name}",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400, fontSize: 11),
                       ),
                       const SizedBox(height: 5),
                       _categoryList(profiles[index]),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ));
@@ -187,7 +170,6 @@ class _SentimentWidgetState extends State<SentimentWidget> {
 
   Widget _categoryList(ProfileDocument profile) {
     return Container(
-      constraints: const BoxConstraints(maxHeight: 150),
       child: SingleChildScrollView(
         child: Column(
             children: List.generate(
@@ -203,30 +185,33 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                         children: [
                           Row(
                             children: [
-                              Checkbox(
-                                  activeColor:
-                                      themeProvider.themeMode().themeColor,
-                                  value: chosenCategories
-                                      .where((element) =>
-                                          element.id ==
-                                          profile.categories[index].id)
-                                      .toList()
-                                      .isNotEmpty,
-                                  onChanged: (value) {
-                                    !value!
-                                        ? chosenCategories.remove(
-                                            chosenCategories
-                                                .firstWhere((element) =>
-                                                    element.id ==
-                                                    profile
-                                                        .categories[index].id))
-                                        : chosenCategories
-                                            .add(profile.categories[index]);
+                              Transform.scale(
+                                  scale: 0.8,
+                                  child: Checkbox(
+                                      activeColor:
+                                          themeProvider.themeMode().themeColor,
+                                      value: chosenCategories
+                                          .where((element) =>
+                                              element.id ==
+                                              profile.categories[index].id)
+                                          .toList()
+                                          .isNotEmpty,
+                                      onChanged: (value) {
+                                        !value!
+                                            ? chosenCategories.remove(
+                                                chosenCategories.firstWhere(
+                                                    (element) =>
+                                                        element.id ==
+                                                        profile
+                                                            .categories[index]
+                                                            .id))
+                                            : chosenCategories
+                                                .add(profile.categories[index]);
 
-                                    setState(
-                                      () {},
-                                    );
-                                  }),
+                                        setState(
+                                          () {},
+                                        );
+                                      })),
                               Text(profile.categories[index].category.name,
                                   style: const TextStyle(
                                     fontSize: 12,
