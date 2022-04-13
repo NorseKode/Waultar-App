@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
@@ -9,10 +10,10 @@ import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/domain/services/dashboard_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 
-import 'package:waultar/presentation/widgets/IM/sentiment_widget.dart';
+import 'package:waultar/presentation/widgets/machine_models/sentiment_widget.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget_box.dart';
-import 'package:waultar/presentation/widgets/general/default_widgets/service_widget.dart';
+import 'package:waultar/presentation/widgets/dashboard/service_widget.dart';
 
 import 'package:waultar/presentation/widgets/machine_models/image_classify_widget.dart';
 
@@ -70,13 +71,13 @@ class _DashboardState extends State<Dashboard> {
             children: [
               _services(),
               const SizedBox(height: 20),
-              _highlightBar(),
-              const SizedBox(height: 20),
               Text(
                 "Highlights",
                 style: themeProvider.themeData().textTheme.headline4,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 15),
+              _highlightBar(),
+              const SizedBox(height: 20),
               IntrinsicHeight(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -117,7 +118,7 @@ class _DashboardState extends State<Dashboard> {
           "Services",
           style: themeProvider.themeData().textTheme.headline4,
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 15),
         Wrap(
           runSpacing: 20,
           spacing: 20,
@@ -138,7 +139,7 @@ class _DashboardState extends State<Dashboard> {
           "Data Analysis",
           style: themeProvider.themeData().textTheme.headline4,
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 15),
         ImageClassifyWidget(),
         const SizedBox(height: 20),
         SentimentWidget(),
@@ -147,10 +148,61 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _highlightBar() {
+    return Container(
+      constraints: BoxConstraints(maxHeight: 70),
+      child: Row(
+        children: [
+          _highlightWidget(
+              Iconsax.activity5,
+              themeProvider.themeMode().themeColor,
+              "Most Active Year",
+              "${"2020"}",
+              Container())
+        ],
+      ),
+    );
+  }
+
+  Widget _highlightWidget(
+      IconData icon, Color color, String title, String result, Widget child) {
     return DefaultWidgetBox(
-        child: Container(
-      height: 50,
-    ));
+      padding: EdgeInsets.all(15),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+                color: color, //const Color(0xFF323346),
+                borderRadius: BorderRadius.circular(5)),
+            child: Icon(
+              icon,
+              color: color,
+            ),
+          ),
+          SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                    color: Color(0xFFABAAB8),
+                    fontSize: 10,
+                    fontWeight: FontWeight.w400),
+              ),
+              Text(
+                result,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+              )
+            ],
+          ),
+          SizedBox(width: 10),
+          child
+        ],
+      ),
+    );
   }
 
   Widget _topMessageWidget() {
@@ -158,8 +210,16 @@ class _DashboardState extends State<Dashboard> {
         title: "Top Message Count",
         child: Expanded(
           child: Container(
-            //color: Colors.red,
-            height: 400,
+            child: Column(
+              children: List.generate(
+                  10,
+                  (index) => Container(
+                        height: 40,
+                        child: Row(
+                          children: [Text("Person $index")],
+                        ),
+                      )),
+            ),
           ),
         ));
   }
@@ -169,9 +229,7 @@ class _DashboardState extends State<Dashboard> {
       child: DefaultWidget(
           title: "Data overview",
           child: Expanded(
-            child: Container(
-                //color: Colors.red,
-                ),
+            child: Container(),
           )),
     );
   }
@@ -181,9 +239,7 @@ class _DashboardState extends State<Dashboard> {
       child: DefaultWidget(
           title: "Data overview",
           child: Expanded(
-            child: Container(
-                //color: Colors.red,
-                ),
+            child: Container(),
           )),
     );
   }

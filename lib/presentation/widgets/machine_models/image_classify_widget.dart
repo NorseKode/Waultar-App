@@ -64,6 +64,12 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
     );
   }
 
+  String _timeEstimate(int count) {
+    var timeEstimate = (count * 0.4).ceil();
+
+    return "${'${(Duration(seconds: timeEstimate))}'.substring(2, 7)}  ${timeEstimate < 60 ? "sec" : "min"}";
+  }
+
   Widget _mainBody() {
     return DefaultWidget(
       title: "Image Classification",
@@ -113,7 +119,7 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                                 fontFamily: "Poppins",
                                 fontSize: 11,
                                 fontWeight: FontWeight.w500)),
-                        Text("$_imagesToTagCount",
+                        Text("${_imagesToTagCount}",
                             style: TextStyle(fontSize: 11)),
                       ],
                     ),
@@ -129,7 +135,7 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                               fontWeight: FontWeight.w500),
                         ),
                         Text(
-                          "${(_imagesToTagCount * 0.4) / 60} min",
+                          "${_timeEstimate(_imagesToTagCount)}",
                           style: TextStyle(fontSize: 11),
                         ),
                       ],

@@ -129,18 +129,13 @@ class _SentimentWidgetState extends State<SentimentWidget> {
     }
   }
 
-  String formatTime(int seconds) {
-    return '${(Duration(seconds: seconds))}'.substring(2, 7);
-  }
-
   String _timeEstimateOnCat() {
     var timeEstimate = 0;
     for (var element in chosenCategories) {
       timeEstimate += (element.count * 0.001).ceil();
-      ;
     }
 
-    return "${formatTime(timeEstimate)} sec";
+    return "${'${(Duration(seconds: timeEstimate))}'.substring(2, 7)} ${timeEstimate < 60 ? "sec" : "min"}";
   }
 
   List<Widget> _profileList() {

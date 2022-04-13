@@ -32,7 +32,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                    color: const Color(0xFF5D97FF),
+                    color: Colors.pink, //widget.service.service.target!.color,
                     borderRadius: BorderRadius.circular(5)),
                 child: SizedBox(
                   child: Container(),
@@ -52,7 +52,8 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                     child: Container(
                       height: 5,
                       decoration: const BoxDecoration(
-                        color: Color(0xFF5D97FF),
+                        color:
+                            Colors.pink, //widget.service.service.target!.color,
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10),
                           bottomLeft: Radius.circular(10),
