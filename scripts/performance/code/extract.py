@@ -23,10 +23,19 @@ def extractAndParseReadingToConsole(path):
     for point in childs["childs"]:
         if point["key"] == "Parse of file":
             parseOfFileTme = parseOfFileTme + point["elapsedTime"]
+    
+    extractionPercentage = extractTotalTime / totalTime * 100
+    parsingPercentage = parseTime / totalTime * 100
+    totalPercentage = [extractionPercentage, parsingPercentage]
+    # totalLabels
+
+    # decodePercentage = 
+    # extractPercentage =
+    # extractSeries =
 
     print(f"Extraction and parsing took {totalTime / 100000} seconds")
-    print(f"\tWith extraction taking {extractTotalTime / totalTime * 100}% of the time, with")
+    print(f"\tWith extraction taking {extractionPercentage}% of the time, with")
     print(f"\t\tDecoding of zip taking {decodeZipTime / extractTotalTime * 100}% of the extraction time")
     print(f"\t\tExtraction of file taking {extractedFileTime / extractTotalTime * 100}% of the extraction time")
-    print(f"\tAnd parsing taking {parseTime / totalTime * 100}% of the time, with")
+    print(f"\tAnd parsing taking {parsingPercentage}% of the time, with")
     print(f"\t\tParsing of file taking {parseOfFileTme / parseTime * 100}% of the parse time")
