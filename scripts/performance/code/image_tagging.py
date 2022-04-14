@@ -1,5 +1,6 @@
 import json
 import os
+from .diagram_creator import *
 
 def taggedImageReadingToConsole(path):
     taggedImages = json.load(open(path))
@@ -22,11 +23,19 @@ def taggedImageReadingToConsole(path):
         if point["key"] == "Loading of images":
             loadingOfImagesCount = loadingOfImagesCount + 1
             loadingOfImagesTime = loadingOfImagesTime + point["elapsedTime"]
+    
+    setupPercentage = setupClassifierTime / classifyingTime * 100
+    loadImagePercentage = loadingOfImagesTime / classifyingTime * 100
+    classifyImagePercentage = summedImagesTaggedTime / classifyingTime * 100
+    other = 100 - setupPercentage - loadImagePercentage - classifyImagePercentage
+    percentData = [setupPercentage, loadImagePercentage, classifyImagePercentage, other]
+    percentLabel = ["Setup", "Load Image", "Classify Image", "Other"]
+    createPieChart(percentData, percentLabel, "Percentage of time used in classifier", "img/img_classifier_percent_timev0.1.png")
 
     print(f"Image tagging took {totalTime / 1000000} seconds")
     print(f"With image classifying taking {classifyingTime / totalTime}% of the time")
     print(f"\tWith {len(imagesTagged)} images tagged in {summedImagesTaggedTime / 1000000} second");
-    print(f"\t\tSetup of classifier took {setupClassifierTime / classifyingTime * 100}% of the classifying time")
-    print(f"\t\tLoading of images from the database took {loadingOfImagesTime / classifyingTime * 100}% of the classifying time")
-    print(f"\t\tClassifying of images took {summedImagesTaggedTime / classifyingTime * 100}% of the classifying time used")
+    print(f"\t\tSetup of classifier took {setupPercentage}% of the classifying time")
+    print(f"\t\tLoading of images from the database took {loadImagePercentage}% of the classifying time")
+    print(f"\t\tClassifying of images took {classifyingTime}% of the classifying time used")
     print(f"\t\tThat's an average tagging time of {(summedImagesTaggedTime / len(imagesTagged)) / 1000000} seconds per image")
