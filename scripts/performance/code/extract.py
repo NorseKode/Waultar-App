@@ -30,14 +30,14 @@ def extractAndParseReadingToConsole(path):
     other = 100 - extractionPercentage - parsingPercentage
     totalPercentage = [extractionPercentage, parsingPercentage, other]
     totalLabels = ["Extraction", "Parsing", "Other"]
-    # createPieChart(totalPercentage, totalLabels, "Extract and parsing time in percentage", "img/extract_and_parsev0.1.png")
+    createPieChart(totalPercentage, totalLabels, "Extract and parsing time in percentage", "img/extract_and_parsev0.1.png")
 
     decodePercentage = decodeZipTime / extractTotalTime * 100
     extractPercentage = extractedFileTime / extractTotalTime * 100
     other = 100 - decodePercentage - extractPercentage
     extractPercentage = [decodePercentage, extractPercentage, other]
     extractLabel = ["Decode", "Extract", "Other"]
-    createPieChart(extractPercentage, extractLabel, "Percentage time in extraction", "img/extract_percentagev0.1.png")
+    # createPieChart(extractPercentage, extractLabel, "Percentage time in extraction", "img/extract_percentagev0.1.png")
 
     parseFileTime = parseOfFileTme / parseTime * 100
     extractSeries = [parseFileTime]

@@ -1,4 +1,5 @@
 import json
+from .diagram_creator import *
 
 def classifyPerformanceToConsole(path):
     data = json.load(open(path))
@@ -27,22 +28,22 @@ def classifyPerformanceToConsole(path):
     preProcessAvgTime = preProcessTimes / predictCounts / 1000000
     runPredictionsAvgTimes = runPredictionsTimes / predictCounts / 1000000
     getResultsAvgTimes = getResultsTimes / predictCounts / 1000000
+    preProcessPercentage = preProcessAvgTime / predictAvgTime * 100
+    runPredictionPercentage = runPredictionsAvgTimes / predictAvgTime * 100
+    getResultPercentage = getResultsAvgTimes / predictAvgTime * 100
+    other = 100 - preProcessPercentage - runPredictionPercentage - getResultPercentage 
+    percentageData = [preProcessPercentage, runPredictionPercentage, getResultPercentage, other]
+    percentageLabel = ["Pre Process", "Run Predictions", "Get Results", "Other"]
+    createPieChart(percentageData, percentageLabel, "Percentage of time used in predictions", "img/classifier_percentage_timev0.1.png")
 
     print(f"The image prediction ran in {totalTime / 1000000} seconds")
     print(f"On average a prediction took {predictAvgTime} seconds, with")
     print(f"\tPre processing:")
     print(f"\t\ton average takes {preProcessAvgTime} seconds")
-    print(f"\t\twhich is {preProcessAvgTime / predictAvgTime * 100}% of the predict time")
+    print(f"\t\twhich is {preProcessPercentage}% of the predict time")
     print(f"\tRun Predictions:")
     print(f"\t\ton average takes {runPredictionsAvgTimes} seconds")
-    print(f"\t\twhich is {runPredictionsAvgTimes / predictAvgTime * 100}% of the predict time")
+    print(f"\t\twhich is {runPredictionPercentage}% of the predict time")
     print(f"\tGet Results:")
     print(f"\t\ton average takes {getResultsAvgTimes} seconds")
-    print(f"\t\twhich is {getResultsAvgTimes / predictAvgTime * 100}% of the predict time")
-
-    # print(f"Tree Parser took {totalTime / 1000000} seconds to parse {parsePathCount} files")
-    # print(f"\tparsePath function used {parsePathTotalTime / totalTime}%, but it is the top function so it makes sense")
-    # print(f"\tgetFromFolderName function used {getFromFolderNameTotalTime / totalTime}% and was called {getFromFolderNameCount} times")
-    # print(f"\tparseName function used {parseNameTotalTime / totalTime}% and was called {parseNameCount} times")
-    # print(f"\tcleanFileName function used {cleanFileNameTotalTime / totalTime}% and was called {cleanFileNameCount} times")
-    # print(f"\taddCategoryTotalTime function used {addCategoryTotalTime / totalTime}% and was called {addCategoryCount} times")
+    print(f"\t\twhich is {getResultPercentage}% of the predict time")
