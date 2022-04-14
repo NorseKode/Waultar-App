@@ -38,7 +38,7 @@ class ImageClassifier extends IMLModel {
   dispose() {
     interpreterOptions = null;
     _interpreter.close();
-
+    
     if (ISPERFORMANCETRACKING) {
       _performance.addData(_performance.parentKey,
           duration: _performance.stopReading(_performance.parentKey));
@@ -51,7 +51,7 @@ class ImageClassifier extends IMLModel {
   @override
   init() {
     _appLogger.logger.info("Init of image classifier called");
-
+    
     if (ISPERFORMANCETRACKING) {
       _performance.init(newParentKey: "Image Classifier");
       _performance.startReading(_performance.parentKey);
@@ -116,74 +116,69 @@ class ImageClassifier extends IMLModel {
   }
 
   List<Tuple2<String, double>> predict(String imagePath, int amountOfTopCategories) {
-    try {
-      _appLogger.logger.info(
-          "Predicting image with path: $imagePath, and returning $amountOfTopCategories categories");
+    _appLogger.logger.info(
+        "Predicting image with path: $imagePath, and returning $amountOfTopCategories categories");
 
-      var parentKey = "Predict All";
-      PerformanceHelper? performance2;
-      if (ISPERFORMANCETRACKING) {
-        performance2 = PerformanceHelper(pathToPerformanceFile: '');
-        performance2.init(newParentKey: parentKey);
-        performance2.startReading(parentKey);
-      }
-
-      var image = img.decodeImage(File(imagePath).readAsBytesSync());
-      if (image == null) {
-        throw AIException("Couldn't locate image from path: $imagePath", this, image);
-      }
-
-      if (ISPERFORMANCETRACKING) {
-        performance2!.startReading("Pre process");
-      }
-      _inputImage = TensorImage(_inputType);
-      _inputImage.loadImage(image);
-      _inputImage = _preProcess();
-      if (ISPERFORMANCETRACKING) {
-        performance2!.addReading(parentKey, "Pre process", performance2.stopReading("Pre process"));
-        performance2.reset("Pre process");
-      }
-
-      if (ISPERFORMANCETRACKING) {
-        performance2!.startReading("Run prediction");
-      }
-      _interpreter.run(_inputImage.buffer, _outputBuffer.getBuffer());
-      if (ISPERFORMANCETRACKING) {
-        performance2!
-            .addReading(parentKey, "Run prediction", performance2.stopReading("Run prediction"));
-        performance2.reset("Run prediction");
-      }
-
-      if (ISPERFORMANCETRACKING) {
-        performance2!.startReading("Get results");
-      }
-      Map<String, double> labeledProb =
-          TensorLabel.fromList(_labels, _probabilityProcessor.process(_outputBuffer))
-              .getMapWithFloatValue();
-      final pred = _getProbability(labeledProb).toList();
-
-      var results = <Tuple2<String, double>>[];
-
-      for (var i = 0; i < amountOfTopCategories; i++) {
-        if (pred[i].value > 0.75) {
-          results.add(Tuple2(pred[i].key, pred[i].value));
-        }
-      }
-      if (ISPERFORMANCETRACKING) {
-        performance2!.addReading(parentKey, "Get results", performance2.stopReading("Get results"));
-        performance2.reset("Get results");
-      }
-
-      if (ISPERFORMANCETRACKING) {
-        performance2!.addData(parentKey, duration: performance2.stopReading(parentKey));
-        _performance.addDataPoint(_performance.parentKey, performance2.parentDataPoint);
-      }
-
-      return results;
-    } on Exception catch (e, s) {
-      _appLogger.logger.shout("Exception in image classifier with message: $e", e, s);
-      return <Tuple2<String, double>>[];
+    var parentKey = "Predict All";
+    PerformanceHelper? performance2;
+    if (ISPERFORMANCETRACKING) {
+      performance2 = PerformanceHelper(pathToPerformanceFile: '');
+      performance2.init(newParentKey: parentKey);
+      performance2.startReading(parentKey);
     }
+
+    var image = img.decodeImage(File(imagePath).readAsBytesSync());
+    if (image == null) {
+      performance2!.dispose();
+      throw AIException("Couldn't locate image from path: $imagePath", this, image);
+    }
+
+    if (ISPERFORMANCETRACKING) {
+      performance2!.startReading("Pre process");
+    }
+    _inputImage = TensorImage(_inputType);
+    _inputImage.loadImage(image);
+    _inputImage = _preProcess();
+    if (ISPERFORMANCETRACKING) {
+      performance2!.addReading(parentKey, "Pre process", performance2.stopReading("Pre process"));
+      performance2.reset("Pre process");
+    }
+
+    if (ISPERFORMANCETRACKING) {
+      performance2!.startReading("Run prediction");
+    }
+    _interpreter.run(_inputImage.buffer, _outputBuffer.getBuffer());
+    if (ISPERFORMANCETRACKING) {
+      performance2!.addReading(parentKey, "Run prediction", performance2.stopReading("Run prediction"));
+      performance2.reset("Run prediction");
+    }
+
+    if (ISPERFORMANCETRACKING) {
+      performance2!.startReading("Get results");
+    }
+    Map<String, double> labeledProb =
+        TensorLabel.fromList(_labels, _probabilityProcessor.process(_outputBuffer))
+            .getMapWithFloatValue();
+    final pred = _getProbability(labeledProb).toList();
+
+    var results = <Tuple2<String, double>>[];
+
+    for (var i = 0; i < amountOfTopCategories; i++) {
+      if (pred[i].value > 0.75) {
+        results.add(Tuple2(pred[i].key, pred[i].value));
+      }
+    }
+    if (ISPERFORMANCETRACKING) {
+      performance2!.addReading(parentKey, "Get results", performance2.stopReading("Get results"));
+      performance2.reset("Get results");
+    }
+
+    if (ISPERFORMANCETRACKING) {
+      performance2!.addData(parentKey, duration: performance2.stopReading(parentKey));
+      _performance.addDataPoint(_performance.parentKey, performance2.parentDataPoint);
+    }
+
+    return results;
   }
 
   PriorityQueue<MapEntry<String, double>> _getProbability(Map<String, double> labeledProb) {
