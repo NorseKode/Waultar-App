@@ -2,7 +2,7 @@ import json
 import os
 from .diagram_creator import *
 
-def sentimentReadingToConsole(path):
+def sentimentReadingToConsole(path, savePath):
     taggedImages = json.load(open(path))
 
     totalTime = taggedImages["elapsedTime"]
@@ -44,8 +44,8 @@ def sentimentReadingToConsole(path):
     classifyPercentage = classifyTime / sentimentClassificationTime * 100
     other = 100 - setupPercentage - _isOwnDataPercentage - cleanTextPercentage - classifyPercentage
     percentageData = [setupPercentage, _isOwnDataPercentage, cleanTextPercentage, classifyPercentage, other]
-    percentageLabel = ["Setup", "_isOwnData", "Clean Text", "Classify", "Other"]
-    createPieChart(percentageData, percentageLabel, "% Time Used in Sentiment Classifier", "img/percentage_time_sent_classiv0.1.png")
+    percentageLabel = ["Setup", "isOwnData", "Clean Text", "Classify", "Other"]
+    createPieChart(percentageData, percentageLabel, "% Time Used in Sentiment Classifier", savePath)
 
     print(f"Sentiment classification took {totalTime / 1000000} seconds")
     print(f"\tWith the update of buckets repo taking {bucketRepoUpdateTime / totalTime * 100}% of the time")

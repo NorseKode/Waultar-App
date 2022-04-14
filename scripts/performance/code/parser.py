@@ -2,7 +2,7 @@ import json
 from pandas import DataFrame, Series
 from .diagram_creator import *
 
-def parserPerformanceToConsole(path):
+def parserPerformanceToConsole(path, savePath):
     parseData = json.load(open(path))
 
     totalTime = parseData["elapsedTime"]
@@ -51,4 +51,4 @@ def parserPerformanceToConsole(path):
     print(f"\tcleanFileName function used {cleanFileNamePercentage}% and was called {cleanFileNameCount} times")
     print(f"\taddCategoryTotalTime function used {addCategoryPercentage}% and was called {addCategoryCount} times")
 
-    createPieChart(percentage, labels, "Percentage of time used in parser", "img/parse_percentagev0.1.png")
+    createPieChart(percentage, labels, "Percentage of time used in parser", savePath)
