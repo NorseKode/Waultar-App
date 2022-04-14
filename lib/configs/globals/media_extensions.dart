@@ -31,14 +31,14 @@ class Extensions {
   }
 
   static FileType getFileType(String path) {
-    if (isImage(path)) {
-      return FileType.image;
+    if (isLink(path)) {
+      return FileType.link;
     } else if (isVideo(path)) {
       return FileType.video;
     } else if (isFile(path)) {
       return FileType.file;
-    } else if (isLink(path)) {
-      return FileType.link;
+    } else if (isImage(path)) {
+      return FileType.image;
     }
   
     return FileType.unknown;
