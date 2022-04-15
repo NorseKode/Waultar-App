@@ -57,7 +57,6 @@ class DataPoint {
 
   DataPoint({
     this.id = 0,
-    this.sentimentScore = 0.0,
     this.searchTerms = '',
   }) {
     createdAt = DateTime.now();
@@ -105,7 +104,8 @@ class DataPoint {
       if (tempTimestamps.length > 1) {
         tempTimestamps.sort();
       }
-      timestamp = tempTimestamps.first;}
+      timestamp = tempTimestamps.first;
+    }
 
     var temp = _getSentimentText(dataCategory, json, targetProfile, parentName);
     if (temp != null) {
@@ -113,8 +113,8 @@ class DataPoint {
     }
   }
 
-  String? _getSentimentText(
-      DataCategory dataCategory, dynamic json, ProfileDocument profile, DataPointName parent) {
+  String? _getSentimentText(DataCategory dataCategory, dynamic json,
+      ProfileDocument profile, DataPointName parent) {
     switch (profile.service.target!.serviceName) {
       case "Facebook":
         switch (dataCategory.category) {
@@ -254,7 +254,8 @@ class DataPoint {
     sb.write("ID: $id \n");
 
     if (dataPointName.hasValue) {
-      sb.write("DataPoint relation target name: ${dataPointName.target!.name}\n");
+      sb.write(
+          "DataPoint relation target name: ${dataPointName.target!.name}\n");
     }
 
     sb.write("Data:\n");

@@ -46,8 +46,10 @@ class _DashboardState extends State<Dashboard> {
     themeProvider = Provider.of<ThemeProvider>(context);
     profiles = _dashboardService.getAllProfiles();
     weekdays = _dashboardService.getActiveWeekday();
-    mostActive = weekdays.reduce(
-        (value, element) => value.item2 <= element.item2 ? element : value);
+    if (profiles.isNotEmpty) {
+      mostActive = weekdays.reduce(
+          (value, element) => value.item2 <= element.item2 ? element : value);
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

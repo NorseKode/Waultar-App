@@ -86,6 +86,8 @@ Future sentimentWorkerBody(
             if (point.asMap["sender_name"] == profileUsername) {
               return true;
             }
+            point.sentimentScore = -1;
+            dataRepo.addDataPoint(point);
             return false;
 
           default:

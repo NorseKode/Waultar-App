@@ -29,11 +29,32 @@ class _SentimentWidgetState extends State<SentimentWidget> {
   bool translate = false;
   bool analyzing = false;
   String message = "Analyzing ...";
+  List<CategoryEnum> validCategories = [
+    CategoryEnum.comments,
+    CategoryEnum.messaging,
+    CategoryEnum.posts
+  ];
+  List<int> categories = [];
 
   @override
   Widget build(BuildContext context) {
     profiles = sentimentService.getAllProfiles();
     themeProvider = Provider.of<ThemeProvider>(context);
+
+    for (var profile in profiles) {
+      var profileCats = profile.categories
+          .where((element) => validCategories.contains(element.category));
+      for (var element in profileCats) {
+        categories.add(element.id);
+      }
+    }
+
+    for (var id in categories) {
+      if (!sentimentService.categoryCount.containsKey(id)) {
+        _calculateCount();
+        break;
+      }
+    }
 
     return DefaultWidget(
         title: "Sentiment Analysis",
@@ -91,7 +112,6 @@ class _SentimentWidgetState extends State<SentimentWidget> {
               "Estimated Time To Tag: ",
               style: const TextStyle(
                   color: Color.fromARGB(255, 149, 150, 159),
-                  fontFamily: "Poppins",
                   fontSize: 11,
                   fontWeight: FontWeight.w500),
             ),
@@ -114,6 +134,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                             chosenCategories,
                             _sentimentAnalyzingProgress,
                             translate);
+                        chosenCategories = [];
                         setState(() {});
                       }),
           ],
@@ -125,6 +146,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
   _sentimentAnalyzingProgress(String message, bool isDone) {
     analyzing = !isDone;
     if (isDone) {
+      _calculateCount();
       setState(() {});
     }
   }
@@ -153,9 +175,10 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                       Text(
                         "${profiles[index].service.target!.serviceName} - ${profiles[index].name}",
                         style: TextStyle(
-                            fontWeight: FontWeight.w400, fontSize: 11),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 11,
+                            color: Color.fromARGB(255, 149, 150, 159)),
                       ),
-                      const SizedBox(height: 5),
                       _categoryList(profiles[index]),
                       const SizedBox(height: 20),
                     ],
@@ -169,55 +192,100 @@ class _SentimentWidgetState extends State<SentimentWidget> {
         child: Column(
             children: List.generate(
                 profile.categories.length,
-                (index) => profile.categories[index].category ==
-                            CategoryEnum.messaging ||
-                        profile.categories[index].category ==
-                            CategoryEnum.posts ||
-                        profile.categories[index].category ==
-                            CategoryEnum.comments
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Transform.scale(
-                                  scale: 0.8,
-                                  child: Checkbox(
-                                      activeColor:
-                                          themeProvider.themeMode().themeColor,
-                                      value: chosenCategories
+                (index) => validCategories
+                        .contains(profile.categories[index].category)
+                    ? Padding(
+                        padding: EdgeInsets.only(top: 5),
+                        child: GestureDetector(
+                          onTap: sentimentService.categoryCount[
+                                      profile.categories[index].id] ==
+                                  0
+                              ? () {}
+                              : () {
+                                  chosenCategories
                                           .where((element) =>
                                               element.id ==
                                               profile.categories[index].id)
                                           .toList()
-                                          .isNotEmpty,
-                                      onChanged: (value) {
-                                        !value!
-                                            ? chosenCategories.remove(
-                                                chosenCategories.firstWhere(
-                                                    (element) =>
-                                                        element.id ==
-                                                        profile
-                                                            .categories[index]
-                                                            .id))
-                                            : chosenCategories
-                                                .add(profile.categories[index]);
+                                          .isNotEmpty
+                                      ? chosenCategories.remove(chosenCategories
+                                          .firstWhere((element) =>
+                                              element.id ==
+                                              profile.categories[index].id))
+                                      : chosenCategories
+                                          .add(profile.categories[index]);
 
-                                        setState(
-                                          () {},
-                                        );
-                                      })),
-                              Text(profile.categories[index].category.name,
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                  )),
-                            ],
+                                  setState(
+                                    () {},
+                                  );
+                                },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                vertical: 8, horizontal: 10),
+                            decoration: BoxDecoration(
+                                color: chosenCategories
+                                        .where((element) =>
+                                            element.id ==
+                                            profile.categories[index].id)
+                                        .toList()
+                                        .isNotEmpty
+                                    ? const Color(0xFF323346)
+                                    : Colors.transparent,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(
+                                        profile.categories[index].category.icon,
+                                        color: sentimentService.categoryCount[
+                                                    profile.categories[index]
+                                                        .id] ==
+                                                0
+                                            ? Color.fromARGB(255, 149, 150, 159)
+                                            : profile.categories[index].category
+                                                .color,
+                                        size: 16),
+                                    SizedBox(width: 10),
+                                    Text(
+                                        profile.categories[index].category.name,
+                                        style: TextStyle(
+                                          color: sentimentService.categoryCount[
+                                                      profile.categories[index]
+                                                          .id] ==
+                                                  0
+                                              ? Color.fromARGB(
+                                                  255, 149, 150, 159)
+                                              : Colors.white,
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 12,
+                                        )),
+                                  ],
+                                ),
+                                Text(
+                                  sentimentService.categoryCount[
+                                          profile.categories[index].id]
+                                      .toString(),
+                                  style: TextStyle(
+                                    color: sentimentService.categoryCount[
+                                                profile.categories[index].id] ==
+                                            0
+                                        ? Color.fromARGB(255, 149, 150, 159)
+                                        : Colors.white,
+                                  ),
+                                )
+                              ],
+                            ),
                           ),
-                          Text(profile.categories[index].count.toString())
-                        ],
+                        ),
                       )
                     : Container())),
       ),
     );
+  }
+
+  void _calculateCount() {
+    sentimentService.calculateCategoryCount(categories);
   }
 }
