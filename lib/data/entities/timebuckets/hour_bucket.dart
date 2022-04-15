@@ -64,7 +64,7 @@ class HourBucket {
 
   Future updateSentiment() async {
     var stream = Stream.fromIterable(
-        dataPoints.where((datapoint) => datapoint.sentimentScore != null));
+        dataPoints.where((datapoint) => datapoint.sentimentScore != null && datapoint.sentimentScore != -1));
 
     Map<CategoryEnum, Tuple2<int, double>> _tempSentimentMap = {};
 

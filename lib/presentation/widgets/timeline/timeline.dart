@@ -95,7 +95,13 @@ class _TimelineState extends State<Timeline> {
 
     var controller = TabbedViewController(tabs);
     TabbedView tabbedView = TabbedView(controller: controller);
-    return Expanded(child: tabbedView);
+    TabbedViewTheme tabTheme = TabbedViewTheme(
+      child: tabbedView,
+      data: TabbedViewThemeData.dark(
+        colorSet: Colors.grey, 
+      ),
+    );
+    return Expanded(child: tabTheme);
   }
 
   Widget _chartArea() {
