@@ -7,6 +7,8 @@ import 'package:waultar/core/ai/sentiment_classifier_textClassification.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/data/configs/objectbox.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
+import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/repositories/data_category_repo.dart';
 import 'package:waultar/data/repositories/datapoint_repo.dart';
@@ -40,38 +42,45 @@ Future sentimentWorkerBody(
           .map((e) => categoryRepo.getCategoryById(e)!)
           .toList();
 
-      var username = "";
-      var profile = categories.first.profile.target!;
-      var profileData = categories.first.profile.target!.categories
-          .firstWhere((element) => element.category == CategoryEnum.profile)
-          .dataPointNames
-          .forEach((element) {
-        if (profile.service.target!.serviceName == "Instagram") {
-          if (element.name == "profile user") {
-            for (var point in element.dataPoints) {
-              username =
-                  ((point.asMap["string_map_data"])["Username"])["value"];
-            }
-          }
-        } else {
-          if (element.name == "profile") {
-            for (var pointName in element.children) {
-              for (var point in pointName.dataPoints) {
-                if (point.asMap.containsKey("full name")) {
-                  username = point.asMap["full name"];
-                }
-              }
-            }
-          }
-        }
-      });
+      List<String> usernames = [];
+      List<ProfileDocument> profiles = [];
+      for (var category in categories) {
+        profiles.add(category.profile.target!);
+      }
+
       if (data.isPerformanceTracking) {
         performance.addReading(
             performance.parentKey, "Setup", performance.stopReading("Setup"));
       }
 
-      bool _isOwnData(
-          DataPoint point, String profileUsername, String profileName) {
+      String _getCategoryUsername(DataCategory category) {
+        String username = "";
+        String serviceName =
+            category.profile.target!.service.target!.serviceName;
+        for (var element in category.dataPointNames) {
+          if (serviceName == "Instagram") {
+            if (element.name == "profile user") {
+              for (var point in element.dataPoints) {
+                username =
+                    ((point.asMap["string_map_data"])["Username"])["value"];
+              }
+            }
+          } else {
+            if (element.name == "profile") {
+              for (var pointName in element.children) {
+                for (var point in pointName.dataPoints) {
+                  if (point.asMap.containsKey("full name")) {
+                    username = point.asMap["full name"];
+                  }
+                }
+              }
+            }
+          }
+        }
+        return username;
+      }
+
+      bool _isOwnData(DataPoint point, String profileUsername) {
         switch (point.category.target!.category) {
           case CategoryEnum.messaging:
             if (point.asMap["sender_name"] == profileUsername) {
@@ -87,7 +96,6 @@ Future sentimentWorkerBody(
       String _cleanText(String text) {
         var clean = RemoveEmoji().removemoji(text);
         clean = clean.replaceAll(RegExp(r'#\w+\s\h*'), '');
-        clean = clean.replaceAll(RegExp(r'@\w+\s\h*'), '');
         return clean;
       }
 
@@ -96,11 +104,22 @@ Future sentimentWorkerBody(
 
       for (var category in categories) {
         List<DataPoint> dataPoints = dataRepo.readAllFromCategory(category);
+
+        if (data.isPerformanceTracking) {
+          performance.startReading("_getCategoryUsername");
+        }
+        var categoryUsername = _getCategoryUsername(category);
+        if (data.isPerformanceTracking) {
+          performance.addReading(performance.parentKey, "_getCategoryUsername",
+              performance.stopReading(performance.parentKey));
+        }
+
         for (var point in dataPoints) {
           if (data.isPerformanceTracking) {
             performance.startReading("_isOwnData");
           }
-          var isOwnData = _isOwnData(point, username, profile.name);
+
+          var isOwnData = _isOwnData(point, categoryUsername);
           if (data.isPerformanceTracking) {
             performance.addReading(performance.parentKey, "_isOwnData",
                 performance.stopReading(performance.parentKey));
@@ -113,42 +132,43 @@ Future sentimentWorkerBody(
               performance.startReading("classify all");
             }
 
-            if (data.isPerformanceTracking) performance.startReading("classify");
+            if (data.isPerformanceTracking)
+              performance.startReading("classify");
             var text = _cleanText(point.sentimentText!);
             text = text.trim();
             if (text.length > 256) text = text.substring(0, 256);
 
             if (text.isNotEmpty) {
-            // if (data.isPerformanceTracking) performance.startReading("translate");
-            // await translator.translate(input: point.sentimentText!, outputLanguage: 'en');
-            // if (data.isPerformanceTracking)
-            //   performance.addReading(
-            //       performance.parentKey, "translate", performance.stopReading("translate"));
+              // if (data.isPerformanceTracking) performance.startReading("translate");
+              // await translator.translate(input: point.sentimentText!, outputLanguage: 'en');
+              // if (data.isPerformanceTracking)
+              //   performance.addReading(
+              //       performance.parentKey, "translate", performance.stopReading("translate"));
 
-            if (data.isPerformanceTracking) {
-              performance.startReading("classify");
-            }
-            if (data.translate) {
-              text =
-                  await translator.translate(input: text, outputLanguage: 'en');
-            }
+              if (data.isPerformanceTracking) {
+                performance.startReading("classify");
+              }
+              if (data.translate) {
+                text = await translator.translate(
+                    input: text, outputLanguage: 'en');
+              }
 
-            var sentimentScore = sentimentClassifier.classify(text);
-            point.sentimentScore = sentimentScore.last; //0-1
-            if (data.isPerformanceTracking) {
-              performance.addReading(performance.parentKey, "classify",
-                  performance.stopReading("classify"));
-            }
+              var sentimentScore = sentimentClassifier.classify(text);
+              point.sentimentScore = sentimentScore.last; //0-1
+              if (data.isPerformanceTracking) {
+                performance.addReading(performance.parentKey, "classify",
+                    performance.stopReading("classify"));
+              }
 
-            if (data.isPerformanceTracking) performance.startReading("repo");
-            dataRepo.addDataPoint(point);
-            if (data.isPerformanceTracking) {
-              performance.addReading(performance.parentKey, "repo",
-                  performance.stopReading("repo"));
-            }
+              if (data.isPerformanceTracking) performance.startReading("repo");
+              dataRepo.addDataPoint(point);
+              if (data.isPerformanceTracking) {
+                performance.addReading(performance.parentKey, "repo",
+                    performance.stopReading("repo"));
+              }
 
-            _logger.logger
-                .info("Gave DataPoint with id ${point.id} a score of ${point.sentimentScore}");
+              _logger.logger.info(
+                  "Gave DataPoint with id ${point.id} a score of ${point.sentimentScore}");
             } else {
               _logger.logger.info("DataPoint had an empty sentiment text");
             }
