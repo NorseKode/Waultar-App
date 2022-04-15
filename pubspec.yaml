@@ -89,6 +89,8 @@ dependencies:
   translator: ^0.1.7
   remove_emoji: ^0.0.7
 
+  tabbed_view: ^1.12.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

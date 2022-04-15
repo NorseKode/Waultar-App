@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:tabbed_view/tabbed_view.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
@@ -67,9 +68,34 @@ class _TimelineState extends State<Timeline> {
                 ],
               ),
         const SizedBox(height: 30),
-        _chartArea(),
+        // _chartArea(),
+        _tabs(),
       ],
     );
+  }
+
+  Widget _tabs() {
+    List<TabData> tabs = [];
+
+    tabs.add(TabData(
+      text: 'Data over time',
+      closable: false,
+      content: _timelineChart(),
+    ));
+    tabs.add(TabData(
+      text: 'Averages',
+      closable: false,
+      content: _averageChart(),
+    ));
+    tabs.add(TabData(
+      text: 'Sentiment',
+      closable: false,
+      content: _sentimentChart(),
+    ));
+
+    var controller = TabbedViewController(tabs);
+    TabbedView tabbedView = TabbedView(controller: controller);
+    return Expanded(child: tabbedView);
   }
 
   Widget _chartArea() {
@@ -164,11 +190,11 @@ class _TimelineState extends State<Timeline> {
   }
 
   Widget _averageChart() {
+    bool anyData = _timelineService.mainChartCategorySeries.isNotEmpty;
     return SfCartesianChart(
       title: ChartTitle(
         text: 'Average pr weekday',
       ),
-      series: _getAverageChartSeries(),
       tooltipBehavior: TooltipBehavior(
         enable: true,
       ),
@@ -180,6 +206,7 @@ class _TimelineState extends State<Timeline> {
       primaryYAxis: NumericAxis(
         majorGridLines: const MajorGridLines(width: 0),
       ),
+      series: anyData ? _getAverageChartSeries() : null,
     );
   }
 
@@ -200,9 +227,10 @@ class _TimelineState extends State<Timeline> {
   }
 
   Widget _sentimentChart() {
+    bool anyData = _timelineService.mainChartCategorySeries.isNotEmpty;
     return SfCartesianChart(
       title: ChartTitle(
-        text: '${_timelineService.currentProfile!.name} sentiment over time',
+        text: 'Sentiment over time per category',
       ),
       plotAreaBorderWidth: 0,
       tooltipBehavior: TooltipBehavior(
@@ -210,18 +238,16 @@ class _TimelineState extends State<Timeline> {
       ),
       primaryYAxis: NumericAxis(
         majorGridLines: const MajorGridLines(width: 0),
-        // minimum: 0.0,
-        // maximum: 1.0,
       ),
       primaryXAxis: DateTimeCategoryAxis(
         majorGridLines: const MajorGridLines(width: 0),
         labelIntersectAction: AxisLabelIntersectAction.rotate45,
         intervalType: _timelineService.currentXAxisInterval,
         interval: 1,
-        minimum: _timelineService.minimum,
-        maximum: _timelineService.maximum,
+        minimum: anyData ? _timelineService.minimum : null,
+        maximum: anyData ? _timelineService.maximum : null,
       ),
-      series: _getSentimentChartSeries(),
+      series: anyData ? _getSentimentChartSeries() : null,
     );
   }
 
@@ -243,10 +269,11 @@ class _TimelineState extends State<Timeline> {
   }
 
   Widget _timelineChart() {
+    bool anyData = _timelineService.mainChartCategorySeries.isNotEmpty;
     return SfCartesianChart(
       key: GlobalKey<State>(),
       title: ChartTitle(
-        text: '${_timelineService.currentProfile!.name} data over time',
+        text: 'All data over time',
       ),
       // onActualRangeChanged: _currentTimeInterval == TimeIntervalType.days
       //     ? (ActualRangeChangedArgs args) {
@@ -285,22 +312,24 @@ class _TimelineState extends State<Timeline> {
       primaryYAxis: NumericAxis(
         majorGridLines: const MajorGridLines(width: 0),
       ),
-      onAxisLabelTapped: (AxisLabelTapArgs args) {
-        var index = args.value;
-        setState(() {
-          _timelineService.updateMainChartSeries(index);
-        });
-      },
+      onAxisLabelTapped: anyData
+          ? (AxisLabelTapArgs args) {
+              var index = args.value;
+              setState(() {
+                _timelineService.updateMainChartSeries(index);
+              });
+            }
+          : null,
       plotAreaBorderWidth: 0,
       primaryXAxis: DateTimeCategoryAxis(
         majorGridLines: const MajorGridLines(width: 0),
         labelIntersectAction: AxisLabelIntersectAction.rotate45,
         intervalType: _timelineService.currentXAxisInterval,
         interval: 1,
-        minimum: _timelineService.minimum,
-        maximum: _timelineService.maximum,
+        minimum: anyData ? _timelineService.minimum : null,
+        maximum: anyData ? _timelineService.maximum : null,
       ),
-      series: _getMainChartSeries(),
+      series: anyData ? _getMainChartSeries() : null,
     );
   }
 
