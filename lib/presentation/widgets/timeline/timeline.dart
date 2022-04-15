@@ -28,6 +28,7 @@ class _TimelineState extends State<Timeline> {
   late ChartSeriesType _chosenChartType;
   late bool isLoadMoreView, isNeedToUpdateView, isDataUpdated;
   double? oldAxisVisibleMin, oldAxisVisibleMax;
+  late int selectedTab;
   // ChartSeriesController? _seriesController;
 
   @override
@@ -37,6 +38,7 @@ class _TimelineState extends State<Timeline> {
   }
 
   void initVariables() {
+    selectedTab = 0;
     _timelineService.init();
     _tooltipBehavior = TooltipBehavior(enable: true);
     _chosenChartType = ChartSeriesType.stackedColumns;
@@ -55,20 +57,9 @@ class _TimelineState extends State<Timeline> {
           "Timeline",
           style: _themeProvider.themeData().textTheme.headline3,
         ),
-        const SizedBox(height: 30),
-        _timelineService.allProfiles.isEmpty
-            ? Container()
-            : Row(
-                children: [
-                  _chartTypeSelector(),
-                  const SizedBox(width: 20),
-                  _profileSelector(),
-                  const SizedBox(width: 20),
-                  _resetButton(),
-                ],
-              ),
-        const SizedBox(height: 30),
-        // _chartArea(),
+        const SizedBox(height: 10),
+        _profileSelector(),
+        const SizedBox(height: 10),
         _tabs(),
       ],
     );
@@ -80,12 +71,12 @@ class _TimelineState extends State<Timeline> {
     tabs.add(TabData(
       text: 'Data over time',
       closable: false,
-      content: _timelineChart(),
+      content: _timeLineTabContent(),
     ));
     tabs.add(TabData(
       text: 'Averages',
       closable: false,
-      content: _averageChart(),
+      content: _averageTabContent(),
     ));
     tabs.add(TabData(
       text: 'Sentiment',
@@ -94,58 +85,18 @@ class _TimelineState extends State<Timeline> {
     ));
 
     var controller = TabbedViewController(tabs);
-    TabbedView tabbedView = TabbedView(controller: controller);
+    controller.selectedIndex = selectedTab;
+    TabbedView tabbedView = TabbedView(
+      controller: controller,
+      onTabSelection: (index) => selectedTab = index ?? 0,
+    );
     TabbedViewTheme tabTheme = TabbedViewTheme(
       child: tabbedView,
       data: TabbedViewThemeData.dark(
-        colorSet: Colors.grey, 
+        colorSet: Colors.grey,
       ),
     );
     return Expanded(child: tabTheme);
-  }
-
-  Widget _chartArea() {
-    if (_timelineService.allProfiles.isEmpty ||
-        _timelineService.mainChartCategorySeries.isEmpty) {
-      return const Center(
-        child: Text('No datapoints found'),
-      );
-    } else {
-      return Expanded(
-        child: Column(
-          children: [
-            Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: _timelineChart(),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: _averageChart(),
-                  )
-                ],
-              ),
-            ),
-            Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: _sentimentChart(),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: SfCartesianChart(),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      );
-    }
   }
 
   Widget _profileSelector() {
@@ -192,6 +143,15 @@ class _TimelineState extends State<Timeline> {
         setState(() {});
       },
       text: 'Reset',
+    );
+  }
+
+  Widget _averageTabContent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(child: _averageChart()),
+      ],
     );
   }
 
@@ -274,30 +234,27 @@ class _TimelineState extends State<Timeline> {
     return returnList;
   }
 
+  Widget _timeLineTabContent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            _chartTypeSelector(),
+            const SizedBox(width: 20),
+            _resetButton(),
+          ],
+        ),
+        const SizedBox(height: 15),
+        Expanded(child: _timelineChart()),
+      ],
+    );
+  }
+
   Widget _timelineChart() {
     bool anyData = _timelineService.mainChartCategorySeries.isNotEmpty;
     return SfCartesianChart(
       key: GlobalKey<State>(),
-      title: ChartTitle(
-        text: 'All data over time',
-      ),
-      // onActualRangeChanged: _currentTimeInterval == TimeIntervalType.days
-      //     ? (ActualRangeChangedArgs args) {
-      //         if (args.orientation == AxisOrientation.horizontal) {
-      //           if (isLoadMoreView) {
-      //             args.visibleMin = oldAxisVisibleMin;
-      //             args.visibleMax = oldAxisVisibleMax;
-      //           }
-      //           oldAxisVisibleMin = args.visibleMin as double;
-      //           oldAxisVisibleMax = args.visibleMax as double;
-      //         }
-      //         isLoadMoreView = false;
-      //       }
-      //     : null,
-      // loadMoreIndicatorBuilder: _currentTimeInterval == TimeIntervalType.days
-      //     ? (BuildContext context, ChartSwipeDirection direction) =>
-      //         getloadMoreIndicatorBuilder(context, direction)
-      //     : null,
       tooltipBehavior: _tooltipBehavior,
       zoomPanBehavior: ZoomPanBehavior(
         enablePanning: true,
@@ -354,9 +311,6 @@ class _TimelineState extends State<Timeline> {
                 plotPoint.category.categoryName,
             legendIconType: LegendIconType.rectangle,
             name: plotPoint.category.categoryName,
-            // onRendererCreated: (ChartSeriesController controller) {
-            //   _seriesController = controller;
-            // },
           );
 
           returnList.add(outPut);
@@ -374,9 +328,6 @@ class _TimelineState extends State<Timeline> {
                 plotPoint.category.categoryName,
             legendIconType: LegendIconType.rectangle,
             name: plotPoint.category.categoryName,
-            // onRendererCreated: (ChartSeriesController controller) {
-            //   _seriesController = controller;
-            // },
           );
           returnList.add(outPut);
         }
@@ -392,9 +343,6 @@ class _TimelineState extends State<Timeline> {
                 plotPoint.category.categoryName,
             legendIconType: LegendIconType.rectangle,
             name: plotPoint.category.categoryName,
-            // onRendererCreated: (ChartSeriesController controller) {
-            //   _seriesController = controller;
-            // },
           );
 
           returnList.add(outPut);
@@ -411,9 +359,6 @@ class _TimelineState extends State<Timeline> {
                 plotPoint.category.categoryName,
             legendIconType: LegendIconType.rectangle,
             name: plotPoint.category.categoryName,
-            // onRendererCreated: (ChartSeriesController controller) {
-            //   _seriesController = controller;
-            // },
           );
 
           returnList.add(outPut);
@@ -430,9 +375,6 @@ class _TimelineState extends State<Timeline> {
                 plotPoint.category.categoryName,
             legendIconType: LegendIconType.rectangle,
             name: plotPoint.category.categoryName,
-            // onRendererCreated: (ChartSeriesController controller) {
-            //   _seriesController = controller;
-            // },
           );
 
           returnList.add(outPut);
@@ -450,9 +392,6 @@ class _TimelineState extends State<Timeline> {
                 plotPoint.category.categoryName,
             legendIconType: LegendIconType.rectangle,
             name: plotPoint.category.categoryName,
-            // onRendererCreated: (ChartSeriesController controller) {
-            //   _seriesController = controller;
-            // },
           );
 
           returnList.add(outPut);
@@ -472,101 +411,10 @@ class _TimelineState extends State<Timeline> {
       yValueMapper: (TimeUnitWithTotal model, _) => model.total,
       name: '${chartObject.profile.name} total',
       legendIconType: LegendIconType.horizontalLine,
-      // onRendererCreated: (ChartSeriesController controller) {
-      //   _seriesController = controller;
-      // },
     );
     return [outPut];
   }
 
-  // Widget getloadMoreIndicatorBuilder(
-  //     BuildContext context, ChartSwipeDirection direction) {
-  //   if (direction == ChartSwipeDirection.end) {
-  //     isNeedToUpdateView = true;
-  //     globalKey = GlobalKey<State>();
-  //     return StatefulBuilder(
-  //         key: globalKey,
-  //         builder: (BuildContext context, StateSetter stateSetter) {
-  //           Widget widget;
-  //           if (isNeedToUpdateView) {
-  //             widget = getProgressIndicator();
-  //             _updateView();
-  //             isDataUpdated = true;
-  //           } else {
-  //             widget = Container();
-  //           }
-  //           return widget;
-  //         });
-  //   } else if (direction == ChartSwipeDirection.start) {
-  //     return SizedBox.fromSize(size: Size.zero);
-  //   } else {
-  //     return SizedBox.fromSize(size: Size.zero);
-  //   }
-  // }
-
-  // //Adding new data to the chart.
-  // void _updateData() {
-  //   var newData = _timelineService.getDaysFrom(_timeSeries.last.dateTime);
-  //   _timeSeries.addAll(newData);
-  //   isLoadMoreView = true;
-  //   _seriesController?.updateDataSource(
-  //       addedDataIndexes: getIndexes(newData.length));
-  // }
-
-  // getIndexes(int lenght) {
-  //   List<int> indexes = <int>[];
-  //   for (int i = lenght - 1; i >= 0; i--) {
-  //     indexes.add(_timeSeries.length - 1 - i);
-  //   }
-  //   return indexes;
-  // }
-
-  // // Redrawing the chart with updated data by calling the chart state.
-  // Future<void> _updateView() async {
-  //   await Future<void>.delayed(const Duration(seconds: 1), () {
-  //     isNeedToUpdateView = false;
-  //     if (isDataUpdated) {
-  //       _updateData();
-  //       isDataUpdated = false;
-  //     }
-  //     setState(() {});
-  //   });
-  // }
-
-  // Widget getProgressIndicator() {
-  //   return Align(
-  //     alignment: Alignment.centerRight,
-  //     child: Padding(
-  //       padding: const EdgeInsets.only(bottom: 22),
-  //       child: Container(
-  //         width: 50,
-  //         alignment: Alignment.centerRight,
-  //         decoration: BoxDecoration(
-  //           gradient: LinearGradient(
-  //             colors: _themeProvider.isLightTheme
-  //                 ? <Color>[
-  //                     Colors.white.withOpacity(0.0),
-  //                     Colors.white.withOpacity(0.74)
-  //                   ]
-  //                 : const <Color>[
-  //                     Color.fromRGBO(33, 33, 33, 0.0),
-  //                     Color.fromRGBO(33, 33, 33, 0.74)
-  //                   ],
-  //             stops: const <double>[0.0, 1],
-  //           ),
-  //         ),
-  //         child: const SizedBox(
-  //           height: 35,
-  //           width: 35,
-  //           child: CircularProgressIndicator(
-  //             backgroundColor: Colors.transparent,
-  //             strokeWidth: 3,
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 }
 
 enum ChartSeriesType {
