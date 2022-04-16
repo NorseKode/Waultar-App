@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:tabbed_view/tabbed_view.dart';
+import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
@@ -29,7 +32,7 @@ class _TimelineState extends State<Timeline> {
   late bool isLoadMoreView, isNeedToUpdateView, isDataUpdated;
   double? oldAxisVisibleMin, oldAxisVisibleMax;
   late int selectedTab;
-  // ChartSeriesController? _seriesController;
+  late SelectionBehavior _selectionBehavior;
 
   @override
   void initState() {
@@ -41,6 +44,10 @@ class _TimelineState extends State<Timeline> {
     selectedTab = 0;
     _timelineService.init();
     _tooltipBehavior = TooltipBehavior(enable: true);
+    _selectionBehavior = SelectionBehavior(
+      enable: true,
+      unselectedOpacity: 0.2,
+    );
     _chosenChartType = ChartSeriesType.stackedColumns;
     isLoadMoreView = false;
     isNeedToUpdateView = false;
@@ -83,6 +90,11 @@ class _TimelineState extends State<Timeline> {
       closable: false,
       content: _sentimentChart(),
     ));
+    tabs.add(TabData(
+      text: 'Test',
+      closable: false,
+      content: _testChart(),
+    ));
 
     var controller = TabbedViewController(tabs);
     controller.selectedIndex = selectedTab;
@@ -105,8 +117,8 @@ class _TimelineState extends State<Timeline> {
       items: List.generate(
         _timelineService.allProfiles.length,
         (index) => DropdownMenuItem(
-          child: Text(
-              '${_timelineService.allProfiles[index].name} - ${_timelineService.allProfiles[index].service.target!.serviceName}'),
+          child:
+              Text(_profileNameInDropDown(_timelineService.allProfiles[index])),
           value: _timelineService.allProfiles[index],
         ),
       ),
@@ -116,6 +128,14 @@ class _TimelineState extends State<Timeline> {
         });
       },
     );
+  }
+
+  String _profileNameInDropDown(ProfileDocument profile) {
+    if (profile.service.hasValue) {
+      return '${profile.name} - ${profile.service.target!.serviceName}';
+    } else {
+      return profile.name;
+    }
   }
 
   Widget _chartTypeSelector() {
@@ -365,39 +385,39 @@ class _TimelineState extends State<Timeline> {
         }
         break;
 
-      case LineSeries:
-        for (var plotPoint in chartObjects) {
-          var outPut = LineSeries(
-            dataSource: plotPoint.chartDataPoints,
-            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-            dataLabelMapper: (TimeUnitWithTotal model, _) =>
-                plotPoint.category.categoryName,
-            legendIconType: LegendIconType.rectangle,
-            name: plotPoint.category.categoryName,
-          );
+      // case LineSeries:
+      //   for (var plotPoint in chartObjects) {
+      //     var outPut = LineSeries(
+      //       dataSource: plotPoint.chartDataPoints,
+      //       xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
+      //       yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+      //       dataLabelMapper: (TimeUnitWithTotal model, _) =>
+      //           plotPoint.category.categoryName,
+      //       legendIconType: LegendIconType.rectangle,
+      //       name: plotPoint.category.categoryName,
+      //     );
 
-          returnList.add(outPut);
-        }
-        returnList.addAll(_getProfilesLineSeries());
-        break;
+      //     returnList.add(outPut);
+      //   }
+      //   returnList.addAll(_getProfilesLineSeries());
+      //   break;
 
-      case ColumnSeries:
-        for (var plotPoint in chartObjects) {
-          var outPut = ColumnSeries(
-            dataSource: plotPoint.chartDataPoints,
-            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-            dataLabelMapper: (TimeUnitWithTotal model, _) =>
-                plotPoint.category.categoryName,
-            legendIconType: LegendIconType.rectangle,
-            name: plotPoint.category.categoryName,
-          );
+      // case ColumnSeries:
+      //   for (var plotPoint in chartObjects) {
+      //     var outPut = ColumnSeries(
+      //       dataSource: plotPoint.chartDataPoints,
+      //       xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
+      //       yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+      //       dataLabelMapper: (TimeUnitWithTotal model, _) =>
+      //           plotPoint.category.categoryName,
+      //       legendIconType: LegendIconType.rectangle,
+      //       name: plotPoint.category.categoryName,
+      //     );
 
-          returnList.add(outPut);
-        }
-        returnList.addAll(_getProfilesLineSeries());
-        break;
+      //     returnList.add(outPut);
+      //   }
+      //   returnList.addAll(_getProfilesLineSeries());
+      //   break;
     }
 
     return returnList;
@@ -415,6 +435,80 @@ class _TimelineState extends State<Timeline> {
     return [outPut];
   }
 
+  Widget _testChart() {
+    var user1 = UserChartData(userName: 'User 1');
+    List<TestChartData> _dataSourceUser1 = [
+      TestChartData.generateTestData(DateTime(2018)),
+      TestChartData.generateTestData(DateTime(2019)),
+      TestChartData.generateTestData(DateTime(2020)),
+      TestChartData.generateTestData(DateTime(2021)),
+      TestChartData.generateTestData(DateTime(2022)),
+    ];
+    user1.dataSeries = _dataSourceUser1;
+
+    var user2 = UserChartData(userName: 'User 2');
+    List<TestChartData> _dataSourceUser2 = [
+      TestChartData.generateTestData(DateTime(2018)),
+      TestChartData.generateTestData(DateTime(2019)),
+      // TestChartData.generateTestData(DateTime(2020)),
+      TestChartData.generateTestData(DateTime(2021)),
+      TestChartData.generateTestData(DateTime(2022)),
+    ];
+    user2.dataSeries = _dataSourceUser2;
+    List<UserChartData> users = [user1, user2];
+
+    List<ChartSeries> chartSeries = [];
+
+    for (var item in CategoryEnum.values) {
+      for (var user in users) {
+        var output = StackedColumnSeries(
+          dataSource: user.dataSeries,
+          xValueMapper: (TestChartData data, index) => data.xValue,
+          yValueMapper: (TestChartData data, index) =>
+              data.yValues[item.index].item2,
+          pointColorMapper: (TestChartData data, index) =>
+              data.yValues[item.index].item1.color,
+          dataLabelMapper: (TestChartData data, index) =>
+              data.yValues[item.index].item1.categoryName,
+          name: CategoryEnum.values[item.index].categoryName,
+          groupName: user.userName,
+          selectionBehavior: _selectionBehavior,
+          color: item.color,
+          legendItemText: '${item.categoryName} - ${user.userName}',
+          legendIconType: LegendIconType.circle,
+          sortFieldValueMapper: (TestChartData data, _) => data.xValue,
+        );
+        chartSeries.add(output);
+      }
+    }
+
+    for (var user in users) {
+      var output = SplineSeries(
+        dataSource: user.dataSeries,
+        xValueMapper: (TestChartData data, _) => data.xValue,
+        yValueMapper: (TestChartData data, _) => data.total,
+        dataLabelMapper: (TestChartData data, _) => user.userName,
+        name: '${user.userName} total',
+        legendItemText: '${user.userName} total',
+        legendIconType: LegendIconType.horizontalLine,
+      );
+      chartSeries.add(output);
+    }
+
+    return SfCartesianChart(
+      primaryXAxis: DateTimeCategoryAxis(
+        intervalType: DateTimeIntervalType.years,
+      ),
+      series: chartSeries,
+      selectionType: SelectionType.series,
+      enableMultiSelection: true,
+      legend: Legend(
+        isVisible: true,
+        position: LegendPosition.right,
+        toggleSeriesVisibility: true,
+      ),
+    );
+  }
 }
 
 enum ChartSeriesType {
@@ -422,8 +516,41 @@ enum ChartSeriesType {
   stackedColumns100,
   stackedBar,
   stackedBar100,
-  lines,
-  columns,
+  // lines,
+  // columns,
+}
+
+class TestChartData {
+  late DateTime xValue;
+  late int total;
+  late List<Tuple2<CategoryEnum, int>> yValues;
+
+  TestChartData({
+    required this.xValue,
+    required this.total,
+  }) : yValues = [];
+
+  TestChartData.generateTestData(DateTime x) {
+    xValue = x;
+    Random random = Random();
+    yValues = List.generate(CategoryEnum.values.length, (index) {
+      var category = CategoryEnum.values[index];
+      var yValue = random.nextInt(200);
+      return Tuple2(category, yValue);
+    });
+    total = yValues.fold(
+        0, (previousValue, element) => previousValue + element.item2);
+  } //: this(xValue: x, groupName: groupBy)
+}
+
+class UserChartData {
+  String userName;
+  late List<TestChartData> dataSeries;
+  UserChartData({
+    required this.userName,
+  }) {
+    dataSeries = [];
+  }
 }
 
 extension ChartSeriesTypeHelper on ChartSeriesType {
@@ -432,8 +559,8 @@ extension ChartSeriesTypeHelper on ChartSeriesType {
     ChartSeriesType.stackedColumns100: 'Stacked Columns Percentage',
     ChartSeriesType.stackedBar: 'Stacked Bars',
     ChartSeriesType.stackedBar100: 'Stacked Bars Percentage',
-    ChartSeriesType.lines: 'Lines',
-    ChartSeriesType.columns: 'Columns',
+    // ChartSeriesType.lines: 'Lines',
+    // ChartSeriesType.columns: 'Columns',
   };
 
   static const chartTypeMap = {
@@ -441,8 +568,8 @@ extension ChartSeriesTypeHelper on ChartSeriesType {
     ChartSeriesType.stackedColumns100: StackedColumn100Series,
     ChartSeriesType.stackedBar: StackedBarSeries,
     ChartSeriesType.stackedBar100: StackedBar100Series,
-    ChartSeriesType.lines: LineSeries,
-    ChartSeriesType.columns: ColumnSeries,
+    // ChartSeriesType.lines: LineSeries,
+    // ChartSeriesType.columns: ColumnSeries,
   };
 
   static const canZoomMap = {
@@ -450,8 +577,8 @@ extension ChartSeriesTypeHelper on ChartSeriesType {
     ChartSeriesType.stackedColumns100: false,
     ChartSeriesType.stackedBar: true,
     ChartSeriesType.stackedBar100: false,
-    ChartSeriesType.lines: true,
-    ChartSeriesType.columns: true,
+    // ChartSeriesType.lines: true,
+    // ChartSeriesType.columns: true,
   };
 
   String get chartName => namesMap[this] ?? 'Unknown';

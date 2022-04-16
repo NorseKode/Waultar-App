@@ -15,6 +15,8 @@ class TimeLineService implements ITimelineService {
     _sentimentChartSeries = [];
     _profiles = [];
     _currentTimeIntervalForChart = DateTimeIntervalType.auto;
+    _allProfilesRepresenter = ProfileDocument(name: 'All');
+    _currentIndex = [];
   }
 
   @override
@@ -22,10 +24,12 @@ class TimeLineService implements ITimelineService {
     _profiles = _profileRepo.getAll();
     if (_profiles.isNotEmpty) {
       _currentProfile = _profiles.first;
+      _profiles.add(_allProfilesRepresenter);
       _currentTimeSeries = _bucketsRepo.getAllYearModels(_currentProfile!);
       _currentTimeIntervalForChart = DateTimeIntervalType.years;
       _setChartSeries();
       _setAverageChartSeries();
+      _setIndexTimeSeries();
     }
   }
 
@@ -34,6 +38,7 @@ class TimeLineService implements ITimelineService {
   final ProfileRepository _profileRepo =
       locator.get<ProfileRepository>(instanceName: 'profileRepo');
 
+  late List<DateTime> _currentIndex;
   late List<TimeModel> _currentTimeSeries;
   late ProfileDocument? _currentProfile;
   late List<ProfileDocument> _profiles;
@@ -43,6 +48,7 @@ class TimeLineService implements ITimelineService {
   late List<AverageChartObject> _averageChartSeries;
   late List<SentimentChartObject> _sentimentChartSeries;
   late TimelineProfileChartObject _profileTotalChartSeries;
+  late ProfileDocument _allProfilesRepresenter;
 
   @override
   List<ProfileDocument> get allProfiles => _profiles;
@@ -68,9 +74,9 @@ class TimeLineService implements ITimelineService {
   List<SentimentChartObject> get sentimentChartSeries => _sentimentChartSeries;
 
   @override
-  DateTime get minimum => _currentTimeSeries.first.dateTime;
+  DateTime get minimum => _currentIndex.first;
   @override
-  DateTime get maximum => _currentTimeSeries.last.dateTime;
+  DateTime get maximum => _currentIndex.last;
 
   @override
   void updateMainChartSeries(num index) {
@@ -88,20 +94,54 @@ class TimeLineService implements ITimelineService {
       _currentProfile = profile;
       reset();
       _setAverageChartSeries();
-      // _setChartSeries();
-      // _setCurrentXIntervalEnum();
     }
   }
 
   @override
   void reset() {
-    _currentTimeSeries = _bucketsRepo.getAllYearModels(_currentProfile!);
+    if (_currentProfile == null) return;
+    if (_currentProfile!.id != 0) {
+      _currentTimeSeries = _bucketsRepo.getAllYearModels(_currentProfile!);
+    } else {
+      _currentTimeSeries.clear();
+      var actualProfiles = _profiles.where((element) => element.id != 0);
+      for (var profile in actualProfiles) {
+        _currentTimeSeries.addAll(_bucketsRepo.getAllYearModels(profile));
+      }
+
+      _currentIndex.clear();
+      Set<DateTime> xAxisSet = {};
+      for (var timeModel in _currentTimeSeries) {
+        xAxisSet.add(timeModel.dateTime);
+      }
+      _currentIndex = xAxisSet.toList();
+      _currentIndex.sort((a, b) => a.compareTo(b));
+    }
     _setChartSeries();
     _setCurrentXIntervalEnum();
   }
 
+  void _setIndexTimeSeries() {
+    _currentIndex.clear();
+    Set<DateTime> xAxisSet = {};
+    for (var timeModel in _currentTimeSeries) {
+      xAxisSet.add(timeModel.dateTime);
+    }
+    _currentIndex = xAxisSet.toList();
+    _currentIndex.sort((a, b) => a.compareTo(b));
+  }
+
   void _setAverageChartSeries() {
-    var averageDocuments = _bucketsRepo.getAverages(_currentProfile!);
+    var averageDocuments = <WeekDayAverageComputed>[];
+    if (_currentProfile!.id != 0) {
+      _bucketsRepo.getAverages(_currentProfile!);
+    } else {
+      var actualProfiles = _profiles.where((element) => element.id != 0);
+      for (var profile in actualProfiles) {
+        averageDocuments.addAll(_bucketsRepo.getAverages(profile));
+      }
+    }
+
     var updatedAverageList = <AverageChartObject>[];
 
     for (var catEnum in CategoryEnum.values) {
@@ -166,8 +206,8 @@ class TimeLineService implements ITimelineService {
       ));
 
       for (var item in updatedMainList) {
-        if (timeModel.categoryCount.any(
-            (element) => element.item1.index == item.category.index)) {
+        if (timeModel.categoryCount
+            .any((element) => element.item1.index == item.category.index)) {
           var tuple = timeModel.categoryCount.singleWhere(
               (element) => element.item1.index == item.category.index);
           item.chartDataPoints.add(
@@ -280,8 +320,7 @@ class TimeLineService implements ITimelineService {
 
   List<DayModel> getDaysFrom(DateTime from) {
     // call repo with from parameter
-    // the to interval parameter should always be the same
-    //  -> let's do 90 dayBuckets to start off with
+    //  -> from + 90 days
     return _bucketsRepo.getDaysFrom(from);
   }
 
