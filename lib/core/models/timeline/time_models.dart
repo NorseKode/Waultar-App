@@ -1,6 +1,9 @@
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
+
 abstract class TimeModel {
+  ProfileDocument profile;
   int id;
   int timeValue; // x value
   int total; // y total value
@@ -9,6 +12,7 @@ abstract class TimeModel {
   List<Tuple2<CategoryEnum, double>> sentimentScores;
 
   TimeModel(
+    this.profile,
     this.id,
     this.timeValue,
     this.total,
@@ -20,6 +24,7 @@ abstract class TimeModel {
 
 class YearModel extends TimeModel {
   YearModel({
+    required ProfileDocument profile,
     required int id,
     required int year,
     required int total,
@@ -27,6 +32,7 @@ class YearModel extends TimeModel {
     required List<Tuple2<CategoryEnum, int>> categoryCount,
     required List<Tuple2<CategoryEnum, double>> sentimentScores,
   }) : super(
+          profile,
           id,
           year,
           total,
@@ -38,6 +44,7 @@ class YearModel extends TimeModel {
 
 class MonthModel extends TimeModel {
   MonthModel({
+    required ProfileDocument profile,
     required int id,
     required int month,
     required int total,
@@ -45,6 +52,7 @@ class MonthModel extends TimeModel {
     required List<Tuple2<CategoryEnum, int>> categoryCount,
     required List<Tuple2<CategoryEnum, double>> sentimentScores,
   }) : super(
+          profile,
           id,
           month,
           total,
@@ -56,6 +64,7 @@ class MonthModel extends TimeModel {
 
 class DayModel extends TimeModel {
   DayModel({
+    required ProfileDocument profile,
     required int id,
     required int day,
     required int total,
@@ -63,6 +72,7 @@ class DayModel extends TimeModel {
     required List<Tuple2<CategoryEnum, int>> categoryCount,
     required List<Tuple2<CategoryEnum, double>> sentimentScores,
   }) : super(
+          profile,
           id,
           day,
           total,
@@ -74,6 +84,7 @@ class DayModel extends TimeModel {
 
 class HourModel extends TimeModel {
   HourModel({
+    required ProfileDocument profile,
     required int id,
     required int hour,
     required int total,
@@ -81,6 +92,7 @@ class HourModel extends TimeModel {
     required List<Tuple2<CategoryEnum, int>> categoryCount,
     required List<Tuple2<CategoryEnum, double>> sentimentScores,
   }) : super(
+          profile,
           id,
           hour,
           total,

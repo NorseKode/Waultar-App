@@ -93,6 +93,7 @@ class BucketsRepository extends IBucketsRepository {
       var years = query.build().find();
       for (var year in years) {
         var model = YearModel(
+          profile: year.profile.target!,
           id: year.id,
           year: year.year,
           total: year.total,
@@ -109,9 +110,6 @@ class BucketsRepository extends IBucketsRepository {
       }
     });
     listToReturn.sort((a, b) => a.dateTime.compareTo(b.dateTime));
-    // for (var item in listToReturn) {
-    //   print(item.dateTime.toString());
-    // }
     return listToReturn;
   }
 
@@ -124,6 +122,7 @@ class BucketsRepository extends IBucketsRepository {
       var months = query.build().find();
       for (var month in months) {
         var model = MonthModel(
+          profile: month.profile.target!,
           id: month.id,
           month: month.month,
           total: month.total,
@@ -153,6 +152,7 @@ class BucketsRepository extends IBucketsRepository {
       var days = monthBucket.days.toList();
       for (var day in days) {
         var model = DayModel(
+          profile: day.profile.target!,
           id: day.id,
           day: day.day,
           total: day.total,
@@ -182,6 +182,7 @@ class BucketsRepository extends IBucketsRepository {
       var hours = dayBucket.hours.toList();
       for (var hour in hours) {
         var model = HourModel(
+          profile: hour.profile.target!,
           id: hour.id,
           hour: hour.hour,
           total: hour.total,
@@ -216,6 +217,7 @@ class BucketsRepository extends IBucketsRepository {
 
       for (var day in days) {
         var model = DayModel(
+          profile: day.profile.target!,
           id: day.id,
           day: day.day,
           total: day.total,
@@ -245,6 +247,7 @@ class BucketsRepository extends IBucketsRepository {
       var months = yearBucket.months.toList();
       for (var month in months) {
         var model = MonthModel(
+          profile: month.profile.target!,
           id: month.id,
           month: month.month,
           total: month.total,

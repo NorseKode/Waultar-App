@@ -1,4 +1,5 @@
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
@@ -17,6 +18,8 @@ class TimeLineService implements ITimelineService {
     _currentTimeIntervalForChart = DateTimeIntervalType.auto;
     _allProfilesRepresenter = ProfileDocument(name: 'All');
     _currentIndex = [];
+    _chartData = [];
+    _edgeDuration = const Duration(days: 365);
   }
 
   @override
@@ -27,6 +30,7 @@ class TimeLineService implements ITimelineService {
       _profiles.add(_allProfilesRepresenter);
       _currentTimeSeries = _bucketsRepo.getAllYearModels(_currentProfile!);
       _currentTimeIntervalForChart = DateTimeIntervalType.years;
+      _setUserChartDataSeries();
       _setChartSeries();
       _setAverageChartSeries();
       _setIndexTimeSeries();
@@ -38,10 +42,7 @@ class TimeLineService implements ITimelineService {
   final ProfileRepository _profileRepo =
       locator.get<ProfileRepository>(instanceName: 'profileRepo');
 
-  late List<DateTime> _currentIndex;
   late List<TimeModel> _currentTimeSeries;
-  late ProfileDocument? _currentProfile;
-  late List<ProfileDocument> _profiles;
   late DateTimeIntervalType _currentTimeIntervalForChart;
 
   late List<TimelineCategoryChartObject> _mainChartSeries;
@@ -49,6 +50,15 @@ class TimeLineService implements ITimelineService {
   late List<SentimentChartObject> _sentimentChartSeries;
   late TimelineProfileChartObject _profileTotalChartSeries;
   late ProfileDocument _allProfilesRepresenter;
+
+  late ProfileDocument? _currentProfile;
+  late List<ProfileDocument> _profiles;
+  late List<UserChartData> _chartData;
+  late List<DateTime> _currentIndex;
+  late Duration _edgeDuration;
+
+  @override
+  List<UserChartData> get chartData => _chartData;
 
   @override
   List<ProfileDocument> get allProfiles => _profiles;
@@ -73,16 +83,64 @@ class TimeLineService implements ITimelineService {
   @override
   List<SentimentChartObject> get sentimentChartSeries => _sentimentChartSeries;
 
+  void _setEdgeLabelDuration() {
+    switch (_currentTimeIntervalForChart) {
+      case DateTimeIntervalType.years:
+        _edgeDuration = const Duration(days: 365);
+        break;
+      case DateTimeIntervalType.months:
+        _edgeDuration = const Duration(days: 31);
+        break;
+      case DateTimeIntervalType.days:
+        _edgeDuration = const Duration(days: 1);
+        break;
+      case DateTimeIntervalType.hours:
+        _edgeDuration = const Duration(hours: 4);
+        break;
+      default:
+        print(_currentTimeIntervalForChart.name);
+        break;
+    }
+  }
+
   @override
-  DateTime get minimum => _currentIndex.first;
+  DateTime get minimum {
+    _setEdgeLabelDuration();
+    return _currentIndex.first.add(-_edgeDuration);
+  }
+
   @override
-  DateTime get maximum => _currentIndex.last;
+  DateTime get maximum {
+    _setEdgeLabelDuration();
+    return _currentIndex.last.add(_edgeDuration);
+  }
 
   @override
   void updateMainChartSeries(num index) {
-    var model = _currentTimeSeries[index.round()];
-    if (model.runtimeType != HourModel) {
-      _currentTimeSeries = _getInnerValues(model);
+    int selectedTimeValue = 0;
+    var selectedTime = DateTime.fromMillisecondsSinceEpoch(index as int);
+    if (_currentTimeIntervalForChart == DateTimeIntervalType.years) {
+      selectedTimeValue = selectedTime.year;
+    }
+    if (_currentTimeIntervalForChart == DateTimeIntervalType.months) {
+      selectedTimeValue = selectedTime.month;
+    }
+    if (_currentTimeIntervalForChart == DateTimeIntervalType.days) {
+      selectedTimeValue = selectedTime.day;
+    }
+    
+    // var selectedTime = _currentIndex[index.round()];
+    if (_currentTimeIntervalForChart != DateTimeIntervalType.hours) {
+      var timeModelsToRetrieveFrom = _currentTimeSeries
+          .where((element) => element.timeValue == selectedTimeValue)
+          .toList();
+      var updatedList = <TimeModel>[];
+      for (var item in timeModelsToRetrieveFrom) {
+        updatedList.addAll(_getInnerValues(item));
+      }
+      _currentTimeSeries = updatedList;
+      _setUserChartDataSeries();
+      _setIndexTimeSeries();
       _setChartSeries();
       _setCurrentXIntervalEnum();
     }
@@ -108,17 +166,12 @@ class TimeLineService implements ITimelineService {
       for (var profile in actualProfiles) {
         _currentTimeSeries.addAll(_bucketsRepo.getAllYearModels(profile));
       }
-
-      _currentIndex.clear();
-      Set<DateTime> xAxisSet = {};
-      for (var timeModel in _currentTimeSeries) {
-        xAxisSet.add(timeModel.dateTime);
-      }
-      _currentIndex = xAxisSet.toList();
-      _currentIndex.sort((a, b) => a.compareTo(b));
     }
+    _setUserChartDataSeries();
+    _setIndexTimeSeries();
     _setChartSeries();
     _setCurrentXIntervalEnum();
+    print(_chartData.length);
   }
 
   void _setIndexTimeSeries() {
@@ -334,6 +387,69 @@ class TimeLineService implements ITimelineService {
 
   List<YearModel> getAllYears(ProfileDocument profile) {
     return _bucketsRepo.getAllYearModels(profile);
+  }
+
+  void _setUserChartDataSeries() {
+    List<UserChartData> userChartSeries = [];
+    List<ProfileDocument> profiles = _currentProfile!.id == 0
+        ? _profiles.where((element) => element.id != 0).toList()
+        : [_currentProfile!];
+    for (var profile in profiles) {
+      var userChart = UserChartData(
+        profileId: profile.id,
+        userName: profile.name,
+        serviceName: profile.service.target!.serviceName,
+      );
+      var timeModels = _currentTimeSeries
+          .where((element) => element.profile.id == profile.id)
+          .toList();
+      timeModels.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+      for (var timeModel in timeModels) {
+        userChart.categorySeries
+            .add(CategoryChartData.fromTimeModel(timeModel));
+      }
+      // userChart.categorySeries.sort((a, b) => a.xValue.compareTo(b.xValue));
+      userChartSeries.add(userChart);
+    }
+
+    _chartData = userChartSeries;
+  }
+}
+
+class UserChartData {
+  late int profileId;
+  late String userName;
+  late String serviceName;
+  late List<CategoryChartData> categorySeries;
+  UserChartData({
+    required this.profileId,
+    required this.userName,
+    required this.serviceName,
+  }) {
+    categorySeries = [];
+  }
+}
+
+class CategoryChartData {
+  late DateTime xValue;
+  late int total;
+  late List<Tuple2<CategoryEnum, int>> yValues;
+  CategoryChartData({
+    required this.xValue,
+    required this.total,
+  }) : yValues = [];
+
+  CategoryChartData.fromTimeModel(TimeModel model) {
+    xValue = model.dateTime;
+    total = model.total;
+    yValues = List.generate(CategoryEnum.values.length, (index) {
+      var category = CategoryEnum.values[index];
+      var yValue = model.categoryCount
+          .firstWhere((element) => element.item1.index == index,
+              orElse: () => Tuple2(category, 0))
+          .item2;
+      return Tuple2(category, yValue);
+    });
   }
 }
 

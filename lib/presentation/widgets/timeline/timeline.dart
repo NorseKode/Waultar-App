@@ -304,7 +304,7 @@ class _TimelineState extends State<Timeline> {
             }
           : null,
       plotAreaBorderWidth: 0,
-      primaryXAxis: DateTimeCategoryAxis(
+      primaryXAxis: DateTimeAxis(
         majorGridLines: const MajorGridLines(width: 0),
         labelIntersectAction: AxisLabelIntersectAction.rotate45,
         intervalType: _timelineService.currentXAxisInterval,
@@ -436,72 +436,69 @@ class _TimelineState extends State<Timeline> {
   }
 
   Widget _testChart() {
-    var user1 = UserChartData(userName: 'User 1');
-    List<TestChartData> _dataSourceUser1 = [
-      TestChartData.generateTestData(DateTime(2018)),
-      TestChartData.generateTestData(DateTime(2019)),
-      TestChartData.generateTestData(DateTime(2020)),
-      TestChartData.generateTestData(DateTime(2021)),
-      TestChartData.generateTestData(DateTime(2022)),
-    ];
-    user1.dataSeries = _dataSourceUser1;
-
-    var user2 = UserChartData(userName: 'User 2');
-    List<TestChartData> _dataSourceUser2 = [
-      TestChartData.generateTestData(DateTime(2018)),
-      TestChartData.generateTestData(DateTime(2019)),
-      // TestChartData.generateTestData(DateTime(2020)),
-      TestChartData.generateTestData(DateTime(2021)),
-      TestChartData.generateTestData(DateTime(2022)),
-    ];
-    user2.dataSeries = _dataSourceUser2;
-    List<UserChartData> users = [user1, user2];
-
     List<ChartSeries> chartSeries = [];
 
     for (var item in CategoryEnum.values) {
-      for (var user in users) {
+      for (var user in _timelineService.chartData) {
         var output = StackedColumnSeries(
-          dataSource: user.dataSeries,
-          xValueMapper: (TestChartData data, index) => data.xValue,
-          yValueMapper: (TestChartData data, index) =>
+          dataSource: user.categorySeries,
+          xValueMapper: (CategoryChartData data, index) => data.xValue,
+          yValueMapper: (CategoryChartData data, index) =>
               data.yValues[item.index].item2,
-          pointColorMapper: (TestChartData data, index) =>
-              data.yValues[item.index].item1.color,
-          dataLabelMapper: (TestChartData data, index) =>
-              data.yValues[item.index].item1.categoryName,
-          name: CategoryEnum.values[item.index].categoryName,
+          pointColorMapper: (CategoryChartData data, index) => item.color,
+          name: '${item.categoryName} - ${user.userName}',
           groupName: user.userName,
           selectionBehavior: _selectionBehavior,
           color: item.color,
           legendItemText: '${item.categoryName} - ${user.userName}',
           legendIconType: LegendIconType.circle,
-          sortFieldValueMapper: (TestChartData data, _) => data.xValue,
+          sortFieldValueMapper: (CategoryChartData data, _) => data.xValue,
+          sortingOrder: SortingOrder.ascending,
+          // width: 1.0,
         );
         chartSeries.add(output);
       }
     }
 
-    for (var user in users) {
-      var output = SplineSeries(
-        dataSource: user.dataSeries,
-        xValueMapper: (TestChartData data, _) => data.xValue,
-        yValueMapper: (TestChartData data, _) => data.total,
-        dataLabelMapper: (TestChartData data, _) => user.userName,
+    for (var user in _timelineService.chartData) {
+      var output = LineSeries(
+        dataSource: user.categorySeries,
+        xValueMapper: (CategoryChartData data, _) => data.xValue,
+        yValueMapper: (CategoryChartData data, _) => data.total,
         name: '${user.userName} total',
         legendItemText: '${user.userName} total',
         legendIconType: LegendIconType.horizontalLine,
+        sortFieldValueMapper: (CategoryChartData data, _) => data.xValue,
+        sortingOrder: SortingOrder.ascending,
       );
       chartSeries.add(output);
     }
 
+    bool anyData = _timelineService.mainChartCategorySeries.isNotEmpty;
+
     return SfCartesianChart(
-      primaryXAxis: DateTimeCategoryAxis(
-        intervalType: DateTimeIntervalType.years,
+      onAxisLabelTapped: (args) {
+        if (args.axisName == 'x_axis') {
+          setState(() {
+            _timelineService.updateMainChartSeries(args.value);
+          });
+        }
+      },
+      primaryXAxis: DateTimeAxis(
+        name: 'x_axis',
+        majorGridLines: const MajorGridLines(width: 0),
+        labelIntersectAction: AxisLabelIntersectAction.rotate45,
+        intervalType: _timelineService.currentXAxisInterval,
+        interval: 1,
+        minimum: anyData ? _timelineService.minimum : null,
+        maximum: anyData ? _timelineService.maximum : null,
       ),
       series: chartSeries,
       selectionType: SelectionType.series,
       enableMultiSelection: true,
+      tooltipBehavior: TooltipBehavior(
+        enable: true,
+      ),
       legend: Legend(
         isVisible: true,
         position: LegendPosition.right,

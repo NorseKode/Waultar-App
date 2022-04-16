@@ -3,6 +3,7 @@ import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/timebuckets/weekday_average_bucket.dart';
 import 'package:waultar/domain/services/timeline_service.dart';
+
 abstract class ITimelineService {
   /// returns all years in sorted order
   // List<YearModel> getAllYears(ProfileDocument profile);
@@ -17,7 +18,6 @@ abstract class ITimelineService {
   /// return all hours (max 24) from the given day in sorted order
   // List<HourModel> getHoursFromDay(DayModel day);
 
-
   // List<ProfileDocument> getAllProfiles();
 
   void init();
@@ -28,6 +28,7 @@ abstract class ITimelineService {
   TimelineProfileChartObject get mainChartProfileTotalSeries;
   List<AverageChartObject> get averageWeekDayChartSeries;
   List<SentimentChartObject> get sentimentChartSeries;
+  List<UserChartData> get chartData;
   DateTime get minimum;
   DateTime get maximum;
   void updateMainChartSeries(num index);
