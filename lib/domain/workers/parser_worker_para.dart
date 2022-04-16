@@ -4,31 +4,56 @@ import 'dart:isolate';
 import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/core/parsers/tree_parser.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/domain/workers/shared_packages.dart';
 import 'package:waultar/startup.dart';
 
-Future parseWorkerBody(dynamic data, SendPort mainSendPort, Function onError) async {
   TreeParser? parser;
-  int? profileId;
+  ProfileDocument? profile;
+Future parseWorkerBody2(dynamic data, SendPort mainSendPort, Function onError) async {
   bool isPerformance = false;
+  var pathsToBeParsed = <String>[];
 
   switch (data.runtimeType) {
-    case IsolateStandardStartupPackage:
+    case IsolateParserStartPackage:
       await setupIsolate(mainSendPort, data, data.waultarPath);
       data as IsolateParserStartPackage;
-      profileId = data.profileId;
+      profile = locator.get<ProfileRepository>(instanceName: 'profileRepo').get(data.profileId);
       isPerformance = data.isPerformanceTracking;
       parser = locator.get<TreeParser>(instanceName: 'parser');
+
+      mainSendPort.send(MainParseSetupDonePackage());
       break;
 
-    case IsolateParseFile:
+    case IsolateParseDestDirPackage:
+      data as IsolateParseDestDirPackage;
+      parser!.basePathToFiles = data.destDir;
+      break;
+
+    case IsolateParserClosePackage:
+      data as IsolateParserClosePackage;
+      var _context = locator.get<ObjectBox>(instanceName: 'context');
+      _context.store.close();
+      break;
+
+    case IsolateParseFilePackage:
+      try {
+        data as IsolateParseFilePackage;
+        var count = 0;
+        await for (final _ in parser!.parseManyPaths(data.pathToFile, profile!)) {
+          count++;
+        }
+        mainSendPort.send(
+            MainParsedProgressPackage(parsedCount: count, isDone: false, performanceDataPoint: ""));
+      } catch (e, stackTrace) {
+        mainSendPort.send(LogRecordPackage(e.toString(), stackTrace.toString()));
+      }
       break;
   }
 
-  
   // if (data is IsolateParserStartPackage) {
   //   try {
   //     await setupIsolate(mainSendPort, data, data.waultarPath);
@@ -111,12 +136,19 @@ class IsolateParserStartPackage extends InitiatorPackage {
   });
 }
 
-class IsolateParseFile {
-  String pathToFile;
+class IsolateParseFilePackage {
+  List<String> pathToFile;
 
-  IsolateParseFile({required this.pathToFile});
+  IsolateParseFilePackage({required this.pathToFile});
 }
 
+class IsolateParserClosePackage {}
+
+class IsolateParseDestDirPackage {
+  String destDir;
+
+  IsolateParseDestDirPackage({required this.destDir});
+}
 class MainParsedProgressPackage {
   int parsedCount;
   bool isDone;
@@ -128,6 +160,8 @@ class MainParsedProgressPackage {
     required this.performanceDataPoint,
   });
 }
+
+class MainParseSetupDonePackage {}
 
 class MainErrorPackage {
   String message;

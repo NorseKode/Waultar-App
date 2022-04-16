@@ -39,4 +39,8 @@ class BaseWorker {
   dynamic sendMessage(dynamic package) {
     worker.sendMessage(package);
   }
+
+  void dispose() {
+    worker.dispose();
+  }
 }
