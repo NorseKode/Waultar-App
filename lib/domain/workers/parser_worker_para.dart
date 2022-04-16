@@ -18,100 +18,40 @@ Future parseWorkerBody2(dynamic data, SendPort mainSendPort, Function onError) a
   var pathsToBeParsed = <String>[];
 
   switch (data.runtimeType) {
-    case IsolateParserStartPackage:
+    case IsolateParserParaStartPackage:
       await setupIsolate(mainSendPort, data, data.waultarPath);
-      data as IsolateParserStartPackage;
+      data as IsolateParserParaStartPackage;
       profile = locator.get<ProfileRepository>(instanceName: 'profileRepo').get(data.profileId);
       isPerformance = data.isPerformanceTracking;
       parser = locator.get<TreeParser>(instanceName: 'parser');
 
-      mainSendPort.send(MainParseSetupDonePackage());
       break;
 
-    case IsolateParseDestDirPackage:
-      data as IsolateParseDestDirPackage;
+    case IsolateParseParaDestDirPackage:
+      data as IsolateParseParaDestDirPackage;
       parser!.basePathToFiles = data.destDir;
       break;
 
-    case IsolateParserClosePackage:
-      data as IsolateParserClosePackage;
+    case IsolateParserParaClosePackage:
+      data as IsolateParserParaClosePackage;
       var _context = locator.get<ObjectBox>(instanceName: 'context');
       _context.store.close();
       break;
 
-    case IsolateParseFilePackage:
+    case IsolateParseParaFilePackage:
       try {
-        data as IsolateParseFilePackage;
+        data as IsolateParseParaFilePackage;
         var count = 0;
         await for (final _ in parser!.parseManyPaths(data.pathToFile, profile!)) {
           count++;
         }
         mainSendPort.send(
-            MainParsedProgressPackage(parsedCount: count, isDone: false, performanceDataPoint: ""));
+            MainParsedParaProgressPackage(parsedCount: count, isDone: false, performanceDataPoint: ""));
       } catch (e, stackTrace) {
         mainSendPort.send(LogRecordPackage(e.toString(), stackTrace.toString()));
       }
       break;
   }
-
-  // if (data is IsolateParserStartPackage) {
-  //   try {
-  //     await setupIsolate(mainSendPort, data, data.waultarPath);
-  //     var count = 0;
-  //     var profile = locator.get<ProfileRepository>(instanceName: 'profileRepo').get(data.profileId);
-  //     var performance = locator<PerformanceHelper>(instanceName: "performance");
-
-  //     if (data.isPerformanceTracking) {
-  //       ISPERFORMANCETRACKING = true;
-  //       performance.init(newParentKey: "Parsing of files");
-  //       performance.startReading(performance.parentKey);
-  //     }
-
-  //     if (profile == null) {
-  //       mainSendPort.send("No profile with id: ${data.profileId}");
-  //     } else {
-  //       var parser = locator.get<TreeParser>(instanceName: 'parser');
-
-  //       if (data.isPerformanceTracking) {
-  //         performance.startReading("Parse of file");
-  //       }
-  //       await for (final increment in parser.parseManyPaths(data.paths, profile)) {
-  //         if (data.isPerformanceTracking) {
-  //           var key = "Parse of file";
-  //           performance.addReading(
-  //             performance.parentKey,
-  //             key,
-  //             performance.stopReading(key),
-  //             metadata: {"file name": data.paths[count]},
-  //           );
-  //           count++;
-  //         }
-  //         mainSendPort.send(MainParsedProgressPackage(
-  //           parsedCount: increment,
-  //           isDone: false,
-  //           performanceDataPoint: "",
-  //         ));
-  //       }
-
-  //       if (data.isPerformanceTracking) {
-  //         performance.addData(performance.parentKey,
-  //             duration: performance.stopReading(performance.parentKey));
-  //       }
-
-  //       mainSendPort.send(MainParsedProgressPackage(
-  //         parsedCount: 0,
-  //         isDone: true,
-  //         performanceDataPoint:
-  //             data.isPerformanceTracking ? jsonEncode(performance.parentDataPoint.toMap()) : "",
-  //       ));
-  //     }
-  //   } catch (e, stackTrace) {
-  //     mainSendPort.send(LogRecordPackage(e.toString(), stackTrace.toString()));
-  //   } finally {
-  //     var _context = locator.get<ObjectBox>(instanceName: 'context');
-  //     _context.store.close();
-  //   }
-  // }
 }
 
 // run setupServices with configuration
@@ -122,13 +62,13 @@ Future<void> setupIsolate(SendPort sendPort, InitiatorPackage setupData, String 
       testing: setupData.testing, isolate: true, sendPort: sendPort, waultarPath: waultarPath);
 }
 
-class IsolateParserStartPackage extends InitiatorPackage {
+class IsolateParserParaStartPackage extends InitiatorPackage {
   List<String> paths;
   int profileId;
   bool isPerformanceTracking;
   String waultarPath;
 
-  IsolateParserStartPackage({
+  IsolateParserParaStartPackage({
     required this.paths,
     required this.profileId,
     required this.isPerformanceTracking,
@@ -136,35 +76,33 @@ class IsolateParserStartPackage extends InitiatorPackage {
   });
 }
 
-class IsolateParseFilePackage {
+class IsolateParseParaFilePackage {
   List<String> pathToFile;
 
-  IsolateParseFilePackage({required this.pathToFile});
+  IsolateParseParaFilePackage({required this.pathToFile});
 }
 
-class IsolateParserClosePackage {}
+class IsolateParserParaClosePackage {}
 
-class IsolateParseDestDirPackage {
+class IsolateParseParaDestDirPackage {
   String destDir;
 
-  IsolateParseDestDirPackage({required this.destDir});
+  IsolateParseParaDestDirPackage({required this.destDir});
 }
-class MainParsedProgressPackage {
+class MainParsedParaProgressPackage {
   int parsedCount;
   bool isDone;
   String performanceDataPoint;
 
-  MainParsedProgressPackage({
+  MainParsedParaProgressPackage({
     required this.parsedCount,
     required this.isDone,
     required this.performanceDataPoint,
   });
 }
 
-class MainParseSetupDonePackage {}
-
-class MainErrorPackage {
+class MainParaErrorPackage {
   String message;
 
-  MainErrorPackage({required this.message});
+  MainParaErrorPackage({required this.message});
 }

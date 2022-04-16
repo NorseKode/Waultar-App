@@ -12,8 +12,10 @@ import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/core/parsers/tree_parser.dart';
+import 'package:waultar/domain/workers/parser_worker.dart';
 import 'package:waultar/domain/workers/parser_worker_para.dart';
 import 'package:waultar/domain/workers/shared_packages.dart';
+import 'package:waultar/domain/workers/unzip_worker.dart';
 import 'package:waultar/domain/workers/unzip_worker_para.dart';
 import 'package:waultar/presentation/widgets/upload/upload_files.dart';
 import 'package:waultar/startup.dart';
@@ -50,106 +52,106 @@ class ParserService implements IParserService {
     String serviceName,
     ProfileDocument profile,
   ) async {
-    // if (ISPERFORMANCETRACKING) {
-    //   _performance.init(newParentKey: "Extracting and parsing synchronously");
-    //   _performance.startReading(_performance.parentKey);
-    // }
+    if (ISPERFORMANCETRACKING) {
+      _performance.init(newParentKey: "Extracting and parsing synchronously");
+      _performance.startReading(_performance.parentKey);
+    }
 
-    // _parsingStartedAt = DateTime.now();
+    _parsingStartedAt = DateTime.now();
 
-    // var service = _serviceRepo.get(serviceName)!;
-    // profile.service.target = service;
-    // profile = _profileRepo.add(profile);
+    var service = _serviceRepo.get(serviceName)!;
+    profile.service.target = service;
+    profile = _profileRepo.add(profile);
 
-    // _startExtracting(zipPath, callback, profile);
+    _startExtracting(zipPath, callback, profile);
     throw UnimplementedError();
   }
 
-  // _startExtracting(String zipPath, Function callback, ProfileDocument profile) {
-  //   var initiator = IsolateUnzipStartPackage(
-  //     pathToZip: zipPath,
-  //     isPerformanceTracking: ISPERFORMANCETRACKING,
-  //     profileName: profile.name,
-  //     waultarPath: _waultarPath,
-  //   );
-  //   _listenZip(dynamic data) {
-  //     switch (data.runtimeType) {
-  //       case MainUnzipTotalCountPackage:
-  //         data as MainUnzipTotalCountPackage;
-  //         _totalCount = data.total;
-  //         callback("Total files to extract: $_totalCount", false);
-  //         break;
+  _startExtracting(String zipPath, Function callback, ProfileDocument profile) {
+    var initiator = IsolateUnzipStartPackage(
+      pathToZip: zipPath,
+      isPerformanceTracking: ISPERFORMANCETRACKING,
+      profileName: profile.name,
+      waultarPath: _waultarPath,
+    );
+    _listenZip(dynamic data) {
+      switch (data.runtimeType) {
+        case MainUnzipTotalCountPackage:
+          data as MainUnzipTotalCountPackage;
+          _totalCount = data.total;
+          callback("Total files to extract: $_totalCount", false);
+          break;
 
-  //       case MainUnzipProgressPackage:
-  //         data as MainUnzipProgressPackage;
-  //         callback("${data.progress} files extracted out of $_totalCount", false);
-  //         break;
+        case MainUnzipProgressPackage:
+          data as MainUnzipProgressPackage;
+          callback("${data.progress} files extracted out of $_totalCount", false);
+          break;
 
-  //       case MainUnzippedPathsPackage:
-  //         data as MainUnzippedPathsPackage;
-  //         _pathsToParse = data.pathsInSameFolder;
-  //         _startParsing(callback, profile);
+        case MainUnzippedPathsPackage:
+          data as MainUnzippedPathsPackage;
+          _pathsToParse = data.pathsInSameFolder;
+          _startParsing(callback, profile);
 
-  //         if (ISPERFORMANCETRACKING && ISTRACKALL) {
-  //           _performance.addDataPoint(_performance.parentKey,
-  //               PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
-  //         }
+          if (ISPERFORMANCETRACKING && ISTRACKALL) {
+            _performance.addDataPoint(_performance.parentKey,
+                PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
+          }
 
-  //         break;
+          break;
 
-  //       case MainPerformanceMeasurementPackage:
-  //         data as MainPerformanceMeasurementPackage;
-  //         if (ISPERFORMANCETRACKING && ISTRACKALL) {
-  //           var performanceReading =
-  //               PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPointJson));
-  //           _performance.storeDataPoint("Extracting files", performanceReading);
-  //         }
-  //         break;
-  //       default:
-  //     }
-  //   }
+        case MainPerformanceMeasurementPackage:
+          data as MainPerformanceMeasurementPackage;
+          if (ISPERFORMANCETRACKING && ISTRACKALL) {
+            var performanceReading =
+                PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPointJson));
+            _performance.storeDataPoint("Extracting files", performanceReading);
+          }
+          break;
+        default:
+      }
+    }
 
-  //   var zipWorker = BaseWorker(initiator: initiator, mainHandler: _listenZip);
-  //   zipWorker.init(unzipWorkerBody);
-  // }
+    var zipWorker = BaseWorker(initiator: initiator, mainHandler: _listenZip);
+    zipWorker.init(unzipWorkerBody);
+  }
 
-  // _startParsing(Function callback, ProfileDocument profile) {
-  //   var parseInitiator = IsolateParserStartPackage(
-  //     paths: _pathsToParse,
-  //     profileId: profile.id,
-  //     isPerformanceTracking: ISTRACKALL,
-  //     waultarPath: _waultarPath,
-  //   );
-  //   _listenParser(dynamic data) {
-  //     switch (data.runtimeType) {
-  //       case MainParsedProgressPackage:
-  //         data as MainParsedProgressPackage;
-  //         callback("Parsing ${data.parsedCount}/${_pathsToParse.length}", data.isDone);
+  _startParsing(Function callback, ProfileDocument profile) {
+    var parseInitiator = IsolateParserStartPackage(
+      paths: _pathsToParse,
+      profileId: profile.id,
+      isPerformanceTracking: ISTRACKALL,
+      waultarPath: _waultarPath,
+    );
+    _listenParser(dynamic data) {
+      switch (data.runtimeType) {
+        case MainParsedProgressPackage:
+          data as MainParsedProgressPackage;
+          callback("Parsing ${data.parsedCount}/${_pathsToParse.length}", data.isDone);
 
-  //         if (data.isDone) {
-  //           _bucketsRepo.createBuckets(_parsingStartedAt, profile);
-  //         }
+          if (data.isDone) {
+            _bucketsRepo.createBuckets(_parsingStartedAt, profile);
+          }
 
-  //         if (data.isDone && ISPERFORMANCETRACKING && ISTRACKALL) {
-  //           _performance.addData(_performance.parentKey,
-  //               duration: _performance.stopReading(_performance.parentKey));
-  //           _performance.addDataPoint(_performance.parentKey,
-  //               PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
-  //           _performance.summary("Extraction and parsing");
-  //         }
-  //         break;
+          if (data.isDone && ISPERFORMANCETRACKING && ISTRACKALL) {
+            _performance.addData(_performance.parentKey,
+                duration: _performance.stopReading(_performance.parentKey));
+            _performance.addDataPoint(_performance.parentKey,
+                PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
+            _performance.summary("Extraction and parsing");
+          }
+          break;
 
-  //       case MainErrorPackage:
-  //         data as MainErrorPackage;
-  //         callback(data.message, true);
-  //         break;
-  //       default:
-  //     }
-  //   }
+        case MainErrorPackage:
+          data as MainErrorPackage;
+          callback(data.message, true);
+          break;
+        default:
+      }
+    }
 
-  //   var parseWorker = BaseWorker(mainHandler: _listenParser, initiator: parseInitiator);
-  //   parseWorker.init(parseWorkerBody);
-  // }
+    var parseWorker = BaseWorker(mainHandler: _listenParser, initiator: parseInitiator);
+    parseWorker.init(parseWorkerBody);
+  }
 
   @override
   Future<void> parseIsolatesParallel(String zipPath, Function(String message, bool isDone) callback,
@@ -172,7 +174,7 @@ class ParserService implements IParserService {
     BaseWorker? parseWorker;
     BaseWorker? zipWorker;
     // Parser
-    var parseInitiator = IsolateParserStartPackage(
+    var parseInitiator = IsolateParserParaStartPackage(
       paths: _pathsToParse,
       profileId: profile.id,
       isPerformanceTracking: false,
@@ -181,12 +183,14 @@ class ParserService implements IParserService {
 
     _listenParser(dynamic data) {
       switch (data.runtimeType) {
-        case MainParsedProgressPackage:
-          data as MainParsedProgressPackage;
+        case MainParsedParaProgressPackage:
+          data as MainParsedParaProgressPackage;
           callback("Parsing ${parsedCount += data.parsedCount}/${_totalCount}", false);
 
           if (parsedCount == _totalCount) {
-            parseWorker!.dispose();
+            parseWorker!.sendMessage(IsolateParserParaClosePackage());
+
+            parseWorker.dispose();
             zipWorker!.dispose();
 
             _bucketsRepo.createBuckets(_parsingStartedAt, profile);
@@ -200,27 +204,11 @@ class ParserService implements IParserService {
             _performance.summary("Extraction and parsing");
           }
           }
-
-          // if (pathToBeParsed.isNotEmpty) {
-          //   isParsing = true;
-          //   parseWorker!.sendMessage(IsolateParseFilePackage(pathToFile: [pathToBeParsed.removeAt(0)]));
-          // } else {
-          //   if (isExtractingDone && !isParsing && isParsingSetupDone) {
-          //     print("Closing");
-          //     parseWorker!.dispose();
-          //     zipWorker!.dispose();
-
-          //     _bucketsRepo.createBuckets(_parsingStartedAt, profile);
-          //     callback("Parsing ${data.parsedCount}/${_pathsToParse.length}", true);
-          //   }
-          // }
           break;
 
-        case MainParseSetupDonePackage:
-          break;
 
-        case MainErrorPackage:
-          data as MainErrorPackage;
+        case MainParaErrorPackage:
+          data as MainParaErrorPackage;
           callback(data.message, true);
           break;
         default:
@@ -231,7 +219,7 @@ class ParserService implements IParserService {
     parseWorker.init(parseWorkerBody2);
 
     // Extract
-    var initiator = IsolateUnzipStartPackage(
+    var initiator = IsolateUnzipParaStartPackage(
       pathToZip: zipPath,
       isPerformanceTracking: ISPERFORMANCETRACKING,
       profileName: profile.name,
@@ -240,58 +228,43 @@ class ParserService implements IParserService {
 
     _listenZip(dynamic data) {
       switch (data.runtimeType) {
-        case MainUnzipTotalCountPackage:
-          data as MainUnzipTotalCountPackage;
+        case MainUnzipParaTotalCountPackage:
+          data as MainUnzipParaTotalCountPackage;
           // _totalCount = data.total;
           // callback("Total files to extract: $_totalCount", false);
           break;
 
-        case MainUnzipDestDirPackage:
-          data as MainUnzipDestDirPackage;
+        case MainUnzipParaDestDirPackage:
+          data as MainUnzipParaDestDirPackage;
           if (_totalCount == 0) {
             callback("Started unzipping", false);
             _totalCount = data.amountOfFiles;
 
-            parseWorker!.sendMessage(IsolateParseDestDirPackage(destDir: data.destDir));
+            parseWorker!.sendMessage(IsolateParseParaDestDirPackage(destDir: data.destDir));
           } else {
             _totalCount = data.amountOfFiles;
           }
           // parseInitiator.destDir = data.destDir;
           break;
 
-        case MainUnzipProgressPackage:
-          data as MainUnzipProgressPackage;
+        case MainUnzipParaProgressPackage:
+          data as MainUnzipParaProgressPackage;
           // callback("${data.progress} files extracted out of $_totalCount", false);
 
           if (pathsToBeParsed.length > 18) {
             pathsToBeParsed.add(data.path);
-            parseWorker!.sendMessage(IsolateParseFilePackage(pathToFile: pathsToBeParsed));
+            parseWorker!.sendMessage(IsolateParseParaFilePackage(pathToFile: pathsToBeParsed));
             pathsToBeParsed.clear();
           } else {
             pathsToBeParsed.add(data.path);
           }
-
-
-          // if (isParsingSetupDone && isFirstParse) {
-          //   if (pathToBeParsed.isNotEmpty) {
-          //     parseWorker!.sendMessage(IsolateParseFilePackage(pathToFile: pathToBeParsed));
-          //     pathToBeParsed = [];
-          //   } else {
-          //     parseWorker!.sendMessage(IsolateParseFilePackage(pathToFile: [data.path]));
-          //   }
-          // } else {
-          //   pathToBeParsed.add(data.path);
-          // }
           break;
 
-        case MainUnzippedPathsPackage:
-          data as MainUnzippedPathsPackage;
+        case MainUnzippedParaPathsPackage:
+          data as MainUnzippedParaPathsPackage;
 
-          parseWorker!.sendMessage(IsolateParseFilePackage(pathToFile: pathsToBeParsed));
+          parseWorker!.sendMessage(IsolateParseParaFilePackage(pathToFile: pathsToBeParsed));
           pathsToBeParsed.clear();
-
-          // _pathsToParse = data.pathsInSameFolder;
-          // _startParsing(callback, profile);
 
           // if (ISPERFORMANCETRACKING && ISTRACKALL) {
           //   _performance.addDataPoint(_performance.parentKey,

@@ -9,7 +9,7 @@ import 'package:waultar/startup.dart';
 import 'package:path/path.dart' as dart_path;
 
 Future unzipWorkerBody2(dynamic data, SendPort mainSendPort, Function onError) async {
-  if (data is IsolateUnzipStartPackage) {
+  if (data is IsolateUnzipParaStartPackage) {
     try {
       await setupIsolate(mainSendPort, data, data.waultarPath);
       var performance = locator.get<PerformanceHelper>(instanceName: 'performance');
@@ -37,14 +37,14 @@ Future unzipWorkerBody2(dynamic data, SendPort mainSendPort, Function onError) a
       }
 
       // Send total count back
-      mainSendPort.send(MainUnzipTotalCountPackage(archive.files.length));
+      mainSendPort.send(MainUnzipParaTotalCountPackage(archive.files.length));
       var extractsPath = locator.get<String>(instanceName: 'extracts_folder');
 
       String tempDestDirPath = extractsPath + "/" + profileName;
       final destDirPath = dart_path.normalize(tempDestDirPath);
 
       mainSendPort.send(
-        MainUnzipDestDirPackage(
+        MainUnzipParaDestDirPackage(
           destDir: destDirPath,
           amountOfFiles: archive.length,
         ),
@@ -64,7 +64,7 @@ Future unzipWorkerBody2(dynamic data, SendPort mainSendPort, Function onError) a
           file.writeContent(outputStream);
 
           // if (list.isNotEmpty && !PathHelper.hasCommonPath(list[list.length - 1], outputStream.path)) {
-          //   mainSendPort.send(MainUnzippedPathsPackage(list, list.length));
+          //   mainSendPort.send(MainUnzippedParaPathsPackage(list, list.length));
 
           //   list = [outputStream.path];
           // }
@@ -88,7 +88,7 @@ Future unzipWorkerBody2(dynamic data, SendPort mainSendPort, Function onError) a
           }
           outputStream.close();
           progress = progress + 1;
-          mainSendPort.send(MainUnzipProgressPackage(
+          mainSendPort.send(MainUnzipParaProgressPackage(
             progress,
             path: outputStream.path,
             shouldParse: shouldParse,
@@ -97,7 +97,7 @@ Future unzipWorkerBody2(dynamic data, SendPort mainSendPort, Function onError) a
       }
 
       mainSendPort.send(
-        MainUnzipDestDirPackage(
+        MainUnzipParaDestDirPackage(
           destDir: destDirPath,
           amountOfFiles: list.length,
         ),
@@ -109,7 +109,7 @@ Future unzipWorkerBody2(dynamic data, SendPort mainSendPort, Function onError) a
             duration: performance.stopReading(performance.parentKey));
       }
 
-      mainSendPort.send(MainUnzippedPathsPackage(list, list.length,
+      mainSendPort.send(MainUnzippedParaPathsPackage(list, list.length,
           isPerformanceTracking ? jsonEncode(performance.parentDataPoint.toMap()) : ""));
       inputStream.close();
 
@@ -134,7 +134,7 @@ Future<void> setupIsolate(SendPort sendPort, InitiatorPackage setupData, String 
 }
 
 // isolate modtager denne
-class IsolateUnzipStartPackage extends InitiatorPackage {
+class IsolateUnzipParaStartPackage extends InitiatorPackage {
   String pathToZip;
   String waultarPath;
 
@@ -144,7 +144,7 @@ class IsolateUnzipStartPackage extends InitiatorPackage {
   // to be used as root folder name for extracted dump
   String profileName;
 
-  IsolateUnzipStartPackage({
+  IsolateUnzipParaStartPackage({
     required this.pathToZip,
     required this.isPerformanceTracking,
     required this.profileName,
@@ -152,31 +152,30 @@ class IsolateUnzipStartPackage extends InitiatorPackage {
   });
 }
 
-// worker får disse
-class MainUnzippedPathsPackage {
+class MainUnzippedParaPathsPackage {
   List<String> pathsInSameFolder;
   int parsedCount;
   String performanceDataPoint;
 
-  MainUnzippedPathsPackage(this.pathsInSameFolder, this.parsedCount, this.performanceDataPoint);
+  MainUnzippedParaPathsPackage(this.pathsInSameFolder, this.parsedCount, this.performanceDataPoint);
 }
 
-class MainUnzipTotalCountPackage {
+class MainUnzipParaTotalCountPackage {
   int total;
-  MainUnzipTotalCountPackage(this.total);
+  MainUnzipParaTotalCountPackage(this.total);
 }
 
-class MainUnzipProgressPackage {
+class MainUnzipParaProgressPackage {
   int progress;
   String path;
   bool shouldParse;
 
-  MainUnzipProgressPackage(this.progress, {required this.path, required this.shouldParse});
+  MainUnzipParaProgressPackage(this.progress, {required this.path, required this.shouldParse});
 }
 
-class MainUnzipDestDirPackage {
+class MainUnzipParaDestDirPackage {
   String destDir;
   int amountOfFiles;
 
-  MainUnzipDestDirPackage({required this.destDir, required this.amountOfFiles});
+  MainUnzipParaDestDirPackage({required this.destDir, required this.amountOfFiles});
 }
