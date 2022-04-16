@@ -95,7 +95,7 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
             }
 
             if (isOwnData && point.sentimentText != null && point.sentimentText!.isNotEmpty) {
-              if (data.isPerformanceTracking) performance.startReading("_cleanText");
+              if (data.isPerformanceTracking) performance.startReading("clean text");
               var text = "";
               if (point.sentimentText!.contains("#") || point.sentimentText!.contains("#")) {
                 var text = _cleanText(point.sentimentText!);
@@ -106,7 +106,7 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
               if (text.length > 256) text = text.substring(0, 256);
               if (data.isPerformanceTracking) {
                 performance.addReading(
-                    performance.parentKey, "clean text", performance.stopReading("_cleanText"));
+                    performance.parentKey, "clean text", performance.stopReading("clean text"));
               }
 
               if (text.isNotEmpty) {

@@ -19,6 +19,8 @@ def sentimentReadingToConsole(path, savePath):
     classifyTime = 0
     repoCount = 0
     repoTime = 0
+    translateCount = 0
+    translateTime = 0
     childs = taggedImages["childs"][1]["childs"]
 
     for point in childs:
@@ -36,15 +38,20 @@ def sentimentReadingToConsole(path, savePath):
         if point["key"] == "repo":
             repoCount = repoCount + 1
             repoTime = repoTime + point["elapsedTime"]
+        if point["key"] == "translate":
+            translateCount = translateCount + 1
+            translateTime = translateTime + point["elapsedTime"]
 
     # Setup percentage should probably be removed
     setupPercentage = setupTime / sentimentClassificationTime * 100
     _isOwnDataPercentage = _isOwnDataTime / sentimentClassificationTime * 100
     cleanTextPercentage = cleanTextTime / sentimentClassificationTime * 100
     classifyPercentage = classifyTime / sentimentClassificationTime * 100
-    other = 100 - setupPercentage - _isOwnDataPercentage - cleanTextPercentage - classifyPercentage
-    percentageData = [setupPercentage, _isOwnDataPercentage, cleanTextPercentage, classifyPercentage, other]
-    percentageLabel = ["Setup", "isOwnData", "Clean Text", "Classify", "Other"]
+    repoPercentage = repoTime / sentimentClassificationTime * 100
+    translatePercentage = translateTime / sentimentClassificationTime * 100 if translateCount > 0 else 0
+    other = 100 - setupPercentage - _isOwnDataPercentage - cleanTextPercentage - classifyPercentage - repoPercentage
+    percentageData = [setupPercentage, _isOwnDataPercentage, cleanTextPercentage, classifyPercentage, repoPercentage, other]
+    percentageLabel = ["Setup", "isOwnData", "Clean Text", "Classify", "Repository Calls", "Other"]
     createPieChart(percentageData, percentageLabel, "% Time Used in Sentiment Classifier", savePath)
 
     print(f"Sentiment classification took {totalTime / 1000000} seconds")
@@ -59,9 +66,20 @@ def sentimentReadingToConsole(path, savePath):
     print(f"\t\t\tTook {_isOwnDataPercentage}% of the time")
     print(f"\t\t\tand took {_isOwnDataTime / 1000000} seconds")
     print(f"\t\t\tWas called {_isOwnDataCount} time")
-    print(f"\t\tThe _isOwnData taking {_isOwnDataPercentage}% and was called {_isOwnDataCount} times")
     print(f"\t\tClean Text")
     print(f"\t\t\tTook {cleanTextPercentage}% of the time")
     print(f"\t\t\tand took {cleanTextTime / 1000000} seconds")
     print(f"\t\t\tWas called {cleanTextCount} time")
-    print(f"\t\tThe classify taking {classifyPercentage}% and was called {classifyCount} times")
+    print(f"\t\tClassify")
+    print(f"\t\t\tTook {classifyPercentage}% of the time")
+    print(f"\t\t\tand took {classifyTime / 1000000} seconds")
+    print(f"\t\t\tWas called {classifyCount} time")
+    print(f"\t\tRepository calls")
+    print(f"\t\t\tTook {repoPercentage}% of the time")
+    print(f"\t\t\tand took {repoTime / 1000000} seconds")
+    print(f"\t\t\tWas called {repoCount} time")
+    if (translateCount > 0):
+        print(f"\t\tTranslate")
+        print(f"\t\t\tTook {classifyPercentage}% of the time")
+        print(f"\t\t\tand took {classifyTime / 1000000} seconds")
+        print(f"\t\t\tWas called {classifyCount} time")

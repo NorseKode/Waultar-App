@@ -1,10 +1,12 @@
 from pandas import DataFrame, Series
 
 def createPieChart(data, labels, title, savePath):
-    series = Series(data=data, index=labels, name="")
+    labels = ['{0} - {1:1.2f} %'.format(i, j) for i, j in zip(labels, data)]
 
-    f = series.plot.pie(autopct="%.2f%%", legend=True,  shadow=True, title=title) \
-        .legend(loc='center right', bbox_to_anchor=(0.06, 1)) \
+    series = Series(data=data, name="")
+
+    f = series.plot.pie(labels=None, shadow=True, title=title) \
+        .legend(labels) \
         .get_figure()
-    f.savefig(savePath)
+    f.savefig(savePath, bbox_inches='tight')
     f.clear()
