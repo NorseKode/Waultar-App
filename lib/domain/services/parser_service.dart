@@ -165,11 +165,7 @@ class ParserService implements IParserService {
     profile.service.target = service;
     profile = _profileRepo.add(profile);
 
-    var isParsingSetupDone = false;
-    var isParsing = false;
-    var isFirstParse = true;
-    var isExtractingDone = false;
-    var pathToBeParsed = <String>[];
+    var pathsToBeParsed = <String>[];
     var parsedCount = 0;
     _totalCount = 0;
 
@@ -187,7 +183,6 @@ class ParserService implements IParserService {
       switch (data.runtimeType) {
         case MainParsedProgressPackage:
           data as MainParsedProgressPackage;
-          isParsing = false;
           callback("Parsing ${parsedCount += data.parsedCount}/${_totalCount}", false);
 
           if (parsedCount == _totalCount) {
@@ -222,7 +217,6 @@ class ParserService implements IParserService {
           break;
 
         case MainParseSetupDonePackage:
-          isParsingSetupDone = true;
           break;
 
         case MainErrorPackage:
@@ -255,6 +249,7 @@ class ParserService implements IParserService {
         case MainUnzipDestDirPackage:
           data as MainUnzipDestDirPackage;
           if (_totalCount == 0) {
+            callback("Started unzipping", false);
             _totalCount = data.amountOfFiles;
 
             parseWorker!.sendMessage(IsolateParseDestDirPackage(destDir: data.destDir));
@@ -268,7 +263,14 @@ class ParserService implements IParserService {
           data as MainUnzipProgressPackage;
           // callback("${data.progress} files extracted out of $_totalCount", false);
 
-          parseWorker!.sendMessage(IsolateParseFilePackage(pathToFile: [data.path]));
+          if (pathsToBeParsed.length > 18) {
+            pathsToBeParsed.add(data.path);
+            parseWorker!.sendMessage(IsolateParseFilePackage(pathToFile: pathsToBeParsed));
+            pathsToBeParsed.clear();
+          } else {
+            pathsToBeParsed.add(data.path);
+          }
+
 
           // if (isParsingSetupDone && isFirstParse) {
           //   if (pathToBeParsed.isNotEmpty) {
@@ -284,7 +286,10 @@ class ParserService implements IParserService {
 
         case MainUnzippedPathsPackage:
           data as MainUnzippedPathsPackage;
-          isExtractingDone = true;
+
+          parseWorker!.sendMessage(IsolateParseFilePackage(pathToFile: pathsToBeParsed));
+          pathsToBeParsed.clear();
+
           // _pathsToParse = data.pathsInSameFolder;
           // _startParsing(callback, profile);
 
