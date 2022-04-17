@@ -11,6 +11,8 @@ def taggedImageReadingToConsole(path, savePath):
     summedImagesTaggedTime = 0
     loadingOfImagesCount = 0
     loadingOfImagesTime = 0
+    updateRepoCount = 0
+    updateRepoTime = 0
     info = taggedImages["childs"][0]
     classifyingTime = info["elapsedTime"]
 
@@ -23,13 +25,17 @@ def taggedImageReadingToConsole(path, savePath):
         if point["key"] == "Loading of images":
             loadingOfImagesCount = loadingOfImagesCount + 1
             loadingOfImagesTime = loadingOfImagesTime + point["elapsedTime"]
+        if point["key"] == "Update Repo":
+            updateRepoCount = updateRepoCount + 1
+            updateRepoTime = updateRepoTime + point["elapsedTime"]
     
     setupPercentage = setupClassifierTime / classifyingTime * 100
     loadImagePercentage = loadingOfImagesTime / classifyingTime * 100
     classifyImagePercentage = summedImagesTaggedTime / classifyingTime * 100
-    other = 100 - setupPercentage - loadImagePercentage - classifyImagePercentage
+    updateRepoPercentage = updateRepoTime / classifyingTime * 100
+    other = 100 - setupPercentage - loadImagePercentage - classifyImagePercentage - updateRepoPercentage
     percentData = [setupPercentage, loadImagePercentage, classifyImagePercentage, other]
-    percentLabel = ["Setup", "Load Image", "Classify Image", "Other"]
+    percentLabel = ["Setup", "Load Image", "Classify Image", "Update Repo", "Other"]
     createPieChart(percentData, percentLabel, "Percentage of time used in classifier", savePath)
 
     print(f"Image tagging took {totalTime / 1000000} seconds")
@@ -37,5 +43,6 @@ def taggedImageReadingToConsole(path, savePath):
     print(f"\tWith {len(imagesTagged)} images tagged in {summedImagesTaggedTime / 1000000} second");
     print(f"\t\tSetup of classifier took {setupPercentage}% of the classifying time")
     print(f"\t\tLoading of images from the database took {loadImagePercentage}% of the classifying time")
+    print(f"\t\tUpdate of repo from the database took {updateRepoPercentage}% of the classifying time")
     print(f"\t\tClassifying of images took {classifyingTime}% of the classifying time used")
     print(f"\t\tThat's an average tagging time of {(summedImagesTaggedTime / len(imagesTagged)) / 1000000} seconds per image")

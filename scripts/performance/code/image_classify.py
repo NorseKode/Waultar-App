@@ -5,6 +5,8 @@ def classifyPerformanceToConsole(path, savePath):
     data = json.load(open(path))
 
     totalTime = data["elapsedTime"]
+    imageDiskCount = 0
+    imageDiskTime = 0
     predictTimes = 0
     predictCounts = 0
     preProcessTimes = 0
@@ -16,7 +18,10 @@ def classifyPerformanceToConsole(path, savePath):
         if point["key"] == "Predict All":
             predictCounts = predictCounts + 1
             predictTimes = predictTimes + point["elapsedTime"]
-            for reading in point["childs"]:
+            for reading in point["childs"]:                
+                if reading["key"] == "Image from disk":
+                    imageDiskCount = imageDiskCount + 1
+                    imageDiskTime = imageDiskTime + reading["elapsedTime"]
                 if reading["key"] == "Pre process":
                     preProcessTimes = preProcessTimes + reading["elapsedTime"]
                 if reading["key"] == "Run prediction":
@@ -25,15 +30,17 @@ def classifyPerformanceToConsole(path, savePath):
                     getResultsTimes = getResultsTimes + reading["elapsedTime"]
 
     predictAvgTime = predictTimes / predictCounts / 1000000
+    imageDiskAvgTime = imageDiskTime / imageDiskCount / 1000000
     preProcessAvgTime = preProcessTimes / predictCounts / 1000000
     runPredictionsAvgTimes = runPredictionsTimes / predictCounts / 1000000
     getResultsAvgTimes = getResultsTimes / predictCounts / 1000000
+    imageDiskPercentage = imageDiskAvgTime / predictAvgTime * 100
     preProcessPercentage = preProcessAvgTime / predictAvgTime * 100
     runPredictionPercentage = runPredictionsAvgTimes / predictAvgTime * 100
     getResultPercentage = getResultsAvgTimes / predictAvgTime * 100
-    other = 100 - preProcessPercentage - runPredictionPercentage - getResultPercentage 
-    percentageData = [preProcessPercentage, runPredictionPercentage, getResultPercentage, other]
-    percentageLabel = ["Pre Process", "Run Predictions", "Get Results", "Other"]
+    other = 100 - imageDiskPercentage - preProcessPercentage - runPredictionPercentage - getResultPercentage 
+    percentageData = [imageDiskPercentage, preProcessPercentage, runPredictionPercentage, getResultPercentage, other]
+    percentageLabel = ["Load Image From Disk", "Pre Process", "Run Predictions", "Get Results", "Other"]
     createPieChart(percentageData, percentageLabel, "Percentage of time used in predictions", savePath)
 
     print(f"The image prediction ran in {totalTime / 1000000} seconds")

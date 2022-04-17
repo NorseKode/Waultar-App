@@ -13,7 +13,8 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
     try {
       await setupIsolate(mainSendPort, data, data.waultarPath);
       var logger = locator.get<BaseLogger>(instanceName: 'logger');
-      var performance = PerformanceHelper(pathToPerformanceFile: locator.get<String>(instanceName: 'performance_folder'));
+      var performance = PerformanceHelper(
+          pathToPerformanceFile: locator.get<String>(instanceName: 'performance_folder'));
       var mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
       if (data.isPerformanceTracking) {
         performance.init(newParentKey: "Classifier");
@@ -68,7 +69,14 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
           }
         }
 
+        // TODO-Lukas
+        if (data.isPerformanceTracking) performance.startReading("Update Repo");
         mediaRepo.updateImages(images);
+        if (data.isPerformanceTracking) {
+          performance.addReading(
+              performance.parentKey, "Update Repo", performance.stopReading("Update Repo"));
+          performance.startReading("Update Repo");
+        }
         mainSendPort.send(MainImageClassifyProgressPackage(amountTagged: step, isDone: false));
         offset += step;
 
@@ -88,7 +96,6 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
       }
 
       classifier.dispose();
-
 
       mainSendPort.send(MainImageClassifyProgressPackage(
         amountTagged: step,

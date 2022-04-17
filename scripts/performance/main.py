@@ -11,14 +11,14 @@ saveInsta = os.path.join("img", "Instagram")
 saveFacebook = os.path.join("img", "Facebook")
 
 extractDataNewInsta = os.path.join(folderInsta, "1649919884197626-Extraction and parsing.json")
-parserDataNewInsta = os.path.join(folderInsta, "1649919884192624-Tree Parser Performance Data.json") 
+parserDataNewInsta = os.path.join(folderInsta, "1649919884192624-Tree Parser Performance Data.json")
 # sentimentDataOldInsta = os.path.join(folderInsta, "1649760401279386-Sentiment classification.json")
 sentimentDataNewInsta = os.path.join(folderInsta, "1649919895180558-Sentiment classification.json")
-imageDataNewInsta = os.path.join(folderInsta, "1649927778577750-Tagging of images only total.json")
-imageClassInsta = os.path.join(folderInsta, "1649927778564748-Image Classifier Abstract Class.json")
+imageDataNewInsta = os.path.join(folderInsta, "1650106097323059-Tagging of images only total.json")
+imageClassInsta = os.path.join(folderInsta, "1650186668137059-Image Classifier Abstract Class.json")
 
 extractDataNewFacebook = os.path.join(folderFacebook, "1649922014370244-Extraction and parsing.json")
-parserDataNewFacebook = os.path.join(folderFacebook, "1649922014345243-Tree Parser Performance Data.json") 
+parserDataNewFacebook = os.path.join(folderFacebook, "1649922014345243-Tree Parser Performance Data.json")
 # sentimentDataOldFacebook = os.path.join(folderFacebook, "1649760401279386-Sentiment classification.json")
 sentimentDataNewFacebook = os.path.join(folderFacebook, "1649922245262247-Sentiment classification.json")
 imageDataNewFacebook = os.path.join(folderFacebook, "1649928298832161-Tagging of images only total.json")
@@ -68,7 +68,7 @@ it.taggedImageReadingToConsole(imageDataNewFacebook, os.path.join(saveFacebook, 
 print("###### Image Tagging - End ######\n")
 
 print("##### Image Classifier - Start #####")
-ic.classifyPerformanceToConsole(imageClassFacebook, os.path.join(saveFacebook, "image_classifier_time_percent_v0.1.png"))
+# ic.classifyPerformanceToConsole(imageClassFacebook, os.path.join(saveFacebook, "image_classifier_time_percent_v0.1.png"))
 print("###### Image Classifier - End ######\n")
 
 # print("##### Sentiment Old - Start #####")
