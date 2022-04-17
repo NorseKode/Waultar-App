@@ -86,7 +86,7 @@ class _BrowseState extends State<Browse> {
           var zipFile =
               files.item1.singleWhere((element) => dart_path.extension(element) == ".zip");
 
-          await _parserService.parseIsolates(
+          await _parserService.parseIsolatesParallel(
             zipFile,
             _onUploadProgress,
             files.item3,

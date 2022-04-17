@@ -45,7 +45,7 @@ class TreeParser {
   late String formerFileName;
   late String formerFileParentName;
 
-  late String basePathToFiles;
+  String? basePathToFiles;
 
   Stream<int> parseManyPaths(
       List<String> paths, ProfileDocument profile) async* {
@@ -56,7 +56,7 @@ class TreeParser {
       _performance.startReading(_performance.parentKey);
     }
 
-    if (paths.length > 1) {
+    if (basePathToFiles != null && paths.length > 1) {
       var path1 = paths.first;
       var path2 = paths.last;
 
@@ -203,7 +203,7 @@ class TreeParser {
             parent,
             profile,
             entry.value,
-            basePathToFiles,
+            basePathToFiles!,
           );
 
           _appLogger.logger.info(
@@ -229,7 +229,7 @@ class TreeParser {
             parent,
             profile,
             item,
-            basePathToFiles,
+            basePathToFiles!,
           );
 
           parent.dataPoints.add(directDataPoint);
@@ -267,7 +267,7 @@ class TreeParser {
         parent,
         profile,
         mapToEmbedWith,
-        basePathToFiles,
+        basePathToFiles!,
       );
 
       var nameBasedOnTitle = mapToEmbedWith['title'];
@@ -287,7 +287,7 @@ class TreeParser {
         parent,
         profile,
         listToEmbed,
-        basePathToFiles,
+        basePathToFiles!,
       );
       parent.dataPoints.add(directDataPoint);
     }
