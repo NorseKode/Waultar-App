@@ -10,19 +10,19 @@ folderFacebook = os.path.join("readings", "Facebook");
 saveInsta = os.path.join("img", "Instagram")
 saveFacebook = os.path.join("img", "Facebook")
 
-extractDataNewInsta = os.path.join(folderInsta, "1649919884197626-Extraction and parsing.json")
-parserDataNewInsta = os.path.join(folderInsta, "1649919884192624-Tree Parser Performance Data.json")
+extractDataNewInsta = os.path.join(folderInsta, "Extraction and parsing.json")
+parserDataNewInsta = os.path.join(folderInsta, "Tree Parser Performance Data.json")
 # sentimentDataOldInsta = os.path.join(folderInsta, "1649760401279386-Sentiment classification.json")
-sentimentDataNewInsta = os.path.join(folderInsta, "1649919895180558-Sentiment classification.json")
-imageDataNewInsta = os.path.join(folderInsta, "1650106097323059-Tagging of images only total.json")
-imageClassInsta = os.path.join(folderInsta, "1650186668137059-Image Classifier Abstract Class.json")
+sentimentDataNewInsta = os.path.join(folderInsta, "Sentiment classification.json")
+imageDataNewInsta = os.path.join(folderInsta, "Tagging of images only total.json")
+imageClassInsta = os.path.join(folderInsta, "Image Classifier Abstract Class.json")
 
-extractDataNewFacebook = os.path.join(folderFacebook, "1649922014370244-Extraction and parsing.json")
-parserDataNewFacebook = os.path.join(folderFacebook, "1649922014345243-Tree Parser Performance Data.json")
+extractDataNewFacebook = os.path.join(folderFacebook, "Extraction and parsing.json")
+parserDataNewFacebook = os.path.join(folderFacebook, "Tree Parser Performance Data.json")
 # sentimentDataOldFacebook = os.path.join(folderFacebook, "1649760401279386-Sentiment classification.json")
-sentimentDataNewFacebook = os.path.join(folderFacebook, "1649922245262247-Sentiment classification.json")
-imageDataNewFacebook = os.path.join(folderFacebook, "1649928298832161-Tagging of images only total.json")
-imageClassFacebook = os.path.join(folderFacebook, "1649928298821161-Image Classifier Abstract Class.json")
+sentimentDataNewFacebook = os.path.join(folderFacebook, "Sentiment classification.json")
+imageDataNewFacebook = os.path.join(folderFacebook, "Tagging of images only total.json")
+imageClassFacebook = os.path.join(folderFacebook, "Image Classifier Abstract Class.json")
 
 print("########## Instagram ##########")
 print("##### Extract - Start #####")
@@ -68,7 +68,7 @@ it.taggedImageReadingToConsole(imageDataNewFacebook, os.path.join(saveFacebook, 
 print("###### Image Tagging - End ######\n")
 
 print("##### Image Classifier - Start #####")
-# ic.classifyPerformanceToConsole(imageClassFacebook, os.path.join(saveFacebook, "image_classifier_time_percent_v0.1.png"))
+ic.classifyPerformanceToConsole(imageClassFacebook, os.path.join(saveFacebook, "image_classifier_time_percent_v0.1.png"))
 print("###### Image Classifier - End ######\n")
 
 # print("##### Sentiment Old - Start #####")

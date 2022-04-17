@@ -56,7 +56,7 @@ class TreeParser {
       _performance.startReading(_performance.parentKey);
     }
 
-    if (basePathToFiles != null && paths.length > 1) {
+    if (basePathToFiles == null && paths.length > 1) {
       var path1 = paths.first;
       var path2 = paths.last;
 

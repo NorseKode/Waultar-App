@@ -1,14 +1,10 @@
-import 'dart:convert';
 import 'dart:isolate';
 
-import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
-import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/core/parsers/tree_parser.dart';
 import 'package:waultar/data/configs/objectbox.dart';
-import 'package:waultar/domain/workers/shared_packages.dart';
 import 'package:waultar/startup.dart';
 
   TreeParser? parser;

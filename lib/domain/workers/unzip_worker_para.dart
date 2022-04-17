@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:isolate';
 
 import 'package:archive/archive_io.dart';
@@ -109,8 +108,8 @@ Future unzipWorkerBody2(dynamic data, SendPort mainSendPort, Function onError) a
             duration: performance.stopReading(performance.parentKey));
       }
 
-      mainSendPort.send(MainUnzippedParaPathsPackage(list, list.length,
-          isPerformanceTracking ? jsonEncode(performance.parentDataPoint.toMap()) : ""));
+      // mainSendPort.send(MainUnzippedParaPathsPackage(list, list.length,
+      //     isPerformanceTracking ? jsonEncode(performance.parentDataPoint.toMap()) : ""));
       inputStream.close();
 
       if (isPerformanceTracking) {

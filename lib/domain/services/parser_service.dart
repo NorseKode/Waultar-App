@@ -64,7 +64,6 @@ class ParserService implements IParserService {
     profile = _profileRepo.add(profile);
 
     _startExtracting(zipPath, callback, profile);
-    throw UnimplementedError();
   }
 
   _startExtracting(String zipPath, Function callback, ProfileDocument profile) {
@@ -92,7 +91,7 @@ class ParserService implements IParserService {
           _pathsToParse = data.pathsInSameFolder;
           _startParsing(callback, profile);
 
-          if (ISPERFORMANCETRACKING && ISTRACKALL) {
+          if (ISPERFORMANCETRACKING) {
             _performance.addDataPoint(_performance.parentKey,
                 PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
           }
@@ -101,7 +100,7 @@ class ParserService implements IParserService {
 
         case MainPerformanceMeasurementPackage:
           data as MainPerformanceMeasurementPackage;
-          if (ISPERFORMANCETRACKING && ISTRACKALL) {
+          if (ISPERFORMANCETRACKING) {
             var performanceReading =
                 PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPointJson));
             _performance.storeDataPoint("Extracting files", performanceReading);
@@ -119,7 +118,7 @@ class ParserService implements IParserService {
     var parseInitiator = IsolateParserStartPackage(
       paths: _pathsToParse,
       profileId: profile.id,
-      isPerformanceTracking: ISTRACKALL,
+      isPerformanceTracking: ISPERFORMANCETRACKING,
       waultarPath: _waultarPath,
     );
     _listenParser(dynamic data) {
@@ -132,7 +131,7 @@ class ParserService implements IParserService {
             _bucketsRepo.createBuckets(_parsingStartedAt, profile);
           }
 
-          if (data.isDone && ISPERFORMANCETRACKING && ISTRACKALL) {
+          if (data.isDone && ISPERFORMANCETRACKING) {
             _performance.addData(_performance.parentKey,
                 duration: _performance.stopReading(_performance.parentKey));
             _performance.addDataPoint(_performance.parentKey,
@@ -169,10 +168,32 @@ class ParserService implements IParserService {
 
     var pathsToBeParsed = <String>[];
     var parsedCount = 0;
+    var isExtractionDone = false;
     _totalCount = 0;
 
     BaseWorker? parseWorker;
     BaseWorker? zipWorker;
+
+    // SHared functions
+    _disposeWorkers() {
+parseWorker!.sendMessage(IsolateParserParaClosePackage());
+
+            parseWorker.dispose();
+            zipWorker!.dispose();
+
+            _bucketsRepo.createBuckets(_parsingStartedAt, profile);
+            callback("", true);
+
+            if (ISPERFORMANCETRACKING) {
+            _performance.addData(_performance.parentKey,
+                duration: _performance.stopReading(_performance.parentKey));
+            // _performance.addDataPoint(_performance.parentKey,
+            //     PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
+            _performance.summary("Extraction and parsing");
+          }
+    }
+
+
     // Parser
     var parseInitiator = IsolateParserParaStartPackage(
       paths: _pathsToParse,
@@ -185,24 +206,10 @@ class ParserService implements IParserService {
       switch (data.runtimeType) {
         case MainParsedParaProgressPackage:
           data as MainParsedParaProgressPackage;
-          callback("Parsing ${parsedCount += data.parsedCount}/${_totalCount}", false);
+          callback("Parsing ${parsedCount += data.parsedCount}/$_totalCount", false);
 
           if (parsedCount == _totalCount) {
-            parseWorker!.sendMessage(IsolateParserParaClosePackage());
-
-            parseWorker.dispose();
-            zipWorker!.dispose();
-
-            _bucketsRepo.createBuckets(_parsingStartedAt, profile);
-            callback("Parsing ${data.parsedCount}/${_pathsToParse.length}", true);
-
-            if (ISPERFORMANCETRACKING) {
-            _performance.addData(_performance.parentKey,
-                duration: _performance.stopReading(_performance.parentKey));
-            // _performance.addDataPoint(_performance.parentKey,
-            //     PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
-            _performance.summary("Extraction and parsing");
-          }
+            _disposeWorkers();
           }
           break;
 
@@ -242,7 +249,12 @@ class ParserService implements IParserService {
 
             parseWorker!.sendMessage(IsolateParseParaDestDirPackage(destDir: data.destDir));
           } else {
+            isExtractionDone = true;
             _totalCount = data.amountOfFiles;
+
+            if (parsedCount == _totalCount) {
+              _disposeWorkers();
+            }
           }
           // parseInitiator.destDir = data.destDir;
           break;
@@ -251,7 +263,7 @@ class ParserService implements IParserService {
           data as MainUnzipParaProgressPackage;
           // callback("${data.progress} files extracted out of $_totalCount", false);
 
-          if (pathsToBeParsed.length > 18) {
+          if (pathsToBeParsed.length > 3) {
             pathsToBeParsed.add(data.path);
             parseWorker!.sendMessage(IsolateParseParaFilePackage(pathToFile: pathsToBeParsed));
             pathsToBeParsed.clear();
@@ -260,18 +272,18 @@ class ParserService implements IParserService {
           }
           break;
 
-        case MainUnzippedParaPathsPackage:
-          data as MainUnzippedParaPathsPackage;
+        // case MainUnzippedParaPathsPackage:
+        //   data as MainUnzippedParaPathsPackage;
 
-          parseWorker!.sendMessage(IsolateParseParaFilePackage(pathToFile: pathsToBeParsed));
-          pathsToBeParsed.clear();
+        //   parseWorker!.sendMessage(IsolateParseParaFilePackage(pathToFile: pathsToBeParsed));
+        //   pathsToBeParsed.clear();
 
-          // if (ISPERFORMANCETRACKING && ISTRACKALL) {
-          //   _performance.addDataPoint(_performance.parentKey,
-          //       PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
-          // }
+        //   // if (ISPERFORMANCETRACKING && ISTRACKALL) {
+        //   //   _performance.addDataPoint(_performance.parentKey,
+        //   //       PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
+        //   // }
 
-          break;
+        //   break;
 
         case MainPerformanceMeasurementPackage:
           data as MainPerformanceMeasurementPackage;
