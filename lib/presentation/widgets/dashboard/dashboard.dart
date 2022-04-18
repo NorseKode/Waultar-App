@@ -111,9 +111,8 @@ class _DashboardState extends State<Dashboard> {
           ),
         ),
         const SizedBox(width: 20),
-        Expanded(
-          child: _analysis(),
-        ),
+        Container(
+            constraints: BoxConstraints(maxWidth: 400), child: _analysis()),
       ],
     );
   }

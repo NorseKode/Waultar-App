@@ -79,7 +79,11 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
       child: _isLoading
           ? _loadingScreen()
           : _imagesToTagCount == 0
-              ? const Text("No Images To Tag")
+              ? Row(
+                  children: [
+                    const Text("No Images To Tag"),
+                  ],
+                )
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
