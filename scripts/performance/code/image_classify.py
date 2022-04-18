@@ -1,9 +1,12 @@
 import json
+from .diagram_creator import *
 
-def classifyPerformanceToConsole(path):
+def classifyPerformanceToConsole(path, savePath):
     data = json.load(open(path))
 
     totalTime = data["elapsedTime"]
+    imageDiskCount = 0
+    imageDiskTime = 0
     predictTimes = 0
     predictCounts = 0
     preProcessTimes = 0
@@ -15,7 +18,10 @@ def classifyPerformanceToConsole(path):
         if point["key"] == "Predict All":
             predictCounts = predictCounts + 1
             predictTimes = predictTimes + point["elapsedTime"]
-            for reading in point["childs"]:
+            for reading in point["childs"]:                
+                if reading["key"] == "Image from disk":
+                    imageDiskCount = imageDiskCount + 1
+                    imageDiskTime = imageDiskTime + reading["elapsedTime"]
                 if reading["key"] == "Pre process":
                     preProcessTimes = preProcessTimes + reading["elapsedTime"]
                 if reading["key"] == "Run prediction":
@@ -24,25 +30,27 @@ def classifyPerformanceToConsole(path):
                     getResultsTimes = getResultsTimes + reading["elapsedTime"]
 
     predictAvgTime = predictTimes / predictCounts / 1000000
+    imageDiskAvgTime = imageDiskTime / imageDiskCount / 1000000
     preProcessAvgTime = preProcessTimes / predictCounts / 1000000
     runPredictionsAvgTimes = runPredictionsTimes / predictCounts / 1000000
     getResultsAvgTimes = getResultsTimes / predictCounts / 1000000
+    imageDiskPercentage = imageDiskAvgTime / predictAvgTime * 100
+    preProcessPercentage = preProcessAvgTime / predictAvgTime * 100
+    runPredictionPercentage = runPredictionsAvgTimes / predictAvgTime * 100
+    getResultPercentage = getResultsAvgTimes / predictAvgTime * 100
+    other = 100 - imageDiskPercentage - preProcessPercentage - runPredictionPercentage - getResultPercentage 
+    percentageData = [imageDiskPercentage, preProcessPercentage, runPredictionPercentage, getResultPercentage, other]
+    percentageLabel = ["Load Image From Disk", "Pre Process", "Run Predictions", "Get Results", "Other"]
+    createPieChart(percentageData, percentageLabel, "Percentage of time used in predictions", savePath)
 
     print(f"The image prediction ran in {totalTime / 1000000} seconds")
     print(f"On average a prediction took {predictAvgTime} seconds, with")
     print(f"\tPre processing:")
     print(f"\t\ton average takes {preProcessAvgTime} seconds")
-    print(f"\t\twhich is {preProcessAvgTime / predictAvgTime * 100}% of the predict time")
+    print(f"\t\twhich is {preProcessPercentage}% of the predict time")
     print(f"\tRun Predictions:")
     print(f"\t\ton average takes {runPredictionsAvgTimes} seconds")
-    print(f"\t\twhich is {runPredictionsAvgTimes / predictAvgTime * 100}% of the predict time")
+    print(f"\t\twhich is {runPredictionPercentage}% of the predict time")
     print(f"\tGet Results:")
     print(f"\t\ton average takes {getResultsAvgTimes} seconds")
-    print(f"\t\twhich is {getResultsAvgTimes / predictAvgTime * 100}% of the predict time")
-
-    # print(f"Tree Parser took {totalTime / 1000000} seconds to parse {parsePathCount} files")
-    # print(f"\tparsePath function used {parsePathTotalTime / totalTime}%, but it is the top function so it makes sense")
-    # print(f"\tgetFromFolderName function used {getFromFolderNameTotalTime / totalTime}% and was called {getFromFolderNameCount} times")
-    # print(f"\tparseName function used {parseNameTotalTime / totalTime}% and was called {parseNameCount} times")
-    # print(f"\tcleanFileName function used {cleanFileNameTotalTime / totalTime}% and was called {cleanFileNameCount} times")
-    # print(f"\taddCategoryTotalTime function used {addCategoryTotalTime / totalTime}% and was called {addCategoryCount} times")
+    print(f"\t\twhich is {getResultPercentage}% of the predict time")

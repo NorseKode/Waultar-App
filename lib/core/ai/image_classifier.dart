@@ -127,9 +127,16 @@ class ImageClassifier extends IMLModel {
       performance2.startReading(parentKey);
     }
 
+    if (ISPERFORMANCETRACKING) {
+      performance2!.startReading("Image from disk");
+    }
     var image = img.decodeImage(File(imagePath).readAsBytesSync());
     if (image == null) {
+      performance2!.dispose();
       throw AIException("Couldn't locate image from path: $imagePath", this, image);
+    }
+    if (ISPERFORMANCETRACKING) {
+      performance2!.addReading(performance2.parentKey, "Image from disk", performance2.stopReading("Image from disk"));
     }
 
     if (ISPERFORMANCETRACKING) {
@@ -140,7 +147,6 @@ class ImageClassifier extends IMLModel {
     _inputImage = _preProcess();
     if (ISPERFORMANCETRACKING) {
       performance2!.addReading(parentKey, "Pre process", performance2.stopReading("Pre process"));
-      performance2.reset("Pre process");
     }
 
     if (ISPERFORMANCETRACKING) {
@@ -149,7 +155,6 @@ class ImageClassifier extends IMLModel {
     _interpreter.run(_inputImage.buffer, _outputBuffer.getBuffer());
     if (ISPERFORMANCETRACKING) {
       performance2!.addReading(parentKey, "Run prediction", performance2.stopReading("Run prediction"));
-      performance2.reset("Run prediction");
     }
 
     if (ISPERFORMANCETRACKING) {
@@ -169,7 +174,6 @@ class ImageClassifier extends IMLModel {
     }
     if (ISPERFORMANCETRACKING) {
       performance2!.addReading(parentKey, "Get results", performance2.stopReading("Get results"));
-      performance2.reset("Get results");
     }
 
     if (ISPERFORMANCETRACKING) {

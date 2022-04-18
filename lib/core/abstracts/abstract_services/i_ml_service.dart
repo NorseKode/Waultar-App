@@ -4,6 +4,7 @@ abstract class IMLService {
   Future<void> classifyImagesSeparateThread({
     required Function(String message, bool isDone) callback,
     required int totalAmountOfImagesToTag,
+    int threadCount = 1,
     int? limitAmount,
   });
   // double connotateText(String text);

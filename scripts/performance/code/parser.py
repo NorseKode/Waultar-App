@@ -1,7 +1,8 @@
 import json
 from pandas import DataFrame, Series
+from .diagram_creator import *
 
-def parserPerformanceToConsole(path):
+def parserPerformanceToConsole(path, savePath):
     parseData = json.load(open(path))
 
     totalTime = parseData["elapsedTime"]
@@ -33,13 +34,21 @@ def parserPerformanceToConsole(path):
             cleanFileNameCount = cleanFileNameCount + 1
             cleanFileNameTotalTime = cleanFileNameTotalTime + point["elapsedTime"]
 
-    prasePathPercentage = parsePathTotalTime / totalTime
-
-    series = Series()
-
+    parsePathPercentage = parsePathTotalTime / totalTime
+    getFromFolderPercentage = getFromFolderNameTotalTime / totalTime
+    parseNamePercentage = parseNameTotalTime / totalTime
+    cleanFileNamePercentage = cleanFileNameTotalTime / totalTime
+    addCategoryPercentage = addCategoryTotalTime / totalTime
+    
+    percentage = [getFromFolderPercentage, parseNamePercentage, \
+        cleanFileNamePercentage, addCategoryPercentage]
+    labels = ["Get From Folder", "Parse Name", "Clean File Name", "Add Category"]
+        
     print(f"Tree Parser took {totalTime / 1000000} seconds to parse {parsePathCount} files")
-    print(f"\tparsePath function used {prasePathPercentage}%, but it is the top function so it makes sense")
-    print(f"\tgetFromFolderName function used {getFromFolderNameTotalTime / totalTime}% and was called {getFromFolderNameCount} times")
-    print(f"\tparseName function used {parseNameTotalTime / totalTime}% and was called {parseNameCount} times")
-    print(f"\tcleanFileName function used {cleanFileNameTotalTime / totalTime}% and was called {cleanFileNameCount} times")
-    print(f"\taddCategoryTotalTime function used {addCategoryTotalTime / totalTime}% and was called {addCategoryCount} times")
+    print(f"\tparsePath function used {parsePathPercentage}%, but it is the top function so it makes sense")
+    print(f"\tgetFromFolderName function used {getFromFolderPercentage}% and was called {getFromFolderNameCount} times")
+    print(f"\tparseName function used {parseNamePercentage}% and was called {parseNameCount} times")
+    print(f"\tcleanFileName function used {cleanFileNamePercentage}% and was called {cleanFileNameCount} times")
+    print(f"\taddCategoryTotalTime function used {addCategoryPercentage}% and was called {addCategoryCount} times")
+
+    createPieChart(percentage, labels, "Percentage of time used in parser", savePath)

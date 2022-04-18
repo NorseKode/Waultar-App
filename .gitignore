@@ -58,3 +58,6 @@ windows/flutter/generated_plugins.cmake
 lib/data/configs/objectbox.g.dart
 linux/flutter/generated_plugin_registrant.cc
 linux/flutter/generated_plugins.cmake
+
+# Others
+scripts/performance/img/*

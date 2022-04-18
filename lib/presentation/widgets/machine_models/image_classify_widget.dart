@@ -52,6 +52,7 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
       limitAmount: _amountToTagTextController.text.isNotEmpty
           ? int.parse(_amountToTagTextController.text)
           : null,
+      threadCount: 3,
     );
   }
 
@@ -88,7 +89,7 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                       keyboardType: TextInputType.number,
                     ),
                     Text("Untagged Images Count: $_imagesToTagCount"),
-                    Text("Estimated Time To Tag All: ${(_imagesToTagCount * 0.4) / 60} minuets"),
+                    Text("Estimated Time To Tag All: ${(_imagesToTagCount * 0.08) / 60} minuets"),
                     const SizedBox(height: 10),
                     Divider(
                       height: 2,

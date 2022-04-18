@@ -27,6 +27,14 @@ class MediaRepository {
       ..limit = limit;
     return query.find();
   }
+  
+  List<ImageDocument> getImagesForTaggingPagination(int offset, int limit) {
+    var query = _imageBox.query(ImageDocument_.mediaTags.equals("")).build();
+    query
+      ..offset = offset
+      ..limit = limit;
+    return query.find();
+  }
 
   List<int> updateImages(List<ImageDocument> images) {
     return _imageBox.putMany(images);

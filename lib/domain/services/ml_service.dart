@@ -14,9 +14,14 @@ class MLService extends IMLService {
   Future<void> classifyImagesSeparateThread({
     required Function(String message, bool isDone) callback,
     required int totalAmountOfImagesToTag,
+    int threadCount = 1,
     int? limitAmount,
   }) async {
+    var isDoneCount = 0;
     var amountTaggedSummed = 0;
+    var amountToProcess = limitAmount ?? totalAmountOfImagesToTag;
+    var splitCount = amountToProcess ~/ threadCount;
+    var workersList = <BaseWorker>[];
 
     if (ISPERFORMANCETRACKING) {
       var key = "Classifying of images";
@@ -24,34 +29,49 @@ class MLService extends IMLService {
       _performance.startReading(key);
     }
 
-    var initiator = IsolateImageClassifyStartPackage(
-      waultarPath: locator.get<String>(instanceName: 'waultar_root_directory'),
-      limit: limitAmount,
-      isPerformanceTracking: ISPERFORMANCETRACKING,
-    );
-
     _listenImageClassify(dynamic data) {
       switch (data.runtimeType) {
         case MainImageClassifyProgressPackage:
           data as MainImageClassifyProgressPackage;
           amountTaggedSummed += data.amountTagged;
+
+          if (data.isDone) isDoneCount++;
+
           callback("$amountTaggedSummed/${limitAmount ?? totalAmountOfImagesToTag} Images Tagged",
-              data.isDone);
-          if (ISPERFORMANCETRACKING && data.isDone) {
+              isDoneCount == threadCount);
+          if (ISPERFORMANCETRACKING && isDoneCount == threadCount) {
             _performance.addData(
               _performance.parentKey,
               duration: _performance.stopReading(_performance.parentKey),
-              childs: data.performanceDataPoint != null
+              childs: data.performanceDataPoint != null && data.performanceDataPoint!.isNotEmpty
                   ? [PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint!))]
                   : [],
+              metadata: {"threadCount": threadCount},
             );
             _performance.summary("Tagging of images only total");
+
+            for (var worker in workersList) {
+              worker.dispose();
+            }
           }
       }
     }
 
-    var classifyWorker = BaseWorker(initiator: initiator, mainHandler: _listenImageClassify);
-    classifyWorker.init(imageClassifierWorkerBody);
+    var waultarPath = locator.get<String>(instanceName: 'waultar_root_directory');
+    for (var i = 0; i < threadCount; i++) {
+      var worker = BaseWorker(
+        mainHandler: _listenImageClassify,
+        initiator: IsolateImageClassifyStartPackage(
+          waultarPath: waultarPath,
+          offset: splitCount * i,
+          limit: i != threadCount - 1 ? (splitCount * (i + 1)) : amountToProcess,
+          isPerformanceTracking: false,
+        ),
+      );
+
+      workersList.add(worker);
+      worker.init(imageClassifierWorkerBody);
+    }
   }
 
   @override
