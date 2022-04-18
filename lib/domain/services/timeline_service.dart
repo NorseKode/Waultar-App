@@ -13,7 +13,6 @@ class TimeLineService implements ITimelineService {
   TimeLineService() {
     _profiles = [];
     _currentTimeSeries = [];
-    // _currentSentimentTimeSeries = [];
     _chartData = [];
     _averageChartData = [];
     _sentimentChartSeries = [];
@@ -31,8 +30,6 @@ class TimeLineService implements ITimelineService {
       _currentProfile = _profiles.first;
       _profiles.add(_allProfilesRepresenter);
       _currentTimeSeries = _bucketsRepo.getAllYearModels(_currentProfile!);
-      // _currentSentimentTimeSeries =
-      //     _bucketsRepo.getAllYearModels(_currentProfile!);
       _currentTimeIntervalForChart = DateTimeIntervalType.years;
       _setUserChartDataSeries();
       _setAverageChartSeries();
@@ -52,7 +49,6 @@ class TimeLineService implements ITimelineService {
   late List<ProfileDocument> _profiles;
 
   late List<TimeModel> _currentTimeSeries;
-  // late List<TimeModel> _currentSentimentTimeSeries;
   late List<DateTime> _currentIndex;
   late List<UserChartData> _chartData;
   late List<UserAverageChartData> _averageChartData;
@@ -332,7 +328,6 @@ class SentimentChartPoint {
           .item2;
       return Tuple2(category, yValue);
     });
-    // yValues.removeWhere((element) => element.item2 == 0);
   }
 }
 

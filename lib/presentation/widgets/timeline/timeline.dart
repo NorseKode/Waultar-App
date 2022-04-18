@@ -68,12 +68,12 @@ class _TimelineState extends State<Timeline> {
     List<TabData> tabs = [];
 
     tabs.add(TabData(
-      text: 'Data over time',
+      text: 'All data',
       closable: false,
       content: _timeLineTabContent(),
     ));
     tabs.add(TabData(
-      text: 'Averages',
+      text: 'Average',
       closable: false,
       content: _averageTabContent(),
     ));
@@ -187,23 +187,6 @@ class _TimelineState extends State<Timeline> {
     );
   }
 
-  // List<ChartSeries> _getSentimentChartSeries() {
-  //   var returnList = <ChartSeries>[];
-  //   var plotPoints = _timelineService.sentimentChartSeries;
-  //   for (var plotPoint in plotPoints) {
-  //     var output = ColumnSeries(
-  //       dataSource: plotPoint.chartDataPoints,
-  //       xValueMapper: (SentimentWithAverage model, _) => model.timeValue,
-  //       yValueMapper: (SentimentWithAverage model, _) => model.score,
-  //       dataLabelMapper: (x, _) => plotPoint.category.categoryName,
-  //       name: plotPoint.category.categoryName,
-  //     );
-  //     returnList.add(output);
-  //   }
-
-  //   return returnList;
-  // }
-
   Widget _timeLineTabContent() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,11 +228,17 @@ class _TimelineState extends State<Timeline> {
       primaryYAxis: NumericAxis(
         majorGridLines: const MajorGridLines(width: 0),
         minimum: 0.0,
+        title: AxisTitle(
+          text: 'Amount of datapoints' 
+        ),
       ),
       axes: _chosenChartType == ChartSeriesType.stackedColumns
           ? <ChartAxis>[
               NumericAxis(
                 name: 'sentiment_axis',
+                title: AxisTitle(
+                  text: 'Sentiment score'
+                ),
                 opposedPosition: true,
                 interval: 0.1,
                 minimum: 0.0,
