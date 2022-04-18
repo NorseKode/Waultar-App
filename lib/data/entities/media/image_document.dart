@@ -1,4 +1,3 @@
-
 import 'package:objectbox/objectbox.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
@@ -34,5 +33,18 @@ class ImageDocument {
     } else {
       mediaTagScores = <String>[];
     }
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'uri': uri,
+      'data': data,
+      'searchString': searchString,
+      'mediaTags': mediaTags,
+      'mediaTagScores': mediaTagScores,
+      'relatedDatapoint': relatedDatapoint.targetId,
+      'profile': profile.targetId,
+    };
   }
 }
