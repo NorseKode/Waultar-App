@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:isolate';
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/core/ai/image_classifier_mobilenetv3.dart';
+import 'package:waultar/core/ai/image_classifier_mobilenetv3_small.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/data/configs/objectbox.dart';
