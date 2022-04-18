@@ -51,7 +51,7 @@ class _TimelineState extends State<Timeline> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Timeline",
+          "Statistics",
           style: _themeProvider.themeData().textTheme.headline3,
         ),
         const SizedBox(height: 30),
@@ -154,6 +154,7 @@ class _TimelineState extends State<Timeline> {
 
   Widget _resetButton() {
     return DefaultButton(
+      constraints: BoxConstraints(maxWidth: 200),
       onPressed: () {
         _timelineService.reset();
         setState(() {});

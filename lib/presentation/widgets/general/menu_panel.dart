@@ -150,12 +150,6 @@ class _MenuPanelState extends State<MenuPanel> {
                         .read<AppState>()
                         .updateNavigatorState(AppRoutePath.home());
                   }),
-                  menuButton(Iconsax.element_3, localizer.collections,
-                      ViewScreen.browse, (_) {
-                    context
-                        .read<AppState>()
-                        .updateNavigatorState(AppRoutePath.browse());
-                  }),
                   menuButton(
                       Iconsax.image, localizer.gallery, ViewScreen.gallery,
                       (_) {
@@ -163,18 +157,23 @@ class _MenuPanelState extends State<MenuPanel> {
                         .read<AppState>()
                         .updateNavigatorState(AppRoutePath.gallery());
                   }),
-                  menuButton(
-                      Iconsax.ruler, localizer.timeline, ViewScreen.timeline,
-                      (_) {
-                    context
-                        .read<AppState>()
-                        .updateNavigatorState(AppRoutePath.timeline());
-                  }),
                   menuButton(Iconsax.search_normal_1, localizer.search,
                       ViewScreen.search, (_) {
                     context
                         .read<AppState>()
                         .updateNavigatorState(AppRoutePath.search());
+                  }),
+                  menuButton(Iconsax.ruler, "Statistics", ViewScreen.timeline,
+                      (_) {
+                    context
+                        .read<AppState>()
+                        .updateNavigatorState(AppRoutePath.timeline());
+                  }),
+                  menuButton(Iconsax.element_3, "Upload", ViewScreen.browse,
+                      (_) {
+                    context
+                        .read<AppState>()
+                        .updateNavigatorState(AppRoutePath.browse());
                   }),
                   Divider(
                       height: 40,

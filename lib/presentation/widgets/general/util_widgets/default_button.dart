@@ -7,7 +7,7 @@ class DefaultButton extends StatefulWidget {
   final VoidCallback? onPressed;
   final Color? color;
   final IconData? icon;
-  final double? size;
+  final BoxConstraints? constraints;
   final Color? textColor;
 
   const DefaultButton(
@@ -16,7 +16,7 @@ class DefaultButton extends StatefulWidget {
       this.onPressed,
       this.color,
       this.icon,
-      this.size,
+      this.constraints,
       this.textColor})
       : super(key: key);
 
@@ -31,11 +31,13 @@ class _DefaultButtonState extends State<DefaultButton> {
     themeProvider = Provider.of<ThemeProvider>(context);
     TextStyle textStyle = TextStyle(
         color: widget.textColor ?? Colors.white,
-        fontSize: widget.size ?? 10,
+        fontSize: 10,
         fontWeight: FontWeight.w500);
 
-    return Expanded(
+    return Flexible(
       child: Container(
+        constraints: widget.constraints ?? BoxConstraints(),
+        width: double.infinity,
         decoration: BoxDecoration(
             color: widget.onPressed != null
                 ? (widget.color ?? themeProvider.themeMode().themeColor)
@@ -53,8 +55,7 @@ class _DefaultButtonState extends State<DefaultButton> {
           child: Row(mainAxisSize: MainAxisSize.min, children: [
             widget.icon != null
                 ? Icon(widget.icon!,
-                    color: widget.textColor ?? Colors.white,
-                    size: widget.size != null ? widget.size! + 2 : 13)
+                    color: widget.textColor ?? Colors.white, size: 13)
                 : Container(),
             widget.icon != null && widget.text != null
                 ? const SizedBox(width: 10)
