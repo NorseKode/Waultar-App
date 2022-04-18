@@ -1,7 +1,5 @@
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
-import 'package:waultar/data/entities/timebuckets/weekday_average_bucket.dart';
 import 'package:waultar/domain/services/timeline_service.dart';
 
 abstract class ITimelineService {
@@ -27,6 +25,7 @@ abstract class ITimelineService {
   // List<TimelineCategoryChartObject> get mainChartCategorySeries;
   // TimelineProfileChartObject get mainChartProfileTotalSeries;
   // List<AverageChartObject> get averageWeekDayChartSeries;
+  List<UserAverageChartData> get averageCharData;
   List<SentimentChartObject> get sentimentChartSeries;
   List<UserChartData> get chartData;
   DateTime get minimum;

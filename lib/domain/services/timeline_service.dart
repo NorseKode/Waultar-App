@@ -18,6 +18,7 @@ class TimeLineService implements ITimelineService {
     _allProfilesRepresenter = ProfileDocument(name: 'All');
     _currentIndex = [];
     _chartData = [];
+    _averageChartData = [];
     _edgeDuration = const Duration(days: 365);
   }
 
@@ -48,11 +49,15 @@ class TimeLineService implements ITimelineService {
   late ProfileDocument? _currentProfile;
   late List<ProfileDocument> _profiles;
   late List<UserChartData> _chartData;
+  late List<UserAverageChartData> _averageChartData;
   late List<DateTime> _currentIndex;
   late Duration _edgeDuration;
 
   @override
   List<UserChartData> get chartData => _chartData;
+
+  @override
+  List<UserAverageChartData> get averageCharData => _averageChartData;
 
   @override
   List<ProfileDocument> get allProfiles => _profiles;
@@ -163,30 +168,47 @@ class TimeLineService implements ITimelineService {
   }
 
   void _setAverageChartSeries() {
-    var averageDocuments = <WeekDayAverageComputed>[];
-    if (_currentProfile!.id != 0) {
-      averageDocuments.addAll(_bucketsRepo.getAverages(_currentProfile!));
-      for (var user in _chartData) {
-        for (var average in averageDocuments) {
-          user.averageSeries
-              .add(WeekDayAverageChartPoint.fromComputedDocument(average));
-        }
-      }
-    } else {
-      var actualProfiles = _profiles.where((element) => element.id != 0);
-      for (var profile in actualProfiles) {
-        averageDocuments.addAll(_bucketsRepo.getAverages(profile));
-      }
+    // var averageDocuments = <WeekDayAverageComputed>[];
+    // if (_currentProfile!.id != 0) {
+    //   averageDocuments.addAll(_bucketsRepo.getAverages(_currentProfile!));
+    //   for (var user in _averageChartData) {
+    //     for (var average in averageDocuments) {
+    //       user.averageSeries
+    //           .add(WeekDayAverageChartPoint.fromComputedDocument(average));
+    //     }
+    //   }
+    // } else {
+    //   var actualProfiles = _profiles.where((element) => element.id != 0);
+    //   for (var profile in actualProfiles) {
+    //     averageDocuments.addAll(_bucketsRepo.getAverages(profile));
+    //   }
 
-      for (var user in _chartData) {
-        for (var average in averageDocuments
-            .where((element) => element.profile.target!.id == user.profileId)) {
-          user.averageSeries
-              .add(WeekDayAverageChartPoint.fromComputedDocument(average));
-        }
+    //   for (var user in _averageChartData) {
+    //     for (var average in averageDocuments
+    //         .where((element) => element.profile.target!.id == user.profileId)) {
+    //       user.averageSeries
+    //           .add(WeekDayAverageChartPoint.fromComputedDocument(average));
+    //     }
+    //   }
+    // }
+
+    // List<UserAverageChartData> averageChartSeries = [];
+    _averageChartData.clear();
+    List<ProfileDocument> profiles = _currentProfile!.id == 0
+        ? _profiles.where((element) => element.id != 0).toList()
+        : [_currentProfile!];
+    for (var profile in profiles) {
+      var averageUserChart = UserAverageChartData(
+        profileId: profile.id,
+        userName: profile.name,
+        serviceName: profile.service.target!.serviceName,
+      );
+      var documents = _bucketsRepo.getAverages(profile);
+      for (var document in documents) {
+        averageUserChart.averageSeries.add(WeekDayAverageChartPoint.fromComputedDocument(document));
       }
+      _averageChartData.add(averageUserChart);
     }
-
   }
 
   List<TimeModel> _getInnerValues(TimeModel timeModel) {
@@ -201,7 +223,6 @@ class TimeLineService implements ITimelineService {
         return [];
     }
   }
-
 
   void _setUserChartDataSeries() {
     List<UserChartData> userChartSeries = [];
@@ -287,15 +308,27 @@ class UserChartData {
   late String userName;
   late String serviceName;
   late List<CategoryChartData> categorySeries;
-  late List<WeekDayAverageChartPoint> averageSeries;
+  // late List<WeekDayAverageChartPoint> averageSeries;
   UserChartData({
     required this.profileId,
     required this.userName,
     required this.serviceName,
   }) {
     categorySeries = [];
-    averageSeries = [];
+    // averageSeries = [];
   }
+}
+
+class UserAverageChartData {
+  late int profileId;
+  late String userName;
+  late String serviceName;
+  late List<WeekDayAverageChartPoint> averageSeries;
+  UserAverageChartData({
+    required this.profileId,
+    required this.userName,
+    required this.serviceName,
+  }) : averageSeries = [];
 }
 
 class CategoryChartData {

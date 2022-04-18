@@ -1,10 +1,7 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:tabbed_view/tabbed_view.dart';
-import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
@@ -85,11 +82,6 @@ class _TimelineState extends State<Timeline> {
       closable: false,
       content: _sentimentChart(),
     ));
-    // tabs.add(TabData(
-    //   text: 'Test',
-    //   closable: false,
-    //   content: _testChart(),
-    // ));
 
     var controller = TabbedViewController(tabs);
     controller.selectedIndex = selectedTab;
@@ -169,43 +161,6 @@ class _TimelineState extends State<Timeline> {
       ],
     );
   }
-
-  // Widget _averageChart() {
-  //   bool anyData = _timelineService.chartData.isNotEmpty;
-  //   return SfCartesianChart(
-  //     title: ChartTitle(
-  //       text: 'Average pr weekday',
-  //     ),
-  //     tooltipBehavior: TooltipBehavior(
-  //       enable: true,
-  //     ),
-  //     plotAreaBorderWidth: 0,
-  //     primaryXAxis: CategoryAxis(
-  //       majorGridLines: const MajorGridLines(width: 0),
-  //       desiredIntervals: 7,
-  //     ),
-  //     primaryYAxis: NumericAxis(
-  //       majorGridLines: const MajorGridLines(width: 0),
-  //     ),
-  //     series: anyData ? _getAverageChartSeries() : null,
-  //   );
-  // }
-
-  // List<ChartSeries> _getAverageChartSeries() {
-  //   var returnList = <ChartSeries>[];
-  //   var plotPoints = _timelineService.averageWeekDayChartSeries;
-  //   for (var plotPoint in plotPoints) {
-  //     var output = StackedBarSeries(
-  //       dataSource: plotPoint.chartDataPoints,
-  //       xValueMapper: (WeekDayWithAverage model, _) => model.weekDay,
-  //       yValueMapper: (WeekDayWithAverage model, _) => model.average,
-  //       dataLabelMapper: (x, _) => plotPoint.category.categoryName,
-  //       name: plotPoint.category.categoryName,
-  //     );
-  //     returnList.add(output);
-  //   }
-  //   return returnList;
-  // }
 
   Widget _sentimentChart() {
     bool anyData = _timelineService.chartData.isNotEmpty;
@@ -482,7 +437,7 @@ class _TimelineState extends State<Timeline> {
   List<ChartSeries> _averageChartSeries() {
     var returnList = <ChartSeries>[];
     for (var item in CategoryEnum.values) {
-      for (var user in _timelineService.chartData) {
+      for (var user in _timelineService.averageCharData) {
         var output = StackedColumnSeries(
           dataSource: user.averageSeries,
           xValueMapper: (WeekDayAverageChartPoint data, index) => data.xValue,
@@ -499,79 +454,6 @@ class _TimelineState extends State<Timeline> {
     return returnList;
   }
 
-  Widget _testChart() {
-    List<ChartSeries> chartSeries = [];
-
-    for (var item in CategoryEnum.values) {
-      for (var user in _timelineService.chartData) {
-        var output = StackedColumnSeries(
-          dataSource: user.categorySeries,
-          xValueMapper: (CategoryChartData data, index) => data.xValue,
-          yValueMapper: (CategoryChartData data, index) =>
-              data.yValues[item.index].item2,
-          pointColorMapper: (CategoryChartData data, index) => item.color,
-          name: '${item.categoryName} - ${user.userName}',
-          groupName: user.userName,
-          selectionBehavior: _selectionBehavior,
-          color: item.color,
-          legendItemText: '${item.categoryName} - ${user.userName}',
-          legendIconType: LegendIconType.circle,
-          sortFieldValueMapper: (CategoryChartData data, _) => data.xValue,
-          sortingOrder: SortingOrder.ascending,
-          // width: 1.0,
-        );
-        chartSeries.add(output);
-      }
-    }
-
-    for (var user in _timelineService.chartData) {
-      var output = SplineSeries(
-        dataSource: user.categorySeries,
-        xValueMapper: (CategoryChartData data, _) => data.xValue,
-        yValueMapper: (CategoryChartData data, _) => data.total,
-        name: '${user.userName} total',
-        legendItemText: '${user.userName} total',
-        legendIconType: LegendIconType.horizontalLine,
-        sortFieldValueMapper: (CategoryChartData data, _) => data.xValue,
-        sortingOrder: SortingOrder.ascending,
-        splineType: SplineType.clamped,
-        dashArray: const <double>[5, 5],
-      );
-      chartSeries.add(output);
-    }
-
-    bool anyData = _timelineService.chartData.isNotEmpty;
-
-    return SfCartesianChart(
-      onAxisLabelTapped: (args) {
-        if (args.axisName == 'x_axis') {
-          setState(() {
-            _timelineService.updateMainChartSeries(args.value);
-          });
-        }
-      },
-      primaryXAxis: DateTimeAxis(
-        name: 'x_axis',
-        majorGridLines: const MajorGridLines(width: 0),
-        labelIntersectAction: AxisLabelIntersectAction.rotate45,
-        intervalType: _timelineService.currentXAxisInterval,
-        interval: 1,
-        minimum: anyData ? _timelineService.minimum : null,
-        maximum: anyData ? _timelineService.maximum : null,
-      ),
-      series: chartSeries,
-      selectionType: SelectionType.series,
-      enableMultiSelection: true,
-      tooltipBehavior: TooltipBehavior(
-        enable: true,
-      ),
-      legend: Legend(
-        isVisible: true,
-        position: LegendPosition.right,
-        toggleSeriesVisibility: true,
-      ),
-    );
-  }
 }
 
 enum ChartSeriesType {
