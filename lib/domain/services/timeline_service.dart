@@ -44,7 +44,7 @@ class TimeLineService implements ITimelineService {
 
   late DateTimeIntervalType _currentTimeIntervalForChart;
   late Duration _edgeDuration;
-  late ProfileDocument? _currentProfile;
+  ProfileDocument? _currentProfile;
   late ProfileDocument _allProfilesRepresenter;
   late List<ProfileDocument> _profiles;
 
