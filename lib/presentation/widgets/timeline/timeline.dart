@@ -183,26 +183,26 @@ class _TimelineState extends State<Timeline> {
         minimum: anyData ? _timelineService.minimum : null,
         maximum: anyData ? _timelineService.maximum : null,
       ),
-      series: anyData ? _getSentimentChartSeries() : null,
+      series: null, // _getSentimentChartSeries() : null,
     );
   }
 
-  List<ChartSeries> _getSentimentChartSeries() {
-    var returnList = <ChartSeries>[];
-    var plotPoints = _timelineService.sentimentChartSeries;
-    for (var plotPoint in plotPoints) {
-      var output = ColumnSeries(
-        dataSource: plotPoint.chartDataPoints,
-        xValueMapper: (SentimentWithAverage model, _) => model.timeValue,
-        yValueMapper: (SentimentWithAverage model, _) => model.score,
-        dataLabelMapper: (x, _) => plotPoint.category.categoryName,
-        name: plotPoint.category.categoryName,
-      );
-      returnList.add(output);
-    }
+  // List<ChartSeries> _getSentimentChartSeries() {
+  //   var returnList = <ChartSeries>[];
+  //   var plotPoints = _timelineService.sentimentChartSeries;
+  //   for (var plotPoint in plotPoints) {
+  //     var output = ColumnSeries(
+  //       dataSource: plotPoint.chartDataPoints,
+  //       xValueMapper: (SentimentWithAverage model, _) => model.timeValue,
+  //       yValueMapper: (SentimentWithAverage model, _) => model.score,
+  //       dataLabelMapper: (x, _) => plotPoint.category.categoryName,
+  //       name: plotPoint.category.categoryName,
+  //     );
+  //     returnList.add(output);
+  //   }
 
-    return returnList;
-  }
+  //   return returnList;
+  // }
 
   Widget _timeLineTabContent() {
     return Column(
@@ -244,7 +244,19 @@ class _TimelineState extends State<Timeline> {
       ),
       primaryYAxis: NumericAxis(
         majorGridLines: const MajorGridLines(width: 0),
+        minimum: 0.0,
       ),
+      axes: _chosenChartType == ChartSeriesType.stackedColumns
+          ? <ChartAxis>[
+              NumericAxis(
+                name: 'sentiment_axis',
+                opposedPosition: true,
+                interval: 0.1,
+                minimum: 0.0,
+                maximum: 1.0,
+              )
+            ]
+          : null,
       onAxisLabelTapped: (AxisLabelTapArgs args) {
         if (args.axisName == 'x_axis') {
           setState(() {
@@ -291,6 +303,7 @@ class _TimelineState extends State<Timeline> {
           }
         }
         returnList.addAll(_getProfilesLineSeries());
+        returnList.addAll(_getSentimentLineSeries());
         break;
 
       case StackedColumn100Series:
@@ -373,22 +386,22 @@ class _TimelineState extends State<Timeline> {
       //   returnList.addAll(_getProfilesLineSeries());
       //   break;
 
-    //   case ColumnSeries:
-    //     for (var plotPoint in chartObjects) {
-    //       var outPut = ColumnSeries(
-    //         dataSource: plotPoint.chartDataPoints,
-    //         xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-    //         yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-    //         dataLabelMapper: (TimeUnitWithTotal model, _) =>
-    //             plotPoint.category.categoryName,
-    //         legendIconType: LegendIconType.rectangle,
-    //         name: plotPoint.category.categoryName,
-    //       );
+      //   case ColumnSeries:
+      //     for (var plotPoint in chartObjects) {
+      //       var outPut = ColumnSeries(
+      //         dataSource: plotPoint.chartDataPoints,
+      //         xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
+      //         yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+      //         dataLabelMapper: (TimeUnitWithTotal model, _) =>
+      //             plotPoint.category.categoryName,
+      //         legendIconType: LegendIconType.rectangle,
+      //         name: plotPoint.category.categoryName,
+      //       );
 
-    //       returnList.add(outPut);
-    //     }
-    //     returnList.addAll(_getProfilesLineSeries());
-    //     break;
+      //       returnList.add(outPut);
+      //     }
+      //     returnList.addAll(_getProfilesLineSeries());
+      //     break;
     }
 
     return returnList;
@@ -408,6 +421,35 @@ class _TimelineState extends State<Timeline> {
         splineType: SplineType.monotonic,
       );
       returnList.add(output);
+    }
+
+    return returnList;
+  }
+
+  List<ChartSeries> _getSentimentLineSeries() {
+    var returnList = <ChartSeries>[];
+
+    for (var item in CategoryEnum.values) {
+      for (var user in _timelineService.chartData) {
+        var output = LineSeries(
+          dataSource: user.sentimentSeries,
+          xValueMapper: (SentimentChartPoint data, index) => data.xValue,
+          yValueMapper: (SentimentChartPoint data, index) =>
+              data.yValues[item.index].item2 < 0
+                  ? null
+                  : data.yValues[item.index].item2,
+          pointColorMapper: (x, _) => item.color,
+          name: 'Sentiment ${item.categoryName} - ${user.userName}',
+          xAxisName: 'x_axis',
+          yAxisName: 'sentiment_axis',
+
+          emptyPointSettings: EmptyPointSettings(mode: EmptyPointMode.drop),
+          isVisibleInLegend: false,
+          color: item.color,
+          markerSettings: const MarkerSettings(isVisible: true,)
+        );
+        returnList.add(output);
+      }
     }
 
     return returnList;
@@ -453,7 +495,6 @@ class _TimelineState extends State<Timeline> {
     }
     return returnList;
   }
-
 }
 
 enum ChartSeriesType {

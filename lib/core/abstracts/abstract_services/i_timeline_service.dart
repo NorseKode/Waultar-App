@@ -26,7 +26,7 @@ abstract class ITimelineService {
   // TimelineProfileChartObject get mainChartProfileTotalSeries;
   // List<AverageChartObject> get averageWeekDayChartSeries;
   List<UserAverageChartData> get averageCharData;
-  List<SentimentChartObject> get sentimentChartSeries;
+  List<UserSentimentChartData> get sentimentChartSeries;
   List<UserChartData> get chartData;
   DateTime get minimum;
   DateTime get maximum;
