@@ -109,7 +109,7 @@ class ImageClassifier extends IMLModel {
 
     return ImageProcessorBuilder()
         .add(ResizeWithCropOrPadOp(cropSize, cropSize))
-        .add(ResizeOp(_inputShape[1], _inputShape[2], ResizeMethod.BILINEAR))
+        .add(ResizeOp(_inputShape[1], _inputShape[2], ResizeMethod.NEAREST_NEIGHBOUR))
         .add(preProcessNormalizeOp)
         .build()
         .process(_inputImage);
@@ -172,7 +172,6 @@ class ImageClassifier extends IMLModel {
         results.add(Tuple2(pred[i].key, pred[i].value));
       }
     }
-    print(results);
     if (ISPERFORMANCETRACKING) {
       performance2!.addReading(parentKey, "Get results", performance2.stopReading("Get results"));
     }

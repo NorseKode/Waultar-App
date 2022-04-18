@@ -31,7 +31,7 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
       }
 
       int step = 1;
-      int offset = 0;
+      int offset = data.offset ?? 0;
       int limit = step;
       if (data.isPerformanceTracking) {
         performance.startReading("Loading of images");
@@ -42,7 +42,7 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
         performance.addReading(performance.parentKey, key, performance.stopReading(key));
       }
 
-      while (images.isNotEmpty && (data.limit == null || offset <= data.limit!)) {
+      while (images.isNotEmpty && (data.limit == null || offset < data.limit!)) {
         for (var image in images) {
           try {
             if (data.isPerformanceTracking) {
@@ -128,11 +128,13 @@ Future<void> setupIsolate(SendPort sendPort, InitiatorPackage setupData, String 
 class IsolateImageClassifyStartPackage extends InitiatorPackage {
   String waultarPath;
   int? limit;
+  int? offset;
   bool isPerformanceTracking;
 
   IsolateImageClassifyStartPackage({
     required this.waultarPath,
     this.limit,
+    this.offset,
     required this.isPerformanceTracking,
   });
 }

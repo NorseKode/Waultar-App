@@ -263,7 +263,7 @@ parseWorker!.sendMessage(IsolateParserParaClosePackage());
           data as MainUnzipParaProgressPackage;
           // callback("${data.progress} files extracted out of $_totalCount", false);
 
-          if (pathsToBeParsed.length > 3) {
+          if (pathsToBeParsed.length > 18) {
             pathsToBeParsed.add(data.path);
             parseWorker!.sendMessage(IsolateParseParaFilePackage(pathToFile: pathsToBeParsed));
             pathsToBeParsed.clear();
