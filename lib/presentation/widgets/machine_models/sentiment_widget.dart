@@ -62,7 +62,10 @@ class _SentimentWidgetState extends State<SentimentWidget> {
             "Analyze the invoked sentiment in your data.\nChoose what data to run analysis on :",
         child: analyzing
             ? Column(
-                children: [Text(message), const CircularProgressIndicator()],
+                children: [
+                  Text(message),
+                  const Center(child: CircularProgressIndicator())
+                ],
               )
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

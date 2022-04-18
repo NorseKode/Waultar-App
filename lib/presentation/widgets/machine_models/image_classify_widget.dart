@@ -57,9 +57,11 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
 
   Widget _loadingScreen() {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(_progressMessage),
-        const CircularProgressIndicator(),
+        SizedBox(height: 20),
+        Center(child: const CircularProgressIndicator())
       ],
     );
   }
