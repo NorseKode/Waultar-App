@@ -56,3 +56,8 @@ windows/flutter/generated_plugins.cmake
 
 # generated g.dart file for objectBox schema
 lib/data/configs/objectbox.g.dart
+linux/flutter/generated_plugin_registrant.cc
+linux/flutter/generated_plugins.cmake
+
+# Others
+scripts/performance/img/*

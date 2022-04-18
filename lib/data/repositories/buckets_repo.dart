@@ -2,6 +2,7 @@
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repository.dart';
+import 'package:waultar/core/helpers/parse_helper.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/data/configs/objectbox.dart';
@@ -309,7 +310,7 @@ class BucketsRepository extends IBucketsRepository {
     // process each datapoint from the stream
     await for (final dataPoint in toBeProcessed) {
       var profile = dataPoint.profile.target!;
-      var timestamps = _scrapeUniqueTimestamps(dataPoint);
+      var timestamps = ParseHelper.scrapeUniqueTimestampsFromDataPoint(dataPoint);
 
       if (timestamps.isNotEmpty) {
         CategoryEnum category = dataPoint.category.target!.category;

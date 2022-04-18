@@ -8,6 +8,7 @@ import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/repositories/data_category_repo.dart';
 import 'package:waultar/data/repositories/datapoint_name_repo.dart';
 import 'package:waultar/data/repositories/datapoint_repo.dart';
+import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:path/path.dart' as dart_path;
 import 'package:waultar/startup.dart';
@@ -23,7 +24,7 @@ class PresentationHelper {
   static final _categoryRepo = locator.get<DataCategoryRepository>(instanceName: "categoryRepo");
   static final _nameRepo = locator.get<DataPointNameRepository>(instanceName: "nameRepo");
   static final _dataRepo = locator.get<DataPointRepository>(instanceName: "dataRepo");
-  // static final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
+  static final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
   static final _bucketsRepo = locator.get<IBucketsRepository>(instanceName: 'bucketsRepo');
   static final _fileSavePath = locator.get<String>(instanceName: 'performance_folder');
 
@@ -65,6 +66,8 @@ class PresentationHelper {
         jsonEncode(_bucketsRepo.getAllMonthBuckets().map((e) => e.toMap()).toList()));
     _writeEntitiesToJsonFile(
         "yearBuckets", jsonEncode(_bucketsRepo.getAllYearBuckets().map((e) => e.toMap()).toList()));
+    _writeEntitiesToJsonFile(
+        "images", jsonEncode(_mediaRepo.getAllImages().map((e) => e.toMap()).toList()));
   }
 
   static void _writeEntitiesToJsonFile(String filename, String entitiesJson) {

@@ -19,6 +19,7 @@ import 'configs/globals/app_logger.dart';
 import 'startup.dart';
 
 void main() async {
+  try {
   await setupServices();
 
   locator.registerSingleton<IMLService>(
@@ -39,6 +40,9 @@ void main() async {
       child: const WaultarApp(),
     ),
   );
+  } catch (e, s) {
+    locator.get<BaseLogger>(instanceName: 'logger').logger.shout("Uncaught Exception caught in main", e, s);
+  }
 }
 
 class WaultarApp extends StatefulWidget {

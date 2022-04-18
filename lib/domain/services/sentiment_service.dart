@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 
 import 'package:waultar/configs/globals/category_enums.dart';
@@ -6,8 +7,8 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repositor
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_translator_service.dart';
 
-import 'package:waultar/core/ai/sentiment_classifier.dart';
 import 'package:waultar/core/base_worker/base_worker.dart';
+import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/data/repositories/datapoint_repo.dart';
 
 import 'package:waultar/data/entities/misc/profile_document.dart';
@@ -32,6 +33,7 @@ class SentimentService extends ISentimentService {
   final _bucketsRepo = locator.get<IBucketsRepository>(
     instanceName: 'bucketsRepo',
   );
+  final _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
 
   @override
   Future<void> connotateAllTextSeparateThreadFromDB() {
@@ -47,12 +49,18 @@ class SentimentService extends ISentimentService {
   @override
   Future<void> connotateOwnTextsFromCategory(List<DataCategory> categories,
       Function(String message, bool isDone) callback, bool translate) async {
+    if (ISPERFORMANCETRACKING) {
+      var key = "Classify text all";
+      _performance.init(newParentKey: key);
+      _performance.startReading(key);
+    }
+
     var initiator = IsolateSentimentStartPackage(
       waultarPath: locator.get<String>(instanceName: 'waultar_root_directory'),
       aiFolder: locator.get<String>(instanceName: 'ai_folder'),
       categoriesIds: categories.map((e) => e.id).toList(),
       translate: translate,
-      isPerformanceTracking: ISTRACKALL,
+      isPerformanceTracking: ISPERFORMANCETRACKING,
     );
 
     _listenSentimentClassify(dynamic data) {
@@ -62,9 +70,20 @@ class SentimentService extends ISentimentService {
           callback("", data.isDone);
 
           if (data.isDone) {
+            if (ISPERFORMANCETRACKING) {
+              _performance.startReading("Bucket repo update");
+            }
             _bucketsRepo.updateForSentiments(
               categories.first.profile.target!,
             );
+            if (ISPERFORMANCETRACKING) {
+              _performance.addReading(_performance.parentKey, "Bucket repo update",
+                  _performance.stopReading("Bucket repo update"));
+              _performance.addData(_performance.parentKey,
+                  duration: _performance.stopReading(_performance.parentKey),
+                  childs: [PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint!))]);
+              _performance.summary("Sentiment classification");
+            }
           }
       }
     }
