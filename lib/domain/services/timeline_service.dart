@@ -11,8 +11,7 @@ import 'package:waultar/startup.dart';
 
 class TimeLineService implements ITimelineService {
   TimeLineService() {
-    _mainChartSeries = [];
-    _averageChartSeries = [];
+    _currentTimeSeries = [];
     _sentimentChartSeries = [];
     _profiles = [];
     _currentTimeIntervalForChart = DateTimeIntervalType.auto;
@@ -31,7 +30,6 @@ class TimeLineService implements ITimelineService {
       _currentTimeSeries = _bucketsRepo.getAllYearModels(_currentProfile!);
       _currentTimeIntervalForChart = DateTimeIntervalType.years;
       _setUserChartDataSeries();
-      _setChartSeries();
       _setAverageChartSeries();
       _setIndexTimeSeries();
     }
@@ -42,15 +40,11 @@ class TimeLineService implements ITimelineService {
   final ProfileRepository _profileRepo =
       locator.get<ProfileRepository>(instanceName: 'profileRepo');
 
-  late List<TimeModel> _currentTimeSeries;
-  late DateTimeIntervalType _currentTimeIntervalForChart;
-
-  late List<TimelineCategoryChartObject> _mainChartSeries;
-  late List<AverageChartObject> _averageChartSeries;
   late List<SentimentChartObject> _sentimentChartSeries;
-  late TimelineProfileChartObject _profileTotalChartSeries;
   late ProfileDocument _allProfilesRepresenter;
 
+  late DateTimeIntervalType _currentTimeIntervalForChart;
+  late List<TimeModel> _currentTimeSeries;
   late ProfileDocument? _currentProfile;
   late List<ProfileDocument> _profiles;
   late List<UserChartData> _chartData;
@@ -64,21 +58,10 @@ class TimeLineService implements ITimelineService {
   List<ProfileDocument> get allProfiles => _profiles;
 
   @override
-  List<AverageChartObject> get averageWeekDayChartSeries => _averageChartSeries;
-
-  @override
   ProfileDocument? get currentProfile => _currentProfile;
 
   @override
   DateTimeIntervalType get currentXAxisInterval => _currentTimeIntervalForChart;
-
-  @override
-  List<TimelineCategoryChartObject> get mainChartCategorySeries =>
-      _mainChartSeries;
-
-  @override
-  TimelineProfileChartObject get mainChartProfileTotalSeries =>
-      _profileTotalChartSeries;
 
   @override
   List<SentimentChartObject> get sentimentChartSeries => _sentimentChartSeries;
@@ -98,7 +81,6 @@ class TimeLineService implements ITimelineService {
         _edgeDuration = const Duration(hours: 4);
         break;
       default:
-        print(_currentTimeIntervalForChart.name);
         break;
     }
   }
@@ -128,8 +110,7 @@ class TimeLineService implements ITimelineService {
     if (_currentTimeIntervalForChart == DateTimeIntervalType.days) {
       selectedTimeValue = selectedTime.day;
     }
-    
-    // var selectedTime = _currentIndex[index.round()];
+
     if (_currentTimeIntervalForChart != DateTimeIntervalType.hours) {
       var timeModelsToRetrieveFrom = _currentTimeSeries
           .where((element) => element.timeValue == selectedTimeValue)
@@ -141,7 +122,6 @@ class TimeLineService implements ITimelineService {
       _currentTimeSeries = updatedList;
       _setUserChartDataSeries();
       _setIndexTimeSeries();
-      _setChartSeries();
       _setCurrentXIntervalEnum();
     }
   }
@@ -169,9 +149,7 @@ class TimeLineService implements ITimelineService {
     }
     _setUserChartDataSeries();
     _setIndexTimeSeries();
-    _setChartSeries();
     _setCurrentXIntervalEnum();
-    print(_chartData.length);
   }
 
   void _setIndexTimeSeries() {
@@ -187,139 +165,66 @@ class TimeLineService implements ITimelineService {
   void _setAverageChartSeries() {
     var averageDocuments = <WeekDayAverageComputed>[];
     if (_currentProfile!.id != 0) {
-      _bucketsRepo.getAverages(_currentProfile!);
+      averageDocuments.addAll(_bucketsRepo.getAverages(_currentProfile!));
+      for (var user in _chartData) {
+        for (var average in averageDocuments) {
+          user.averageSeries
+              .add(WeekDayAverageChartPoint.fromComputedDocument(average));
+        }
+      }
     } else {
       var actualProfiles = _profiles.where((element) => element.id != 0);
       for (var profile in actualProfiles) {
         averageDocuments.addAll(_bucketsRepo.getAverages(profile));
       }
-    }
 
-    var updatedAverageList = <AverageChartObject>[];
-
-    for (var catEnum in CategoryEnum.values) {
-      updatedAverageList.add(AverageChartObject(category: catEnum));
-    }
-
-    for (var document in averageDocuments) {
-      for (var item in updatedAverageList) {
-        var exists = document.averageCategoryMap.entries.any(
-          (element) => element.key.index == item.category.index,
-        );
-        if (exists) {
-          var entry = document.averageCategoryMap.entries.singleWhere(
-            (element) => element.key.index == item.category.index,
-          );
-          item.chartDataPoints.add(
-            WeekDayWithAverage(
-              average: entry.value,
-              weekDay: document.weekDay.weekDayName,
-            ),
-          );
-        } else {
-          item.chartDataPoints.add(
-            WeekDayWithAverage(
-              average: 0.0,
-              weekDay: document.weekDay.weekDayName,
-            ),
-          );
+      for (var user in _chartData) {
+        for (var average in averageDocuments
+            .where((element) => element.profile.target!.id == user.profileId)) {
+          user.averageSeries
+              .add(WeekDayAverageChartPoint.fromComputedDocument(average));
         }
       }
     }
 
-    updatedAverageList.removeWhere(
-      (element) {
-        var accumulated = element.chartDataPoints.fold<double>(
-          0.0,
-          (previousValue, element) => previousValue + element.average,
-        );
-        return accumulated == 0.0;
-      },
-    );
-
-    _averageChartSeries = updatedAverageList;
   }
 
-  void _setChartSeries() {
-    var updatedMainList = <TimelineCategoryChartObject>[];
-    var updatedSentimentList = <SentimentChartObject>[];
-    var updatedProfileChartObject = TimelineProfileChartObject(
-      profile: _currentProfile!,
-    );
-
-    for (var catEnum in CategoryEnum.values) {
-      updatedMainList.add(TimelineCategoryChartObject(category: catEnum));
-      updatedSentimentList.add(SentimentChartObject(category: catEnum));
+  List<TimeModel> _getInnerValues(TimeModel timeModel) {
+    switch (timeModel.runtimeType) {
+      case YearModel:
+        return _bucketsRepo.getMonthModelsFromYear(timeModel as YearModel);
+      case MonthModel:
+        return _bucketsRepo.getDayModelsFromMonth(timeModel as MonthModel);
+      case DayModel:
+        return _bucketsRepo.getHourModelsFromDay(timeModel as DayModel);
+      default:
+        return [];
     }
+  }
 
-    for (var timeModel in _currentTimeSeries) {
-      updatedProfileChartObject.chartDataPoints.add(TimeUnitWithTotal(
-        timeValue: timeModel.dateTime,
-        total: timeModel.total,
-      ));
 
-      for (var item in updatedMainList) {
-        if (timeModel.categoryCount
-            .any((element) => element.item1.index == item.category.index)) {
-          var tuple = timeModel.categoryCount.singleWhere(
-              (element) => element.item1.index == item.category.index);
-          item.chartDataPoints.add(
-            TimeUnitWithTotal(
-              timeValue: timeModel.dateTime,
-              total: tuple.item2,
-            ),
-          );
-        } else {
-          item.chartDataPoints.add(
-            TimeUnitWithTotal(
-              timeValue: timeModel.dateTime,
-              total: 0,
-            ),
-          );
-        }
+  void _setUserChartDataSeries() {
+    List<UserChartData> userChartSeries = [];
+    List<ProfileDocument> profiles = _currentProfile!.id == 0
+        ? _profiles.where((element) => element.id != 0).toList()
+        : [_currentProfile!];
+    for (var profile in profiles) {
+      var userChart = UserChartData(
+        profileId: profile.id,
+        userName: profile.name,
+        serviceName: profile.service.target!.serviceName,
+      );
+      var timeModels = _currentTimeSeries
+          .where((element) => element.profile.id == profile.id)
+          .toList();
+      timeModels.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+      for (var timeModel in timeModels) {
+        userChart.categorySeries
+            .add(CategoryChartData.fromTimeModel(timeModel));
       }
-
-      for (var item in updatedSentimentList) {
-        if (timeModel.sentimentScores
-            .any((element) => element.item1.index == item.category.index)) {
-          var tuple = timeModel.sentimentScores.singleWhere(
-              (element) => element.item1.index == item.category.index);
-          item.chartDataPoints.add(
-            SentimentWithAverage(
-              timeValue: timeModel.dateTime,
-              score: tuple.item2,
-            ),
-          );
-        } else {
-          item.chartDataPoints.add(
-            SentimentWithAverage(
-              timeValue: timeModel.dateTime,
-              score: 0.0,
-            ),
-          );
-        }
-      }
+      userChartSeries.add(userChart);
     }
-
-    updatedMainList.removeWhere(
-      (element) {
-        var accumulated = element.chartDataPoints.fold<int>(
-            0, (previousValue, element) => previousValue + element.total);
-        return accumulated == 0;
-      },
-    );
-
-    updatedSentimentList.removeWhere(
-      (element) {
-        var accumulated = element.chartDataPoints.fold<double>(
-            0.0, (previousValue, element) => previousValue + element.score);
-        return accumulated == 0.0;
-      },
-    );
-
-    _mainChartSeries = updatedMainList;
-    _sentimentChartSeries = updatedSentimentList;
-    _profileTotalChartSeries = updatedProfileChartObject;
+    _chartData = userChartSeries;
   }
 
   void _setCurrentXIntervalEnum() {
@@ -339,19 +244,6 @@ class TimeLineService implements ITimelineService {
         break;
       default:
         _currentTimeIntervalForChart = DateTimeIntervalType.auto;
-    }
-  }
-
-  List<TimeModel> _getInnerValues(TimeModel timeModel) {
-    switch (timeModel.runtimeType) {
-      case YearModel:
-        return _bucketsRepo.getMonthModelsFromYear(timeModel as YearModel);
-      case MonthModel:
-        return _bucketsRepo.getDayModelsFromMonth(timeModel as MonthModel);
-      case DayModel:
-        return _bucketsRepo.getHourModelsFromDay(timeModel as DayModel);
-      default:
-        return [];
     }
   }
 
@@ -388,32 +280,6 @@ class TimeLineService implements ITimelineService {
   List<YearModel> getAllYears(ProfileDocument profile) {
     return _bucketsRepo.getAllYearModels(profile);
   }
-
-  void _setUserChartDataSeries() {
-    List<UserChartData> userChartSeries = [];
-    List<ProfileDocument> profiles = _currentProfile!.id == 0
-        ? _profiles.where((element) => element.id != 0).toList()
-        : [_currentProfile!];
-    for (var profile in profiles) {
-      var userChart = UserChartData(
-        profileId: profile.id,
-        userName: profile.name,
-        serviceName: profile.service.target!.serviceName,
-      );
-      var timeModels = _currentTimeSeries
-          .where((element) => element.profile.id == profile.id)
-          .toList();
-      timeModels.sort((a, b) => a.dateTime.compareTo(b.dateTime));
-      for (var timeModel in timeModels) {
-        userChart.categorySeries
-            .add(CategoryChartData.fromTimeModel(timeModel));
-      }
-      // userChart.categorySeries.sort((a, b) => a.xValue.compareTo(b.xValue));
-      userChartSeries.add(userChart);
-    }
-
-    _chartData = userChartSeries;
-  }
 }
 
 class UserChartData {
@@ -421,12 +287,14 @@ class UserChartData {
   late String userName;
   late String serviceName;
   late List<CategoryChartData> categorySeries;
+  late List<WeekDayAverageChartPoint> averageSeries;
   UserChartData({
     required this.profileId,
     required this.userName,
     required this.serviceName,
   }) {
     categorySeries = [];
+    averageSeries = [];
   }
 }
 
@@ -453,51 +321,26 @@ class CategoryChartData {
   }
 }
 
-class TimelineCategoryChartObject {
-  CategoryEnum category;
-  late List<TimeUnitWithTotal> chartDataPoints;
-  TimelineCategoryChartObject({required this.category}) {
-    chartDataPoints = [];
+class WeekDayAverageChartPoint {
+  late String xValue; // <== weekday
+  late List<Tuple2<CategoryEnum, double>> yValues;
+  WeekDayAverageChartPoint({
+    required this.xValue,
+  }) {
+    yValues = [];
   }
-}
 
-class TimelineProfileChartObject {
-  ProfileDocument profile;
-  late List<TimeUnitWithTotal> chartDataPoints;
-  TimelineProfileChartObject({required this.profile}) {
-    chartDataPoints = [];
+  WeekDayAverageChartPoint.fromComputedDocument(
+      WeekDayAverageComputed document) {
+    xValue = document.weekDay.weekDayName;
+    yValues = List.generate(CategoryEnum.values.length, (index) {
+      var category = CategoryEnum.values[index];
+      var yValue = document.averageCategoryMap.entries.firstWhere(
+          (element) => element.key.index == index,
+          orElse: () => MapEntry(category, 0.0));
+      return Tuple2(category, yValue.value);
+    });
   }
-}
-
-class TimeUnitWithTotal {
-  DateTime timeValue;
-  int total;
-  TimeUnitWithTotal({
-    required this.timeValue,
-    required this.total,
-  });
-
-  @override
-  String toString() {
-    return 'timeValue -> ${timeValue.toString()} total -> $total';
-  }
-}
-
-class AverageChartObject {
-  CategoryEnum category;
-  late List<WeekDayWithAverage> chartDataPoints;
-  AverageChartObject({required this.category}) {
-    chartDataPoints = [];
-  }
-}
-
-class WeekDayWithAverage {
-  String weekDay;
-  double average;
-  WeekDayWithAverage({
-    required this.average,
-    required this.weekDay,
-  });
 }
 
 extension WeekDayHelper on int {

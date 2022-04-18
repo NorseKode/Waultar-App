@@ -24,9 +24,9 @@ abstract class ITimelineService {
   List<ProfileDocument> get allProfiles;
   ProfileDocument? get currentProfile;
   DateTimeIntervalType get currentXAxisInterval;
-  List<TimelineCategoryChartObject> get mainChartCategorySeries;
-  TimelineProfileChartObject get mainChartProfileTotalSeries;
-  List<AverageChartObject> get averageWeekDayChartSeries;
+  // List<TimelineCategoryChartObject> get mainChartCategorySeries;
+  // TimelineProfileChartObject get mainChartProfileTotalSeries;
+  // List<AverageChartObject> get averageWeekDayChartSeries;
   List<SentimentChartObject> get sentimentChartSeries;
   List<UserChartData> get chartData;
   DateTime get minimum;
