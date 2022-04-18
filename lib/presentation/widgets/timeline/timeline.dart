@@ -5,6 +5,7 @@ import 'package:tabbed_view/tabbed_view.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
+import 'package:waultar/data/repositories/datapoint_repo.dart';
 import 'package:waultar/domain/services/timeline_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
@@ -166,25 +167,56 @@ class _TimelineState extends State<Timeline> {
     bool anyData = _timelineService.chartData.isNotEmpty;
     return SfCartesianChart(
       title: ChartTitle(
-        text: 'Sentiment over time per category',
+        text: 'Sentiment plotted over time per category',
       ),
       plotAreaBorderWidth: 0,
+      zoomPanBehavior: ZoomPanBehavior(
+        enablePanning: true,
+        zoomMode: ZoomMode.x,
+        enableMouseWheelZooming: true,
+      ),
       tooltipBehavior: TooltipBehavior(
         enable: true,
       ),
+      onTooltipRender: (TooltipArgs args) {
+        var index = args.pointIndex as int;
+        var data = _timelineService.scatterChartPoints[index];
+        args.header = 'Score: ' + data.sentimentScore.toStringAsFixed(2);
+        var sb = StringBuffer();
+        sb.write(data.userName + '\n');
+        sb.write(data.category.categoryName + '\n');
+        sb.write(data.timeStamp.toString() + '\n');
+        sb.write(data.path + '\n');
+        sb.write(data.sentimentText + '\n');
+        args.text = sb.toString();
+      },
       primaryYAxis: NumericAxis(
         majorGridLines: const MajorGridLines(width: 0),
+        minimum: 0.0,
+        maximum: 1.0,
+        interval: 0.1,
       ),
-      primaryXAxis: DateTimeCategoryAxis(
+      primaryXAxis: DateTimeAxis(
         majorGridLines: const MajorGridLines(width: 0),
         labelIntersectAction: AxisLabelIntersectAction.rotate45,
-        intervalType: _timelineService.currentXAxisInterval,
-        interval: 1,
-        minimum: anyData ? _timelineService.minimum : null,
-        maximum: anyData ? _timelineService.maximum : null,
+        intervalType: DateTimeIntervalType.auto,
       ),
-      series: null, // _getSentimentChartSeries() : null,
+      series: anyData ? _getSentimentScatterData() : null,
     );
+  }
+
+  List<ChartSeries> _getSentimentScatterData() {
+    var scatterSeries =  _timelineService.scatterChartPoints;
+    var output = ScatterSeries(
+      dataSource: scatterSeries,
+      xValueMapper: (ScatterSentimentDTO model, index) => model.timeStamp,
+      yValueMapper: (ScatterSentimentDTO model, index) => model.sentimentScore,
+      pointColorMapper: (ScatterSentimentDTO model, index) =>
+          model.category.color,
+      enableTooltip: true,
+    );
+
+    return [output];
   }
 
   Widget _timeLineTabContent() {
@@ -228,17 +260,13 @@ class _TimelineState extends State<Timeline> {
       primaryYAxis: NumericAxis(
         majorGridLines: const MajorGridLines(width: 0),
         minimum: 0.0,
-        title: AxisTitle(
-          text: 'Amount of datapoints' 
-        ),
+        title: AxisTitle(text: 'Amount of datapoints'),
       ),
       axes: _chosenChartType == ChartSeriesType.stackedColumns
           ? <ChartAxis>[
               NumericAxis(
                 name: 'sentiment_axis',
-                title: AxisTitle(
-                  text: 'Sentiment score'
-                ),
+                title: AxisTitle(text: 'Sentiment score'),
                 opposedPosition: true,
                 interval: 0.1,
                 minimum: 0.0,
@@ -421,22 +449,22 @@ class _TimelineState extends State<Timeline> {
     for (var item in CategoryEnum.values) {
       for (var user in _timelineService.chartData) {
         var output = LineSeries(
-          dataSource: user.sentimentSeries,
-          xValueMapper: (SentimentChartPoint data, index) => data.xValue,
-          yValueMapper: (SentimentChartPoint data, index) =>
-              data.yValues[item.index].item2 < 0
-                  ? null
-                  : data.yValues[item.index].item2,
-          pointColorMapper: (x, _) => item.color,
-          name: 'Sentiment ${item.categoryName} - ${user.userName}',
-          xAxisName: 'x_axis',
-          yAxisName: 'sentiment_axis',
-
-          emptyPointSettings: EmptyPointSettings(mode: EmptyPointMode.drop),
-          isVisibleInLegend: false,
-          color: item.color,
-          markerSettings: const MarkerSettings(isVisible: true,)
-        );
+            dataSource: user.sentimentSeries,
+            xValueMapper: (SentimentChartPoint data, index) => data.xValue,
+            yValueMapper: (SentimentChartPoint data, index) =>
+                data.yValues[item.index].item2 < 0
+                    ? null
+                    : data.yValues[item.index].item2,
+            pointColorMapper: (x, _) => item.color,
+            name: 'Sentiment ${item.categoryName} - ${user.userName}',
+            xAxisName: 'x_axis',
+            yAxisName: 'sentiment_axis',
+            emptyPointSettings: EmptyPointSettings(mode: EmptyPointMode.drop),
+            isVisibleInLegend: false,
+            color: item.color,
+            markerSettings: const MarkerSettings(
+              isVisible: true,
+            ));
         returnList.add(output);
       }
     }

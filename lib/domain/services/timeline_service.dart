@@ -6,6 +6,7 @@ import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart
 import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/timebuckets/weekday_average_bucket.dart';
+import 'package:waultar/data/repositories/datapoint_repo.dart';
 import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/startup.dart';
 
@@ -16,6 +17,7 @@ class TimeLineService implements ITimelineService {
     _chartData = [];
     _averageChartData = [];
     _sentimentChartSeries = [];
+    _scatterChartPoints = [];
     _currentIndex = [];
 
     _currentTimeIntervalForChart = DateTimeIntervalType.auto;
@@ -34,13 +36,19 @@ class TimeLineService implements ITimelineService {
       _setUserChartDataSeries();
       _setAverageChartSeries();
       _setIndexTimeSeries();
+      _setScatterChartSeries();
     }
   }
 
-  final IBucketsRepository _bucketsRepo =
-      locator.get<IBucketsRepository>(instanceName: 'bucketsRepo');
-  final ProfileRepository _profileRepo =
-      locator.get<ProfileRepository>(instanceName: 'profileRepo');
+  final IBucketsRepository _bucketsRepo = locator.get<IBucketsRepository>(
+    instanceName: 'bucketsRepo',
+  );
+  final ProfileRepository _profileRepo = locator.get<ProfileRepository>(
+    instanceName: 'profileRepo',
+  );
+  final DataPointRepository _dataRepo = locator.get<DataPointRepository>(
+    instanceName: 'dataRepo',
+  );
 
   late DateTimeIntervalType _currentTimeIntervalForChart;
   late Duration _edgeDuration;
@@ -53,12 +61,16 @@ class TimeLineService implements ITimelineService {
   late List<UserChartData> _chartData;
   late List<UserAverageChartData> _averageChartData;
   late List<UserSentimentChartData> _sentimentChartSeries;
+  late List<ScatterSentimentDTO> _scatterChartPoints;
 
   @override
   List<UserChartData> get chartData => _chartData;
 
   @override
   List<UserAverageChartData> get averageCharData => _averageChartData;
+
+  @override
+  List<ScatterSentimentDTO> get scatterChartPoints => _scatterChartPoints;
 
   @override
   List<ProfileDocument> get allProfiles => _profiles;
@@ -139,6 +151,7 @@ class TimeLineService implements ITimelineService {
       _currentProfile = profile;
       reset();
       _setAverageChartSeries();
+      _setScatterChartSeries();
     }
   }
 
@@ -280,6 +293,15 @@ class TimeLineService implements ITimelineService {
 
   List<YearModel> getAllYears(ProfileDocument profile) {
     return _bucketsRepo.getAllYearModels(profile);
+  }
+
+  void _setScatterChartSeries() {
+    if (_currentProfile!.id == 0) {
+      var actualProfiles = _profiles.where((element) => element.id != 0).toList();
+      _scatterChartPoints = _dataRepo.getDataPointsWithSentiment(actualProfiles);
+    } else {
+      _scatterChartPoints = _dataRepo.getDataPointsWithSentiment([_currentProfile!]);
+    }
   }
 }
 

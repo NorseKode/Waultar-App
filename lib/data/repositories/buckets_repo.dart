@@ -7,30 +7,24 @@ import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/core/models/timeline/time_models.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
-import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/entities/timebuckets/day_bucket.dart';
 import 'package:waultar/data/entities/timebuckets/hour_bucket.dart';
 import 'package:waultar/data/entities/timebuckets/month_bucket.dart';
 import 'package:waultar/data/entities/timebuckets/weekday_average_bucket.dart';
 import 'package:waultar/data/entities/timebuckets/year_bucket.dart';
-import 'package:waultar/domain/services/timeline_service.dart';
 
 class BucketsRepository extends IBucketsRepository {
   final ObjectBox _context;
   late final Box<YearBucket> _yearBox;
   late final Box<MonthBucket> _monthBox;
   late final Box<DayBucket> _dayBox;
-  late final Box<DataCategory> _categoryBox;
-  late final Box<ProfileDocument> _profileBox;
   late final Box<WeekDayAverageComputed> _averageBox;
 
   BucketsRepository(this._context) {
     _yearBox = _context.store.box<YearBucket>();
     _monthBox = _context.store.box<MonthBucket>();
     _dayBox = _context.store.box<DayBucket>();
-    _categoryBox = _context.store.box<DataCategory>();
-    _profileBox = _context.store.box<ProfileDocument>();
     _averageBox = _context.store.box<WeekDayAverageComputed>();
   }
 
