@@ -46,6 +46,128 @@ class ParserService implements IParserService {
   );
 
   @override
+  Future<void> parseIsolatesPara(String zipPath, Function(String message, bool isDone) callback,
+      String serviceName, ProfileDocument profile,
+      {int threadCount = 1}) async {
+    if (ISPERFORMANCETRACKING) {
+      _performance.init(newParentKey: "Extracting and parsing synchronously");
+      _performance.startReading(_performance.parentKey);
+    }
+
+    var isDoneCount = 0;
+    var workersList = <BaseWorker>[];
+    var parsedCount = 0;
+
+    _parsingStartedAt = DateTime.now();
+
+    var service = _serviceRepo.get(serviceName)!;
+    profile.service.target = service;
+    profile = _profileRepo.add(profile);
+
+    var initiator = IsolateUnzipStartPackage(
+      pathToZip: zipPath,
+      isPerformanceTracking: ISPERFORMANCETRACKING,
+      profileName: profile.name,
+      waultarPath: _waultarPath,
+    );
+    _listenZip(dynamic data) {
+      switch (data.runtimeType) {
+        case MainUnzipTotalCountPackage:
+          data as MainUnzipTotalCountPackage;
+          _totalCount = data.total;
+          callback("Total files to extract: $_totalCount", false);
+          break;
+
+        case MainUnzipProgressPackage:
+          data as MainUnzipProgressPackage;
+          callback("${data.progress} files extracted out of $_totalCount", false);
+          break;
+
+        case MainUnzippedPathsPackage:
+          data as MainUnzippedPathsPackage;
+          _pathsToParse = data.pathsInSameFolder;
+          var splitCount = _pathsToParse.length ~/ threadCount;
+
+          _listenParser2(dynamic data) {
+            switch (data.runtimeType) {
+              case MainParsedProgressPackage:
+                data as MainParsedProgressPackage;
+                if (data.isDone) {
+                  isDoneCount++;
+                } else {
+                  parsedCount++;
+                }
+
+                callback("Parsing ${parsedCount}/${_pathsToParse.length}", false);
+
+                if (isDoneCount == threadCount) {
+                  _bucketsRepo.createBuckets(_parsingStartedAt, profile);
+                  for (var worker in workersList) {
+                    worker.dispose();
+                  }
+                  callback("", true);
+                }
+
+                if (isDoneCount == threadCount && ISPERFORMANCETRACKING) {
+                  _performance.addData(_performance.parentKey,
+                      duration: _performance.stopReading(_performance.parentKey));
+                  if (data.performanceDataPoint.isNotEmpty) {
+                    _performance.addDataPoint(_performance.parentKey,
+                        PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
+                  }
+                  _performance.summary("Extraction and parsing");
+                }
+                break;
+
+              case MainErrorPackage:
+                data as MainErrorPackage;
+                callback(data.message, true);
+                break;
+              default:
+            }
+          }
+
+          for (var i = 0; i < threadCount; i++) {
+            var paths = _pathsToParse.sublist(splitCount * i,
+                i != threadCount - 1 ? (splitCount * (i + 1)) : _pathsToParse.length);
+            var worker = BaseWorker(
+              mainHandler: _listenParser2,
+              initiator: IsolateParserStartPackage(
+                paths: paths,
+                profileId: profile.id,
+                isPerformanceTracking: false,
+                waultarPath: _waultarPath,
+              ),
+            );
+            workersList.add(worker);
+
+            worker.init(parseWorkerBody);
+          }
+
+          if (ISPERFORMANCETRACKING) {
+            _performance.addDataPoint(_performance.parentKey,
+                PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
+          }
+
+          break;
+
+        case MainPerformanceMeasurementPackage:
+          data as MainPerformanceMeasurementPackage;
+          if (ISPERFORMANCETRACKING) {
+            var performanceReading =
+                PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPointJson));
+            _performance.storeDataPoint("Extracting files", performanceReading);
+          }
+          break;
+        default:
+      }
+    }
+
+    var zipWorker = BaseWorker(initiator: initiator, mainHandler: _listenZip);
+    zipWorker.init(unzipWorkerBody);
+  }
+
+  @override
   Future<void> parseIsolates(
     String zipPath,
     Function(String message, bool isDone) callback,
@@ -176,23 +298,22 @@ class ParserService implements IParserService {
 
     // SHared functions
     _disposeWorkers() {
-parseWorker!.sendMessage(IsolateParserParaClosePackage());
+      parseWorker!.sendMessage(IsolateParserParaClosePackage());
 
-            parseWorker.dispose();
-            zipWorker!.dispose();
+      parseWorker.dispose();
+      zipWorker!.dispose();
 
-            _bucketsRepo.createBuckets(_parsingStartedAt, profile);
-            callback("", true);
+      _bucketsRepo.createBuckets(_parsingStartedAt, profile);
+      callback("", true);
 
-            if (ISPERFORMANCETRACKING) {
-            _performance.addData(_performance.parentKey,
-                duration: _performance.stopReading(_performance.parentKey));
-            // _performance.addDataPoint(_performance.parentKey,
-            //     PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
-            _performance.summary("Extraction and parsing");
-          }
+      if (ISPERFORMANCETRACKING) {
+        _performance.addData(_performance.parentKey,
+            duration: _performance.stopReading(_performance.parentKey));
+        // _performance.addDataPoint(_performance.parentKey,
+        //     PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
+        _performance.summary("Extraction and parsing");
+      }
     }
-
 
     // Parser
     var parseInitiator = IsolateParserParaStartPackage(
@@ -212,7 +333,6 @@ parseWorker!.sendMessage(IsolateParserParaClosePackage());
             _disposeWorkers();
           }
           break;
-
 
         case MainParaErrorPackage:
           data as MainParaErrorPackage;

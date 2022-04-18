@@ -92,11 +92,18 @@ class _BrowseState extends State<Browse> {
           //   files.item3,
           //   ProfileDocument(name: files.item2),
           // );
-          await _parserService.parseIsolatesParallel(
+          // await _parserService.parseIsolatesParallel(
+          //   zipFile,
+          //   _onUploadProgress,
+          //   files.item3,
+          //   ProfileDocument(name: files.item2),
+          // );
+          await _parserService.parseIsolatesPara(
             zipFile,
             _onUploadProgress,
             files.item3,
             ProfileDocument(name: files.item2),
+            threadCount: 3,
           );
         }
       },
