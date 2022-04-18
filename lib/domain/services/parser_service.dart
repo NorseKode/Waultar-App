@@ -250,7 +250,11 @@ class ParserService implements IParserService {
           callback("Parsing ${data.parsedCount}/${_pathsToParse.length}", data.isDone);
 
           if (data.isDone) {
-            _bucketsRepo.createBuckets(_parsingStartedAt, profile);
+            callback("Creating timeline ...", false);
+            _bucketsRepo.createBuckets(_parsingStartedAt, profile).whenComplete(
+                () => callback(
+                    "Parsing ${data.parsedCount}/${_pathsToParse.length}",
+                    data.isDone));
           }
 
           if (data.isDone && ISPERFORMANCETRACKING) {
