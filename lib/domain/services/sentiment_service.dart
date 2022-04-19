@@ -4,6 +4,7 @@ import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_translator_service.dart';
+import 'package:waultar/core/ai/sentiment_classifier_textClassification.dart';
 
 import 'package:waultar/core/base_worker/base_worker.dart';
 import 'package:waultar/data/repositories/data_category_repo.dart';
@@ -33,6 +34,8 @@ class SentimentService extends ISentimentService {
     instanceName: 'bucketsRepo',
   );
 
+  var sentimentClassifier = SentimentClassifierTextClassifierTFLite();
+
   Map<int, int> categoryCountMap = {};
 
   @override
@@ -45,7 +48,7 @@ class SentimentService extends ISentimentService {
 
   @override
   double connotateText(String text) {
-    throw UnimplementedError();
+    return sentimentClassifier.classify(text).last;
   }
 
   @override
@@ -87,12 +90,6 @@ class SentimentService extends ISentimentService {
     return _profileRepo.getAll();
   }
 
-  // String _cleanText(String text) {
-  //   var clean = RemoveEmoji().removemoji(text);
-  //   clean = clean.replaceAll(RegExp(r'#\w+\s\h*'), '');
-  //   return clean;
-  // }
-
   @override
   void calculateCategoryCount(List<int> categories) {
     for (var categoryID in categories) {
@@ -108,21 +105,4 @@ class SentimentService extends ISentimentService {
   int getCategoryCount(int categoryId) {
     return _dataRepo.readAllSentimentCategory(categoryId);
   }
-
-  // @override
-  // int getCategoryCount(DataCategory category) {
-  //   List<DataPoint> dataPoints = _dataRepo.readAllFromCategory(category);
-  //   int count = 0;
-
-  //   for (var point in dataPoints) {
-  //     if (point.sentimentText != null) {
-  //       point.sentimentText = _cleanText(point.sentimentText!);
-  //       if (point.sentimentText!.isNotEmpty && point.sentimentScore == null) {
-  //         count++;
-  //       }
-  //     }
-  //   }
-
-  //   return count;
-  // }
 }

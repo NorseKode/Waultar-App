@@ -9,9 +9,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tuple/tuple.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_dashboard_service.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/domain/services/dashboard_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
+import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 
 import 'package:waultar/presentation/widgets/machine_models/sentiment_widget.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
@@ -33,12 +35,16 @@ class _DashboardState extends State<Dashboard> {
   final _dashboardService = locator.get<IDashboardService>(
     instanceName: 'dashboardService',
   );
+  final sentimentService =
+      locator.get<ISentimentService>(instanceName: 'sentimentService');
   late AppLocalizations localizer;
   late ThemeProvider themeProvider;
   late List<ProfileDocument> profiles;
   late List<Tuple2<String, double>> weekdays =
       _dashboardService.getActiveWeekday();
   late var mostActive;
+  var testText = TextEditingController();
+  double testScore = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -153,6 +159,8 @@ class _DashboardState extends State<Dashboard> {
         ImageClassifyWidget(),
         const SizedBox(height: 20),
         SentimentWidget(),
+        const SizedBox(height: 20),
+        _sentimentTestWidget(),
       ],
     );
   }
@@ -351,5 +359,47 @@ class _DashboardState extends State<Dashboard> {
             child: Container(),
           )),
     );
+  }
+
+  Widget _sentimentTestWidget() {
+    return DefaultWidget(
+        title: "Sentiment Test",
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Input text to test sentiment"),
+            SizedBox(height: 10),
+            TextFormField(
+                style: TextStyle(fontSize: 12),
+                cursorWidth: 1,
+                keyboardType: TextInputType.number,
+                controller: testText,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.only(left: 15),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(5.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: (const Color(0xFF323346)),
+                  hintText: "Enter a sentence ...",
+                  hintStyle: TextStyle(letterSpacing: 0.3),
+                )),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                DefaultButton(
+                  text: "Analyze",
+                  onPressed: () {
+                    testScore = sentimentService.connotateText(testText.text);
+                    setState(() {});
+                  },
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Text("Sentiment Score: $testScore"),
+          ],
+        ));
   }
 }
