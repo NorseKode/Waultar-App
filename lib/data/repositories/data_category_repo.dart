@@ -9,7 +9,6 @@ import 'package:waultar/data/entities/nodes/name_node.dart';
 class DataCategoryRepository {
   final ObjectBox _context;
   late final Box<DataCategory> _categoryBox;
-  // final String _extractsFolder = locator.get<String>(instanceName: 'extracts_folder');
 
   DataCategoryRepository(this._context) {
     _categoryBox = _context.store.box<DataCategory>();
@@ -64,20 +63,22 @@ class DataCategoryRepository {
     // get category from service based on parent directory for the file
     // keep looking backwards in the path until we reach root folder
     var categoryEnum = getFromPath(folderName);
-    var existing = profile.categories
-        .any((element) => element.dbCategory == categoryEnum.index);
-    if (existing) {
-      var category = profile.categories
-          .singleWhere((element) => element.dbCategory == categoryEnum.index);
-      return category;
+    var existingBuilder = _categoryBox
+        .query(DataCategory_.dbCategory.equals(categoryEnum.index))
+        ..link(DataCategory_.profile, ProfileDocument_.id.equals(profile.id));
+    var existingEntity = existingBuilder.build().findUnique();
+    if (existingEntity != null) {
+      return existingEntity;
     } else {
       var newCategory = DataCategory(
         matchingFoldersFacebook: [],
         matchingFoldersInstagram: [],
         category: categoryEnum,
       );
+      newCategory.profile.target = profile;
       int createdId = _categoryBox.put(newCategory);
       var createdCategory = _categoryBox.get(createdId)!;
+      
       profile.categories.add(createdCategory);
       return createdCategory;
     }
