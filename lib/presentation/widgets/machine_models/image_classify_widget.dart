@@ -149,11 +149,13 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        DefaultButton(
-                          text: "Tag Images",
-                          onPressed: () {
-                            _tagImages();
-                          },
+                        Expanded(
+                          child: DefaultButton(
+                            text: "Tag Images",
+                            onPressed: () {
+                              _tagImages();
+                            },
+                          ),
                         ),
                       ],
                     )

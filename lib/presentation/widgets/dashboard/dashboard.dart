@@ -388,12 +388,14 @@ class _DashboardState extends State<Dashboard> {
             SizedBox(height: 10),
             Row(
               children: [
-                DefaultButton(
-                  text: "Analyze",
-                  onPressed: () {
-                    testScore = sentimentService.connotateText(testText.text);
-                    setState(() {});
-                  },
+                Expanded(
+                  child: DefaultButton(
+                    text: "Analyze",
+                    onPressed: () {
+                      testScore = sentimentService.connotateText(testText.text);
+                      setState(() {});
+                    },
+                  ),
                 ),
               ],
             ),

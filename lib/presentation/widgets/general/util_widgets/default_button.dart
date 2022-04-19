@@ -34,42 +34,40 @@ class _DefaultButtonState extends State<DefaultButton> {
         fontSize: 10,
         fontWeight: FontWeight.w500);
 
-    return Expanded(
-      child: Container(
-        constraints: widget.constraints ?? BoxConstraints(),
-        decoration: BoxDecoration(
-            color: widget.onPressed != null
-                ? (widget.color ?? themeProvider.themeMode().themeColor)
-                : const Color.fromARGB(255, 114, 130, 161),
-            borderRadius: widget.icon != null && widget.text == null
-                ? BorderRadius.circular(100)
-                : BorderRadius.circular(5)),
-        child: TextButton(
-          style: TextButton.styleFrom(
-              padding: widget.icon != null && widget.text == null
-                  ? const EdgeInsets.symmetric(horizontal: 5, vertical: 13)
-                  : const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              minimumSize: const Size(0, 0)),
-          onPressed: widget.onPressed,
-          child: Row(mainAxisSize: MainAxisSize.min, children: [
-            widget.icon != null
-                ? Icon(widget.icon!,
-                    color: widget.textColor ?? Colors.white, size: 13)
-                : Container(),
-            widget.icon != null && widget.text != null
-                ? const SizedBox(width: 10)
-                : Container(),
-            widget.text != null
-                ? Text(
-                    widget.text!,
-                    style: textStyle,
-                  )
-                : Container(),
-            widget.text == null && widget.icon == null
-                ? Text("Button", style: textStyle)
-                : Container()
-          ]),
-        ),
+    return Container(
+      constraints: widget.constraints ?? BoxConstraints(),
+      decoration: BoxDecoration(
+          color: widget.onPressed != null
+              ? (widget.color ?? themeProvider.themeMode().themeColor)
+              : const Color.fromARGB(255, 114, 130, 161),
+          borderRadius: widget.icon != null && widget.text == null
+              ? BorderRadius.circular(100)
+              : BorderRadius.circular(5)),
+      child: TextButton(
+        style: TextButton.styleFrom(
+            padding: widget.icon != null && widget.text == null
+                ? const EdgeInsets.symmetric(horizontal: 5, vertical: 13)
+                : const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            minimumSize: const Size(0, 0)),
+        onPressed: widget.onPressed,
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          widget.icon != null
+              ? Icon(widget.icon!,
+                  color: widget.textColor ?? Colors.white, size: 13)
+              : Container(),
+          widget.icon != null && widget.text != null
+              ? const SizedBox(width: 10)
+              : Container(),
+          widget.text != null
+              ? Text(
+                  widget.text!,
+                  style: textStyle,
+                )
+              : Container(),
+          widget.text == null && widget.icon == null
+              ? Text("Button", style: textStyle)
+              : Container()
+        ]),
       ),
     );
   }

@@ -130,19 +130,21 @@ class _SentimentWidgetState extends State<SentimentWidget> {
         const SizedBox(height: 20),
         Row(
           children: [
-            DefaultButton(
-                text: "Analyze",
-                onPressed: profiles.isEmpty
-                    ? null
-                    : () async {
-                        analyzing = true;
-                        await sentimentService.connotateOwnTextsFromCategory(
-                            chosenCategories,
-                            _sentimentAnalyzingProgress,
-                            translate);
-                        chosenCategories = [];
-                        setState(() {});
-                      }),
+            Expanded(
+              child: DefaultButton(
+                  text: "Analyze",
+                  onPressed: profiles.isEmpty
+                      ? null
+                      : () async {
+                          analyzing = true;
+                          await sentimentService.connotateOwnTextsFromCategory(
+                              chosenCategories,
+                              _sentimentAnalyzingProgress,
+                              translate);
+                          chosenCategories = [];
+                          setState(() {});
+                        }),
+            ),
           ],
         )
       ],
