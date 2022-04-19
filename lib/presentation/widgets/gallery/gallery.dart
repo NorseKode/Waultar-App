@@ -100,8 +100,8 @@ class _GalleryState extends State<Gallery> {
       child: Row(
         children: [
           DefaultButton(
-            constraints: BoxConstraints(maxHeight: 35),
-            text: "Images",
+            constraints: BoxConstraints(maxHeight: 20),
+            //text: "Images",
             textColor: _selectedMediaType == FileType.image
                 ? null
                 : themeProvider.themeMode().tonedTextColor,
@@ -118,8 +118,8 @@ class _GalleryState extends State<Gallery> {
           ),
           SizedBox(width: 10),
           DefaultButton(
-            constraints: BoxConstraints(maxHeight: 35),
-            text: "Video",
+            constraints: BoxConstraints(maxHeight: 20),
+            //text: "Video",
             textColor: _selectedMediaType == FileType.video
                 ? null
                 : themeProvider.themeMode().tonedTextColor,
@@ -136,8 +136,8 @@ class _GalleryState extends State<Gallery> {
           ),
           SizedBox(width: 10),
           DefaultButton(
-            constraints: BoxConstraints(maxHeight: 35),
-            text: "Files",
+            constraints: BoxConstraints(maxHeight: 20),
+            //text: "Files",
             textColor: _selectedMediaType == FileType.file
                 ? null
                 : themeProvider.themeMode().tonedTextColor,
@@ -229,7 +229,6 @@ class _GalleryState extends State<Gallery> {
 
   Widget _topBar() {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           "Gallery",
@@ -237,8 +236,6 @@ class _GalleryState extends State<Gallery> {
         ),
         SizedBox(width: 20),
         _contentSelectionRadio(),
-        Expanded(child: Container()),
-        if (_selectedMediaType == FileType.image) Expanded(child: _searchbar()),
       ],
     );
   }
@@ -343,6 +340,8 @@ class _GalleryState extends State<Gallery> {
       children: [
         _topBar(),
         const SizedBox(height: 20),
+        if (_selectedMediaType == FileType.image) _searchbar(),
+        const SizedBox(height: 20),
         _imageList(),
       ],
     );
@@ -369,7 +368,7 @@ class _GalleryState extends State<Gallery> {
             ),
             filled: true,
             fillColor: (const Color(0xFF272837)),
-            hintText: "search gallery ...",
+            hintText: "search your images ...",
             hintStyle: TextStyle(letterSpacing: 0.3),
           )),
     );

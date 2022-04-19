@@ -208,7 +208,7 @@ class _BrowseState extends State<Browse> {
               Row(
                 children: [
                   Text(
-                    "Upload",
+                    "Browse",
                     style: themeProvider.themeData().textTheme.headline3,
                   ),
                   const SizedBox(
