@@ -175,20 +175,20 @@ class _MenuPanelState extends State<MenuPanel> {
                         .read<AppState>()
                         .updateNavigatorState(AppRoutePath.browse());
                   }),
-                  Divider(
-                      height: 40,
-                      thickness: 2,
-                      color: themeProvider.themeMode().tonedColor),
-                  menuButton(
-                      themeProvider.isLightTheme ? Iconsax.sun : Iconsax.moon,
-                      localizer.changeTheme,
-                      ViewScreen.unknown, (_) async {
-                    await themeProvider.toggleThemeData();
-                  }),
-                  Divider(
-                      height: 40,
-                      thickness: 2,
-                      color: themeProvider.themeMode().tonedColor),
+                  // Divider(
+                  //     height: 40,
+                  //     thickness: 2,
+                  //     color: themeProvider.themeMode().tonedColor),
+                  // menuButton(
+                  //     themeProvider.isLightTheme ? Iconsax.sun : Iconsax.moon,
+                  //     localizer.changeTheme,
+                  //     ViewScreen.unknown, (_) async {
+                  //   await themeProvider.toggleThemeData();
+                  // }),
+                  // Divider(
+                  //     height: 40,
+                  //     thickness: 2,
+                  //     color: themeProvider.themeMode().tonedColor),
                 ],
               ),
               Column(
