@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:tabbed_view/tabbed_view.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_timeline_service.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
+import 'package:waultar/data/repositories/datapoint_repo.dart';
 import 'package:waultar/domain/services/timeline_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
@@ -25,9 +27,8 @@ class _TimelineState extends State<Timeline> {
 
   late TooltipBehavior _tooltipBehavior;
   late ChartSeriesType _chosenChartType;
-  late bool isLoadMoreView, isNeedToUpdateView, isDataUpdated;
-  double? oldAxisVisibleMin, oldAxisVisibleMax;
-  // ChartSeriesController? _seriesController;
+  late int selectedTab;
+  late SelectionBehavior _selectionBehavior;
 
   @override
   void initState() {
@@ -36,12 +37,14 @@ class _TimelineState extends State<Timeline> {
   }
 
   void initVariables() {
+    selectedTab = 0;
     _timelineService.init();
     _tooltipBehavior = TooltipBehavior(enable: true);
+    _selectionBehavior = SelectionBehavior(
+      enable: true,
+      unselectedOpacity: 0.2,
+    );
     _chosenChartType = ChartSeriesType.stackedColumns;
-    isLoadMoreView = false;
-    isNeedToUpdateView = false;
-    isDataUpdated = true;
   }
 
   @override
@@ -54,65 +57,46 @@ class _TimelineState extends State<Timeline> {
           "Statistics",
           style: _themeProvider.themeData().textTheme.headline3,
         ),
-        const SizedBox(height: 30),
-        _timelineService.allProfiles.isEmpty
-            ? Container()
-            : Row(
-                children: [
-                  _chartTypeSelector(),
-                  const SizedBox(width: 20),
-                  _profileSelector(),
-                  const SizedBox(width: 20),
-                  _resetButton(),
-                ],
-              ),
-        const SizedBox(height: 30),
-        _chartArea(),
+        const SizedBox(height: 10),
+        _profileSelector(),
+        const SizedBox(height: 10),
+        _tabs(),
       ],
     );
   }
 
-  Widget _chartArea() {
-    if (_timelineService.allProfiles.isEmpty) {
-      return const Center(
-        child: Text('No datapoints found'),
-      );
-    } else {
-      return Expanded(
-        child: Column(
-          children: [
-            Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: _timelineChart(),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: _averageChart(),
-                  )
-                ],
-              ),
-            ),
-            Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 2,
-                    child: _sentimentChart(),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: SfCartesianChart(),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      );
-    }
+  Widget _tabs() {
+    List<TabData> tabs = [];
+
+    tabs.add(TabData(
+      text: 'All data',
+      closable: false,
+      content: _timeLineTabContent(),
+    ));
+    tabs.add(TabData(
+      text: 'Average',
+      closable: false,
+      content: _averageTabContent(),
+    ));
+    tabs.add(TabData(
+      text: 'Sentiment',
+      closable: false,
+      content: _sentimentChart(),
+    ));
+
+    var controller = TabbedViewController(tabs);
+    controller.selectedIndex = selectedTab;
+    TabbedView tabbedView = TabbedView(
+      controller: controller,
+      onTabSelection: (index) => selectedTab = index ?? 0,
+    );
+    TabbedViewTheme tabTheme = TabbedViewTheme(
+      child: tabbedView,
+      data: TabbedViewThemeData.dark(
+        colorSet: Colors.grey,
+      ),
+    );
+    return Expanded(child: tabTheme);
   }
 
   Widget _profileSelector() {
@@ -121,8 +105,8 @@ class _TimelineState extends State<Timeline> {
       items: List.generate(
         _timelineService.allProfiles.length,
         (index) => DropdownMenuItem(
-          child: Text(
-              '${_timelineService.allProfiles[index].name} - ${_timelineService.allProfiles[index].service.target!.serviceName}'),
+          child:
+              Text(_profileNameInDropDown(_timelineService.allProfiles[index])),
           value: _timelineService.allProfiles[index],
         ),
       ),
@@ -132,6 +116,14 @@ class _TimelineState extends State<Timeline> {
         });
       },
     );
+  }
+
+  String _profileNameInDropDown(ProfileDocument profile) {
+    if (profile.service.hasValue) {
+      return '${profile.name} - ${profile.service.target!.serviceName}';
+    } else {
+      return profile.name;
+    }
   }
 
   Widget _chartTypeSelector() {
@@ -163,108 +155,92 @@ class _TimelineState extends State<Timeline> {
     );
   }
 
-  Widget _averageChart() {
-    return SfCartesianChart(
-      title: ChartTitle(
-        text: 'Average pr weekday',
-      ),
-      series: _getAverageChartSeries(),
-      tooltipBehavior: TooltipBehavior(
-        enable: true,
-      ),
-      plotAreaBorderWidth: 0,
-      primaryXAxis: CategoryAxis(
-        majorGridLines: const MajorGridLines(width: 0),
-        desiredIntervals: 7,
-      ),
-      primaryYAxis: NumericAxis(
-        majorGridLines: const MajorGridLines(width: 0),
-      ),
+  Widget _averageTabContent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(child: _getAverageChart()),
+      ],
     );
-  }
-
-  List<ChartSeries> _getAverageChartSeries() {
-    var returnList = <ChartSeries>[];
-    var plotPoints = _timelineService.averageWeekDayChartSeries;
-    for (var plotPoint in plotPoints) {
-      var output = StackedBarSeries(
-        dataSource: plotPoint.chartDataPoints,
-        xValueMapper: (WeekDayWithAverage model, _) => model.weekDay,
-        yValueMapper: (WeekDayWithAverage model, _) => model.average,
-        dataLabelMapper: (x, _) => plotPoint.category.categoryName,
-        name: plotPoint.category.categoryName,
-      );
-      returnList.add(output);
-    }
-    return returnList;
   }
 
   Widget _sentimentChart() {
+    bool anyData = _timelineService.chartData.isNotEmpty;
     return SfCartesianChart(
       title: ChartTitle(
-        text: '${_timelineService.currentProfile!.name} sentiment over time',
+        text: 'Sentiment plotted over time per category',
       ),
       plotAreaBorderWidth: 0,
+      zoomPanBehavior: ZoomPanBehavior(
+        enablePanning: true,
+        zoomMode: ZoomMode.x,
+        enableMouseWheelZooming: true,
+      ),
       tooltipBehavior: TooltipBehavior(
         enable: true,
       ),
+      onTooltipRender: (TooltipArgs args) {
+        var index = args.pointIndex as int;
+        var data = _timelineService.scatterChartPoints[index];
+        args.header = 'Score: ' + data.sentimentScore.toStringAsFixed(2);
+        var sb = StringBuffer();
+        sb.write(data.userName + '\n');
+        sb.write(data.category.categoryName + '\n');
+        sb.write(data.timeStamp.toString() + '\n');
+        sb.write(data.path + '\n');
+        sb.write(data.sentimentText + '\n');
+        args.text = sb.toString();
+      },
       primaryYAxis: NumericAxis(
         majorGridLines: const MajorGridLines(width: 0),
-        // minimum: 0.0,
-        // maximum: 1.0,
+        minimum: 0.0,
+        maximum: 1.0,
+        interval: 0.1,
       ),
-      primaryXAxis: DateTimeCategoryAxis(
+      primaryXAxis: DateTimeAxis(
         majorGridLines: const MajorGridLines(width: 0),
         labelIntersectAction: AxisLabelIntersectAction.rotate45,
-        intervalType: _timelineService.currentXAxisInterval,
-        interval: 1,
-        minimum: _timelineService.minimum,
-        maximum: _timelineService.maximum,
+        intervalType: DateTimeIntervalType.auto,
       ),
-      series: _getSentimentChartSeries(),
+      series: anyData ? _getSentimentScatterData() : null,
     );
   }
 
-  List<ChartSeries> _getSentimentChartSeries() {
-    var returnList = <ChartSeries>[];
-    var plotPoints = _timelineService.sentimentChartSeries;
-    for (var plotPoint in plotPoints) {
-      var output = ColumnSeries(
-        dataSource: plotPoint.chartDataPoints,
-        xValueMapper: (SentimentWithAverage model, _) => model.timeValue,
-        yValueMapper: (SentimentWithAverage model, _) => model.score,
-        dataLabelMapper: (x, _) => plotPoint.category.categoryName,
-        name: plotPoint.category.categoryName,
-      );
-      returnList.add(output);
-    }
+  List<ChartSeries> _getSentimentScatterData() {
+    var scatterSeries =  _timelineService.scatterChartPoints;
+    var output = ScatterSeries(
+      dataSource: scatterSeries,
+      xValueMapper: (ScatterSentimentDTO model, index) => model.timeStamp,
+      yValueMapper: (ScatterSentimentDTO model, index) => model.sentimentScore,
+      pointColorMapper: (ScatterSentimentDTO model, index) =>
+          model.category.color,
+      enableTooltip: true,
+    );
 
-    return returnList;
+    return [output];
+  }
+
+  Widget _timeLineTabContent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            _chartTypeSelector(),
+            const SizedBox(width: 20),
+            _resetButton(),
+          ],
+        ),
+        const SizedBox(height: 15),
+        Expanded(child: _timelineChart()),
+      ],
+    );
   }
 
   Widget _timelineChart() {
+    bool anyData = _timelineService.chartData.isNotEmpty;
     return SfCartesianChart(
       key: GlobalKey<State>(),
-      title: ChartTitle(
-        text: '${_timelineService.currentProfile!.name} data over time',
-      ),
-      // onActualRangeChanged: _currentTimeInterval == TimeIntervalType.days
-      //     ? (ActualRangeChangedArgs args) {
-      //         if (args.orientation == AxisOrientation.horizontal) {
-      //           if (isLoadMoreView) {
-      //             args.visibleMin = oldAxisVisibleMin;
-      //             args.visibleMax = oldAxisVisibleMax;
-      //           }
-      //           oldAxisVisibleMin = args.visibleMin as double;
-      //           oldAxisVisibleMax = args.visibleMax as double;
-      //         }
-      //         isLoadMoreView = false;
-      //       }
-      //     : null,
-      // loadMoreIndicatorBuilder: _currentTimeInterval == TimeIntervalType.days
-      //     ? (BuildContext context, ChartSwipeDirection direction) =>
-      //         getloadMoreIndicatorBuilder(context, direction)
-      //     : null,
       tooltipBehavior: _tooltipBehavior,
       zoomPanBehavior: ZoomPanBehavior(
         enablePanning: true,
@@ -284,254 +260,259 @@ class _TimelineState extends State<Timeline> {
       ),
       primaryYAxis: NumericAxis(
         majorGridLines: const MajorGridLines(width: 0),
+        minimum: 0.0,
+        title: AxisTitle(text: 'Amount of datapoints'),
       ),
+      axes: _chosenChartType == ChartSeriesType.stackedColumns
+          ? <ChartAxis>[
+              NumericAxis(
+                name: 'sentiment_axis',
+                title: AxisTitle(text: 'Sentiment score'),
+                opposedPosition: true,
+                interval: 0.1,
+                minimum: 0.0,
+                maximum: 1.0,
+              )
+            ]
+          : null,
       onAxisLabelTapped: (AxisLabelTapArgs args) {
-        var index = args.value;
-        setState(() {
-          _timelineService.updateMainChartSeries(index);
-        });
+        if (args.axisName == 'x_axis') {
+          setState(() {
+            _timelineService.updateMainChartSeries(args.value);
+          });
+        }
       },
+      selectionType: SelectionType.series,
+      enableMultiSelection: true,
       plotAreaBorderWidth: 0,
-      primaryXAxis: DateTimeCategoryAxis(
+      primaryXAxis: DateTimeAxis(
+        name: 'x_axis',
         majorGridLines: const MajorGridLines(width: 0),
         labelIntersectAction: AxisLabelIntersectAction.rotate45,
         intervalType: _timelineService.currentXAxisInterval,
         interval: 1,
-        minimum: _timelineService.minimum,
-        maximum: _timelineService.maximum,
+        minimum: anyData ? _timelineService.minimum : null,
+        maximum: anyData ? _timelineService.maximum : null,
       ),
-      series: _getMainChartSeries(),
+      series: anyData ? _getMainChartSeries() : null,
     );
   }
 
   List<ChartSeries> _getMainChartSeries() {
     var returnList = <ChartSeries>[];
-    var chartObjects = _timelineService.mainChartCategorySeries;
-
     switch (_chosenChartType.chartType) {
       case StackedColumnSeries:
-        for (var plotPoint in chartObjects) {
-          var outPut = StackedColumnSeries(
-            dataSource: plotPoint.chartDataPoints,
-            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-            dataLabelMapper: (TimeUnitWithTotal model, _) =>
-                plotPoint.category.categoryName,
-            legendIconType: LegendIconType.rectangle,
-            name: plotPoint.category.categoryName,
-            // onRendererCreated: (ChartSeriesController controller) {
-            //   _seriesController = controller;
-            // },
-          );
-
-          returnList.add(outPut);
+        for (var item in CategoryEnum.values) {
+          for (var user in _timelineService.chartData) {
+            var output = StackedColumnSeries(
+              dataSource: user.categorySeries,
+              xValueMapper: (CategoryChartData data, index) => data.xValue,
+              yValueMapper: (CategoryChartData data, index) =>
+                  data.yValues[item.index].item2,
+              pointColorMapper: (CategoryChartData data, index) => item.color,
+              name: '${item.categoryName} - ${user.userName}',
+              groupName: user.userName,
+              selectionBehavior: _selectionBehavior,
+              color: item.color,
+              legendItemText: '${item.categoryName} - ${user.userName}',
+              legendIconType: LegendIconType.circle,
+            );
+            returnList.add(output);
+          }
         }
         returnList.addAll(_getProfilesLineSeries());
+        returnList.addAll(_getSentimentLineSeries());
         break;
 
       case StackedColumn100Series:
-        for (var plotPoint in chartObjects) {
-          var outPut = StackedColumn100Series(
-            dataSource: plotPoint.chartDataPoints,
-            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-            dataLabelMapper: (TimeUnitWithTotal model, _) =>
-                plotPoint.category.categoryName,
-            legendIconType: LegendIconType.rectangle,
-            name: plotPoint.category.categoryName,
-            // onRendererCreated: (ChartSeriesController controller) {
-            //   _seriesController = controller;
-            // },
-          );
-          returnList.add(outPut);
+        for (var item in CategoryEnum.values) {
+          for (var user in _timelineService.chartData) {
+            var output = StackedColumn100Series(
+              dataSource: user.categorySeries,
+              xValueMapper: (CategoryChartData data, index) => data.xValue,
+              yValueMapper: (CategoryChartData data, index) =>
+                  data.yValues[item.index].item2,
+              pointColorMapper: (CategoryChartData data, index) => item.color,
+              name: '${item.categoryName} - ${user.userName}',
+              groupName: user.userName,
+              selectionBehavior: _selectionBehavior,
+              color: item.color,
+              legendItemText: '${item.categoryName} - ${user.userName}',
+              legendIconType: LegendIconType.circle,
+            );
+            returnList.add(output);
+          }
         }
         break;
 
       case StackedBarSeries:
-        for (var plotPoint in chartObjects) {
-          var outPut = StackedBarSeries(
-            dataSource: plotPoint.chartDataPoints,
-            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-            dataLabelMapper: (TimeUnitWithTotal model, _) =>
-                plotPoint.category.categoryName,
-            legendIconType: LegendIconType.rectangle,
-            name: plotPoint.category.categoryName,
-            // onRendererCreated: (ChartSeriesController controller) {
-            //   _seriesController = controller;
-            // },
-          );
-
-          returnList.add(outPut);
+        for (var item in CategoryEnum.values) {
+          for (var user in _timelineService.chartData) {
+            var output = StackedBarSeries(
+              dataSource: user.categorySeries,
+              xValueMapper: (CategoryChartData data, index) => data.xValue,
+              yValueMapper: (CategoryChartData data, index) =>
+                  data.yValues[item.index].item2,
+              pointColorMapper: (CategoryChartData data, index) => item.color,
+              name: '${item.categoryName} - ${user.userName}',
+              groupName: user.userName,
+              selectionBehavior: _selectionBehavior,
+              color: item.color,
+              legendItemText: '${item.categoryName} - ${user.userName}',
+              legendIconType: LegendIconType.circle,
+            );
+            returnList.add(output);
+          }
         }
         break;
 
       case StackedBar100Series:
-        for (var plotPoint in chartObjects) {
-          var outPut = StackedBar100Series(
-            dataSource: plotPoint.chartDataPoints,
-            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-            dataLabelMapper: (TimeUnitWithTotal model, _) =>
-                plotPoint.category.categoryName,
-            legendIconType: LegendIconType.rectangle,
-            name: plotPoint.category.categoryName,
-            // onRendererCreated: (ChartSeriesController controller) {
-            //   _seriesController = controller;
-            // },
-          );
-
-          returnList.add(outPut);
+        for (var item in CategoryEnum.values) {
+          for (var user in _timelineService.chartData) {
+            var output = StackedBar100Series(
+              dataSource: user.categorySeries,
+              xValueMapper: (CategoryChartData data, index) => data.xValue,
+              yValueMapper: (CategoryChartData data, index) =>
+                  data.yValues[item.index].item2,
+              pointColorMapper: (CategoryChartData data, index) => item.color,
+              name: '${item.categoryName} - ${user.userName}',
+              groupName: user.userName,
+              selectionBehavior: _selectionBehavior,
+              color: item.color,
+              legendItemText: '${item.categoryName} - ${user.userName}',
+              legendIconType: LegendIconType.circle,
+            );
+            returnList.add(output);
+          }
         }
         break;
 
-      case LineSeries:
-        for (var plotPoint in chartObjects) {
-          var outPut = LineSeries(
-            dataSource: plotPoint.chartDataPoints,
-            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-            dataLabelMapper: (TimeUnitWithTotal model, _) =>
-                plotPoint.category.categoryName,
-            legendIconType: LegendIconType.rectangle,
-            name: plotPoint.category.categoryName,
-            // onRendererCreated: (ChartSeriesController controller) {
-            //   _seriesController = controller;
-            // },
-          );
+      // case LineSeries:
+      //   for (var plotPoint in chartObjects) {
+      //     var outPut = LineSeries(
+      //       dataSource: plotPoint.chartDataPoints,
+      //       xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
+      //       yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+      //       dataLabelMapper: (TimeUnitWithTotal model, _) =>
+      //           plotPoint.category.categoryName,
+      //       legendIconType: LegendIconType.rectangle,
+      //       name: plotPoint.category.categoryName,
+      //     );
 
-          returnList.add(outPut);
-        }
-        returnList.addAll(_getProfilesLineSeries());
-        break;
+      //     returnList.add(outPut);
+      //   }
+      //   returnList.addAll(_getProfilesLineSeries());
+      //   break;
 
-      case ColumnSeries:
-        for (var plotPoint in chartObjects) {
-          var outPut = ColumnSeries(
-            dataSource: plotPoint.chartDataPoints,
-            xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-            yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-            dataLabelMapper: (TimeUnitWithTotal model, _) =>
-                plotPoint.category.categoryName,
-            legendIconType: LegendIconType.rectangle,
-            name: plotPoint.category.categoryName,
-            // onRendererCreated: (ChartSeriesController controller) {
-            //   _seriesController = controller;
-            // },
-          );
+      //   case ColumnSeries:
+      //     for (var plotPoint in chartObjects) {
+      //       var outPut = ColumnSeries(
+      //         dataSource: plotPoint.chartDataPoints,
+      //         xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
+      //         yValueMapper: (TimeUnitWithTotal model, _) => model.total,
+      //         dataLabelMapper: (TimeUnitWithTotal model, _) =>
+      //             plotPoint.category.categoryName,
+      //         legendIconType: LegendIconType.rectangle,
+      //         name: plotPoint.category.categoryName,
+      //       );
 
-          returnList.add(outPut);
-        }
-        returnList.addAll(_getProfilesLineSeries());
-        break;
+      //       returnList.add(outPut);
+      //     }
+      //     returnList.addAll(_getProfilesLineSeries());
+      //     break;
     }
 
     return returnList;
   }
 
   List<ChartSeries> _getProfilesLineSeries() {
-    var chartObject = _timelineService.mainChartProfileTotalSeries;
-    var outPut = SplineSeries(
-      dataSource: chartObject.chartDataPoints,
-      xValueMapper: (TimeUnitWithTotal model, _) => model.timeValue,
-      yValueMapper: (TimeUnitWithTotal model, _) => model.total,
-      name: '${chartObject.profile.name} total',
-      legendIconType: LegendIconType.horizontalLine,
-      // onRendererCreated: (ChartSeriesController controller) {
-      //   _seriesController = controller;
-      // },
-    );
-    return [outPut];
+    var returnList = <ChartSeries>[];
+
+    for (var user in _timelineService.chartData) {
+      var output = SplineSeries(
+        dataSource: user.categorySeries,
+        xValueMapper: (CategoryChartData data, _) => data.xValue,
+        yValueMapper: (CategoryChartData data, _) => data.total,
+        name: '${user.userName} total',
+        legendItemText: '${user.userName} total',
+        legendIconType: LegendIconType.horizontalLine,
+        splineType: SplineType.monotonic,
+      );
+      returnList.add(output);
+    }
+
+    return returnList;
   }
 
-  // Widget getloadMoreIndicatorBuilder(
-  //     BuildContext context, ChartSwipeDirection direction) {
-  //   if (direction == ChartSwipeDirection.end) {
-  //     isNeedToUpdateView = true;
-  //     globalKey = GlobalKey<State>();
-  //     return StatefulBuilder(
-  //         key: globalKey,
-  //         builder: (BuildContext context, StateSetter stateSetter) {
-  //           Widget widget;
-  //           if (isNeedToUpdateView) {
-  //             widget = getProgressIndicator();
-  //             _updateView();
-  //             isDataUpdated = true;
-  //           } else {
-  //             widget = Container();
-  //           }
-  //           return widget;
-  //         });
-  //   } else if (direction == ChartSwipeDirection.start) {
-  //     return SizedBox.fromSize(size: Size.zero);
-  //   } else {
-  //     return SizedBox.fromSize(size: Size.zero);
-  //   }
-  // }
+  List<ChartSeries> _getSentimentLineSeries() {
+    var returnList = <ChartSeries>[];
 
-  // //Adding new data to the chart.
-  // void _updateData() {
-  //   var newData = _timelineService.getDaysFrom(_timeSeries.last.dateTime);
-  //   _timeSeries.addAll(newData);
-  //   isLoadMoreView = true;
-  //   _seriesController?.updateDataSource(
-  //       addedDataIndexes: getIndexes(newData.length));
-  // }
+    for (var item in CategoryEnum.values) {
+      for (var user in _timelineService.chartData) {
+        var output = LineSeries(
+            dataSource: user.sentimentSeries,
+            xValueMapper: (SentimentChartPoint data, index) => data.xValue,
+            yValueMapper: (SentimentChartPoint data, index) =>
+                data.yValues[item.index].item2 < 0
+                    ? null
+                    : data.yValues[item.index].item2,
+            pointColorMapper: (x, _) => item.color,
+            name: 'Sentiment ${item.categoryName} - ${user.userName}',
+            xAxisName: 'x_axis',
+            yAxisName: 'sentiment_axis',
+            emptyPointSettings: EmptyPointSettings(mode: EmptyPointMode.drop),
+            isVisibleInLegend: false,
+            color: item.color,
+            markerSettings: const MarkerSettings(
+              isVisible: true,
+            ));
+        returnList.add(output);
+      }
+    }
 
-  // getIndexes(int lenght) {
-  //   List<int> indexes = <int>[];
-  //   for (int i = lenght - 1; i >= 0; i--) {
-  //     indexes.add(_timeSeries.length - 1 - i);
-  //   }
-  //   return indexes;
-  // }
+    return returnList;
+  }
 
-  // // Redrawing the chart with updated data by calling the chart state.
-  // Future<void> _updateView() async {
-  //   await Future<void>.delayed(const Duration(seconds: 1), () {
-  //     isNeedToUpdateView = false;
-  //     if (isDataUpdated) {
-  //       _updateData();
-  //       isDataUpdated = false;
-  //     }
-  //     setState(() {});
-  //   });
-  // }
+  Widget _getAverageChart() {
+    bool anyData = _timelineService.chartData.isNotEmpty;
+    return SfCartesianChart(
+      title: ChartTitle(
+        text: 'Average pr weekday',
+      ),
+      tooltipBehavior: TooltipBehavior(
+        enable: true,
+      ),
+      plotAreaBorderWidth: 0,
+      primaryXAxis: CategoryAxis(
+        majorGridLines: const MajorGridLines(width: 0),
+        desiredIntervals: 7,
+      ),
+      primaryYAxis: NumericAxis(
+        majorGridLines: const MajorGridLines(width: 0),
+      ),
+      series: anyData ? _averageChartSeries() : null,
+    );
+  }
 
-  // Widget getProgressIndicator() {
-  //   return Align(
-  //     alignment: Alignment.centerRight,
-  //     child: Padding(
-  //       padding: const EdgeInsets.only(bottom: 22),
-  //       child: Container(
-  //         width: 50,
-  //         alignment: Alignment.centerRight,
-  //         decoration: BoxDecoration(
-  //           gradient: LinearGradient(
-  //             colors: _themeProvider.isLightTheme
-  //                 ? <Color>[
-  //                     Colors.white.withOpacity(0.0),
-  //                     Colors.white.withOpacity(0.74)
-  //                   ]
-  //                 : const <Color>[
-  //                     Color.fromRGBO(33, 33, 33, 0.0),
-  //                     Color.fromRGBO(33, 33, 33, 0.74)
-  //                   ],
-  //             stops: const <double>[0.0, 1],
-  //           ),
-  //         ),
-  //         child: const SizedBox(
-  //           height: 35,
-  //           width: 35,
-  //           child: CircularProgressIndicator(
-  //             backgroundColor: Colors.transparent,
-  //             strokeWidth: 3,
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
+  List<ChartSeries> _averageChartSeries() {
+    var returnList = <ChartSeries>[];
+    for (var item in CategoryEnum.values) {
+      for (var user in _timelineService.averageCharData) {
+        var output = StackedColumnSeries(
+          dataSource: user.averageSeries,
+          xValueMapper: (WeekDayAverageChartPoint data, index) => data.xValue,
+          yValueMapper: (WeekDayAverageChartPoint data, index) =>
+              data.yValues[item.index].item2,
+          pointColorMapper: (WeekDayAverageChartPoint data, _) => item.color,
+          name: '${item.categoryName} - ${user.userName}',
+          groupName: user.userName,
+          color: item.color,
+        );
+        returnList.add(output);
+      }
+    }
+    return returnList;
+  }
 }
 
 enum ChartSeriesType {
@@ -539,8 +520,8 @@ enum ChartSeriesType {
   stackedColumns100,
   stackedBar,
   stackedBar100,
-  lines,
-  columns,
+  // lines,
+  // columns,
 }
 
 extension ChartSeriesTypeHelper on ChartSeriesType {
@@ -549,8 +530,8 @@ extension ChartSeriesTypeHelper on ChartSeriesType {
     ChartSeriesType.stackedColumns100: 'Stacked Columns Percentage',
     ChartSeriesType.stackedBar: 'Stacked Bars',
     ChartSeriesType.stackedBar100: 'Stacked Bars Percentage',
-    ChartSeriesType.lines: 'Lines',
-    ChartSeriesType.columns: 'Columns',
+    // ChartSeriesType.lines: 'Lines',
+    // ChartSeriesType.columns: 'Columns',
   };
 
   static const chartTypeMap = {
@@ -558,8 +539,8 @@ extension ChartSeriesTypeHelper on ChartSeriesType {
     ChartSeriesType.stackedColumns100: StackedColumn100Series,
     ChartSeriesType.stackedBar: StackedBarSeries,
     ChartSeriesType.stackedBar100: StackedBar100Series,
-    ChartSeriesType.lines: LineSeries,
-    ChartSeriesType.columns: ColumnSeries,
+    // ChartSeriesType.lines: LineSeries,
+    // ChartSeriesType.columns: ColumnSeries,
   };
 
   static const canZoomMap = {
@@ -567,8 +548,8 @@ extension ChartSeriesTypeHelper on ChartSeriesType {
     ChartSeriesType.stackedColumns100: false,
     ChartSeriesType.stackedBar: true,
     ChartSeriesType.stackedBar100: false,
-    ChartSeriesType.lines: true,
-    ChartSeriesType.columns: true,
+    // ChartSeriesType.lines: true,
+    // ChartSeriesType.columns: true,
   };
 
   String get chartName => namesMap[this] ?? 'Unknown';

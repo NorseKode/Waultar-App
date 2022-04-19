@@ -40,48 +40,59 @@ class _SettingsViewState extends State<SettingsView> {
         children: [
           const Text("Developer Tools"),
           const Divider(),
-          DefaultButton(
-            text: localizer.nukeDatabase,
-            onPressed: () {
-              PresentationHelper.nukeDatabase();
-            },
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+            child: DefaultButton(
+              text: "Clear Database",
+              onPressed: () {
+                PresentationHelper.nukeDatabase();
+              },
+            ),
           ),
-          Row(
-            children: [
-              const Text("Enable performance mode"),
-              Switch(
-                value: ISPERFORMANCETRACKING,
-                onChanged: (value) async {
-                  await _appSettings.toggleIsPerformanceTracking(value);
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),            child: Row(
+              children: [
+                const Text("Enable performance mode"),
+                Switch(
+                  value: ISPERFORMANCETRACKING,
+                  onChanged: (value) async {
+                    await _appSettings.toggleIsPerformanceTracking(value);
 
-                  if (!value) {
-                    _appLogger.changeLogLevel(LOGLEVEL);
-                  } else {
-                    _appLogger.changeLogLevel(Level.SEVERE);
-                  }
+                    if (!value) {
+                      _appLogger.changeLogLevel(LOGLEVEL);
+                    } else {
+                      _appLogger.changeLogLevel(Level.SEVERE);
+                    }
 
-                  setState(() {});
-                },
-              ),
-            ],
+                    setState(() {});
+                  },
+                ),
+              ],
+            ),
           ),
-          DefaultButton(
-            text: "Delete Image Tags",
-            onPressed: () {
-              locator.get<MediaRepository>(instanceName: 'mediaRepo').deleteAllImageTags();
-            },
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),            child: DefaultButton(
+              text: "Delete Image Tags",
+              onPressed: () {
+                locator.get<MediaRepository>(instanceName: 'mediaRepo').deleteAllImageTags();
+              },
+            ),
           ),
-          DefaultButton(
-            text: 'Dump Database As Json',
-            onPressed: () {
-              SnackBarCustom.useSnackbarOfContext(
-                  context, "Started writing dump, it may take some time");
-              PresentationHelper.dumpDbAsJson();
-            },
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),            child: DefaultButton(
+              text: 'Dump Database As Json',
+              onPressed: () {
+                SnackBarCustom.useSnackbarOfContext(
+                    context, "Started writing dump, it may take some time");
+                PresentationHelper.dumpDbAsJson();
+              },
+            ),
           ),
-          DefaultButton(
-            text: "Delete all sentiment scores",
-            onPressed: () => PresentationHelper.deleteAllSentimentScores(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),            child: DefaultButton(
+              text: "Delete all sentiment scores",
+              onPressed: () => PresentationHelper.deleteAllSentimentScores(),
+            ),
           ),
           const Divider(),
         ],

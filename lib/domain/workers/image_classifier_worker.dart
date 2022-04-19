@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:isolate';
+import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/core/ai/image_classifier_mobilenetv3.dart';
+import 'package:waultar/core/ai/image_classifier_mobilenetv3_small.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/data/configs/objectbox.dart';
@@ -11,7 +13,9 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
   if (data is IsolateImageClassifyStartPackage) {
     try {
       await setupIsolate(mainSendPort, data, data.waultarPath);
-      var performance = locator.get<PerformanceHelper>(instanceName: 'performance');
+      var logger = locator.get<BaseLogger>(instanceName: 'logger');
+      var performance = PerformanceHelper(
+          pathToPerformanceFile: locator.get<String>(instanceName: 'performance_folder'));
       var mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
       if (data.isPerformanceTracking) {
         performance.init(newParentKey: "Classifier");
@@ -27,12 +31,12 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
       }
 
       int step = 1;
-      int offset = 0;
+      int offset = data.offset ?? 0;
       int limit = step;
       if (data.isPerformanceTracking) {
         performance.startReading("Loading of images");
       }
-      var images = mediaRepo.getImagesPagination(offset, limit);
+      var images = mediaRepo.getImagesForTaggingPagination(offset, limit);
       if (data.isPerformanceTracking) {
         var key = "Loading of images";
         performance.addReading(performance.parentKey, key, performance.stopReading(key));
@@ -40,27 +44,40 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
 
       while (images.isNotEmpty && (data.limit == null || offset < data.limit!)) {
         for (var image in images) {
-          if (data.isPerformanceTracking) {
-            performance.startReading("Classify Image");
-          }
-          var mediaTags = classifier.predict(image.uri, 5);
-          if (data.isPerformanceTracking) {
-            var key = "Classify Image";
-            performance.addReading(performance.parentKey, key, performance.stopReading(key));
-          }
+          try {
+            if (data.isPerformanceTracking) {
+              performance.startReading("Classify Image");
+            }
+            var mediaTags = classifier.predict(image.uri, 5);
+            if (data.isPerformanceTracking) {
+              var key = "Classify Image";
+              performance.addReading(performance.parentKey, key, performance.stopReading(key));
+            }
 
-          if (mediaTags.isEmpty) {
+            if (mediaTags.isEmpty) {
+              image.mediaTagScores = ["NULL"];
+              image.mediaTags = "NULL";
+            } else {
+              image.mediaTagScores = mediaTags.map((e) => ",(${e.item1},${e.item2})").toList();
+
+              image.mediaTags =
+                  mediaTags.fold<String>("", (previous, next) => previous += ",${next.item1}");
+            }
+          } on Exception catch (e, s) {
             image.mediaTagScores = ["NULL"];
             image.mediaTags = "NULL";
-          } else {
-            image.mediaTagScores = mediaTags.map((e) => ",(${e.item1},${e.item2})").toList();
-
-            image.mediaTags =
-                mediaTags.fold<String>("", (previous, next) => previous += ",${next.item1}");
+            logger.logger.shout("Exception in image classifier with message: $e", e, s);
           }
         }
 
+        // TODO-Lukas
+        if (data.isPerformanceTracking) performance.startReading("Update Repo");
         mediaRepo.updateImages(images);
+        if (data.isPerformanceTracking) {
+          performance.addReading(
+              performance.parentKey, "Update Repo", performance.stopReading("Update Repo"));
+          performance.startReading("Update Repo");
+        }
         mainSendPort.send(MainImageClassifyProgressPackage(amountTagged: step, isDone: false));
         offset += step;
 
@@ -79,10 +96,13 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
             duration: performance.stopReading(performance.parentKey));
       }
 
+      classifier.dispose();
+
       mainSendPort.send(MainImageClassifyProgressPackage(
         amountTagged: step,
         isDone: true,
-        performanceDataPoint: data.isPerformanceTracking ? jsonEncode(performance.parentDataPoint.toMap()) : "",
+        performanceDataPoint:
+            data.isPerformanceTracking ? jsonEncode(performance.parentDataPoint.toMap()) : "",
       ));
 
       if (data.isPerformanceTracking) {
@@ -108,11 +128,13 @@ Future<void> setupIsolate(SendPort sendPort, InitiatorPackage setupData, String 
 class IsolateImageClassifyStartPackage extends InitiatorPackage {
   String waultarPath;
   int? limit;
+  int? offset;
   bool isPerformanceTracking;
 
   IsolateImageClassifyStartPackage({
     required this.waultarPath,
     this.limit,
+    this.offset,
     required this.isPerformanceTracking,
   });
 }

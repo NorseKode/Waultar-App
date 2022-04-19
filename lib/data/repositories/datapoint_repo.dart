@@ -4,6 +4,7 @@ import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 
@@ -26,6 +27,17 @@ class DataPointRepository {
     return query;
   }
 
+  List<DataPoint> readAllFromCategoryPagination(
+      DataCategory category, int offset, int limit) {
+    var query = _dataBox.query(DataPoint_.category.equals(category.id)).build();
+
+    query
+      ..offset = offset
+      ..limit = limit;
+
+    return query.find();
+  }
+
   List<UIDTO> search(
       List<int> categoryIds, String searchString, int offset, int limit) {
     var builder = _dataBox.query(
@@ -46,6 +58,7 @@ class DataPointRepository {
     return query.find().map((e) => e.getUIDTO).toList();
   }
 
+
   int readAllSentimentCategory(int categoryId) {
     var query = _dataBox
         .query(DataPoint_.category
@@ -56,6 +69,44 @@ class DataPointRepository {
         .build()
         .count();
     return query;
+
+  List<ScatterSentimentDTO> getDataPointsWithSentiment(
+      List<ProfileDocument> profiles) {
+    var profileIds = profiles.map((e) => e.id).toList();
+    var builder = _dataBox
+        .query(DataPoint_.timestamp
+            .notNull()
+            .and(DataPoint_.sentimentScore.notNull())
+            .and(DataPoint_.sentimentText.notNull()))
+        ..link(DataPoint_.profile, ProfileDocument_.id.oneOf(profileIds));
+
+    builder.order(DataPoint_.timestamp);
+    var result = builder.build().find();
+
+    var listToReturn = <ScatterSentimentDTO>[];
+    for (var datapoint in result) {
+      listToReturn.add(ScatterSentimentDTO.fromDataPoint(datapoint));
+    }
+
+    return listToReturn;
+  }
+}
+
+class ScatterSentimentDTO {
+  late DateTime timeStamp;
+  late double sentimentScore;
+  late String sentimentText;
+  late CategoryEnum category;
+  late String path;
+  late String userName;
+
+  ScatterSentimentDTO.fromDataPoint(DataPoint dataPoint) {
+    timeStamp = dataPoint.timestamp!;
+    sentimentScore = dataPoint.sentimentScore!;
+    sentimentText = dataPoint.sentimentText!;
+    category = dataPoint.category.target!.category;
+    path = dataPoint.path;
+    userName = dataPoint.profile.target!.name;
   }
 }
 
