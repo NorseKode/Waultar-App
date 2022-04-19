@@ -153,16 +153,22 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
         }
 
         const step = 20;
-        int offset = 0;
-        int limit = step;
+        int offset = data.offset ?? 0;
+        int limit = data.offset == null ? step : data.offset! + step;
 
         List<DataPoint> dataPoints = dataRepo.readAllFromCategoryPagination(category, offset, limit);
         
-        while (dataPoints.isNotEmpty) {
+        while (dataPoints.isNotEmpty || (data.limit != null && data.limit! < offset)) {
           await aux(dataPoints);
 
           dataPoints = dataRepo.readAllFromCategoryPagination(category, offset, limit);
-          offset += step;
+          
+          if (data.limit != null && data.limit! < (offset + step)) {
+            print("hell yeah");
+            offset += ((offset + step) - data.limit!);
+          } else {
+            offset += step;
+          }
         }
       }
 
@@ -202,6 +208,8 @@ class IsolateSentimentStartPackage extends InitiatorPackage {
   List<int> categoriesIds;
   bool isPerformanceTracking;
   bool translate;
+  int? limit;
+  int? offset;
 
   IsolateSentimentStartPackage({
     required this.waultarPath,
@@ -209,6 +217,8 @@ class IsolateSentimentStartPackage extends InitiatorPackage {
     required this.categoriesIds,
     required this.isPerformanceTracking,
     required this.translate,
+    this.limit,
+    this.offset,
   });
 }
 

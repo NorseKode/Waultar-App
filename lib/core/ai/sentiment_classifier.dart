@@ -7,10 +7,8 @@ import 'package:waultar/core/ai/i_ml_model.dart';
 import 'package:waultar/startup.dart';
 
 class SentimentClassifier extends IMLModel {
-  // name of the model file
   late String modelPath;
   late String vocabPath;
-  // Maximum length of sentence
   final int _sentenceLen = 256;
 
   final String start = '<START>';
@@ -20,7 +18,6 @@ class SentimentClassifier extends IMLModel {
   late Map<String, int> _dict;
   final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
 
-  // TensorFlow Lite Interpreter object
   late Interpreter _interpreter;
 
   @override
@@ -36,7 +33,6 @@ class SentimentClassifier extends IMLModel {
   }
 
   _loadModel() {
-    // Creating the interpreter using Interpreter.fromAsset
     var path = locator.get<String>(instanceName: 'ai_folder');
     _interpreter = Interpreter.fromFile(File(modelPath), path);
   }
@@ -67,21 +63,12 @@ class SentimentClassifier extends IMLModel {
 
       isLastIt = rawText.length < 256;
 
-      // tokenizeInputText returns List<List<double>>
-      // of shape [1, 256].
-      //List<List<int>> input = tokenizeInputText(rawText);
       var input = tokenizeInputText(first256 ?? rawText);
 
       if (input != null) {
-        // output of shape [1,2].
         var output = List<int>.filled(2, 0).reshape([1, 2]);
-        //var output = List<int>.filled(384, 0).reshape([1, 384]);
 
-        // The run method will run inference and
-        // store the resulting values in output.
-        //print(_interpreter.getOutputTensors());
         _interpreter.run(input, output);
-        //_interpreter.runForMultipleInputs(input, {0: output, 1: output});
 
         finalScore[0] += output[0][0];
         finalScore[1] += output[0][1];
@@ -94,10 +81,8 @@ class SentimentClassifier extends IMLModel {
 
   List<List<double>>? tokenizeInputText(String text) {
     var isNonEmpty = false;
-    // Whitespace tokenization
     final toks = text.split(' ');
 
-    // Create a list of length==_sentenceLen filled with the value <pad>
     var vec = List<double>.filled(_sentenceLen, _dict[pad]!.toDouble());
 
     var index = 0;
@@ -105,7 +90,6 @@ class SentimentClassifier extends IMLModel {
       vec[index++] = _dict[start]!.toDouble();
     }
 
-    // For each word in sentence find corresponding index in dict
     for (var tok in toks) {
       if (index > _sentenceLen) {
         break;
@@ -118,7 +102,6 @@ class SentimentClassifier extends IMLModel {
       }
     }
 
-    // returning List<List<double>> as our interpreter input tensor expects the shape, [1,256]
     return isNonEmpty ? [vec] : null;
   }
 
