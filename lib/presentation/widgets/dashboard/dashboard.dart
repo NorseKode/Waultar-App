@@ -369,22 +369,25 @@ class _DashboardState extends State<Dashboard> {
           children: [
             Text("Input text to test sentiment"),
             SizedBox(height: 10),
-            TextFormField(
-                style: TextStyle(fontSize: 12),
-                cursorWidth: 1,
-                keyboardType: TextInputType.number,
-                controller: testText,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(left: 15),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: (const Color(0xFF323346)),
-                  hintText: "Enter a sentence ...",
-                  hintStyle: TextStyle(letterSpacing: 0.3),
-                )),
+            Container(
+              height: 40,
+              child: TextFormField(
+                  style: TextStyle(fontSize: 12),
+                  cursorWidth: 1,
+                  keyboardType: TextInputType.number,
+                  controller: testText,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(left: 15),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                    fillColor: (const Color(0xFF323346)),
+                    hintText: "Enter a sentence ...",
+                    hintStyle: TextStyle(letterSpacing: 0.3),
+                  )),
+            ),
             SizedBox(height: 10),
             Row(
               children: [

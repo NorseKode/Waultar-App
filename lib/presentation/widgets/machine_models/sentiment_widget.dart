@@ -41,6 +41,11 @@ class _SentimentWidgetState extends State<SentimentWidget> {
   Widget build(BuildContext context) {
     profiles = sentimentService.getAllProfiles();
     themeProvider = Provider.of<ThemeProvider>(context);
+    profiles.forEach((element) {
+      element.categories.forEach((element) {
+        print(element.category);
+      });
+    });
 
     for (var profile in profiles) {
       var profileCats = profile.categories
