@@ -90,8 +90,8 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
             if (data.isPerformanceTracking) performance.startReading("_isOwnData");
             var isOwnData = _isOwnData(point, username, profile.name);
             if (data.isPerformanceTracking) {
-              performance.addReading(performance.parentKey, "_isOwnData",
-                  performance.stopReading("_isOwnData"));
+              performance.addReading(
+                  performance.parentKey, "_isOwnData", performance.stopReading("_isOwnData"));
             }
 
             if (isOwnData && point.sentimentText != null && point.sentimentText!.isNotEmpty) {
@@ -119,7 +119,7 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
                   }
                 }
 
-              if (data.isPerformanceTracking) performance.startReading("classify");
+                if (data.isPerformanceTracking) performance.startReading("classify");
                 var sentimentScore = sentimentClassifier.classify(text);
                 point.sentimentScore = sentimentScore.last; //0-1
                 if (data.isPerformanceTracking) {
@@ -139,7 +139,7 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
               } else {
                 point.sentimentScore = -1;
                 dataRepo.addDataPoint(point);
-                
+
                 _logger.logger.info("DataPoint had an empty sentiment text");
               }
             } else {
@@ -154,23 +154,33 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
 
         const step = 20;
         int offset = data.offset ?? 0;
-        int limit = data.offset == null ? step : data.offset! + step;
+        int limit = step;
+        var isDone = false;
 
-        List<DataPoint> dataPoints = dataRepo.readAllFromCategoryPagination(category, offset, limit);
-        
-        while (dataPoints.isNotEmpty || (data.limit != null && data.limit! < offset)) {
+        List<DataPoint> dataPoints =
+            dataRepo.readAllFromCategoryPagination(category, offset, limit);
+
+        while (dataPoints.isNotEmpty && !isDone) {
           await aux(dataPoints);
 
           dataPoints = dataRepo.readAllFromCategoryPagination(category, offset, limit);
-          
+
           if (data.limit != null && data.limit! < (offset + step)) {
-            print("hell yeah");
-            offset += ((offset + step) - data.limit!);
+            print("offset: $offset, data.limit: ${data.limit!}");
+            var remaining = step - ((offset + step) - data.limit!);
+            offset += remaining;
+            limit = remaining;
+            isDone = true;
+            // limit = data.limit!;
+            print("offset: $offset, limit: ${limit}");
           } else {
-            print("yaa");
             offset += step;
           }
         }
+
+        print("final - offset: $offset, limit: ${limit}");
+        dataPoints = dataRepo.readAllFromCategoryPagination(category, offset, limit);
+        aux(dataPoints);
       }
 
       _logger.logger.info("Finished sentiment scoring");

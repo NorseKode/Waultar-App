@@ -59,7 +59,8 @@ class SentimentService extends ISentimentService {
 
   @override
   Future<void> connotateOwnTextsFromCategory(
-      List<DataCategory> categories, Function(String message, bool isDone) callback, bool translate, {int threadCount = 1}) async {
+      List<DataCategory> categories, Function(String message, bool isDone) callback, bool translate,
+      {int threadCount = 1}) async {
     if (ISPERFORMANCETRACKING) {
       var key = "Classify text all";
       _performance.init(newParentKey: key);
@@ -68,12 +69,21 @@ class SentimentService extends ISentimentService {
 
     var isDoneCount = 0;
     var progressCount = 0;
+    var workers = <BaseWorker>[];
     var totalCount =
         categories.fold<int>(0, (previousValue, element) => previousValue += element.count);
-    var workers = <BaseWorker>[];
+    var profiles =
+        categories.fold<List<ProfileDocument>>(<ProfileDocument>[], (previousValue, element) {
+      if (!previousValue.contains(element.profile.target)) {
+        previousValue.add(element.profile.target!);
+      }
+
+      return previousValue;
+    });
 
     var messagesOnIsolates = categories
-        .where((element) => element.category == CategoryEnum.messaging && element.count > 30000)
+        .where((element) => element.category == CategoryEnum.messaging)
+        // .where((element) => element.category == CategoryEnum.messaging && element.count > 30000)
         .toList();
 
     categories.removeWhere((element) => messagesOnIsolates.contains(element));
@@ -105,9 +115,7 @@ class SentimentService extends ISentimentService {
             if (ISPERFORMANCETRACKING) {
               _performance.startReading("Bucket repo update");
             }
-            _bucketsRepo.updateForSentiments(
-              categories.first.profile.target!,
-            );
+            profiles.map((e) => _bucketsRepo.updateForSentiments(e));
             if (ISPERFORMANCETRACKING) {
               _performance.addReading(_performance.parentKey, "Bucket repo update",
                   _performance.stopReading("Bucket repo update"));
@@ -120,12 +128,14 @@ class SentimentService extends ISentimentService {
       }
     }
 
-    var classifyWorker = BaseWorker(
-      initiator: initiator,
-      mainHandler: _listenSentimentClassify,
-    );
-    workers.add(classifyWorker);
-    classifyWorker.init(sentimentWorkerBody);
+    if (categories.isNotEmpty) {
+      var classifyWorker = BaseWorker(
+        initiator: initiator,
+        mainHandler: _listenSentimentClassify,
+      );
+      workers.add(classifyWorker);
+      classifyWorker.init(sentimentWorkerBody);
+    }
 
     for (var messageData in messagesOnIsolates) {
       var threadCountTemp = 2;
