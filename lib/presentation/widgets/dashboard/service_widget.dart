@@ -1,11 +1,12 @@
-
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/misc/service_document.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 
 class ServiceWidget extends StatefulWidget {
-  final ServiceDocument service;
+  final ProfileDocument service;
   const ServiceWidget({Key? key, required this.service}) : super(key: key);
 
   @override
@@ -19,7 +20,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
   Widget build(BuildContext context) {
     themeProvider = Provider.of<ThemeProvider>(context);
     return Container(
-        width: 200,
+        constraints: BoxConstraints(minWidth: 200, maxWidth: 200),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: themeProvider.themeData().primaryColor),
@@ -32,7 +33,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                    color: const Color(0xFF5D97FF),
+                    color: Colors.white, //widget.service.service.target!.color,
                     borderRadius: BorderRadius.circular(5)),
                 child: SizedBox(
                   child: Container(),
@@ -42,7 +43,8 @@ class _ServiceWidgetState extends State<ServiceWidget> {
               ),
               const SizedBox(height: 15),
               Text(
-                widget.service.serviceName,
+                "${widget.service.service.target!.serviceName} - ${widget.service.name}",
+                softWrap: true,
                 style: const TextStyle(fontSize: 12),
               ),
               const SizedBox(height: 15),
@@ -52,7 +54,8 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                     child: Container(
                       height: 5,
                       decoration: const BoxDecoration(
-                        color: Color(0xFF5D97FF),
+                        color: Colors
+                            .white, //widget.service.service.target!.color,
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10),
                           bottomLeft: Radius.circular(10),
@@ -78,19 +81,19 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                 // ignore: prefer_const_literals_to_create_immutables
                 children: [
                   Text(
-                    "${widget.service.totalDatapoints} data points",
-                    style: const TextStyle(color: Color(0xFFABAAB8), fontSize: 12),
+                    "${NumberFormat.compact().format(145342)} points", //"${widget.service.dataPoints.length} points",
+
+                    style: const TextStyle(
+                        color: Color.fromARGB(255, 149, 150, 159),
+                        fontFamily: "Poppins",
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400),
                   ),
-                  Text("${_sizeOfService(widget.service)} GB",
-                      style: const TextStyle(fontSize: 12))
+                  const Text("4.3 GB", style: TextStyle(fontSize: 12))
                 ],
               ),
             ],
           ),
         ));
-  }
-
-  double _sizeOfService(ServiceDocument service) {
-    return 0.0;
   }
 }

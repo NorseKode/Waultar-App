@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:translator/translator.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_dashboard_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_translator_service.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
@@ -28,6 +29,7 @@ import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/repositories/appsettings_repo.dart';
 import 'package:waultar/domain/services/appsettings_service.dart';
 import 'package:waultar/domain/services/collections_service.dart';
+import 'package:waultar/domain/services/dashboard_service.dart';
 import 'package:waultar/domain/services/parser_service.dart';
 import 'package:waultar/domain/services/timeline_service.dart';
 import 'package:waultar/domain/services/translator_service.dart';
@@ -54,7 +56,6 @@ Future<void> setupServices({
 }) async {
   await initApplicationPaths(testing: testing, waultarPath: waultarPath)
       .whenComplete(() async {
-    
     locator.registerSingleton<String>(
       _waultarPath,
       instanceName: 'waultar_root_directory',
@@ -130,6 +131,7 @@ Future<void> setupServices({
     );
 
     final _bucketsRepo = BucketsRepository(_context);
+    final _profileRepo = ProfileRepository(_context);
     final _categoryRepo = DataCategoryRepository(_context);
     final _nameRepo = DataPointNameRepository(_context);
     final _dataRepo = DataPointRepository(_context);
@@ -163,6 +165,11 @@ Future<void> setupServices({
     locator.registerSingleton<ICollectionsService>(
       CollectionsService(_categoryRepo, _nameRepo, _dataRepo),
       instanceName: 'collectionsService',
+    );
+    locator.registerSingleton<IDashboardService>(
+      DashboardService(
+          _bucketsRepo, _profileRepo, _categoryRepo, _nameRepo, _dataRepo),
+      instanceName: 'dashboardService',
     );
     locator.registerSingleton<TreeParser>(
       TreeParser(),
@@ -231,7 +238,7 @@ Future initApplicationPaths({bool testing = false, String? waultarPath}) async {
   _logFolderPath = dart_path.normalize(_waultarPath + '/logs/');
   _performanceFolderPath = dart_path.normalize(_waultarPath + '/performance/');
   _pathToAIFolder = dart_path.normalize(_waultarPath + '/ai_models/');
- 
+
   var dbFolderDir = Directory(_dbFolderPath);
   var extractsFolderDir = Directory(_extractsFolderPath);
   var logFolderDir = Directory(_logFolderPath);
@@ -263,9 +270,10 @@ Future initApplicationPaths({bool testing = false, String? waultarPath}) async {
         )
         .substring(1));
 
-      for (var aiModelSystem in aiDir.listSync(followLinks: false)) {
-        var file = File(aiModelSystem.path);
-        await file.copy(dart_path.join(_pathToAIFolder, dart_path.basename(file.path)));
-      }
+    for (var aiModelSystem in aiDir.listSync(followLinks: false)) {
+      var file = File(aiModelSystem.path);
+      await file
+          .copy(dart_path.join(_pathToAIFolder, dart_path.basename(file.path)));
+    }
   }
 }

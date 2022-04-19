@@ -16,7 +16,8 @@ import 'package:waultar/startup.dart';
 class PresentationHelper {
   static final IUtilityRepository _utilsRepo =
       locator.get<IUtilityRepository>(instanceName: 'utilsRepo');
-  static final BaseLogger _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
+  static final BaseLogger _appLogger =
+      locator.get<BaseLogger>(instanceName: 'logger');
   // static final _appSettingsRepo =
   //     locator.get<IAppSettingsRepository>(instanceName: 'appSettingsRepo');
   // static final _serviceRepo = locator.get<IServiceRepository>(instanceName: 'serviceRepo');
@@ -30,16 +31,20 @@ class PresentationHelper {
 
   static void logDatabase() {
     _appLogger.logger.info('DB log statistics:');
-    _appLogger.logger
-        .info('Total categories  -> ${_utilsRepo.getTotalCountCategories().toString()}');
-    _appLogger.logger
-        .info('Total name nodes  -> ${_utilsRepo.getTotalCountDataNames().toString()}');
-    _appLogger.logger
-        .info('Total datapoints  -> ${_utilsRepo.getTotalCountDataPoints().toString()}');
-    _appLogger.logger.info('Total images      -> ${_utilsRepo.getTotalCountImages().toString()}');
-    _appLogger.logger.info('Total videos      -> ${_utilsRepo.getTotalCountVideos().toString()}');
-    _appLogger.logger.info('Total files       -> ${_utilsRepo.getTotalCountFiles().toString()}');
-    _appLogger.logger.info('Total links       -> ${_utilsRepo.getTotalCountLinks().toString()}');
+    _appLogger.logger.info(
+        'Total categories  -> ${_utilsRepo.getTotalCountCategories().toString()}');
+    _appLogger.logger.info(
+        'Total name nodes  -> ${_utilsRepo.getTotalCountDataNames().toString()}');
+    _appLogger.logger.info(
+        'Total datapoints  -> ${_utilsRepo.getTotalCountDataPoints().toString()}');
+    _appLogger.logger.info(
+        'Total images      -> ${_utilsRepo.getTotalCountImages().toString()}');
+    _appLogger.logger.info(
+        'Total videos      -> ${_utilsRepo.getTotalCountVideos().toString()}');
+    _appLogger.logger.info(
+        'Total files       -> ${_utilsRepo.getTotalCountFiles().toString()}');
+    _appLogger.logger.info(
+        'Total links       -> ${_utilsRepo.getTotalCountLinks().toString()}');
     _appLogger.logger.info('Category names and counts:');
     for (var category in _utilsRepo.getAllCategories()) {
       _appLogger.logger.info('${category.category.name} -> ${category.count}');
@@ -47,23 +52,30 @@ class PresentationHelper {
   }
 
   static void nukeDatabase() {
-    _appLogger.logger.info("Entities deleted: " + _utilsRepo.nukeAll().toString());
+    _appLogger.logger
+        .info("Entities deleted: " + _utilsRepo.nukeAll().toString());
     _appLogger.logger.info("Nuke database => removed all elements");
   }
 
   static void dumpDbAsJson() {
+    _writeEntitiesToJsonFile("profiles",
+        jsonEncode(_profileRepo.getAll().map((e) => e.toMap()).toList()));
+    _writeEntitiesToJsonFile("dataPoints",
+        jsonEncode(_dataRepo.readAll().map((e) => e.toMap()).toList()));
     _writeEntitiesToJsonFile(
-        "profiles", jsonEncode(_profileRepo.getAll().map((e) => e.toMap()).toList()));
+        "dataCategories",
+        jsonEncode(
+            _categoryRepo.getAllCategories().map((e) => e.toMap()).toList()));
+    _writeEntitiesToJsonFile("dataPointNames",
+        jsonEncode(_nameRepo.getAll().map((e) => e.toMap()).toList()));
     _writeEntitiesToJsonFile(
-        "dataPoints", jsonEncode(_dataRepo.readAll().map((e) => e.toMap()).toList()));
-    _writeEntitiesToJsonFile("dataCategories",
-        jsonEncode(_categoryRepo.getAllCategories().map((e) => e.toMap()).toList()));
+        "dayBuckets",
+        jsonEncode(
+            _bucketsRepo.getAllDayBuckets().map((e) => e.toMap()).toList()));
     _writeEntitiesToJsonFile(
-        "dataPointNames", jsonEncode(_nameRepo.getAll().map((e) => e.toMap()).toList()));
-    _writeEntitiesToJsonFile(
-        "dayBuckets", jsonEncode(_bucketsRepo.getAllDayBuckets().map((e) => e.toMap()).toList()));
-    _writeEntitiesToJsonFile("monthBuckets",
-        jsonEncode(_bucketsRepo.getAllMonthBuckets().map((e) => e.toMap()).toList()));
+        "monthBuckets",
+        jsonEncode(
+            _bucketsRepo.getAllMonthBuckets().map((e) => e.toMap()).toList()));
     _writeEntitiesToJsonFile(
         "yearBuckets", jsonEncode(_bucketsRepo.getAllYearBuckets().map((e) => e.toMap()).toList()));
     _writeEntitiesToJsonFile(
@@ -88,7 +100,9 @@ class PresentationHelper {
   static void deleteAllSentimentScores() {
     var updatedDataPoints = _dataRepo.readAll().map<DataPoint>((e) {
       e.sentimentScore = null;
+
       return e;
-    });
+    }).toList();
+    _dataRepo.addMany(updatedDataPoints);
   }
 }

@@ -58,6 +58,18 @@ class DataPointRepository {
     return query.find().map((e) => e.getUIDTO).toList();
   }
 
+
+  int readAllSentimentCategory(int categoryId) {
+    var query = _dataBox
+        .query(DataPoint_.category
+            .equals(categoryId)
+            .and(DataPoint_.sentimentText.notNull())
+            .and(DataPoint_.sentimentText.notEquals(""))
+            .and(DataPoint_.sentimentScore.isNull()))
+        .build()
+        .count();
+    return query;
+
   List<ScatterSentimentDTO> getDataPointsWithSentiment(
       List<ProfileDocument> profiles) {
     var profileIds = profiles.map((e) => e.id).toList();

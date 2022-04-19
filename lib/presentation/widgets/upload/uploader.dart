@@ -7,7 +7,8 @@ import 'package:waultar/presentation/widgets/general/util_widgets/default_button
 import 'upload_files.dart';
 
 class Uploader {
-  static Future<Tuple3<List<String>, String, String>?> uploadDialogue(BuildContext context) async {
+  static Future<Tuple3<List<String>, String, String>?> uploadDialogue(
+      BuildContext context) async {
     var localizer = AppLocalizations.of(context)!;
 
     return showDialog<Tuple3<List<String>, String, String>?>(
@@ -44,7 +45,8 @@ class Uploader {
                     value: dropDownValue,
                     items: services.map<DropdownMenuItem<String>>(
                       (String service) {
-                        return DropdownMenuItem<String>(value: service, child: Text(service));
+                        return DropdownMenuItem<String>(
+                            value: service, child: Text(service));
                       },
                     ).toList(),
                     onChanged: (String? temp) {
@@ -60,7 +62,8 @@ class Uploader {
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
               child: DefaultButton(
                 onPressed: () async {
-                  if (formKey.currentState != null && formKey.currentState!.validate()) {
+                  if (formKey.currentState != null &&
+                      formKey.currentState!.validate()) {
                     var files = await FileUploader.uploadMultiple();
 
                     if (files != null) {

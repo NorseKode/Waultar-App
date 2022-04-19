@@ -137,9 +137,15 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
                 _logger.logger
                     .info("Gave DataPoint with id ${point.id} a score of ${point.sentimentScore}");
               } else {
+                point.sentimentScore = -1;
+                dataRepo.addDataPoint(point);
+                
                 _logger.logger.info("DataPoint had an empty sentiment text");
               }
             } else {
+              point.sentimentScore = -1;
+              dataRepo.addDataPoint(point);
+
               _logger.logger.info(
                   "DataPoint with id: ${point.id} had a sentiment text that was either null, empty or not the users data");
             }

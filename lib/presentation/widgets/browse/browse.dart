@@ -44,7 +44,7 @@ class _BrowseState extends State<Browse> {
       locator.get<ICollectionsService>(
     instanceName: 'collectionsService',
   );
-  
+
   bool isLoading = false;
   var _progressMessage = "Initializing";
 
@@ -74,17 +74,19 @@ class _BrowseState extends State<Browse> {
 
   uploadButton() {
     return DefaultButton(
+      constraints: BoxConstraints(maxWidth: 200),
       onPressed: () async {
         var files = await Uploader.uploadDialogue(context);
         if (files != null) {
-          SnackBarCustom.useSnackbarOfContext(context, localizer.startedLoadingOfData);
+          SnackBarCustom.useSnackbarOfContext(
+              context, localizer.startedLoadingOfData);
 
           setState(() {
             isLoading = true;
           });
-          
-          var zipFile =
-              files.item1.singleWhere((element) => dart_path.extension(element) == ".zip");
+
+          var zipFile = files.item1
+              .singleWhere((element) => dart_path.extension(element) == ".zip");
 
           // await _parserService.parseIsolates(
           //   zipFile,
@@ -124,7 +126,8 @@ class _BrowseState extends State<Browse> {
               onTap: () {
                 print(_categories[index].category.categoryName);
                 setState(() {
-                  _names = _collectionsService.getAllNamesFromCategory(_categories[index]);
+                  _names = _collectionsService
+                      .getAllNamesFromCategory(_categories[index]);
                 });
               },
               child: Text(_categories[index].category.categoryName +
@@ -153,7 +156,8 @@ class _BrowseState extends State<Browse> {
               onTap: () {
                 print(_names[index].name);
               },
-              child: Text(_names[index].name + "   " + _names[index].count.toString()),
+              child: Text(
+                  _names[index].name + "   " + _names[index].count.toString()),
             ),
             const Divider(
               thickness: 2.0,
@@ -204,7 +208,7 @@ class _BrowseState extends State<Browse> {
               Row(
                 children: [
                   Text(
-                    "Browse",
+                    "Upload",
                     style: themeProvider.themeData().textTheme.headline3,
                   ),
                   const SizedBox(
@@ -218,23 +222,23 @@ class _BrowseState extends State<Browse> {
               ),
               _categories.isEmpty
                   ? const Expanded(
-                    child: Center(
-                        child: Text("You haven't uploaded any data yet ")),
-                  )
+                      child: Center(
+                          child: Text("You haven't uploaded any data yet ")),
+                    )
                   // : _treeMap()
                   : Expanded(
-                    child: GridView.count(
-                      physics: const NeverScrollableScrollPhysics(),
-                      childAspectRatio: 0.7,
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 10,
-                      // shrinkWrap: true,
-                      children: [
-                        categoriesColumn(),
-                        namesColumn(),
-                      ],
+                      child: GridView.count(
+                        physics: const NeverScrollableScrollPhysics(),
+                        childAspectRatio: 0.7,
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 10,
+                        // shrinkWrap: true,
+                        children: [
+                          categoriesColumn(),
+                          namesColumn(),
+                        ],
+                      ),
                     ),
-                  ),
             ],
           );
   }

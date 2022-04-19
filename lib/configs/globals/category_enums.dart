@@ -1,6 +1,6 @@
+import 'package:iconsax/iconsax.dart';
 import 'package:path/path.dart' as dart_path;
 import 'package:flutter/material.dart';
-
 
 enum CategoryEnum {
   unknown,
@@ -69,8 +69,15 @@ extension CategoryMapper on CategoryEnum {
     CategoryEnum.files: 'Files',
   };
 
+  static const icons = {
+    CategoryEnum.comments: Iconsax.message_25,
+    CategoryEnum.messaging: Iconsax.messages_35,
+    CategoryEnum.posts: Iconsax.subtitle5, //Iconsax.message_text,
+  };
+
   Color get color => colors[this] ?? Colors.cyan;
   String get categoryName => names[this] ?? 'Unknown';
+  IconData get icon => icons[this] ?? Iconsax.warning_2;
 }
 
 CategoryEnum getFromPath(String path) {
@@ -121,7 +128,7 @@ CategoryEnum getFromPath(String path) {
     case 'likes':
     case 'posts_and_comments.json':
       return CategoryEnum.reactions;
-    
+
     case 'comments.json':
     case 'your_comments_in_groups.json':
     case 'comments':

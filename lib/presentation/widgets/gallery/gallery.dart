@@ -70,7 +70,8 @@ class _GalleryState extends State<Gallery> {
         _offset += _limit;
 
         if (_isSearch) {
-          _images += _mediaRepo.searchImagesPagination(_textSearchController.text, _offset, _limit);
+          _images += _mediaRepo.searchImagesPagination(
+              _textSearchController.text, _offset, _limit);
         } else {
           _images += _mediaRepo.getImagesPagination(_offset, _limit);
         }
@@ -192,7 +193,9 @@ class _GalleryState extends State<Gallery> {
                     Text(
                       _images[index].mediaTags != ""
                           ? _images[index].mediaTags.split(",").fold(
-                              "", (previousValue, element) => previousValue += element + "\n")
+                              "",
+                              (previousValue, element) =>
+                                  previousValue += element + "\n")
                           : "No tags found",
                     )
                   ],

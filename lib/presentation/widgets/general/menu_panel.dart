@@ -39,8 +39,7 @@ class _MenuPanelState extends State<MenuPanel> {
               children: [
                 const Text(
                   "Waultar App",
-                  style: TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.w400),
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
                 ),
                 const SizedBox(height: 3),
                 Row(
@@ -82,12 +81,11 @@ class _MenuPanelState extends State<MenuPanel> {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: TextButton(
         style: ButtonStyle(
-          overlayColor: MaterialStateProperty.all(
-              (themeProvider.themeMode().secondaryColor)),
+          overlayColor: MaterialStateProperty.all((const Color(0xFF323346))),
           shape: MaterialStateProperty.all(RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0))),
           backgroundColor: MaterialStateProperty.all(widget.active == screen
-              ? (themeProvider.themeMode().secondaryColor)
+              ? (const Color(0xFF323346))
               : Colors.black.withOpacity(0.0)),
         ),
         onPressed: () async {
@@ -152,12 +150,6 @@ class _MenuPanelState extends State<MenuPanel> {
                         .read<AppState>()
                         .updateNavigatorState(AppRoutePath.home());
                   }),
-                  menuButton(Iconsax.element_3, localizer.collections,
-                      ViewScreen.browse, (_) {
-                    context
-                        .read<AppState>()
-                        .updateNavigatorState(AppRoutePath.browse());
-                  }),
                   menuButton(
                       Iconsax.image, localizer.gallery, ViewScreen.gallery,
                       (_) {
@@ -165,18 +157,23 @@ class _MenuPanelState extends State<MenuPanel> {
                         .read<AppState>()
                         .updateNavigatorState(AppRoutePath.gallery());
                   }),
-                  menuButton(
-                      Iconsax.ruler, localizer.timeline, ViewScreen.timeline,
-                      (_) {
-                    context
-                        .read<AppState>()
-                        .updateNavigatorState(AppRoutePath.timeline());
-                  }),
                   menuButton(Iconsax.search_normal_1, localizer.search,
                       ViewScreen.search, (_) {
                     context
                         .read<AppState>()
                         .updateNavigatorState(AppRoutePath.search());
+                  }),
+                  menuButton(Iconsax.ruler, "Statistics", ViewScreen.timeline,
+                      (_) {
+                    context
+                        .read<AppState>()
+                        .updateNavigatorState(AppRoutePath.timeline());
+                  }),
+                  menuButton(Iconsax.element_3, "Upload", ViewScreen.browse,
+                      (_) {
+                    context
+                        .read<AppState>()
+                        .updateNavigatorState(AppRoutePath.browse());
                   }),
                   Divider(
                       height: 40,
