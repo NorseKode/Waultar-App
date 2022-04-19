@@ -103,7 +103,7 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
               } else {
                 text = point.sentimentText!;
               }
-              if (text.length > 256) text = text.substring(0, 256);
+              // if (text.length > 256) text = text.substring(0, 256);
               if (data.isPerformanceTracking) {
                 performance.addReading(
                     performance.parentKey, "clean text", performance.stopReading("clean text"));
