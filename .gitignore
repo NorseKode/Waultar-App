@@ -60,4 +60,5 @@ linux/flutter/generated_plugin_registrant.cc
 linux/flutter/generated_plugins.cmake
 
 # Others
-scripts/performance/img/*
+scripts/performance/img/Instagram/*
+scripts/performance/img/Facebook/*

@@ -36,7 +36,7 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
       if (data.isPerformanceTracking) {
         performance.startReading("Loading of images");
       }
-      var images = mediaRepo.getImagesPagination(offset, limit);
+      var images = mediaRepo.getImagesForTaggingPagination(offset, limit);
       if (data.isPerformanceTracking) {
         var key = "Loading of images";
         performance.addReading(performance.parentKey, key, performance.stopReading(key));
