@@ -167,6 +167,7 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
             print("hell yeah");
             offset += ((offset + step) - data.limit!);
           } else {
+            print("yaa");
             offset += step;
           }
         }

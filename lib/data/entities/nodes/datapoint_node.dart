@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:objectbox/objectbox.dart';
 import 'package:pretty_json/pretty_json.dart';
+import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
 import 'package:waultar/core/helpers/parse_helper.dart';
@@ -12,6 +13,7 @@ import 'package:waultar/data/entities/media/video_document.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/core/parsers/tree_parser.dart';
 import 'package:path/path.dart' as dart_path;
+import 'package:waultar/startup.dart';
 
 import '../media/link_document.dart';
 import 'category_node.dart';
@@ -113,8 +115,8 @@ class DataPoint {
     }
   }
 
-  String? _getSentimentText(DataCategory dataCategory, dynamic json,
-      ProfileDocument profile, DataPointName parent) {
+  String? _getSentimentText(
+      DataCategory dataCategory, dynamic json, ProfileDocument profile, DataPointName parent) {
     switch (profile.service.target!.serviceName) {
       case "Facebook":
         switch (dataCategory.category) {
@@ -138,9 +140,28 @@ class DataPoint {
             break;
 
           case CategoryEnum.comments:
-            if (json is Map<String, dynamic> && json.containsKey("comment")) {
-              return json["comment"];
+            if (json is Map<String, dynamic> && json.containsKey("data")) {
+              var temp = json["data"];
+              if (temp.length > 2) {
+                locator
+                    .get<BaseLogger>(instanceName: 'logger')
+                    .logger
+                    .severe("Found comment with more than 1 data: $json");
+                return "";
+              }
+              if (temp is List<dynamic> && temp.isNotEmpty && temp.first.containsKey("comment")) {
+                temp = temp.first;
+                if (temp is Map<String, dynamic> && temp.containsKey("comment")) {
+                  temp = temp["comment"];
+                  if (temp is Map<String, dynamic> && temp.containsKey("comment")) {
+                    temp = temp["comment"];
+                    return temp;
+                  }
+                }
+              }
             }
+
+            return "";
             break;
 
           default:
@@ -254,8 +275,7 @@ class DataPoint {
     sb.write("ID: $id \n");
 
     if (dataPointName.hasValue) {
-      sb.write(
-          "DataPoint relation target name: ${dataPointName.target!.name}\n");
+      sb.write("DataPoint relation target name: ${dataPointName.target!.name}\n");
     }
 
     sb.write("Data:\n");

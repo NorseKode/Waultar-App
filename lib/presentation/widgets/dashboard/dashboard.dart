@@ -42,7 +42,7 @@ class _DashboardState extends State<Dashboard> {
   late List<ProfileDocument> profiles;
   late List<Tuple2<String, double>> weekdays =
       _dashboardService.getActiveWeekday();
-  late var mostActive;
+  // late var mostActive;
   var testText = TextEditingController();
   double testScore = -1;
 
@@ -53,8 +53,8 @@ class _DashboardState extends State<Dashboard> {
     profiles = _dashboardService.getAllProfiles();
     weekdays = _dashboardService.getActiveWeekday();
     if (profiles.isNotEmpty) {
-      mostActive = weekdays.reduce(
-          (value, element) => value.item2 <= element.item2 ? element : value);
+      // mostActive = weekdays.reduce(
+      //     (value, element) => value.item2 <= element.item2 ? element : value);
     }
 
     return Column(
@@ -93,7 +93,7 @@ class _DashboardState extends State<Dashboard> {
                 style: themeProvider.themeData().textTheme.headline4,
               ),
               const SizedBox(height: 15),
-              _highlightBar(),
+              // _highlightBar(),
               const SizedBox(height: 20),
               IntrinsicHeight(
                 child: Row(
@@ -104,7 +104,7 @@ class _DashboardState extends State<Dashboard> {
                     Expanded(
                       child: Column(
                         children: [
-                          _diagram1(),
+                          // _diagram1(),
                           const SizedBox(height: 20),
                           _diagram2()
                         ],
@@ -165,33 +165,33 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget _highlightBar() {
-    return Container(
-      constraints: BoxConstraints(maxHeight: 70),
-      child: Row(
-        children: [
-          // _highlightWidget(Iconsax.activity5, Colors.amber, "Most Active Year",
-          //     "${_dashboardService.getMostActiveYear()}", Container()),
-          // SizedBox(
-          //   width: 20,
-          // ),
-          _highlightWidget(Iconsax.activity5, const Color(0xFF323346),
-              "Most Active Weekday", "${mostActive.item1}", Container()),
-          SizedBox(
-            width: 20,
-          ),
-          Expanded(
-            child: _highlightWidget(
-                Iconsax.activity5,
-                const Color(0xFF323346),
-                "Last Post",
-                "${DateFormat.yMMMd().format(DateTime.now())}",
-                Container()),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _highlightBar() {
+  //   return Container(
+  //     constraints: BoxConstraints(maxHeight: 70),
+  //     child: Row(
+  //       children: [
+  //         // _highlightWidget(Iconsax.activity5, Colors.amber, "Most Active Year",
+  //         //     "${_dashboardService.getMostActiveYear()}", Container()),
+  //         // SizedBox(
+  //         //   width: 20,
+  //         // ),
+  //         _highlightWidget(Iconsax.activity5, const Color(0xFF323346),
+  //             "Most Active Weekday", "${mostActive.item1}", Container()),
+  //         SizedBox(
+  //           width: 20,
+  //         ),
+  //         Expanded(
+  //           child: _highlightWidget(
+  //               Iconsax.activity5,
+  //               const Color(0xFF323346),
+  //               "Last Post",
+  //               "${DateFormat.yMMMd().format(DateTime.now())}",
+  //               Container()),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _highlightWidget(
       IconData icon, Color color, String title, String result, Widget child) {
@@ -312,44 +312,44 @@ class _DashboardState extends State<Dashboard> {
         ));
   }
 
-  Widget _diagram1() {
-    return Expanded(
-        child: DefaultWidget(
-      title: "Weekly Activity",
-      child: Expanded(
-          child: Container(
-              height: 100,
-              child: Row(
-                  children: List.generate(
-                      weekdays.length,
-                      (index) => Expanded(
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  flex: (100 -
-                                          (weekdays[index].item2 /
-                                              (mostActive.item2 * 1.5) *
-                                              100))
-                                      .floor(),
-                                  child: Container(
-                                    color: Colors.transparent,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: (weekdays[index].item2 /
-                                          (mostActive.item2 * 1.5) *
-                                          100)
-                                      .ceil(),
-                                  child: Container(
-                                    width: 10,
-                                    color: themeProvider.themeMode().themeColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ))))),
-    ));
-  }
+  // Widget _diagram1() {
+  //   return Expanded(
+  //       child: DefaultWidget(
+  //     title: "Weekly Activity",
+  //     child: Expanded(
+  //         child: Container(
+  //             height: 100,
+  //             child: Row(
+  //                 children: List.generate(
+  //                     weekdays.length,
+  //                     (index) => Expanded(
+  //                           child: Column(
+  //                             children: [
+  //                               Expanded(
+  //                                 flex: (100 -
+  //                                         (weekdays[index].item2 /
+  //                                             (mostActive.item2 * 1.5) *
+  //                                             100))
+  //                                     .floor(),
+  //                                 child: Container(
+  //                                   color: Colors.transparent,
+  //                                 ),
+  //                               ),
+  //                               Expanded(
+  //                                 flex: (weekdays[index].item2 /
+  //                                         (mostActive.item2 * 1.5) *
+  //                                         100)
+  //                                     .ceil(),
+  //                                 child: Container(
+  //                                   width: 10,
+  //                                   color: themeProvider.themeMode().themeColor,
+  //                                 ),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         ))))),
+  //   ));
+  // }
 
   Widget _diagram2() {
     return Expanded(
