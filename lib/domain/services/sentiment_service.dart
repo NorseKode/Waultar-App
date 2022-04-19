@@ -87,35 +87,42 @@ class SentimentService extends ISentimentService {
     return _profileRepo.getAll();
   }
 
-  String _cleanText(String text) {
-    var clean = RemoveEmoji().removemoji(text);
-    clean = clean.replaceAll(RegExp(r'#\w+\s\h*'), '');
-    return clean;
-  }
+  // String _cleanText(String text) {
+  //   var clean = RemoveEmoji().removemoji(text);
+  //   clean = clean.replaceAll(RegExp(r'#\w+\s\h*'), '');
+  //   return clean;
+  // }
 
   @override
   void calculateCategoryCount(List<int> categories) {
     for (var categoryID in categories) {
-      categoryCountMap.addAll({
+      var entry = {
         categoryID:
-            getCategoryCount(_categoryRepo.getCategoryById(categoryID)!),
-      });
+            getCategoryCount(_categoryRepo.getCategoryById(categoryID)!.id),
+      };
+      categoryCountMap.addAll(entry);
     }
   }
 
   @override
-  int getCategoryCount(DataCategory category) {
-    List<DataPoint> dataPoints = _dataRepo.readAllFromCategory(category);
-    int count = 0;
-    for (var point in dataPoints) {
-      if (point.sentimentText != null) {
-        point.sentimentText = _cleanText(point.sentimentText!);
-        if (point.sentimentText!.isNotEmpty && point.sentimentScore == null) {
-          count++;
-        }
-      }
-    }
-
-    return count;
+  int getCategoryCount(int categoryId) {
+    return _dataRepo.readAllSentimentCategory(categoryId);
   }
+
+  // @override
+  // int getCategoryCount(DataCategory category) {
+  //   List<DataPoint> dataPoints = _dataRepo.readAllFromCategory(category);
+  //   int count = 0;
+
+  //   for (var point in dataPoints) {
+  //     if (point.sentimentText != null) {
+  //       point.sentimentText = _cleanText(point.sentimentText!);
+  //       if (point.sentimentText!.isNotEmpty && point.sentimentScore == null) {
+  //         count++;
+  //       }
+  //     }
+  //   }
+
+  //   return count;
+  // }
 }

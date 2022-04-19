@@ -112,7 +112,7 @@ class _DashboardState extends State<Dashboard> {
         ),
         const SizedBox(width: 20),
         Container(
-            constraints: BoxConstraints(maxWidth: 400), child: _analysis()),
+            constraints: BoxConstraints(maxWidth: 330), child: _analysis()),
       ],
     );
   }

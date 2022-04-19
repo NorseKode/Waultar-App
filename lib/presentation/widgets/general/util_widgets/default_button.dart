@@ -34,10 +34,9 @@ class _DefaultButtonState extends State<DefaultButton> {
         fontSize: 10,
         fontWeight: FontWeight.w500);
 
-    return Flexible(
+    return Expanded(
       child: Container(
         constraints: widget.constraints ?? BoxConstraints(),
-        width: double.infinity,
         decoration: BoxDecoration(
             color: widget.onPressed != null
                 ? (widget.color ?? themeProvider.themeMode().themeColor)

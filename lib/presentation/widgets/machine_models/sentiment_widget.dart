@@ -35,6 +35,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
     CategoryEnum.posts
   ];
   List<int> categories = [];
+  late Map<int, int> countedCategories;
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +56,8 @@ class _SentimentWidgetState extends State<SentimentWidget> {
         break;
       }
     }
+
+    countedCategories = sentimentService.categoryCount;
 
     return DefaultWidget(
         title: "Sentiment Analysis",
@@ -200,28 +203,30 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                     ? Padding(
                         padding: EdgeInsets.only(top: 5),
                         child: GestureDetector(
-                          onTap: sentimentService.categoryCount[
-                                      profile.categories[index].id] ==
-                                  0
-                              ? () {}
-                              : () {
-                                  chosenCategories
-                                          .where((element) =>
-                                              element.id ==
-                                              profile.categories[index].id)
-                                          .toList()
-                                          .isNotEmpty
-                                      ? chosenCategories.remove(chosenCategories
-                                          .firstWhere((element) =>
-                                              element.id ==
-                                              profile.categories[index].id))
-                                      : chosenCategories
-                                          .add(profile.categories[index]);
+                          onTap:
+                              countedCategories[profile.categories[index].id] ==
+                                      0
+                                  ? () {}
+                                  : () {
+                                      chosenCategories
+                                              .where((element) =>
+                                                  element.id ==
+                                                  profile.categories[index].id)
+                                              .toList()
+                                              .isNotEmpty
+                                          ? chosenCategories.remove(
+                                              chosenCategories
+                                                  .firstWhere((element) =>
+                                                      element.id ==
+                                                      profile.categories[index]
+                                                          .id))
+                                          : chosenCategories
+                                              .add(profile.categories[index]);
 
-                                  setState(
-                                    () {},
-                                  );
-                                },
+                                      setState(
+                                        () {},
+                                      );
+                                    },
                           child: Container(
                             padding: EdgeInsets.symmetric(
                                 vertical: 8, horizontal: 10),
@@ -242,9 +247,8 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                                   children: [
                                     Icon(
                                         profile.categories[index].category.icon,
-                                        color: sentimentService.categoryCount[
-                                                    profile.categories[index]
-                                                        .id] ==
+                                        color: countedCategories[profile
+                                                    .categories[index].id] ==
                                                 0
                                             ? Color.fromARGB(255, 149, 150, 159)
                                             : profile.categories[index].category
@@ -254,9 +258,8 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                                     Text(
                                         profile.categories[index].category.name,
                                         style: TextStyle(
-                                          color: sentimentService.categoryCount[
-                                                      profile.categories[index]
-                                                          .id] ==
+                                          color: countedCategories[profile
+                                                      .categories[index].id] ==
                                                   0
                                               ? Color.fromARGB(
                                                   255, 149, 150, 159)
@@ -267,11 +270,11 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                                   ],
                                 ),
                                 Text(
-                                  sentimentService.categoryCount[
+                                  countedCategories[
                                           profile.categories[index].id]
                                       .toString(),
                                   style: TextStyle(
-                                    color: sentimentService.categoryCount[
+                                    color: countedCategories[
                                                 profile.categories[index].id] ==
                                             0
                                         ? Color.fromARGB(255, 149, 150, 159)
