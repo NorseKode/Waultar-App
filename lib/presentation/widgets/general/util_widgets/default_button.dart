@@ -35,7 +35,7 @@ class _DefaultButtonState extends State<DefaultButton> {
         fontWeight: FontWeight.w500);
 
     return Container(
-      constraints: widget.constraints ?? BoxConstraints(),
+      constraints: widget.constraints ?? const BoxConstraints(),
       decoration: BoxDecoration(
           color: widget.onPressed != null
               ? (widget.color ?? themeProvider.themeMode().themeColor)

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:collection/collection.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/core/ai/i_ml_model.dart';

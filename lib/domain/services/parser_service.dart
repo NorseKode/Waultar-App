@@ -98,7 +98,7 @@ class ParserService implements IParserService {
                   parsedCount++;
                 }
 
-                callback("Parsing ${parsedCount}/${_pathsToParse.length}", false);
+                callback("Parsing $parsedCount/${_pathsToParse.length}", false);
 
                 if (isDoneCount == threadCount) {
                   _bucketsRepo.createBuckets(_parsingStartedAt, profile);

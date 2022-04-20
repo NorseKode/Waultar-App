@@ -61,8 +61,8 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(_progressMessage),
-        SizedBox(height: 20),
-        Center(child: const CircularProgressIndicator())
+        const SizedBox(height: 20),
+        const Center(child: CircularProgressIndicator())
       ],
     );
   }
@@ -81,31 +81,31 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
           ? _loadingScreen()
           : _imagesToTagCount == 0
               ? Row(
-                  children: [
-                    const Text("No Images To Tag"),
+                  children: const [
+                    Text("No Images To Tag"),
                   ],
                 )
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
-                    Text(
+                    const Text(
                       "How many images to tag?",
                       style:
                           TextStyle(fontWeight: FontWeight.w400, fontSize: 11),
                     ),
-                    SizedBox(height: 10),
-                    Container(
+                    const SizedBox(height: 10),
+                    SizedBox(
                       height: 40,
                       child: TextFormField(
-                          style: TextStyle(fontSize: 12),
+                          style: const TextStyle(fontSize: 12),
                           cursorWidth: 1,
                           keyboardType: TextInputType.number,
                           controller: _amountToTagTextController,
                           decoration: InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 15),
+                            contentPadding: const EdgeInsets.only(left: 15),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0),
                               borderSide: BorderSide.none,
@@ -113,37 +113,37 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                             filled: true,
                             fillColor: (const Color(0xFF323346)),
                             hintText: "Enter a number ...",
-                            hintStyle: TextStyle(letterSpacing: 0.3),
+                            hintStyle: const TextStyle(letterSpacing: 0.3),
                           )),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Untagged Images Count: ",
-                            style: const TextStyle(
+                        const Text("Untagged Images Count: ",
+                            style: TextStyle(
                                 color: Color.fromARGB(255, 149, 150, 159),
                                 fontFamily: "Poppins",
                                 fontSize: 11,
                                 fontWeight: FontWeight.w500)),
-                        Text("${_imagesToTagCount}",
-                            style: TextStyle(fontSize: 11)),
+                        Text("$_imagesToTagCount",
+                            style: const TextStyle(fontSize: 11)),
                       ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           "Estimated Time To Tag All: ",
-                          style: const TextStyle(
+                          style: TextStyle(
                               color: Color.fromARGB(255, 149, 150, 159),
                               fontFamily: "Poppins",
                               fontSize: 11,
                               fontWeight: FontWeight.w500),
                         ),
                         Text(
-                          "${_timeEstimate(_imagesToTagCount)}",
-                          style: TextStyle(fontSize: 11),
+                          _timeEstimate(_imagesToTagCount),
+                          style: const TextStyle(fontSize: 11),
                         ),
                       ],
                     ),

@@ -74,7 +74,7 @@ class _BrowseState extends State<Browse> {
 
   uploadButton() {
     return DefaultButton(
-      constraints: BoxConstraints(maxWidth: 200),
+      constraints: const BoxConstraints(maxWidth: 200),
       onPressed: () async {
         var files = await Uploader.uploadDialogue(context);
         if (files != null) {

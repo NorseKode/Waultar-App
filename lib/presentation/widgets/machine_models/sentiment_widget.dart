@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 
@@ -19,8 +18,7 @@ class SentimentWidget extends StatefulWidget {
 }
 
 class _SentimentWidgetState extends State<SentimentWidget> {
-  final sentimentService =
-      locator.get<ISentimentService>(instanceName: 'sentimentService');
+  final sentimentService = locator.get<ISentimentService>(instanceName: 'sentimentService');
   late ThemeProvider themeProvider;
   late List<ProfileDocument> profiles;
 
@@ -28,7 +26,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
   int timeEstimateSeconds = 0;
   bool translate = false;
   bool analyzing = false;
-  String message = "Analyzing ...";
+  String uiMessage = "Analyzing ...";
   List<CategoryEnum> validCategories = [
     CategoryEnum.comments,
     CategoryEnum.messaging,
@@ -43,8 +41,8 @@ class _SentimentWidgetState extends State<SentimentWidget> {
     themeProvider = Provider.of<ThemeProvider>(context);
 
     for (var profile in profiles) {
-      var profileCats = profile.categories
-          .where((element) => validCategories.contains(element.category));
+      var profileCats =
+          profile.categories.where((element) => validCategories.contains(element.category));
       for (var element in profileCats) {
         categories.add(element.id);
       }
@@ -65,17 +63,13 @@ class _SentimentWidgetState extends State<SentimentWidget> {
             "Analyze the invoked sentiment in your data.\nChoose what data to run analysis on :",
         child: analyzing
             ? Column(
-                children: [
-                  Text(message),
-                  const Center(child: CircularProgressIndicator())
-                ],
+                children: [Text(uiMessage), const Center(child: CircularProgressIndicator())],
               )
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 10),
-                  SingleChildScrollView(
-                      child: Column(children: _profileList())),
+                  SingleChildScrollView(child: Column(children: _profileList())),
                   const SizedBox(height: 0),
                   _analyzeBar(),
                 ],
@@ -89,9 +83,9 @@ class _SentimentWidgetState extends State<SentimentWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
+            const Text(
               "Translate text",
-              style: const TextStyle(
+              style: TextStyle(
                   color: Color.fromARGB(255, 149, 150, 159),
                   fontFamily: "Poppins",
                   fontSize: 11,
@@ -114,16 +108,16 @@ class _SentimentWidgetState extends State<SentimentWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
+            const Text(
               "Estimated Time To Tag: ",
-              style: const TextStyle(
+              style: TextStyle(
                   color: Color.fromARGB(255, 149, 150, 159),
                   fontSize: 11,
                   fontWeight: FontWeight.w500),
             ),
             Text(
               timeEstimate,
-              style: TextStyle(fontSize: 11),
+              style: const TextStyle(fontSize: 11),
             ),
           ],
         ),
@@ -138,9 +132,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                       : () async {
                           analyzing = true;
                           await sentimentService.connotateOwnTextsFromCategory(
-                              chosenCategories,
-                              _sentimentAnalyzingProgress,
-                              translate);
+                              chosenCategories, _sentimentAnalyzingProgress, translate);
                           chosenCategories = [];
                           setState(() {});
                         }),
@@ -152,11 +144,16 @@ class _SentimentWidgetState extends State<SentimentWidget> {
   }
 
   _sentimentAnalyzingProgress(String message, bool isDone) {
-    analyzing = !isDone;
-    if (isDone) {
-      _calculateCount();
-      setState(() {});
-    }
+    setState(() {
+      analyzing = !isDone;
+
+      if (isDone) {
+        _calculateCount();
+        uiMessage = "Analyzing ...";
+      } else {
+        uiMessage = message;
+      }
+    });
   }
 
   String _timeEstimateOnCat() {
@@ -170,10 +167,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
 
   List<Widget> _profileList() {
     return profiles.isEmpty
-        ? [
-            Text("No data to analyze",
-                style: themeProvider.themeData().textTheme.headline4)
-          ]
+        ? [Text("No data to analyze", style: themeProvider.themeData().textTheme.headline4)]
         : List.generate(
             profiles.length,
             (index) => Container(
@@ -182,7 +176,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                     children: [
                       Text(
                         "${profiles[index].service.target!.serviceName} - ${profiles[index].name}",
-                        style: TextStyle(
+                        style: const TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 11,
                             color: Color.fromARGB(255, 149, 150, 159)),
@@ -200,43 +194,32 @@ class _SentimentWidgetState extends State<SentimentWidget> {
         child: Column(
             children: List.generate(
                 profile.categories.length,
-                (index) => validCategories
-                        .contains(profile.categories[index].category)
+                (index) => validCategories.contains(profile.categories[index].category)
                     ? Padding(
-                        padding: EdgeInsets.only(top: 5),
+                        padding: const EdgeInsets.only(top: 5),
                         child: GestureDetector(
-                          onTap:
-                              countedCategories[profile.categories[index].id] ==
-                                      0
-                                  ? () {}
-                                  : () {
-                                      chosenCategories
-                                              .where((element) =>
-                                                  element.id ==
-                                                  profile.categories[index].id)
-                                              .toList()
-                                              .isNotEmpty
-                                          ? chosenCategories.remove(
-                                              chosenCategories
-                                                  .firstWhere((element) =>
-                                                      element.id ==
-                                                      profile.categories[index]
-                                                          .id))
-                                          : chosenCategories
-                                              .add(profile.categories[index]);
+                          onTap: countedCategories[profile.categories[index].id] == 0
+                              ? () {}
+                              : () {
+                                  chosenCategories
+                                          .where((element) =>
+                                              element.id == profile.categories[index].id)
+                                          .toList()
+                                          .isNotEmpty
+                                      ? chosenCategories.remove(chosenCategories.firstWhere(
+                                          (element) => element.id == profile.categories[index].id))
+                                      : chosenCategories.add(profile.categories[index]);
 
-                                      setState(
-                                        () {},
-                                      );
-                                    },
+                                  setState(
+                                    () {},
+                                  );
+                                },
                           child: Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 10),
+                            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                             decoration: BoxDecoration(
                                 color: chosenCategories
-                                        .where((element) =>
-                                            element.id ==
-                                            profile.categories[index].id)
+                                        .where(
+                                            (element) => element.id == profile.categories[index].id)
                                         .toList()
                                         .isNotEmpty
                                     ? const Color(0xFF323346)
@@ -247,39 +230,28 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                               children: [
                                 Row(
                                   children: [
-                                    Icon(
-                                        profile.categories[index].category.icon,
-                                        color: countedCategories[profile
-                                                    .categories[index].id] ==
-                                                0
-                                            ? Color.fromARGB(255, 149, 150, 159)
-                                            : profile.categories[index].category
-                                                .color,
+                                    Icon(profile.categories[index].category.icon,
+                                        color: countedCategories[profile.categories[index].id] == 0
+                                            ? const Color.fromARGB(255, 149, 150, 159)
+                                            : profile.categories[index].category.color,
                                         size: 16),
-                                    SizedBox(width: 10),
-                                    Text(
-                                        profile.categories[index].category.name,
+                                    const SizedBox(width: 10),
+                                    Text(profile.categories[index].category.name,
                                         style: TextStyle(
-                                          color: countedCategories[profile
-                                                      .categories[index].id] ==
-                                                  0
-                                              ? Color.fromARGB(
-                                                  255, 149, 150, 159)
-                                              : Colors.white,
+                                          color:
+                                              countedCategories[profile.categories[index].id] == 0
+                                                  ? const Color.fromARGB(255, 149, 150, 159)
+                                                  : Colors.white,
                                           fontWeight: FontWeight.w400,
                                           fontSize: 12,
                                         )),
                                   ],
                                 ),
                                 Text(
-                                  countedCategories[
-                                          profile.categories[index].id]
-                                      .toString(),
+                                  countedCategories[profile.categories[index].id].toString(),
                                   style: TextStyle(
-                                    color: countedCategories[
-                                                profile.categories[index].id] ==
-                                            0
-                                        ? Color.fromARGB(255, 149, 150, 159)
+                                    color: countedCategories[profile.categories[index].id] == 0
+                                        ? const Color.fromARGB(255, 149, 150, 159)
                                         : Colors.white,
                                   ),
                                 )

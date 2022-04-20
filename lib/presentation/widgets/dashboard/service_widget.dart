@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
-import 'package:waultar/data/entities/misc/service_document.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 
 class ServiceWidget extends StatefulWidget {
@@ -20,7 +19,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
   Widget build(BuildContext context) {
     themeProvider = Provider.of<ThemeProvider>(context);
     return Container(
-        constraints: BoxConstraints(minWidth: 200, maxWidth: 200),
+        constraints: const BoxConstraints(minWidth: 200, maxWidth: 200),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: themeProvider.themeData().primaryColor),

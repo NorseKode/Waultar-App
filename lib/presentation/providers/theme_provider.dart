@@ -37,7 +37,7 @@ class ThemeProvider with ChangeNotifier {
           : const Color(0xFF1E1D2B), //background
 
       textTheme: TextTheme(
-        headline1: TextStyle(
+        headline1: const TextStyle(
             color: Colors.white,
             fontFamily: "Poppins",
             fontSize: 14,

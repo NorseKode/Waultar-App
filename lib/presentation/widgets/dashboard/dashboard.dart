@@ -1,17 +1,11 @@
-import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tuple/tuple.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_dashboard_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
-import 'package:waultar/domain/services/dashboard_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 
@@ -118,7 +112,7 @@ class _DashboardState extends State<Dashboard> {
         ),
         const SizedBox(width: 20),
         Container(
-            constraints: BoxConstraints(maxWidth: 330), child: _analysis()),
+            constraints: const BoxConstraints(maxWidth: 330), child: _analysis()),
       ],
     );
   }
@@ -156,9 +150,9 @@ class _DashboardState extends State<Dashboard> {
           style: themeProvider.themeData().textTheme.headline4,
         ),
         const SizedBox(height: 15),
-        ImageClassifyWidget(),
+        const ImageClassifyWidget(),
         const SizedBox(height: 20),
-        SentimentWidget(),
+        const SentimentWidget(),
         const SizedBox(height: 20),
         _sentimentTestWidget(),
       ],
@@ -196,7 +190,7 @@ class _DashboardState extends State<Dashboard> {
   Widget _highlightWidget(
       IconData icon, Color color, String title, String result, Widget child) {
     return DefaultWidgetBox(
-      padding: EdgeInsets.all(15),
+      padding: const EdgeInsets.all(15),
       child: Row(
         children: [
           Container(
@@ -210,7 +204,7 @@ class _DashboardState extends State<Dashboard> {
               color: color,
             ),
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -224,11 +218,11 @@ class _DashboardState extends State<Dashboard> {
               ),
               Text(
                 result,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
               )
             ],
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           child
         ],
       ),
@@ -241,7 +235,7 @@ class _DashboardState extends State<Dashboard> {
     List<Widget> topMessageList = List.generate(
         sortedMessages.length,
         (index) => Padding(
-              padding: EdgeInsets.only(top: 15),
+              padding: const EdgeInsets.only(top: 15),
               child: Container(
                   child: Row(
                 children: [
@@ -257,7 +251,7 @@ class _DashboardState extends State<Dashboard> {
                               border: Border.all(color: Colors.white)),
                           child: Center(child: Text("${index + 1}")),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         Text(sortedMessages[index].item1,
@@ -367,15 +361,15 @@ class _DashboardState extends State<Dashboard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Input text to test sentiment"),
-            SizedBox(height: 10),
+            const Text("Input text to test sentiment"),
+            const SizedBox(height: 10),
             TextFormField(
-                style: TextStyle(fontSize: 12),
+                style: const TextStyle(fontSize: 12),
                 cursorWidth: 1,
                 keyboardType: TextInputType.number,
                 controller: testText,
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.only(left: 15),
+                  contentPadding: const EdgeInsets.only(left: 15),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     borderSide: BorderSide.none,
@@ -383,9 +377,9 @@ class _DashboardState extends State<Dashboard> {
                   filled: true,
                   fillColor: (const Color(0xFF323346)),
                   hintText: "Enter a sentence ...",
-                  hintStyle: TextStyle(letterSpacing: 0.3),
+                  hintStyle: const TextStyle(letterSpacing: 0.3),
                 )),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Row(
               children: [
                 Expanded(
@@ -399,7 +393,7 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text("Sentiment Score: $testScore"),
           ],
         ));

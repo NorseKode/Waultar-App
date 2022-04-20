@@ -146,7 +146,7 @@ class _TimelineState extends State<Timeline> {
 
   Widget _resetButton() {
     return DefaultButton(
-      constraints: BoxConstraints(maxWidth: 200),
+      constraints: const BoxConstraints(maxWidth: 200),
       onPressed: () {
         _timelineService.reset();
         setState(() {});

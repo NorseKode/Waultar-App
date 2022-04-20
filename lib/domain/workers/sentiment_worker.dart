@@ -150,6 +150,11 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
                   "DataPoint with id: ${point.id} had a sentiment text that was either null, empty or not the users data");
             }
           }
+
+          mainSendPort.send(MainSentimentClassifyProgressPackage(
+            amountTagged: dataPoints.length,
+            isDone: false,
+          ));
         }
 
         const step = 20;
@@ -163,24 +168,21 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
         while (dataPoints.isNotEmpty && !isDone) {
           await aux(dataPoints);
 
-          dataPoints = dataRepo.readAllFromCategoryPagination(category, offset, limit);
-
           if (data.limit != null && data.limit! < (offset + step)) {
-            print("offset: $offset, data.limit: ${data.limit!}");
             var remaining = step - ((offset + step) - data.limit!);
             offset += remaining;
             limit = remaining;
             isDone = true;
-            // limit = data.limit!;
-            print("offset: $offset, limit: ${limit}");
           } else {
             offset += step;
           }
+
+          dataPoints = dataRepo.readAllFromCategoryPagination(category, offset, limit);
         }
 
-        print("final - offset: $offset, limit: ${limit}");
-        dataPoints = dataRepo.readAllFromCategoryPagination(category, offset, limit);
-        aux(dataPoints);
+        if (isDone) {
+          aux(dataPoints);
+        }
       }
 
       _logger.logger.info("Finished sentiment scoring");

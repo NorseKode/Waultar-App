@@ -1,5 +1,3 @@
-import 'package:remove_emoji/remove_emoji.dart';
-import "package:collection/collection.dart";
 
 import 'dart:convert';
 
@@ -18,7 +16,6 @@ import 'package:waultar/data/repositories/datapoint_repo.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/data/entities/nodes/category_node.dart';
-import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/domain/workers/sentiment_worker.dart';
 import 'package:waultar/startup.dart';
 
@@ -82,8 +79,7 @@ class SentimentService extends ISentimentService {
     });
 
     var messagesOnIsolates = categories
-        .where((element) => element.category == CategoryEnum.messaging)
-        // .where((element) => element.category == CategoryEnum.messaging && element.count > 30000)
+        .where((element) => element.category == CategoryEnum.messaging && element.count > 30000)
         .toList();
 
     categories.removeWhere((element) => messagesOnIsolates.contains(element));
@@ -100,6 +96,7 @@ class SentimentService extends ISentimentService {
       switch (data.runtimeType) {
         case MainSentimentClassifyProgressPackage:
           data as MainSentimentClassifyProgressPackage;
+          progressCount += data.amountTagged;
           callback("$progressCount/$totalCount text analysed", false);
 
           if (data.isDone) {
