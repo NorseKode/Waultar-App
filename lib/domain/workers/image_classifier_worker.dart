@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:isolate';
 import 'package:waultar/configs/globals/app_logger.dart';
+import 'package:waultar/core/ai/image_classifier_efficient_net_b4.dart';
 import 'package:waultar/core/ai/image_classifier_mobilenetv3.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/data/configs/objectbox.dart';
+import 'package:waultar/data/entities/media/image_document.dart';
 import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:waultar/startup.dart';
 
@@ -23,7 +25,7 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
       if (data.isPerformanceTracking) {
         performance.startReading("Setup of classifier");
       }
-      var classifier = ImageClassifierMobileNetV3();
+      var classifier = ImageClassifierEfficientNetB4();
       if (data.isPerformanceTracking) {
         var key = "Setup of classifier";
         performance.addReading(performance.parentKey, key, performance.stopReading(key));
@@ -32,6 +34,7 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
       int step = 1;
       int offset = data.offset ?? 0;
       int limit = step;
+      var isDone = false;
       if (data.isPerformanceTracking) {
         performance.startReading("Loading of images");
       }
@@ -41,7 +44,7 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
         performance.addReading(performance.parentKey, key, performance.stopReading(key));
       }
 
-      while (images.isNotEmpty && (data.limit == null || offset < data.limit!)) {
+      aux(List<ImageDocument> images) {
         for (var image in images) {
           try {
             if (data.isPerformanceTracking) {
@@ -79,6 +82,10 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
         }
         mainSendPort.send(MainImageClassifyProgressPackage(amountTagged: step, isDone: false));
         offset += step;
+      }
+
+      while (images.isNotEmpty && !isDone) {
+        aux(images);
 
         if (data.isPerformanceTracking) {
           performance.startReading("Loading of images");
@@ -88,6 +95,14 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
           var key = "Loading of images";
           performance.addReading(performance.parentKey, key, performance.stopReading(key));
         }
+
+        if (data.limit != null && offset >= data.limit!) {
+          isDone = true;
+        }
+      }
+
+      if (isDone) {
+        aux(images);
       }
 
       if (data.isPerformanceTracking) {

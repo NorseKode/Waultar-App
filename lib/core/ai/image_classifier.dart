@@ -168,9 +168,9 @@ class ImageClassifier extends IMLModel {
     var results = <Tuple2<String, double>>[];
 
     for (var i = 0; i < amountOfTopCategories; i++) {
-      if (pred[i].value > 0.75) {
+      // if (pred[i].value > 0.75) {
         results.add(Tuple2(pred[i].key, pred[i].value));
-      }
+      // }
     }
     if (ISPERFORMANCETRACKING) {
       performance2!.addReading(parentKey, "Get results", performance2.stopReading("Get results"));
@@ -180,6 +180,8 @@ class ImageClassifier extends IMLModel {
       performance2!.addData(parentKey, duration: performance2.stopReading(parentKey));
       _performance.addDataPoint(_performance.parentKey, performance2.parentDataPoint);
     }
+
+    _appLogger.logger.info("Found following tags: ${results.toString()} to image: $imagePath");
 
     return results;
   }

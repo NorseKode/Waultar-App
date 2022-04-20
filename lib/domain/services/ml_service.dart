@@ -20,6 +20,7 @@ class MLService extends IMLService {
     var isDoneCount = 0;
     var amountTaggedSummed = 0;
     var amountToProcess = limitAmount ?? totalAmountOfImagesToTag;
+    if (amountToProcess < 3) threadCount = 1;
     var splitCount = amountToProcess ~/ threadCount;
     var workersList = <BaseWorker>[];
 
@@ -33,26 +34,35 @@ class MLService extends IMLService {
       switch (data.runtimeType) {
         case MainImageClassifyProgressPackage:
           data as MainImageClassifyProgressPackage;
-          amountTaggedSummed += data.amountTagged;
 
-          if (data.isDone) isDoneCount++;
-
-          callback("$amountTaggedSummed/${limitAmount ?? totalAmountOfImagesToTag} Images Tagged",
-              isDoneCount == threadCount);
-          if (ISPERFORMANCETRACKING && isDoneCount == threadCount) {
-            _performance.addData(
-              _performance.parentKey,
-              duration: _performance.stopReading(_performance.parentKey),
-              childs: data.performanceDataPoint != null && data.performanceDataPoint!.isNotEmpty
-                  ? [PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint!))]
-                  : [],
-              metadata: {"threadCount": threadCount},
+          if (data.isDone) {
+            isDoneCount++;
+          } else {
+            amountTaggedSummed += data.amountTagged;
+            callback(
+              "$amountTaggedSummed/${limitAmount ?? totalAmountOfImagesToTag} Images Tagged",
+              false,
             );
-            _performance.summary("Tagging of images only total");
+          }
 
+          if (isDoneCount == threadCount) {
             for (var worker in workersList) {
               worker.dispose();
             }
+
+            if (ISPERFORMANCETRACKING) {
+              _performance.addData(
+                _performance.parentKey,
+                duration: _performance.stopReading(_performance.parentKey),
+                childs: data.performanceDataPoint != null && data.performanceDataPoint!.isNotEmpty
+                    ? [PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint!))]
+                    : [],
+                metadata: {"threadCount": threadCount},
+              );
+              _performance.summary("Tagging of images only total");
+            }
+print(amountTaggedSummed);
+            callback("Initializing", true);
           }
       }
     }
@@ -65,7 +75,7 @@ class MLService extends IMLService {
           waultarPath: waultarPath,
           offset: splitCount * i,
           limit: i != threadCount - 1 ? (splitCount * (i + 1)) : amountToProcess,
-          isPerformanceTracking: false,
+          isPerformanceTracking: ISPERFORMANCETRACKING,
         ),
       );
 
