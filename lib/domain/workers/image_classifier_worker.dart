@@ -25,7 +25,7 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
       if (data.isPerformanceTracking) {
         performance.startReading("Setup of classifier");
       }
-      var classifier = ImageClassifierEfficientNetB4();
+      var classifier = ImageClassifierMobileNetV3();
       if (data.isPerformanceTracking) {
         var key = "Setup of classifier";
         performance.addReading(performance.parentKey, key, performance.stopReading(key));
@@ -50,7 +50,7 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
             if (data.isPerformanceTracking) {
               performance.startReading("Classify Image");
             }
-            var mediaTags = classifier.predict(image.uri, 5);
+            var mediaTags = classifier.predict(image.uri, 5, percentageThreshold: 0.6);
             if (data.isPerformanceTracking) {
               var key = "Classify Image";
               performance.addReading(performance.parentKey, key, performance.stopReading(key));

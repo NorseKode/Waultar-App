@@ -35,7 +35,7 @@ class _DefaultButtonState extends State<DefaultButton> {
         fontWeight: FontWeight.w500);
 
     return Container(
-      constraints: widget.constraints ?? const BoxConstraints(),
+      constraints: widget.constraints ?? BoxConstraints(maxHeight: 30),
       decoration: BoxDecoration(
           color: widget.onPressed != null
               ? (widget.color ?? themeProvider.themeMode().themeColor)

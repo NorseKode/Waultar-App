@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:translator/translator.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_dashboard_service.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_explorer_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_translator_service.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
@@ -30,6 +31,7 @@ import 'package:waultar/data/repositories/appsettings_repo.dart';
 import 'package:waultar/domain/services/appsettings_service.dart';
 import 'package:waultar/domain/services/collections_service.dart';
 import 'package:waultar/domain/services/dashboard_service.dart';
+import 'package:waultar/domain/services/explorer_service.dart';
 import 'package:waultar/domain/services/parser_service.dart';
 import 'package:waultar/domain/services/timeline_service.dart';
 import 'package:waultar/domain/services/translator_service.dart';
@@ -170,6 +172,10 @@ Future<void> setupServices({
       DashboardService(
           _bucketsRepo, _profileRepo, _categoryRepo, _nameRepo, _dataRepo),
       instanceName: 'dashboardService',
+    );
+    locator.registerSingleton<IExplorerService>(
+      ExplorerService(_profileRepo, _categoryRepo, _nameRepo, _dataRepo),
+      instanceName: 'explorerService',
     );
     locator.registerSingleton<TreeParser>(
       TreeParser(),

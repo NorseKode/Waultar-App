@@ -57,7 +57,11 @@ class MLService extends IMLService {
                 childs: data.performanceDataPoint != null && data.performanceDataPoint!.isNotEmpty
                     ? [PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint!))]
                     : [],
-                metadata: {"threadCount": threadCount},
+                metadata: {
+                  "threadCount": threadCount,
+                  "tagged count": totalAmountOfImagesToTag,
+                  "model": "mobilenet-v3",
+                },
               );
               _performance.summary("Tagging of images only total");
             }

@@ -1,9 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tuple/tuple.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_dashboard_service.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
@@ -15,8 +15,11 @@ import 'package:waultar/presentation/widgets/general/default_widgets/default_wid
 import 'package:waultar/presentation/widgets/dashboard/service_widget.dart';
 
 import 'package:waultar/presentation/widgets/machine_models/image_classify_widget.dart';
+import 'package:waultar/presentation/widgets/snackbar_custom.dart';
+import 'package:waultar/presentation/widgets/upload/uploader.dart';
 
 import 'package:waultar/startup.dart';
+import 'package:path/path.dart' as dart_path;
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -29,15 +32,18 @@ class _DashboardState extends State<Dashboard> {
   final _dashboardService = locator.get<IDashboardService>(
     instanceName: 'dashboardService',
   );
-  final sentimentService =
-      locator.get<ISentimentService>(instanceName: 'sentimentService');
+  final _parserService = locator.get<IParserService>(
+    instanceName: 'parserService',
+  );
+  final sentimentService = locator.get<ISentimentService>(instanceName: 'sentimentService');
   late AppLocalizations localizer;
   late ThemeProvider themeProvider;
   late List<ProfileDocument> profiles;
-  late List<Tuple2<String, double>> weekdays =
-      _dashboardService.getActiveWeekday();
+  late List<Tuple2<String, double>> weekdays = _dashboardService.getActiveWeekday();
   // late var mostActive;
   var testText = TextEditingController();
+  var _isLoading = false;
+  var _progressMessage = "Initializing";
   double testScore = -1;
 
   @override
@@ -53,21 +59,77 @@ class _DashboardState extends State<Dashboard> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          localizer.dashboard,
-          style: themeProvider.themeData().textTheme.headline3,
-        ),
-        const SizedBox(height: 20),
-        Expanded(
-          child: profiles.isNotEmpty
-              ? SingleChildScrollView(child: _dashboardWidgets())
-              : Text(
-                  "Upload data to use dashboard",
-                  style: themeProvider.themeData().textTheme.headline4,
-                ),
-        )
-      ],
+      children: _isLoading
+          ? [
+              Text(_progressMessage),
+              const CircularProgressIndicator(),
+            ]
+          : [
+              Text(
+                localizer.dashboard,
+                style: themeProvider.themeData().textTheme.headline3,
+              ),
+              _uploadButton(),
+              const SizedBox(height: 20),
+              Expanded(
+                child: profiles.isNotEmpty
+                    ? SingleChildScrollView(child: _dashboardWidgets())
+                    : Text(
+                        "Upload data to use dashboard",
+                        style: themeProvider.themeData().textTheme.headline4,
+                      ),
+              )
+            ],
+    );
+  }
+
+  _onUploadProgress(String message, bool isDone) {
+    setState(() {
+      _progressMessage = message;
+      _isLoading = !isDone;
+      if (!_isLoading) {
+        _progressMessage = "Initializing";
+      }
+    });
+  }
+
+  _uploadButton() {
+    return DefaultButton(
+      constraints: const BoxConstraints(maxWidth: 200),
+      onPressed: () async {
+        var files = await Uploader.uploadDialogue(context);
+        if (files != null) {
+          SnackBarCustom.useSnackbarOfContext(context, localizer.startedLoadingOfData);
+
+          setState(() {
+            _isLoading = true;
+          });
+
+          var zipFile =
+              files.item1.singleWhere((element) => dart_path.extension(element) == ".zip");
+
+          // await _parserService.parseIsolates(
+          //   zipFile,
+          //   _onUploadProgress,
+          //   files.item3,
+          //   ProfileDocument(name: files.item2),
+          // );
+          // await _parserService.parseIsolatesParallel(
+          //   zipFile,
+          //   _onUploadProgress,
+          //   files.item3,
+          //   ProfileDocument(name: files.item2),
+          // );
+          await _parserService.parseIsolatesPara(
+            zipFile,
+            _onUploadProgress,
+            files.item3,
+            ProfileDocument(name: files.item2),
+            threadCount: 3,
+          );
+        }
+      },
+      text: localizer.upload,
     );
   }
 
@@ -111,15 +173,14 @@ class _DashboardState extends State<Dashboard> {
           ),
         ),
         const SizedBox(width: 20),
-        Container(
-            constraints: const BoxConstraints(maxWidth: 330), child: _analysis()),
+        Container(constraints: const BoxConstraints(maxWidth: 330), child: _analysis()),
       ],
     );
   }
 
   Widget _services() {
-    List<Widget> serviceWidgets = List.generate(
-        profiles.length, (e) => ServiceWidget(service: profiles[e]));
+    List<Widget> serviceWidgets =
+        List.generate(profiles.length, (e) => ServiceWidget(service: profiles[e]));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -187,8 +248,7 @@ class _DashboardState extends State<Dashboard> {
   //   );
   // }
 
-  Widget _highlightWidget(
-      IconData icon, Color color, String title, String result, Widget child) {
+  Widget _highlightWidget(IconData icon, Color color, String title, String result, Widget child) {
     return DefaultWidgetBox(
       padding: const EdgeInsets.all(15),
       child: Row(
@@ -212,9 +272,7 @@ class _DashboardState extends State<Dashboard> {
               Text(
                 title,
                 style: const TextStyle(
-                    color: Color(0xFFABAAB8),
-                    fontSize: 10,
-                    fontWeight: FontWeight.w400),
+                    color: Color(0xFFABAAB8), fontSize: 10, fontWeight: FontWeight.w400),
               ),
               Text(
                 result,
@@ -247,8 +305,7 @@ class _DashboardState extends State<Dashboard> {
                           height: 20,
                           width: 20,
                           decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white)),
+                              shape: BoxShape.circle, border: Border.all(color: Colors.white)),
                           child: Center(child: Text("${index + 1}")),
                         ),
                         const SizedBox(
@@ -261,8 +318,7 @@ class _DashboardState extends State<Dashboard> {
                                 .themeData()
                                 .textTheme
                                 .headline4!
-                                .apply(
-                                    color: Colors.white, fontSizeDelta: 0.5)),
+                                .apply(color: Colors.white, fontSizeDelta: 0.5)),
                       ],
                     ),
                   ),
@@ -361,25 +417,28 @@ class _DashboardState extends State<Dashboard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Input text to test sentiment"),
-            const SizedBox(height: 10),
-            TextFormField(
-                style: const TextStyle(fontSize: 12),
-                cursorWidth: 1,
-                keyboardType: TextInputType.number,
-                controller: testText,
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.only(left: 15),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  filled: true,
-                  fillColor: (const Color(0xFF323346)),
-                  hintText: "Enter a sentence ...",
-                  hintStyle: const TextStyle(letterSpacing: 0.3),
-                )),
-            const SizedBox(height: 10),
+            Text("Input text to test sentiment"),
+            SizedBox(height: 10),
+            Container(
+              height: 40,
+              child: TextFormField(
+                  style: TextStyle(fontSize: 12),
+                  cursorWidth: 1,
+                  keyboardType: TextInputType.number,
+                  controller: testText,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(left: 15),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                    fillColor: (const Color(0xFF323346)),
+                    hintText: "Enter a sentence ...",
+                    hintStyle: TextStyle(letterSpacing: 0.3),
+                  )),
+            ),
+            SizedBox(height: 10),
             Row(
               children: [
                 Expanded(

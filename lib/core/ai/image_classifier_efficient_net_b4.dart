@@ -13,7 +13,7 @@ class ImageClassifierEfficientNetB4 extends ImageClassifier {
             "labels_eff.txt",
           ),
           labelsLength: 1000,
-          preProcessNormalizeOp: NormalizeOp(127.5, 127.5),
+          preProcessNormalizeOp: NormalizeOp(127, 128),
           postProcessNormalizeOp: NormalizeOp(0, 1),
           // interpreterOptions: InterpreterOptions(),
         );

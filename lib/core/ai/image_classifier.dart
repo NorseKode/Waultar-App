@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:flutter/animation.dart';
 import 'package:image/image.dart' as img;
 import 'package:collection/collection.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
@@ -115,9 +116,17 @@ class ImageClassifier extends IMLModel {
         .process(_inputImage);
   }
 
-  List<Tuple2<String, double>> predict(String imagePath, int amountOfTopCategories) {
+  /// Takes a [imagePath] and returns categories in the image, limits it to 
+  /// [amountOfTopCategories] that, optionally, is above the 
+  /// [percentageThreshold]
+  /// 
+  /// Optionally a [percentageThreshold] can be given which needs to be between 0 and 1
+  /// 
+  /// Return a list of tuples of maximum size [amountOfTopCategories] with the 
+  /// first item being the category, and the second item its probability
+  List<Tuple2<String, double>> predict(String imagePath, int amountOfTopCategories, {double? percentageThreshold}) {
     _appLogger.logger.info(
-        "Predicting image with path: $imagePath, and returning $amountOfTopCategories categories");
+        "Predicting image with path: $imagePath, and returning $amountOfTopCategories categories and percentageThreshold: $percentageThreshold");
 
     var parentKey = "Predict All";
     PerformanceHelper? performance2;
@@ -168,9 +177,9 @@ class ImageClassifier extends IMLModel {
     var results = <Tuple2<String, double>>[];
 
     for (var i = 0; i < amountOfTopCategories; i++) {
-      // if (pred[i].value > 0.75) {
+      if ((percentageThreshold != null ? pred[i].value > percentageThreshold : true)) {
         results.add(Tuple2(pred[i].key, pred[i].value));
-      // }
+      }
     }
     if (ISPERFORMANCETRACKING) {
       performance2!.addReading(parentKey, "Get results", performance2.stopReading("Get results"));

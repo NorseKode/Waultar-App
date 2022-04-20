@@ -7,6 +7,7 @@ import 'package:waultar/configs/navigation/screen.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:waultar/presentation/widgets/upload/uploader.dart';
 
 class MenuPanel extends StatefulWidget {
   final ViewScreen active;
@@ -78,7 +79,7 @@ class _MenuPanelState extends State<MenuPanel> {
     Function(ViewScreen screen) onPressed,
   ) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 5),
       child: TextButton(
         style: ButtonStyle(
           overlayColor: MaterialStateProperty.all((const Color(0xFF323346))),
@@ -93,7 +94,7 @@ class _MenuPanelState extends State<MenuPanel> {
           setState(() {});
         },
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(6, 12, 6, 12),
+          padding: const EdgeInsets.fromLTRB(10, 12, 15, 12),
           child: Row(
             children: [
               Icon(
@@ -101,7 +102,7 @@ class _MenuPanelState extends State<MenuPanel> {
                 color: widget.active != screen
                     ? themeProvider.themeMode().tonedTextColor
                     : Colors.white, //const Color(0xFFABAAB8),
-                size: 12,
+                size: 15,
               ),
               const SizedBox(width: 12),
               Text(
@@ -112,7 +113,7 @@ class _MenuPanelState extends State<MenuPanel> {
                         : Colors.white,
                     fontFamily: "Poppins",
                     fontSize: 12,
-                    fontWeight: FontWeight.w400),
+                    fontWeight: FontWeight.w500),
               ) //const Color(0xFFABAAB8)))
             ],
           ),
@@ -139,8 +140,9 @@ class _MenuPanelState extends State<MenuPanel> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   logo(),
+                  SizedBox(height: 15),
                   Divider(
-                      height: 40,
+                      height: 22,
                       thickness: 2,
                       color: themeProvider.themeMode().tonedColor),
                   menuButton(
@@ -169,7 +171,7 @@ class _MenuPanelState extends State<MenuPanel> {
                         .read<AppState>()
                         .updateNavigatorState(AppRoutePath.timeline());
                   }),
-                  menuButton(Iconsax.element_3, "Upload", ViewScreen.browse,
+                  menuButton(Iconsax.element_3, "Explorer", ViewScreen.browse,
                       (_) {
                     context
                         .read<AppState>()
@@ -189,6 +191,40 @@ class _MenuPanelState extends State<MenuPanel> {
                   //     height: 40,
                   //     thickness: 2,
                   //     color: themeProvider.themeMode().tonedColor),
+
+                  Divider(
+                      height: 22,
+                      thickness: 2,
+                      color: themeProvider.themeMode().tonedColor),
+                  SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () async {
+                      var files = await Uploader.uploadDialogue(context);
+                    },
+                    child: Container(
+                      height: 40,
+                      //width: 40,
+                      decoration: BoxDecoration(
+                          color: themeProvider.themeMode().themeColor,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: 15.0,
+                          right: 20,
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Iconsax.arrow_up_1, size: 17),
+                            SizedBox(width: 12),
+                            Text(
+                              "Upload data",
+                              style: TextStyle(fontWeight: FontWeight.w500),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
               Column(

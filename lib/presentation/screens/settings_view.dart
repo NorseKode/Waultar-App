@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/configs/navigation/screen.dart';
@@ -6,6 +7,7 @@ import 'package:logging/logging.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
 import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:waultar/presentation/presentation_helper.dart';
+import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/screens/shared/waultar_desktop_main.dart';
 import 'package:waultar/presentation/widgets/general/menu_panel.dart';
 import 'package:waultar/presentation/widgets/general/top_panel.dart';
@@ -23,13 +25,16 @@ class SettingsView extends StatefulWidget {
 
 class _SettingsViewState extends State<SettingsView> {
   late AppLocalizations localizer;
+  late ThemeProvider themeProvider;
   final _activeScreen = ViewScreen.settings;
-  final _appSettings = locator.get<IAppSettingsService>(instanceName: 'appSettingsService');
+  final _appSettings =
+      locator.get<IAppSettingsService>(instanceName: 'appSettingsService');
   final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
 
   @override
   Widget build(BuildContext context) {
     localizer = AppLocalizations.of(context)!;
+    themeProvider = Provider.of<ThemeProvider>(context);
 
     return getWaultarDesktopMainBody(
       context,
@@ -38,6 +43,11 @@ class _SettingsViewState extends State<SettingsView> {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(
+            "Settings",
+            style: themeProvider.themeData().textTheme.headline3,
+          ),
+          SizedBox(height: 20),
           const Text("Developer Tools"),
           const Divider(),
           Padding(
@@ -50,7 +60,8 @@ class _SettingsViewState extends State<SettingsView> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),            child: Row(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+            child: Row(
               children: [
                 const Text("Enable performance mode"),
                 Switch(
@@ -71,15 +82,19 @@ class _SettingsViewState extends State<SettingsView> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),            child: DefaultButton(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+            child: DefaultButton(
               text: "Delete Image Tags",
               onPressed: () {
-                locator.get<MediaRepository>(instanceName: 'mediaRepo').deleteAllImageTags();
+                locator
+                    .get<MediaRepository>(instanceName: 'mediaRepo')
+                    .deleteAllImageTags();
               },
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),            child: DefaultButton(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+            child: DefaultButton(
               text: 'Dump Database As Json',
               onPressed: () {
                 SnackBarCustom.useSnackbarOfContext(
@@ -89,7 +104,8 @@ class _SettingsViewState extends State<SettingsView> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),            child: DefaultButton(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+            child: DefaultButton(
               text: "Delete all sentiment scores",
               onPressed: () => PresentationHelper.deleteAllSentimentScores(),
             ),
