@@ -61,7 +61,7 @@ class MLService extends IMLService {
               );
               _performance.summary("Tagging of images only total");
             }
-print(amountTaggedSummed);
+
             callback("Initializing", true);
           }
       }
