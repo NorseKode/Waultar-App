@@ -53,6 +53,7 @@ class ParserService implements IParserService {
       _performance.init(newParentKey: "Extracting and parsing synchronously");
       _performance.startReading(_performance.parentKey);
     }
+    threadCount = 1;
 
     var isDoneCount = 0;
     var workersList = <BaseWorker>[];
@@ -108,13 +109,21 @@ class ParserService implements IParserService {
                   callback("", true);
                 }
 
-                if (isDoneCount == threadCount && ISPERFORMANCETRACKING) {
-                  _performance.addData(_performance.parentKey,
-                      duration: _performance.stopReading(_performance.parentKey));
-                  if (data.performanceDataPoint.isNotEmpty) {
+                if (data.isDone && ISPERFORMANCETRACKING && data.performanceDataPoint.isNotEmpty) {
+                  var performancePoint =
+                      PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint));
+
+                  if (_performance.containsChildWithKey(key: performancePoint.key)) {
+                    _performance.addData(performancePoint.key, childs: performancePoint.childs);
+                  } else {
                     _performance.addDataPoint(_performance.parentKey,
                         PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
                   }
+                }
+
+                if (isDoneCount == threadCount && ISPERFORMANCETRACKING) {
+                  _performance.addData(_performance.parentKey,
+                      duration: _performance.stopReading(_performance.parentKey));
                   _performance.summary("Extraction and parsing");
                 }
                 break;
@@ -135,7 +144,7 @@ class ParserService implements IParserService {
               initiator: IsolateParserStartPackage(
                 paths: paths,
                 profileId: profile.id,
-                isPerformanceTracking: false,
+                isPerformanceTracking: ISPERFORMANCETRACKING,
                 waultarPath: _waultarPath,
               ),
             );
@@ -252,9 +261,7 @@ class ParserService implements IParserService {
           if (data.isDone) {
             callback("Creating timeline ...", false);
             _bucketsRepo.createBuckets(_parsingStartedAt, profile).whenComplete(
-                () => callback(
-                    "Parsing ${data.parsedCount}/${_pathsToParse.length}",
-                    data.isDone));
+                () => callback("Parsing ${data.parsedCount}/${_pathsToParse.length}", data.isDone));
           }
 
           if (data.isDone && ISPERFORMANCETRACKING) {

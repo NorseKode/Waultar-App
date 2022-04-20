@@ -60,7 +60,6 @@ class MLService extends IMLService {
                 metadata: {
                   "threadCount": threadCount,
                   "tagged count": totalAmountOfImagesToTag,
-                  "model": "mobilenet-v3",
                 },
               );
               _performance.summary("Tagging of images only total");
