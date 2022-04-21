@@ -16,6 +16,7 @@ extractDataNewInsta = os.path.join(folderInsta, "Extraction and parsing.json")
 parserDataNewInsta = os.path.join(folderInsta, "Tree Parser Performance Data.json")
 # sentimentDataOldInsta = os.path.join(folderInsta, "1649760401279386-Sentiment classification.json")
 sentimentDataNewInsta = os.path.join(folderInsta, "Sentiment classification.json")
+sentimentTranslateDataNewInsta = os.path.join(folderInsta, "translate-Sentiment classification.json")
 imageDataNewInsta = os.path.join(folderInsta, "Tagging of images only total.json")
 imageClassInsta = os.path.join(folderInsta, "Image Classifier Abstract Class.json")
 
@@ -48,9 +49,13 @@ print("###### Image Classifier - End ######\n")
 # s.sentimentReadingToConsole(os.path.join(sentimentDataOldInsta, ""))
 # print("###### Sentiment Old - End ######\n")
 
-print("##### Sentiment - Start #####")
-s.sentimentReadingToConsole(sentimentDataNewInsta, os.path.join(saveInsta, "sentiment_time_percent_v0.1.png"))
-print("###### Sentiment - End ######")
+print("##### Sentiment No Translate - Start #####")
+s.sentimentReadingToConsole(sentimentDataNewInsta, os.path.join(saveInsta, "insta_sentiment_time_percent_v0.1.png"))
+print("###### Sentiment No Translate - End ######")
+
+print("##### Sentiment Translate - Start #####")
+s.sentimentReadingToConsole(sentimentDataNewInsta, os.path.join(saveInsta, "insta_translate_sentiment_time_percent_v0.1.png"))
+print("###### Sentiment Translate - End ######")
 print("########## Instagram ##########\n\n")
 
 

@@ -53,7 +53,6 @@ class ParserService implements IParserService {
       _performance.init(newParentKey: "Extracting and parsing synchronously");
       _performance.startReading(_performance.parentKey);
     }
-    threadCount = 1;
 
     var isDoneCount = 0;
     var workersList = <BaseWorker>[];
@@ -122,8 +121,13 @@ class ParserService implements IParserService {
                 }
 
                 if (isDoneCount == threadCount && ISPERFORMANCETRACKING) {
-                  _performance.addData(_performance.parentKey,
-                      duration: _performance.stopReading(_performance.parentKey));
+                  _performance.addData(
+                    _performance.parentKey,
+                    duration: _performance.stopReading(_performance.parentKey),
+                    metadata: {
+                      'Thread Count': threadCount,
+                    },
+                  );
                   _performance.summary("Extraction and parsing");
                 }
                 break;

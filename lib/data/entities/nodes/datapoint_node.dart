@@ -91,7 +91,7 @@ class DataPoint {
     dataPointName.target = parentName;
     stringName = parentName.name;
     profile.target = targetProfile;
-    valuesJsonBytes = utf8.encode(utf8.decode(jsonEncode(json).codeUnits));
+    valuesJsonBytes = utf8.encode(utf8.decode(jsonEncode(json).codeUnits, allowMalformed: true));
 
     final StringBuffer sb = StringBuffer();
     sb.write('${parentName.name} ');

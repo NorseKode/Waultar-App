@@ -69,6 +69,7 @@ class _DashboardState extends State<Dashboard> {
                 localizer.dashboard,
                 style: themeProvider.themeData().textTheme.headline3,
               ),
+              TextField(controller: threadCountController),
               _uploadButton(),
               const SizedBox(height: 20),
               Expanded(
@@ -93,6 +94,7 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
+  var threadCountController = TextEditingController();
   _uploadButton() {
     return DefaultButton(
       constraints: const BoxConstraints(maxWidth: 200),
@@ -120,12 +122,13 @@ class _DashboardState extends State<Dashboard> {
           //   files.item3,
           //   ProfileDocument(name: files.item2),
           // );
+
           await _parserService.parseIsolatesPara(
             zipFile,
             _onUploadProgress,
             files.item3,
             ProfileDocument(name: files.item2),
-            threadCount: 3,
+            threadCount: int.parse(threadCountController.text),
           );
         }
       },
