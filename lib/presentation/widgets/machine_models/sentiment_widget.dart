@@ -8,7 +8,7 @@ import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
-import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 import 'package:waultar/startup.dart';
 
 class SentimentWidget extends StatefulWidget {

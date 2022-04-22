@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tuple/tuple.dart';
 import 'package:waultar/presentation/utils/text_validators.dart';
-import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 
 import 'upload_files.dart';
 

@@ -13,7 +13,7 @@ import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dar
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/domain/services/dashboard_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
-import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 
 import 'package:waultar/presentation/widgets/machine_models/sentiment_widget.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';

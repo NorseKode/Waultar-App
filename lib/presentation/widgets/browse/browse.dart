@@ -12,7 +12,7 @@ import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/data/entities/nodes/name_node.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 import 'package:waultar/presentation/widgets/snackbar_custom.dart';
 import 'package:waultar/presentation/widgets/upload/uploader.dart';
 import 'package:waultar/startup.dart';

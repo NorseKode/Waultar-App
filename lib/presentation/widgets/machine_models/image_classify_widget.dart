@@ -4,7 +4,7 @@ import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
-import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 import 'package:waultar/startup.dart';
 
 class ImageClassifyWidget extends StatefulWidget {

@@ -8,7 +8,7 @@ import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/repositories/datapoint_repo.dart';
 import 'package:waultar/domain/services/timeline_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
-import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 import 'package:waultar/startup.dart';
 
 class Timeline extends StatefulWidget {
@@ -207,7 +207,7 @@ class _TimelineState extends State<Timeline> {
   }
 
   List<ChartSeries> _getSentimentScatterData() {
-    var scatterSeries =  _timelineService.scatterChartPoints;
+    var scatterSeries = _timelineService.scatterChartPoints;
     var output = ScatterSeries(
       dataSource: scatterSeries,
       xValueMapper: (ScatterSentimentDTO model, index) => model.timeStamp,

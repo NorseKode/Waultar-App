@@ -11,6 +11,7 @@ import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/entities/nodes/name_node.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 
 import 'package:waultar/startup.dart';
 
@@ -24,15 +25,17 @@ class Explorer extends StatefulWidget {
 class _ExplorerState extends State<Explorer> {
   late AppLocalizations localizer;
   late ThemeProvider themeProvider;
-  late List<ProfileDocument> profiles;
-  late List<DataCategory> categories;
-  late List<DataPointName> datanames;
-  late List<DataPoint> datapoints;
+  List<ProfileDocument> profiles = [];
+  List<DataCategory> categories = [];
+  List<DataPointName> datanames = [];
+  List<DataPointName> datanameChildren = [];
+  List<DataPoint> datapoints = [];
 
-  late int chosenProfile;
-  late int chosenCategory;
-  late int chosenDataname;
-  late int chosenDataPoint;
+  int chosenProfile = -1;
+  int chosenCategory = -1;
+  int chosenDataname = -1;
+  DataPoint? openDataPoint;
+  DataPointName? openDataname;
 
   final IExplorerService _explorerService = locator.get<IExplorerService>(
     instanceName: 'explorerService',
@@ -42,38 +45,13 @@ class _ExplorerState extends State<Explorer> {
   void initState() {
     super.initState();
     profiles = _explorerService.getAllProfiles();
-
-    if (profiles.isNotEmpty) {
-      var firstProfile = profiles.first;
-      chosenProfile = firstProfile.id;
-
-      if (firstProfile.categories.isNotEmpty) {
-        categories = firstProfile.categories;
-        var firstCategory = categories.first;
-        chosenCategory = firstCategory.id;
-
-        if (firstCategory.dataPointNames.isNotEmpty) {
-          datanames = firstCategory.dataPointNames;
-          var firstDataname = datanames.first;
-          chosenDataname = firstDataname.id;
-
-          if (firstDataname.dataPoints.isNotEmpty) {
-            datapoints = firstDataname.dataPoints;
-            var firstDatapoint = datapoints.first;
-            chosenDataPoint = firstDatapoint.id;
-            print("Explorer setup: Completed");
-            return;
-          }
-        }
-      }
-    }
-    print("Explorer setup: Error");
   }
 
   @override
   Widget build(BuildContext context) {
     localizer = AppLocalizations.of(context)!;
     themeProvider = Provider.of<ThemeProvider>(context);
+    _updateChosen();
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(
@@ -85,244 +63,211 @@ class _ExplorerState extends State<Explorer> {
         ],
       ),
       const SizedBox(height: 20),
-      fileManager()
+      setup()
     ]);
   }
 
-  Widget fileManager() {
+  _updateChosen() {
+    var profile = profiles.where((element) => element.id == chosenProfile);
+    if (profile.isNotEmpty) {
+      categories = profile.first.categories;
+    }
+    var category = categories.where((element) => element.id == chosenCategory);
+    if (category.isNotEmpty) {
+      datanames = category.first.dataPointNames;
+    }
+    var dataname = datanames.where((element) => element.id == chosenDataname);
+    if (dataname.isNotEmpty) {
+      openDataname ??= dataname.first;
+      datanameChildren =
+          _explorerService.getAllDatanameChildren(openDataname!.id);
+      datapoints = _explorerService.getAllDataPoints(openDataname!.id);
+    }
+    // else {
+    //   var nameID = dataname.first.id;
+    //   datanameChildren = _explorerService.getAllDatanameChildren(nameID);
+    //   datapoints = _explorerService.getAllDataPoints(nameID);
+    // }
+  }
+
+  Widget setup() {
     return Expanded(
-      child: Column(
+      child: Row(
         children: [
           Expanded(
-            child: Row(
+            child: Column(
               children: [
-                profileList(),
-                SizedBox(width: 20),
-                Expanded(child: categoryList()),
-                SizedBox(width: 20),
-                Expanded(child: datanameList()),
-                SizedBox(width: 20),
-                dataView()
+                Expanded(child: fileManager()),
+                SizedBox(height: 20),
+                Expanded(child: dataPointList())
               ],
             ),
           ),
-          SizedBox(height: 20),
-          Container(
-            height: 150,
-            child: Row(children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Data Point"),
-                  Text(chosenDataPoint.toString())
-                ],
-              ),
-            ]),
-          )
+          SizedBox(width: 20),
+          Container(width: 300, child: datapointOverview())
         ],
       ),
     );
   }
 
-  Widget profileList() {
+  Widget fileManager() {
     return Container(
-      width: 150,
-      // color: Colors.red,
+        child: Row(
+      children: [
+        serviceList(),
+        SizedBox(width: 10),
+        categoryList(),
+        SizedBox(width: 10),
+        datanameList()
+      ],
+    ));
+  }
+
+  Widget serviceList() {
+    return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Services"),
-          Column(
-            children: List.generate(
-                profiles.length, (index) => profileTile(profiles[index])),
-          )
-        ],
-      ),
-    );
-  }
+          Text("Services",
+              style: themeProvider.themeData().textTheme.headline4),
+          SizedBox(height: 10),
+          profiles == null || profiles.isEmpty
+              ? Expanded(child: Center(child: Text("No items")))
+              : Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                        children: List.generate(
+                            profiles.length,
+                            (index) => listEntry(
+                                    Iconsax
+                                        .activity, //profiles[index].service.target!.image,
+                                    profiles[index].id == chosenProfile
+                                        ? true
+                                        : false,
+                                    profiles[index].name, () {
+                                  chosenProfile = profiles[index].id;
 
-  Widget profileTile(ProfileDocument profile) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        height: 40,
-        decoration: BoxDecoration(
-            color: chosenProfile == profile.id
-                ? themeProvider.themeData().primaryColor
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(5)),
-        child: Row(
-          children: [
-            Container(
-              height: 30,
-              width: 30,
-              decoration: BoxDecoration(
-                  color: Colors.pink, borderRadius: BorderRadius.circular(5)),
-              child: Icon(
-                Iconsax.people,
-                size: 20,
-              ),
-            ),
-            SizedBox(width: 12),
-            Text(
-              profile.name,
-              style: TextStyle(fontWeight: FontWeight.w500),
-            )
-          ],
-        ),
+                                  setState(() {});
+                                }))),
+                  ),
+                )
+        ],
       ),
     );
   }
 
   Widget categoryList() {
-    return Container(
-      width: 250,
-      // color: Colors.blue,
+    return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Category"),
-          Expanded(
-              child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: List.generate(categories.length,
-                  (index) => categoryTile(categories[index])),
-            ),
-          ))
-        ],
-      ),
-    );
-  }
+          Text("Categories",
+              style: themeProvider.themeData().textTheme.headline4),
+          SizedBox(height: 10),
+          categories == null || categories.isEmpty
+              ? Expanded(child: Center(child: Text("No items")))
+              : Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                        children: List.generate(
+                            categories.length,
+                            (index) => listEntry(
+                                  categories[index].category.icon,
+                                  categories[index].id == chosenCategory
+                                      ? true
+                                      : false,
+                                  categories[index].category.categoryName,
+                                  () {
+                                    chosenCategory = categories[index].id;
 
-  Widget categoryTile(DataCategory category) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        height: 40,
-        decoration: BoxDecoration(
-            color: chosenCategory == category.id
-                ? themeProvider.themeData().primaryColor
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(5)),
-        child: Row(
-          children: [
-            Container(
-              height: 30,
-              width: 30,
-              decoration: BoxDecoration(
-                  color: category.category.color,
-                  borderRadius: BorderRadius.circular(5)),
-              child: Icon(
-                category.category.icon,
-                size: 20,
-              ),
-            ),
-            SizedBox(width: 12),
-            Text(
-              category.category.name,
-              style: TextStyle(fontWeight: FontWeight.w500),
-            )
-          ],
-        ),
+                                    setState(() {});
+                                  },
+                                  color: categories[index].category.color,
+                                ))),
+                  ),
+                )
+        ],
       ),
     );
   }
 
   Widget datanameList() {
-    return Container(
-      width: 250,
+    return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Subcategory"),
-          Expanded(
-              child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: List.generate(
-                  datanames.length, (index) => datanameTile(datanames[index])),
-            ),
-          ))
+          Text("Subcategories",
+              style: themeProvider.themeData().textTheme.headline4),
+          SizedBox(height: 10),
+          datanames == null || datanames.isEmpty
+              ? Expanded(child: Center(child: Text("No items")))
+              : Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                        children: List.generate(
+                            datanames.length,
+                            (index) => listEntry(
+                                    categories
+                                        .firstWhere((element) =>
+                                            element.id == chosenCategory)
+                                        .category
+                                        .icon,
+                                    datanames[index].id == chosenDataname
+                                        ? true
+                                        : false,
+                                    datanames[index].name, () {
+                                  chosenDataname = datanames[index].id;
+                                  openDataname = datanames[index];
+                                  setState(() {});
+                                },
+                                    color: categories
+                                        .firstWhere((element) =>
+                                            element.id == chosenCategory)
+                                        .category
+                                        .color))),
+                  ),
+                )
         ],
       ),
     );
   }
 
-  Widget datanameTile(DataPointName dataname) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        height: 40,
-        decoration: BoxDecoration(
-            color: chosenDataname == dataname.id
-                ? themeProvider.themeData().primaryColor
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(5)),
-        child: Row(
-          children: [
-            Container(
-              height: 30,
-              width: 30,
-              decoration: BoxDecoration(
-                  color: CategoryEnum.messaging.color,
-                  borderRadius: BorderRadius.circular(5)),
-              child: Icon(
-                CategoryEnum.messaging.icon,
-                size: 20,
-              ),
-            ),
-            SizedBox(width: 12),
-            Text(
-              dataname.name,
-              style: TextStyle(fontWeight: FontWeight.w500),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget dataView() {
-    return Container(
-      width: 250,
-      // color: Colors.orange,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Data points"),
-          Expanded(
-              child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: List.generate(datapoints.length,
-                  (index) => datapointTile(datapoints[index])),
-            ),
-          ))
-        ],
-      ),
-    );
-  }
-
-  Widget datapointTile(DataPoint datapoint) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        height: 40,
-        decoration: BoxDecoration(
-            color: chosenDataPoint == datapoint.id
-                ? themeProvider.themeData().primaryColor
-                : Colors.transparent,
-            borderRadius: BorderRadius.circular(5)),
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: 15.0,
-            right: 20,
-          ),
+  Widget listEntry(IconData icon, bool state, String value, Function() onTap,
+      {Color? color}) {
+    // return Row(
+    //   children: [Icon(icon), SizedBox(width: 10), Text(value)],
+    // );
+    return Padding(
+      padding: EdgeInsets.only(bottom: 10),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          height: 30,
+          decoration: BoxDecoration(
+              color: state
+                  ? themeProvider.themeData().primaryColor
+                  : Colors.transparent,
+              borderRadius: BorderRadius.circular(5)),
           child: Row(
             children: [
+              Container(
+                height: 30,
+                width: 30,
+                decoration: BoxDecoration(
+                    color: color ?? themeProvider.themeData().primaryColor,
+                    borderRadius: state
+                        ? BorderRadius.only(
+                            topLeft: Radius.circular(5),
+                            bottomLeft: Radius.circular(5))
+                        : BorderRadius.circular(5)),
+                child: Icon(
+                  icon,
+                  size: 20,
+                ),
+              ),
+              SizedBox(width: 12),
               Text(
-                datapoint.stringName,
+                value,
                 style: TextStyle(fontWeight: FontWeight.w500),
               )
             ],
@@ -330,5 +275,84 @@ class _ExplorerState extends State<Explorer> {
         ),
       ),
     );
+  }
+
+  Widget dataPointList() {
+    Column? children;
+    if (datanameChildren != null && datanameChildren.isNotEmpty) {
+      children = Column(
+          children: List.generate(
+              datanameChildren.length,
+              (index) => listEntry(
+                      Iconsax.folder, false, datanameChildren[index].name, () {
+                    openDataname = datanameChildren[index];
+                    setState(() {});
+                  }, color: themeProvider.themeData().primaryColor)));
+    }
+    Column? points;
+    if (datapoints != null && datapoints.isNotEmpty) {
+      points = Column(
+          children: List.generate(
+              datapoints.length,
+              (index) => listEntry(
+                      Iconsax.bubble,
+                      openDataPoint != null &&
+                              datapoints[index].id == openDataPoint!.id
+                          ? true
+                          : false,
+                      datapoints[index].stringName, () {
+                    openDataPoint = datapoints[index];
+                    setState(() {});
+                  }, color: themeProvider.themeData().primaryColor)));
+    }
+
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Content", style: themeProvider.themeData().textTheme.headline4),
+          SizedBox(height: 10),
+          openDataname != null && openDataname!.parent.hasValue
+              ? DefaultButton(
+                  color: themeProvider.themeData().scaffoldBackgroundColor,
+                  text: ".. " + openDataname!.parent.target!.name,
+                  onPressed: () {
+                    openDataname = openDataname!.parent.target!;
+                    setState(() {});
+                  },
+                )
+              : Container(),
+          children == null && points == null
+              ? Expanded(child: Center(child: Text("No items")))
+              : Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          children ?? Container(),
+                          points ?? Container()
+                        ]),
+                  ),
+                )
+        ],
+      ),
+    );
+  }
+
+  Widget datapointOverview() {
+    if (openDataPoint == null)
+      return Center(
+        child: Text("No item"),
+      );
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      // Text("Datapoint"),
+      Expanded(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [Text(openDataPoint!.toMap().toString())],
+          ),
+        ),
+      )
+    ]);
   }
 }

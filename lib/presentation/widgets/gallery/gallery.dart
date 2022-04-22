@@ -11,7 +11,7 @@ import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget_box.dart';
 import 'package:waultar/presentation/widgets/general/infinite_scroll.dart';
-import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 
 import 'package:waultar/startup.dart';
 

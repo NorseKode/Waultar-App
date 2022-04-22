@@ -43,7 +43,11 @@ class ExplorerService implements IExplorerService {
 
   @override
   List<DataPoint> getAllDataPoints(int datapointnameID) {
-    // TODO: implement getAllDataPoints
-    throw UnimplementedError();
+    return _dataPointNameRepository.getNameById(datapointnameID)!.dataPoints;
+  }
+
+  @override
+  List<DataPointName> getAllDatanameChildren(int datanameID) {
+    return _dataPointNameRepository.getNameById(datanameID)!.children;
   }
 }
