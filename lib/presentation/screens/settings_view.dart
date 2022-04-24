@@ -5,7 +5,10 @@ import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/configs/navigation/screen.dart';
 import 'package:logging/logging.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_do_not_user_service.dart';
+import 'package:waultar/core/helpers/do_not_use_helper.dart';
 import 'package:waultar/data/repositories/media_repo.dart';
+import 'package:waultar/domain/services/do_no_use_service.dart';
 import 'package:waultar/presentation/presentation_helper.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/screens/shared/waultar_desktop_main.dart';
@@ -27,8 +30,7 @@ class _SettingsViewState extends State<SettingsView> {
   late AppLocalizations localizer;
   late ThemeProvider themeProvider;
   final _activeScreen = ViewScreen.settings;
-  final _appSettings =
-      locator.get<IAppSettingsService>(instanceName: 'appSettingsService');
+  final _appSettings = locator.get<IAppSettingsService>(instanceName: 'appSettingsService');
   final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
 
   @override
@@ -86,9 +88,7 @@ class _SettingsViewState extends State<SettingsView> {
             child: DefaultButton(
               text: "Delete Image Tags",
               onPressed: () {
-                locator
-                    .get<MediaRepository>(instanceName: 'mediaRepo')
-                    .deleteAllImageTags();
+                locator.get<MediaRepository>(instanceName: 'mediaRepo').deleteAllImageTags();
               },
             ),
           ),
@@ -111,6 +111,20 @@ class _SettingsViewState extends State<SettingsView> {
             ),
           ),
           const Divider(),
+          const Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+            child: DefaultButton(
+              text: "Create memory overflow on main thread",
+              // onPressed: () => DoNotUseHelper.createMemoryOverflow(),
+            ),
+          ),
+          const Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+            child: DefaultButton(
+              text: "Create memory overflow on separate thread",
+              // onPressed: () => DoNotUseService().createMemoryOverflow(),
+            ),
+          ),
         ],
       ),
     );
