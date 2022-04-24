@@ -47,6 +47,7 @@ class SentimentClassifier extends IMLModel {
     _dict = dict;
   }
 
+  /// 
   List<double> classify(String rawText) {
     var finalScore = [0.0, 0.0];
     var scoreCount = 0;
@@ -101,6 +102,7 @@ class SentimentClassifier extends IMLModel {
       }
     }
 
+    // return isNonEmpty ? [vec] : [vec];
     return isNonEmpty ? [vec] : null;
   }
 

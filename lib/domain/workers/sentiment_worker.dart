@@ -7,6 +7,7 @@ import 'package:waultar/core/ai/sentiment_classifier_textClassification.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/data/configs/objectbox.dart';
+import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/repositories/data_category_repo.dart';
 import 'package:waultar/data/repositories/datapoint_repo.dart';
@@ -35,6 +36,7 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
       var categories = data.categoriesIds.map((e) => categoryRepo.getCategoryById(e)!).toList();
 
       var username = "";
+      var name = "";
       var profile = categories.first.profile.target!;
       var profileData = categories.first.profile.target!.categories
           .firstWhere((element) => element.category == CategoryEnum.profile)
@@ -43,6 +45,7 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
         if (profile.service.target!.serviceName == "Instagram") {
           if (element.name == "profile user") {
             for (var point in element.dataPoints) {
+              name = ((point.asMap["string_map_data"])["Name"])["value"];
               username = ((point.asMap["string_map_data"])["Username"])["value"];
             }
           }
@@ -65,7 +68,7 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
       bool _isOwnData(DataPoint point, String profileUsername, String profileName) {
         switch (point.category.target!.category) {
           case CategoryEnum.messaging:
-            if (point.asMap["sender_name"] == profileUsername) {
+            if (point.asMap["sender_name"] == profileUsername || point.asMap["sender_name"] == name) {
               return true;
             }
             return false;
@@ -73,6 +76,15 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
           default:
             return true;
         }
+        // switch (point.profile.target!.service.target!.serviceName) {
+        //   case "Facebook":
+
+        //   case "Instagram":
+        //     // print("sender_name: ${point.asMap['sender_name']}, profileUsername: $profileUsername, profileName: $profileName");
+        //     return false;
+        // }
+
+        // return false;
       }
 
       String _cleanText(String text) {
@@ -95,6 +107,8 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
             }
 
             if (isOwnData && point.sentimentText != null && point.sentimentText!.isNotEmpty) {
+              // var text = point.sentimentText!;
+
               if (data.isPerformanceTracking) performance.startReading("clean text");
               var text = "";
               if (point.sentimentText!.contains("#") || point.sentimentText!.contains("#")) {
@@ -103,7 +117,6 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
               } else {
                 text = point.sentimentText!;
               }
-              // if (text.length > 256) text = text.substring(0, 256);
               if (data.isPerformanceTracking) {
                 performance.addReading(
                     performance.parentKey, "clean text", performance.stopReading("clean text"));
