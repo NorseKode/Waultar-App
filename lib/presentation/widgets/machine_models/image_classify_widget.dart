@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/configs/globals/image_model_enum.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
@@ -30,6 +31,7 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
   var _progressMessage = "Initializing";
   var _imagesToTagCount = 0;
   var _isLoading = false;
+  var _isFastImageModel = false;
 
   _onImageTaggingProgress(String message, bool isDone) {
     setState(() {
@@ -53,6 +55,8 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
           ? int.parse(_amountToTagTextController.text)
           : null,
       threadCount: 3,
+      imageModel:
+          _isFastImageModel ? ImageModelEnum.efficientNetB4 : ImageModelEnum.mobileNetV3Large,
     );
   }
 
@@ -71,6 +75,32 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
     var timeEstimate = (count * 0.08).ceil();
 
     return "${'${(Duration(seconds: timeEstimate))}'.substring(2, 7)} ${timeEstimate < 60 ? "sec" : "min"}";
+  }
+
+  Widget _imageModelChooser() {
+    return Column(
+      children: [
+        const Align(
+          alignment: Alignment.centerLeft,
+          child: Text("Should use fast tagger, it's less precise"),
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Checkbox(
+            value: _isFastImageModel,
+            onChanged: (value) {
+              setState(() {
+                if (value != null) {
+                  _isFastImageModel = value;
+                } else {
+                  _isFastImageModel = !_isFastImageModel;
+                }
+              });
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _mainBody() {
@@ -93,8 +123,7 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                     ),
                     const Text(
                       "How many images to tag?",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w400, fontSize: 11),
+                      style: TextStyle(fontWeight: FontWeight.w400, fontSize: 11),
                     ),
                     const SizedBox(height: 10),
                     SizedBox(
@@ -117,6 +146,7 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                           )),
                     ),
                     const SizedBox(height: 20),
+                    _imageModelChooser(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -126,8 +156,7 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                                 fontFamily: "Poppins",
                                 fontSize: 11,
                                 fontWeight: FontWeight.w500)),
-                        Text("$_imagesToTagCount",
-                            style: const TextStyle(fontSize: 11)),
+                        Text("$_imagesToTagCount", style: const TextStyle(fontSize: 11)),
                       ],
                     ),
                     Row(

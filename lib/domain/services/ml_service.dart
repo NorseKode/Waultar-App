@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:waultar/configs/globals/globals.dart';
+import 'package:waultar/configs/globals/image_model_enum.dart';
 import 'package:waultar/core/base_worker/base_worker.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
@@ -16,6 +17,7 @@ class MLService extends IMLService {
     required int totalAmountOfImagesToTag,
     int threadCount = 1,
     int? limitAmount,
+    required ImageModelEnum imageModel,
   }) async {
     var isDoneCount = 0;
     var amountTaggedSummed = 0;
@@ -79,6 +81,7 @@ class MLService extends IMLService {
           offset: splitCount * i,
           limit: i != threadCount - 1 ? (splitCount * (i + 1)) : amountToProcess,
           isPerformanceTracking: ISPERFORMANCETRACKING,
+          imageModel: imageModel,
         ),
       );
 

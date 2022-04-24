@@ -47,34 +47,53 @@ class SentimentClassifier extends IMLModel {
     _dict = dict;
   }
 
-  /// 
+  /// Takes [rawText] and returns a list of doubles of length 2, with the first
+  /// being the % negative and the second being the % positive
+  ///
+  /// If [rawText] doesn't contain any recognized text it will return a list
+  /// with both elements being -1
+  ///
+  /// Taking the two doubles, if the [rawText] was recognized, and adding them
+  /// together, they will sum up to 1
   List<double> classify(String rawText) {
     var finalScore = [0.0, 0.0];
     var scoreCount = 0;
     var isLastIt = rawText.length < 256;
 
-    do {
-      String? first256;
-
-      if (!isLastIt) {
-        first256 = rawText.substring(0, 256);
-        rawText = rawText.substring(256);
-      }
-
-      isLastIt = rawText.length < 256;
-
-      var input = tokenizeInputText(first256 ?? rawText);
+    aux(String inputText) {
+      var input = tokenizeInputText(inputText);
 
       if (input != null) {
         var output = List<int>.filled(2, 0).reshape([1, 2]);
 
         _interpreter.run(input, output);
 
-        finalScore[0] += output[0][0];
-        finalScore[1] += output[0][1];
+        return output;
+      } else {
+        return null;
+      }
+    }
+
+    while (rawText.length > 256) {
+      var first256 = rawText.substring(0, 256);
+      rawText = rawText.substring(256);
+
+      var results = aux(first256);
+
+      if (results != null) {
+        finalScore[0] += results[0][0];
+        finalScore[1] += results[0][1];
         scoreCount++;
-      } 
-    } while (!isLastIt);
+      }
+    }
+
+    var results = aux(rawText);
+
+    if (results != null) {
+      finalScore[0] += results[0][0];
+      finalScore[1] += results[0][1];
+      scoreCount++;
+    }
 
     return scoreCount == 0 ? [-1, -1] : [finalScore[0] / scoreCount, finalScore[1] / scoreCount];
   }

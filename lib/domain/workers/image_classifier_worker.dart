@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:isolate';
 import 'package:waultar/configs/globals/app_logger.dart';
+import 'package:waultar/configs/globals/image_model_enum.dart';
+import 'package:waultar/core/ai/image_classifier.dart';
 import 'package:waultar/core/ai/image_classifier_efficient_net_b4.dart';
 import 'package:waultar/core/ai/image_classifier_mobilenetv3.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
@@ -25,7 +27,21 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
       if (data.isPerformanceTracking) {
         performance.startReading("Setup of classifier");
       }
-      var classifier = ImageClassifierMobileNetV3();
+      ImageClassifier classifier;
+      switch (data.imageModel) {
+        case ImageModelEnum.efficientNetB4:
+        classifier = ImageClassifierEfficientNetB4();
+          break;
+
+        case ImageModelEnum.mobileNetV3Large:
+          classifier = ImageClassifierMobileNetV3();
+          break;
+
+        default:
+          classifier = ImageClassifierMobileNetV3();
+          break;
+      }
+      logger.logger.info("Image Classifier using model: ${data.imageModel}");
       if (data.isPerformanceTracking) {
         var key = "Setup of classifier";
         performance.addReading(performance.parentKey, key, performance.stopReading(key));
@@ -144,12 +160,14 @@ class IsolateImageClassifyStartPackage extends InitiatorPackage {
   int? limit;
   int? offset;
   bool isPerformanceTracking;
+  ImageModelEnum imageModel;
 
   IsolateImageClassifyStartPackage({
     required this.waultarPath,
     this.limit,
     this.offset,
     required this.isPerformanceTracking,
+    required this.imageModel,
   });
 }
 

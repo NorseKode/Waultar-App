@@ -107,20 +107,20 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
             }
 
             if (isOwnData && point.sentimentText != null && point.sentimentText!.isNotEmpty) {
-              // var text = point.sentimentText!;
+              var text = point.sentimentText!;
 
-              if (data.isPerformanceTracking) performance.startReading("clean text");
-              var text = "";
-              if (point.sentimentText!.contains("#") || point.sentimentText!.contains("#")) {
-                var text = _cleanText(point.sentimentText!);
-                text = text.trim();
-              } else {
-                text = point.sentimentText!;
-              }
-              if (data.isPerformanceTracking) {
-                performance.addReading(
-                    performance.parentKey, "clean text", performance.stopReading("clean text"));
-              }
+              // if (data.isPerformanceTracking) performance.startReading("clean text");
+              // var text = "";
+              // if (point.sentimentText!.contains("#") || point.sentimentText!.contains("#")) {
+              //   var text = _cleanText(point.sentimentText!);
+              //   text = text.trim();
+              // } else {
+              //   text = point.sentimentText!;
+              // }
+              // if (data.isPerformanceTracking) {
+              //   performance.addReading(
+              //       performance.parentKey, "clean text", performance.stopReading("clean text"));
+              // }
 
               if (text.isNotEmpty) {
                 if (data.translate) {
