@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/configs/globals/service_enums.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/misc/service_document.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
@@ -19,6 +21,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
   @override
   Widget build(BuildContext context) {
     themeProvider = Provider.of<ThemeProvider>(context);
+    ServiceEnum serviceEnum = getFromID(widget.service.service.target!.id);
     return Container(
         constraints: BoxConstraints(minWidth: 200, maxWidth: 200),
         decoration: BoxDecoration(
@@ -33,12 +36,16 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                    color: Colors.white, //widget.service.service.target!.color,
+                    color: serviceEnum
+                        .color, //widget.service.service.target!.color,
                     borderRadius: BorderRadius.circular(5)),
-                child: SizedBox(
-                  child: Container(),
-                  width: 25,
-                  height: 25,
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: SvgPicture.asset(
+                    serviceEnum.image,
+                    color: Colors.white,
+                    matchTextDirection: true,
+                  ),
                 ),
               ),
               const SizedBox(height: 15),
@@ -53,9 +60,8 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                     flex: 3,
                     child: Container(
                       height: 5,
-                      decoration: const BoxDecoration(
-                        color: Colors
-                            .white, //widget.service.service.target!.color,
+                      decoration: BoxDecoration(
+                        color: serviceEnum.color,
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(10),
                           bottomLeft: Radius.circular(10),

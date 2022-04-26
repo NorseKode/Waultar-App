@@ -1,16 +1,20 @@
 // ignore_for_file: avoid_print
 
 import 'dart:collection';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
+import 'package:waultar/configs/globals/service_enums.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_explorer_service.dart';
 import 'package:waultar/core/helpers/PathHelper.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
+import 'package:waultar/data/entities/misc/service_document.dart';
 import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/entities/nodes/name_node.dart';
@@ -102,7 +106,7 @@ class _ExplorerState extends State<Explorer> {
       SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Wrap(
-            spacing: 10,
+            spacing: 20,
             children: List.generate(profiles.length,
                 (index) => serviceItem(FolderItem(profiles[index])))),
       )
@@ -111,9 +115,14 @@ class _ExplorerState extends State<Explorer> {
 
   Widget serviceItem(FolderItem item) {
     bool state = service.id == item.item.id;
+    ServiceDocument itemService =
+        (item.item as ProfileDocument).service.target!;
+    ServiceEnum serviceEnum = getFromID(itemService.id);
+
     return GestureDetector(
       onTap: () {
         service = item.item;
+        folder = FolderItem.service(service);
         setState(() {});
       },
       child: Container(
@@ -129,15 +138,15 @@ class _ExplorerState extends State<Explorer> {
               height: 30,
               width: 30,
               decoration: BoxDecoration(
-                  color: item.color,
+                  color: serviceEnum.color,
                   borderRadius: state
                       ? const BorderRadius.only(
                           topLeft: Radius.circular(5),
                           bottomLeft: Radius.circular(5))
                       : BorderRadius.circular(5)),
-              child: Icon(
-                item.icon,
-                size: 20,
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: socialSvg(serviceEnum),
               ),
             ),
             SizedBox(width: 12),
@@ -256,7 +265,7 @@ class _ExplorerState extends State<Explorer> {
             ),
             SizedBox(width: 12),
             isDatapoint && (item.item as DataPoint).timestamp != null
-                ? Text(DateFormat('MMM d. yyy, HH.MM')
+                ? Text(DateFormat('MMM d. yyy, HH.MM  ')
                     .format((item.item as DataPoint).timestamp!))
                 : Container()
           ],
@@ -339,8 +348,8 @@ class FolderItem {
 
   FolderItem.service(ProfileDocument dataItem)
       : icon = Iconsax.pen_add,
-        color = Colors.pink,
-        name = "${dataItem.name} (${dataItem.service.target!.serviceName})",
+        color = Colors.transparent,
+        name = "${dataItem.name}",
         item = dataItem;
 
   FolderItem.category(DataCategory dataItem)
@@ -414,4 +423,12 @@ class FolderItem {
         return FolderItem.empty();
     }
   }
+}
+
+SvgPicture socialSvg(ServiceEnum service) {
+  return SvgPicture.asset(
+    service.image,
+    color: Colors.white,
+    matchTextDirection: true,
+  );
 }

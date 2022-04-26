@@ -4,10 +4,14 @@ import 'package:provider/provider.dart';
 import 'package:waultar/configs/navigation/app_state.dart';
 import 'package:waultar/configs/navigation/router/app_route_path.dart';
 import 'package:waultar/configs/navigation/screen.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/presentation/widgets/upload/uploader.dart';
+import 'package:path/path.dart' as dart_path;
+import 'package:waultar/startup.dart';
 
 class MenuPanel extends StatefulWidget {
   final ViewScreen active;
@@ -20,7 +24,12 @@ class MenuPanel extends StatefulWidget {
 class _MenuPanelState extends State<MenuPanel> {
   late AppLocalizations localizer;
   late ThemeProvider themeProvider;
+  final _parserService = locator.get<IParserService>(
+    instanceName: 'parserService',
+  );
   double menuWidth = 250;
+  bool isLoading = false;
+  var _progressMessage = "Initializing";
 
   Widget logo() {
     var logo = SvgPicture.asset('lib/assets/graphics/logo2022.svg',
@@ -177,21 +186,6 @@ class _MenuPanelState extends State<MenuPanel> {
                         .read<AppState>()
                         .updateNavigatorState(AppRoutePath.browse());
                   }),
-                  // Divider(
-                  //     height: 40,
-                  //     thickness: 2,
-                  //     color: themeProvider.themeMode().tonedColor),
-                  // menuButton(
-                  //     themeProvider.isLightTheme ? Iconsax.sun : Iconsax.moon,
-                  //     localizer.changeTheme,
-                  //     ViewScreen.unknown, (_) async {
-                  //   await themeProvider.toggleThemeData();
-                  // }),
-                  // Divider(
-                  //     height: 40,
-                  //     thickness: 2,
-                  //     color: themeProvider.themeMode().tonedColor),
-
                   Divider(
                       height: 22,
                       thickness: 2,
@@ -200,10 +194,27 @@ class _MenuPanelState extends State<MenuPanel> {
                   GestureDetector(
                     onTap: () async {
                       var files = await Uploader.uploadDialogue(context);
+                      if (files != null) {
+                        // SnackBarCustom.useSnackbarOfContext(
+                        //     context, localizer.startedLoadingOfData);
+                        setState(() {
+                          isLoading = true;
+                        });
+
+                        var zipFile = files.item1.singleWhere((element) =>
+                            dart_path.extension(element) == ".zip");
+
+                        await _parserService.parseIsolatesPara(
+                          zipFile,
+                          _onUploadProgress,
+                          files.item3,
+                          ProfileDocument(name: files.item2),
+                          threadCount: 3,
+                        );
+                      }
                     },
                     child: Container(
                       height: 40,
-                      //width: 40,
                       decoration: BoxDecoration(
                           color: themeProvider.themeMode().themeColor,
                           borderRadius: BorderRadius.circular(10)),
@@ -214,10 +225,15 @@ class _MenuPanelState extends State<MenuPanel> {
                         ),
                         child: Row(
                           children: [
-                            Icon(Iconsax.arrow_up_1, size: 17),
+                            isLoading
+                                ? Container(
+                                    height: 17,
+                                    width: 17,
+                                    child: CircularProgressIndicator())
+                                : Icon(Iconsax.arrow_up_1, size: 17),
                             SizedBox(width: 12),
                             Text(
-                              "Upload data",
+                              isLoading ? _progressMessage : "Upload data",
                               style: TextStyle(fontWeight: FontWeight.w500),
                             )
                           ],
@@ -245,5 +261,12 @@ class _MenuPanelState extends State<MenuPanel> {
             ],
           ),
         ));
+  }
+
+  _onUploadProgress(String message, bool isDone) {
+    setState(() {
+      _progressMessage = message;
+      isLoading = !isDone;
+    });
   }
 }

@@ -134,6 +134,7 @@ flutter:
   
   assets:
     - lib/assets/graphics/
+    - lib/assets/service_icons/
     - lib/assets/ai_models/
     # - blobs/
     # - assets/
