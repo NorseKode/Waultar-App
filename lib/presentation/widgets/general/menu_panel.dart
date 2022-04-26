@@ -232,7 +232,7 @@ class _MenuPanelState extends State<MenuPanel> {
                 children: [
                   //profile(),
                   menuButton(
-                      Iconsax.setting, localizer.settings, ViewScreen.unknown,
+                      Iconsax.setting, localizer.settings, ViewScreen.settings,
                       (_) {
                     context
                         .read<AppState>()

@@ -1,10 +1,15 @@
 // ignore_for_file: avoid_print
 
+import 'dart:collection';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_explorer_service.dart';
+import 'package:waultar/core/helpers/PathHelper.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
@@ -12,6 +17,7 @@ import 'package:waultar/data/entities/nodes/name_node.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_widget_box.dart';
 
 import 'package:waultar/startup.dart';
 
@@ -25,17 +31,11 @@ class Explorer extends StatefulWidget {
 class _ExplorerState extends State<Explorer> {
   late AppLocalizations localizer;
   late ThemeProvider themeProvider;
-  List<ProfileDocument> profiles = [];
-  List<DataCategory> categories = [];
-  List<DataPointName> datanames = [];
-  List<DataPointName> datanameChildren = [];
-  List<DataPoint> datapoints = [];
+  late List<ProfileDocument> profiles;
 
-  int chosenProfile = -1;
-  int chosenCategory = -1;
-  int chosenDataname = -1;
-  DataPoint? openDataPoint;
-  DataPointName? openDataname;
+  late ProfileDocument service;
+  late FolderItem folder;
+  DataPoint? datapoint;
 
   final IExplorerService _explorerService = locator.get<IExplorerService>(
     instanceName: 'explorerService',
@@ -45,13 +45,14 @@ class _ExplorerState extends State<Explorer> {
   void initState() {
     super.initState();
     profiles = _explorerService.getAllProfiles();
+    service = profiles.first;
+    folder = FolderItem(service);
   }
 
   @override
   Widget build(BuildContext context) {
     localizer = AppLocalizations.of(context)!;
     themeProvider = Provider.of<ThemeProvider>(context);
-    _updateChosen();
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(
@@ -63,43 +64,24 @@ class _ExplorerState extends State<Explorer> {
         ],
       ),
       const SizedBox(height: 20),
-      setup()
+      profiles.isEmpty
+          ? Center(child: const Text("Upload data to use Explorer"))
+          : setup()
     ]);
-  }
-
-  _updateChosen() {
-    var profile = profiles.where((element) => element.id == chosenProfile);
-    if (profile.isNotEmpty) {
-      categories = profile.first.categories;
-    }
-    var category = categories.where((element) => element.id == chosenCategory);
-    if (category.isNotEmpty) {
-      datanames = category.first.dataPointNames;
-    }
-    var dataname = datanames.where((element) => element.id == chosenDataname);
-    if (dataname.isNotEmpty) {
-      openDataname ??= dataname.first;
-      datanameChildren =
-          _explorerService.getAllDatanameChildren(openDataname!.id);
-      datapoints = _explorerService.getAllDataPoints(openDataname!.id);
-    }
-    // else {
-    //   var nameID = dataname.first.id;
-    //   datanameChildren = _explorerService.getAllDatanameChildren(nameID);
-    //   datapoints = _explorerService.getAllDataPoints(nameID);
-    // }
   }
 
   Widget setup() {
     return Expanded(
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(child: fileManager()),
+                services(),
                 SizedBox(height: 20),
-                Expanded(child: dataPointList())
+                Expanded(child: filemanager())
               ],
             ),
           ),
@@ -110,249 +92,326 @@ class _ExplorerState extends State<Explorer> {
     );
   }
 
-  Widget fileManager() {
-    return Container(
+  Widget services() {
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(
+        "Services",
+        style: themeProvider.themeData().textTheme.headline4,
+      ),
+      const SizedBox(height: 15),
+      SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Wrap(
+            spacing: 10,
+            children: List.generate(profiles.length,
+                (index) => serviceItem(FolderItem(profiles[index])))),
+      )
+    ]);
+  }
+
+  Widget serviceItem(FolderItem item) {
+    bool state = service.id == item.item.id;
+    return GestureDetector(
+      onTap: () {
+        service = item.item;
+        setState(() {});
+      },
+      child: Container(
+        height: 30,
+        decoration: BoxDecoration(
+            color: state
+                ? themeProvider.themeData().primaryColor
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(5)),
         child: Row(
-      children: [
-        serviceList(),
-        SizedBox(width: 10),
-        categoryList(),
-        SizedBox(width: 10),
-        datanameList()
-      ],
-    ));
-  }
-
-  Widget serviceList() {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Services",
-              style: themeProvider.themeData().textTheme.headline4),
-          SizedBox(height: 10),
-          profiles == null || profiles.isEmpty
-              ? Expanded(child: Center(child: Text("No items")))
-              : Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                        children: List.generate(
-                            profiles.length,
-                            (index) => listEntry(
-                                    Iconsax
-                                        .activity, //profiles[index].service.target!.image,
-                                    profiles[index].id == chosenProfile
-                                        ? true
-                                        : false,
-                                    profiles[index].name, () {
-                                  chosenProfile = profiles[index].id;
-
-                                  setState(() {});
-                                }))),
-                  ),
-                )
-        ],
-      ),
-    );
-  }
-
-  Widget categoryList() {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Categories",
-              style: themeProvider.themeData().textTheme.headline4),
-          SizedBox(height: 10),
-          categories == null || categories.isEmpty
-              ? Expanded(child: Center(child: Text("No items")))
-              : Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                        children: List.generate(
-                            categories.length,
-                            (index) => listEntry(
-                                  categories[index].category.icon,
-                                  categories[index].id == chosenCategory
-                                      ? true
-                                      : false,
-                                  categories[index].category.categoryName,
-                                  () {
-                                    chosenCategory = categories[index].id;
-
-                                    setState(() {});
-                                  },
-                                  color: categories[index].category.color,
-                                ))),
-                  ),
-                )
-        ],
-      ),
-    );
-  }
-
-  Widget datanameList() {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Subcategories",
-              style: themeProvider.themeData().textTheme.headline4),
-          SizedBox(height: 10),
-          datanames == null || datanames.isEmpty
-              ? Expanded(child: Center(child: Text("No items")))
-              : Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                        children: List.generate(
-                            datanames.length,
-                            (index) => listEntry(
-                                    categories
-                                        .firstWhere((element) =>
-                                            element.id == chosenCategory)
-                                        .category
-                                        .icon,
-                                    datanames[index].id == chosenDataname
-                                        ? true
-                                        : false,
-                                    datanames[index].name, () {
-                                  chosenDataname = datanames[index].id;
-                                  openDataname = datanames[index];
-                                  setState(() {});
-                                },
-                                    color: categories
-                                        .firstWhere((element) =>
-                                            element.id == chosenCategory)
-                                        .category
-                                        .color))),
-                  ),
-                )
-        ],
-      ),
-    );
-  }
-
-  Widget listEntry(IconData icon, bool state, String value, Function() onTap,
-      {Color? color}) {
-    // return Row(
-    //   children: [Icon(icon), SizedBox(width: 10), Text(value)],
-    // );
-    return Padding(
-      padding: EdgeInsets.only(bottom: 10),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          height: 30,
-          decoration: BoxDecoration(
-              color: state
-                  ? themeProvider.themeData().primaryColor
-                  : Colors.transparent,
-              borderRadius: BorderRadius.circular(5)),
-          child: Row(
-            children: [
-              Container(
-                height: 30,
-                width: 30,
-                decoration: BoxDecoration(
-                    color: color ?? themeProvider.themeData().primaryColor,
-                    borderRadius: state
-                        ? BorderRadius.only(
-                            topLeft: Radius.circular(5),
-                            bottomLeft: Radius.circular(5))
-                        : BorderRadius.circular(5)),
-                child: Icon(
-                  icon,
-                  size: 20,
-                ),
+          children: [
+            Container(
+              height: 30,
+              width: 30,
+              decoration: BoxDecoration(
+                  color: item.color,
+                  borderRadius: state
+                      ? const BorderRadius.only(
+                          topLeft: Radius.circular(5),
+                          bottomLeft: Radius.circular(5))
+                      : BorderRadius.circular(5)),
+              child: Icon(
+                item.icon,
+                size: 20,
               ),
-              SizedBox(width: 12),
-              Text(
-                value,
-                style: TextStyle(fontWeight: FontWeight.w500),
-              )
-            ],
-          ),
+            ),
+            SizedBox(width: 12),
+            Text(
+              item.name,
+              style: const TextStyle(
+                  fontWeight: FontWeight.w500, overflow: TextOverflow.ellipsis),
+            ),
+            SizedBox(width: 12)
+          ],
         ),
       ),
     );
   }
 
-  Widget dataPointList() {
-    Column? children;
-    if (datanameChildren != null && datanameChildren.isNotEmpty) {
-      children = Column(
-          children: List.generate(
-              datanameChildren.length,
-              (index) => listEntry(
-                      Iconsax.folder, false, datanameChildren[index].name, () {
-                    openDataname = datanameChildren[index];
-                    setState(() {});
-                  }, color: themeProvider.themeData().primaryColor)));
-    }
-    Column? points;
-    if (datapoints != null && datapoints.isNotEmpty) {
-      points = Column(
-          children: List.generate(
-              datapoints.length,
-              (index) => listEntry(
-                      Iconsax.bubble,
-                      openDataPoint != null &&
-                              datapoints[index].id == openDataPoint!.id
-                          ? true
-                          : false,
-                      datapoints[index].stringName, () {
-                    openDataPoint = datapoints[index];
-                    setState(() {});
-                  }, color: themeProvider.themeData().primaryColor)));
-    }
+  Widget filemanager() {
+    var children = folder.getChildren();
+    var parent = folder.getParent();
 
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Content", style: themeProvider.themeData().textTheme.headline4),
-          SizedBox(height: 10),
-          openDataname != null && openDataname!.parent.hasValue
-              ? DefaultButton(
-                  color: themeProvider.themeData().scaffoldBackgroundColor,
-                  text: ".. " + openDataname!.parent.target!.name,
-                  onPressed: () {
-                    openDataname = openDataname!.parent.target!;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "File Manager",
+          style: themeProvider.themeData().textTheme.headline4,
+        ),
+        const SizedBox(height: 15),
+        parent.item == null
+            ? Container()
+            : Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: GestureDetector(
+                  onTap: () {
+                    folder = parent;
                     setState(() {});
                   },
-                )
-              : Container(),
-          children == null && points == null
-              ? Expanded(child: Center(child: Text("No items")))
-              : Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          children ?? Container(),
-                          points ?? Container()
-                        ]),
+                  child: Container(
+                    height: 30,
+                    color: Colors.transparent,
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      Icon(Iconsax.arrow_left_2, size: 15),
+                      SizedBox(width: 12),
+                      Text(folder.name)
+                    ]),
                   ),
-                )
-        ],
+                ),
+              ),
+        children.isEmpty
+            ? Center(
+                child: Text("Empty folder"),
+              )
+            : Expanded(
+                child: SingleChildScrollView(
+                  child: Wrap(
+                      spacing: double.infinity,
+                      runSpacing: 10,
+                      children: List.generate(
+                          children.length,
+                          (index) =>
+                              managerItem(FolderItem(children[index].item)))),
+                ),
+              ),
+      ],
+    );
+  }
+
+  Widget managerItem(FolderItem item) {
+    bool isDatapoint = item.item.runtimeType == DataPoint;
+    bool state =
+        isDatapoint && datapoint != null && datapoint!.id == item.item.id;
+
+    return GestureDetector(
+      onTap: isDatapoint
+          ? state
+              ? () {}
+              : () {
+                  datapoint = item.item;
+                  setState(() {});
+                }
+          : () {
+              folder = item;
+              setState(() {});
+            },
+      child: Container(
+        height: 30,
+        decoration: BoxDecoration(
+            color: state
+                ? themeProvider.themeData().primaryColor
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(5)),
+        child: Row(
+          children: [
+            Container(
+              height: 30,
+              width: 30,
+              decoration: BoxDecoration(
+                  color: item.color,
+                  borderRadius: state
+                      ? const BorderRadius.only(
+                          topLeft: Radius.circular(5),
+                          bottomLeft: Radius.circular(5))
+                      : BorderRadius.circular(5)),
+              child: Icon(
+                item.icon,
+                size: 20,
+              ),
+            ),
+            SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                item.name,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    overflow: TextOverflow.ellipsis),
+              ),
+            ),
+            SizedBox(width: 12),
+            isDatapoint && (item.item as DataPoint).timestamp != null
+                ? Text(DateFormat('MMM d. yyy, HH.MM')
+                    .format((item.item as DataPoint).timestamp!))
+                : Container()
+          ],
+        ),
       ),
     );
   }
 
   Widget datapointOverview() {
-    if (openDataPoint == null)
-      return Center(
-        child: Text("No item"),
-      );
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      // Text("Datapoint"),
-      Expanded(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [Text(openDataPoint!.toMap().toString())],
-          ),
+    if (datapoint == null) return Text("Choose a data point");
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          datapoint!.stringName,
+          style: themeProvider.themeData().textTheme.headline1,
         ),
-      )
-    ]);
+        SizedBox(height: 10),
+        Wrap(
+            spacing: double.infinity,
+            runSpacing: 10,
+            children: List.generate(
+                datapoint!.asMap.length,
+                (index) => Wrap(
+                      children: [
+                        RichText(
+                          text: TextSpan(
+                            style: DefaultTextStyle.of(context).style,
+                            children: <TextSpan>[
+                              TextSpan(
+                                text:
+                                    "${datapoint!.asMap.entries.elementAt(index).key}: ",
+                                style: themeProvider
+                                    .themeData()
+                                    .textTheme
+                                    .headline4,
+                              ),
+                              TextSpan(
+                                text:
+                                    "${datapoint!.asMap.entries.elementAt(index).value}",
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ))),
+        datapoint!.asMap.containsKey("photos")
+            ? photoList(datapoint!.asMap["photos"])
+            : Container()
+      ],
+    );
+  }
+
+  Widget photoList(dynamic photos) {
+    return Container();
+    // Map<dynamic, dynamic> map = photos.map((a, b) => MapEntry(a, b));
+
+    // switch (photos.runtimeType) {
+    //   case Map:
+    //     Map photoMap = photos;
+    //     return Image.file(File(photoMap["uri"]));
+    //   case List:
+    //     List photoList = photos;
+    //     return Column(
+    //       children:
+    //           List.generate(photoList.length, (index) => Image.file(File(""))),
+    //     );
+    //   default:
+    //     return const Text("No photo");
+    //}
+  }
+}
+
+class FolderItem {
+  IconData icon;
+  Color color;
+  String name;
+  dynamic item;
+
+  FolderItem.service(ProfileDocument dataItem)
+      : icon = Iconsax.pen_add,
+        color = Colors.pink,
+        name = "${dataItem.name} (${dataItem.service.target!.serviceName})",
+        item = dataItem;
+
+  FolderItem.category(DataCategory dataItem)
+      : icon = dataItem.category.icon,
+        color = dataItem.category.color,
+        name = dataItem.category.categoryName,
+        item = dataItem;
+
+  FolderItem.name(DataPointName dataItem)
+      : icon = Iconsax.folder, //dataItem.dataCategory.target!.category.icon,
+        color = Colors.amber, //dataItem.dataCategory.target!.category.color,
+        name = dataItem.name,
+        item = dataItem;
+
+  FolderItem.point(DataPoint dataItem)
+      : icon = Iconsax.paperclip,
+        //dataItem.category.target!.category.icon,
+        color = Colors.transparent,
+        //dataItem.category.target!.category.color,
+        name = dataItem.stringName,
+        item = dataItem;
+
+  FolderItem.empty()
+      : icon = Iconsax.empty_wallet,
+        color = Colors.transparent,
+        name = "Empty Item";
+
+  factory FolderItem(dynamic dataItem) {
+    switch (dataItem.runtimeType) {
+      case ProfileDocument:
+        return FolderItem.service(dataItem);
+      case DataCategory:
+        return FolderItem.category(dataItem);
+      case DataPointName:
+        return FolderItem.name(dataItem);
+      case DataPoint:
+        return FolderItem.point(dataItem);
+      default:
+        return FolderItem.empty();
+    }
+  }
+
+  List<FolderItem> getChildren() {
+    switch (item.runtimeType) {
+      case ProfileDocument:
+        return List.generate(item.categories.length,
+            (index) => FolderItem(item.categories[index]));
+      case DataCategory:
+        return List.generate(item.dataPointNames.length,
+            (index) => FolderItem(item.dataPointNames[index]));
+      case DataPointName:
+        var pointChildren = List.generate(
+            item.children.length, (index) => FolderItem(item.children[index]));
+        var pointNames = List.generate(item.dataPoints.length,
+            (index) => FolderItem(item.dataPoints[index]));
+        return pointChildren.followedBy(pointNames).toList();
+      default:
+        return [];
+    }
+  }
+
+  FolderItem getParent() {
+    switch (item.runtimeType) {
+      case DataCategory:
+        return FolderItem.service(item.profile.target!);
+      case DataPointName:
+        return item.parent.hasValue
+            ? FolderItem.name(item.parent.target!)
+            : FolderItem.category(item.dataCategory.target!);
+      default:
+        return FolderItem.empty();
+    }
   }
 }
