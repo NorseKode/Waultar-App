@@ -4,6 +4,7 @@ import 'package:waultar/data/entities/media/file_document.dart';
 import 'package:waultar/data/entities/media/image_document.dart';
 import 'package:waultar/data/entities/media/link_document.dart';
 import 'package:waultar/data/entities/media/video_document.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 
 class MediaRepository {
   final ObjectBox _context;
@@ -27,7 +28,7 @@ class MediaRepository {
       ..limit = limit;
     return query.find();
   }
-  
+
   List<ImageDocument> getImagesForTaggingPagination(int offset, int limit) {
     var query = _imageBox.query(ImageDocument_.mediaTags.equals("")).build();
     query
@@ -48,10 +49,15 @@ class MediaRepository {
     return _imageBox.query(ImageDocument_.mediaTags.equals("")).build().count();
   }
 
-  List<ImageDocument> searchImagesPagination(String searchText, int offset, int limit) {
-    var query = _imageBox
-        .query(ImageDocument_.mediaTags.contains(searchText, caseSensitive: false))
-        .build();
+  List<ImageDocument> searchImagesPagination(
+      String searchText, List<int> profileIds, int offset, int limit) {
+    var builder =
+        _imageBox.query(ImageDocument_.mediaTags.contains(searchText, caseSensitive: false));
+
+    builder.link(ImageDocument_.profile, ProfileDocument_.id.oneOf(profileIds));
+
+    var query = builder.build();
+
     query
       ..offset = offset
       ..limit = limit;

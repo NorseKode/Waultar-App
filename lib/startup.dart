@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:translator/translator.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_dashboard_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_explorer_service.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_search_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_translator_service.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_appsettings_repository.dart';
@@ -33,6 +34,7 @@ import 'package:waultar/domain/services/collections_service.dart';
 import 'package:waultar/domain/services/dashboard_service.dart';
 import 'package:waultar/domain/services/explorer_service.dart';
 import 'package:waultar/domain/services/parser_service.dart';
+import 'package:waultar/domain/services/search_service.dart';
 import 'package:waultar/domain/services/timeline_service.dart';
 import 'package:waultar/domain/services/translator_service.dart';
 import 'configs/globals/app_logger.dart';
@@ -188,6 +190,10 @@ Future<void> setupServices({
     locator.registerSingleton<IParserService>(
       ParserService(),
       instanceName: 'parserService',
+    );
+    locator.registerSingleton<ISearchService>(
+      SearchService(),
+      instanceName: 'searchService',
     );
 
     // Translation

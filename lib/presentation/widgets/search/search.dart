@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_search_service.dart';
 import 'package:waultar/core/models/ui_model.dart';
-import 'package:waultar/domain/services/text_search_service.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
+import 'package:waultar/data/repositories/profile_repo.dart';
+import 'package:waultar/domain/services/search_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
+import 'package:waultar/presentation/widgets/general/profile_selector.dart';
+import 'package:waultar/startup.dart';
 
 class Search extends StatefulWidget {
   const Search({Key? key}) : super(key: key);
@@ -16,26 +21,31 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   late ThemeProvider themeProvider;
   final _controller = TextEditingController();
-  final _textSearchService = TextSearchService();
+  final _textSearchService = locator.get<ISearchService>(instanceName: 'searchService');
   final _scrollController = ScrollController();
 
   var _chosenCategories = <CategoryEnum, bool>{};
   var _contents = <UIModel>[];
 
+  var profiles = locator.get<ProfileRepository>(instanceName: 'profileRepo').getAll().toList();
+  late ProfileDocument currentProfile;
+
   var _offset = 0;
   final _limit = 20;
 
+  _getSelectedProfiles() {
+    return currentProfile.id == 0
+      ? profiles.map((e) => e.id).toList()
+      : [currentProfile.id];
+  }
+
   _serach(bool isAppend) {
     setState(() {
-      var categories = _chosenCategories.entries
-          .where((element) => element.value)
-          .map((e) => e.key)
-          .toList();
+      var categories =
+          _chosenCategories.entries.where((element) => element.value).map((e) => e.key).toList();
       isAppend
-          ? _contents += _textSearchService.search(
-              categories, _controller.text, _offset, _limit)
-          : _contents = _textSearchService.search(
-              categories, _controller.text, _offset, _limit);
+          ? _contents += _textSearchService.search(categories, _getSelectedProfiles(), _controller.text, _offset, _limit)
+          : _contents = _textSearchService.search(categories, _getSelectedProfiles(), _controller.text, _offset, _limit);
     });
   }
 
@@ -46,8 +56,7 @@ class _SearchState extends State<Search> {
   }
 
   _onScrollEnd() {
-    if (_scrollController.position.maxScrollExtent ==
-        _scrollController.position.pixels) {
+    if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
       _offset += _limit;
       _serach(true);
     }
@@ -55,6 +64,12 @@ class _SearchState extends State<Search> {
 
   @override
   void initState() {
+    currentProfile = profiles.first;
+    if (profiles.length > 1) {
+      profiles.add(ProfileDocument(name: "All"));
+    }
+    
+    
     _chosenCategories = {for (var item in CategoryEnum.values) item: true};
     super.initState();
     _scrollController.addListener(_onScrollEnd);
@@ -108,15 +123,25 @@ class _SearchState extends State<Search> {
     );
   }
 
+  _changeSelectedProfile(ProfileDocument profile) {
+    currentProfile = profile;
+  }
+
   @override
   Widget build(BuildContext context) {
     themeProvider = Provider.of<ThemeProvider>(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "Search",
-          style: themeProvider.themeData().textTheme.headline3,
+        Row(
+          children: [
+            Text(
+              "Search",
+              style: themeProvider.themeData().textTheme.headline3,
+            ),
+            const SizedBox(width: 20),
+            profileSelector(profiles, currentProfile, _changeSelectedProfile),
+          ],
         ),
         SizedBox(height: 20),
         _topBar(),

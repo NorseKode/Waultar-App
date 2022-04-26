@@ -36,7 +36,7 @@ class DataPointRepository {
     return query.find();
   }
 
-  List<UIDTO> search(List<int> categoryIds, String searchString, int offset, int limit) {
+  List<UIDTO> search(List<int> categoryIds, List<int> profileIds, String searchString, int offset, int limit) {
     var builder = _dataBox.query(
       DataPoint_.searchTerms.contains(
         searchString,
@@ -47,11 +47,17 @@ class DataPointRepository {
       DataPoint_.category,
       DataCategory_.dbCategory.oneOf(categoryIds),
     );
+
+    var amountOfProfiles = _context.store.box<ProfileDocument>().getAll().length;
+    if (amountOfProfiles > profileIds.length) {
+      builder.link(DataPoint_.profile, ProfileDocument_.id.oneOf(profileIds));
+    }
     var query = builder.build();
 
     query
       ..offset = offset
       ..limit = limit;
+
     return query.find().map((e) => e.getUIDTO).toList();
   }
 

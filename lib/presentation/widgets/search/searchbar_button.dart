@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_search_service.dart';
 import 'package:waultar/core/models/ui_model.dart';
-import 'package:waultar/domain/services/text_search_service.dart';
+import 'package:waultar/data/repositories/profile_repo.dart';
+import 'package:waultar/domain/services/search_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
+import 'package:waultar/startup.dart';
 
 class SearchBarButton extends StatefulWidget {
   const SearchBarButton({Key? key}) : super(key: key);
@@ -19,9 +22,14 @@ class _SearchBarButtonState extends State<SearchBarButton> {
   late Map<CategoryEnum, bool> chosenCategories;
   late StateSetter _setState;
 
-  final _textSearchService = TextSearchService();
+  final _textSearchService = locator.get<ISearchService>(instanceName: 'searchService');
   final _scrollController = ScrollController();
   var _contents = <UIModel>[];
+  var profileIds = locator
+      .get<ProfileRepository>(instanceName: 'profileRepo')
+      .getAll()
+      .map((e) => e.id)
+      .toList();
 
   var _offset = 0;
   final _limit = 20;
@@ -33,15 +41,13 @@ class _SearchBarButtonState extends State<SearchBarButton> {
         return;
       }
 
-      var categories = chosenCategories.entries
-          .where((element) => element.value)
-          .map((e) => e.key)
-          .toList();
+      var categories =
+          chosenCategories.entries.where((element) => element.value).map((e) => e.key).toList();
       isAppend
           ? _contents += _textSearchService.search(
-              categories, serachController.text, _offset, _limit)
+              categories, profileIds, serachController.text, _offset, _limit)
           : _contents = _textSearchService.search(
-              categories, serachController.text, _offset, _limit);
+              categories, profileIds, serachController.text, _offset, _limit);
     });
   }
 
@@ -52,8 +58,7 @@ class _SearchBarButtonState extends State<SearchBarButton> {
   }
 
   _onScrollEnd() {
-    if (_scrollController.position.maxScrollExtent ==
-        _scrollController.position.pixels) {
+    if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
       _offset += _limit;
       _serach(true);
     }
@@ -96,8 +101,7 @@ class _SearchBarButtonState extends State<SearchBarButton> {
           decoration: InputDecoration(
               contentPadding: const EdgeInsets.only(left: 15),
               border: const OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
+                  borderSide: BorderSide.none, borderRadius: BorderRadius.all(Radius.circular(10))),
               fillColor: themeProvider.themeData().primaryColor,
               filled: true,
               hoverColor: const Color(0xFF323346),
@@ -137,8 +141,7 @@ class _SearchBarButtonState extends State<SearchBarButton> {
                           child: Column(
                             children: [
                               Container(
-                                constraints:
-                                    const BoxConstraints(maxHeight: 40),
+                                constraints: const BoxConstraints(maxHeight: 40),
                                 child: TextField(
                                   onChanged: (change) {
                                     // call text search
@@ -150,24 +153,19 @@ class _SearchBarButtonState extends State<SearchBarButton> {
                                   autofocus: true,
                                   decoration: InputDecoration(
                                       hoverColor: Colors.transparent,
-                                      contentPadding:
-                                          const EdgeInsets.only(left: 15),
+                                      contentPadding: const EdgeInsets.only(left: 15),
                                       border: const OutlineInputBorder(
                                           borderSide: BorderSide.none,
                                           borderRadius: BorderRadius.only(
                                               topLeft: Radius.circular(10),
                                               topRight: Radius.circular(10))),
-                                      fillColor: themeProvider
-                                          .themeData()
-                                          .primaryColor,
+                                      fillColor: themeProvider.themeData().primaryColor,
                                       filled: true,
                                       hintText: "serach ..."),
                                   style: TextStyle(
                                     fontWeight: FontWeight.w400,
                                     color: serachController.text.isEmpty
-                                        ? themeProvider
-                                            .themeMode()
-                                            .tonedTextColor
+                                        ? themeProvider.themeMode().tonedTextColor
                                         : Colors.white,
                                     fontSize: 12,
                                   ),
@@ -175,13 +173,11 @@ class _SearchBarButtonState extends State<SearchBarButton> {
                               ),
                               Container(
                                 decoration: BoxDecoration(
-                                    color:
-                                        themeProvider.themeData().primaryColor,
+                                    color: themeProvider.themeData().primaryColor,
                                     borderRadius: const BorderRadius.only(
                                         bottomLeft: Radius.circular(10),
                                         bottomRight: Radius.circular(10))),
-                                padding:
-                                    const EdgeInsets.fromLTRB(15, 0, 15, 15),
+                                padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -229,14 +225,12 @@ class _SearchBarButtonState extends State<SearchBarButton> {
                     onTap: () {
                       _setState(() {
                         chosenCategories.update(
-                            chosenCategories.keys.elementAt(index),
-                            (value) => !value);
+                            chosenCategories.keys.elementAt(index), (value) => !value);
                         _loadNewData();
                       });
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 4, horizontal: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
                       decoration: BoxDecoration(
                           color: chosenCategories.values.elementAt(index)
                               ? const Color(0xFF323346)
@@ -245,15 +239,13 @@ class _SearchBarButtonState extends State<SearchBarButton> {
                       child: Row(
                         children: [
                           Icon(Iconsax.document,
-                              size: 12,
-                              color: themeProvider.themeMode().tonedTextColor),
+                              size: 12, color: themeProvider.themeMode().tonedTextColor),
                           const SizedBox(
                             width: 5,
                           ),
                           Text(
                             chosenCategories.keys.elementAt(index).name,
-                            style:
-                                themeProvider.themeData().textTheme.headline4,
+                            style: themeProvider.themeData().textTheme.headline4,
                           )
                         ],
                       ),
@@ -279,18 +271,16 @@ class _SearchBarButtonState extends State<SearchBarButton> {
           child: Container(
             child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _contents[index].getMostInformativeField(),
-                        style: themeProvider.themeData().textTheme.headline1,
-                      ),
-                      const SizedBox(height: 15),
-                      Text(
-                        _contents[index].toString(),
-                      )
-                    ])),
+                child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Text(
+                    _contents[index].getMostInformativeField(),
+                    style: themeProvider.themeData().textTheme.headline1,
+                  ),
+                  const SizedBox(height: 15),
+                  Text(
+                    _contents[index].toString(),
+                  )
+                ])),
           ),
         ),
       ),
