@@ -227,9 +227,12 @@ class _MenuPanelState extends State<MenuPanel> {
                           children: [
                             isLoading
                                 ? Container(
-                                    height: 17,
-                                    width: 17,
-                                    child: CircularProgressIndicator())
+                                    height: 10,
+                                    width: 10,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ))
                                 : Icon(Iconsax.arrow_up_1, size: 17),
                             SizedBox(width: 12),
                             Text(
