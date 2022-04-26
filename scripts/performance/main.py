@@ -28,21 +28,22 @@ sentimentDataNewFacebook = os.path.join(folderFacebook, "Sentiment classificatio
 imageDataNewFacebook = os.path.join(folderFacebook, "Tagging of images only total.json")
 imageClassFacebook = os.path.join(folderFacebook, "Image Classifier Abstract Class.json")
 
+print("########## NOTE: All Run On 1 Isolate ##########")
 print("########## Instagram ##########")
 print("##### Extract Small - Start #####")
 e.extractAndParseReadingToConsole(extractDataNewInsta, os.path.join(saveInsta, "insta_small_extract_time_percent_v0.1.png"), extractionTitle + "\nSingle Thread Instagram Small")
 print("###### Extract Small - End ######\n")
 
 print("##### Parser - Start #####")
-p.parserPerformanceToConsole(parserDataNewInsta, os.path.join(saveInsta, "parse_time_percent_v0.1.png"))
+p.parserPerformanceToConsole(parserDataNewInsta, os.path.join(saveInsta, "insta_parse_time_percent_v0.1.png"))
 print("###### Parser - End ######\n")
 
 print("##### Image Tagging - Start #####")
-it.taggedImageReadingToConsole(imageDataNewInsta, os.path.join(saveInsta, "image_taggin_time_percent_v0.1.png"))
+it.taggedImageReadingToConsole(imageDataNewInsta, os.path.join(saveInsta, "insta_image_taggin_time_percent_v0.1.png"))
 print("###### Image Tagging - End ######\n")
 
 print("##### Image Classifier - Start #####")
-ic.classifyPerformanceToConsole(imageClassInsta, os.path.join(saveInsta, "image_classifier_time_percent_v0.1.png"))
+ic.classifyPerformanceToConsole(imageClassInsta, os.path.join(saveInsta, "insta_image_classifier_time_percent_v0.1.png"))
 print("###### Image Classifier - End ######\n")
 
 # print("##### Sentiment Old - Start #####")
@@ -72,15 +73,15 @@ e.extractAndParseReadingToConsole(extractSmallDataNewFacebook, os.path.join(save
 print("###### Extract Small - End ######\n")
 
 print("##### Parser - Start #####")
-p.parserPerformanceToConsole(parserDataNewFacebook, os.path.join(saveFacebook, "parse_time_percent_v0.1.png"))
+p.parserPerformanceToConsole(parserDataNewFacebook, os.path.join(saveFacebook, "facebook_parse_time_percent_v0.1.png"))
 print("###### Parser - End ######\n")
 
 print("##### Image Tagging - Start #####")
-it.taggedImageReadingToConsole(imageDataNewFacebook, os.path.join(saveFacebook, "image_taggin_time_percent_v0.1.png"))
+it.taggedImageReadingToConsole(imageDataNewFacebook, os.path.join(saveFacebook, "facebook_image_taggin_time_percent_v0.1.png"))
 print("###### Image Tagging - End ######\n")
 
 print("##### Image Classifier - Start #####")
-ic.classifyPerformanceToConsole(imageClassFacebook, os.path.join(saveFacebook, "image_classifier_time_percent_v0.1.png"))
+ic.classifyPerformanceToConsole(imageClassFacebook, os.path.join(saveFacebook, "facebook_image_classifier_time_percent_v0.1.png"))
 print("###### Image Classifier - End ######\n")
 
 # print("##### Sentiment Old - Start #####")
@@ -88,6 +89,7 @@ print("###### Image Classifier - End ######\n")
 # print("###### Sentiment Old - End ######\n")
 
 print("##### Sentiment - Start #####")
-s.sentimentReadingToConsole(sentimentDataNewFacebook, os.path.join(saveFacebook, "sentiment_time_percent_v0.1.png"))
+s.sentimentReadingToConsole(sentimentDataNewFacebook, os.path.join(saveFacebook, "facebook_sentiment_time_percent_v0.1.png"))
 print("###### Sentiment - End ######")
 print("########## Facebook ##########")
+print("########## NOTE: All Run On 1 Isolate ##########")
