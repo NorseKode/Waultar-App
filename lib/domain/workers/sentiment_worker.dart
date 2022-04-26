@@ -68,7 +68,8 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
       bool _isOwnData(DataPoint point, String profileUsername, String profileName) {
         switch (point.category.target!.category) {
           case CategoryEnum.messaging:
-            if (point.asMap["sender_name"] == profileUsername || point.asMap["sender_name"] == name) {
+            if (point.asMap["sender_name"] == profileUsername ||
+                point.asMap["sender_name"] == name) {
               return true;
             }
             return false;
@@ -94,6 +95,13 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
         return clean;
       }
 
+      void _sendProgressUpdate(int count) {
+        mainSendPort.send(MainSentimentClassifyProgressPackage(
+          amountTagged: count,
+          isDone: false,
+        ));
+      }
+
       _logger.logger.info("Started sentiment scoring of ${data.categoriesIds.length} categories");
 
       for (var category in categories) {
@@ -107,31 +115,22 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
             }
 
             if (isOwnData && point.sentimentText != null && point.sentimentText!.isNotEmpty) {
-              var text = point.sentimentText!;
+              // var text = point.sentimentText!;
 
-              // if (data.isPerformanceTracking) performance.startReading("clean text");
-              // var text = "";
-              // if (point.sentimentText!.contains("#") || point.sentimentText!.contains("#")) {
-              //   var text = _cleanText(point.sentimentText!);
-              //   text = text.trim();
-              // } else {
-              //   text = point.sentimentText!;
-              // }
-              // if (data.isPerformanceTracking) {
-              //   performance.addReading(
-              //       performance.parentKey, "clean text", performance.stopReading("clean text"));
-              // }
+              if (data.isPerformanceTracking) performance.startReading("clean text");
+              var text = "";
+              if (point.sentimentText!.contains("#") || point.sentimentText!.contains("#")) {
+                var text = _cleanText(point.sentimentText!);
+                text = text.trim();
+              } else {
+                text = point.sentimentText!;
+              }
+              if (data.isPerformanceTracking) {
+                performance.addReading(
+                    performance.parentKey, "clean text", performance.stopReading("clean text"));
+              }
 
-              if (text.isNotEmpty) {
-                if (data.translate) {
-                  if (data.isPerformanceTracking) performance.startReading("translate");
-                  text = await translator.translate(input: text, outputLanguage: 'en');
-                  if (data.isPerformanceTracking) {
-                    performance.addReading(
-                        performance.parentKey, "translate", performance.stopReading("translate"));
-                  }
-                }
-
+              scoreTheText() {
                 if (data.isPerformanceTracking) performance.startReading("classify");
                 var sentimentScore = sentimentClassifier.classify(text);
                 point.sentimentScore = sentimentScore.last; //0-1
@@ -149,11 +148,60 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
 
                 _logger.logger
                     .info("Gave DataPoint with id ${point.id} a score of ${point.sentimentScore}");
+
+                _sendProgressUpdate(1);
+              }
+
+              if (text.isNotEmpty) {
+                if (data.translate) {
+                  if (data.isPerformanceTracking) performance.startReading("translate");
+                  // text = await translator.translate(input: text, outputLanguage: 'en');
+                  translator.translate(input: text, outputLanguage: 'en').then((value) {
+                    text = value;
+                    scoreTheText();
+                  });
+                  if (data.isPerformanceTracking) {
+                    performance.addReading(
+                        performance.parentKey, "translate", performance.stopReading("translate"));
+                  }
+                } else {
+                  scoreTheText();
+                }
+
+                // if (text.isNotEmpty) {
+                //   if (data.translate) {
+                //     if (data.isPerformanceTracking) performance.startReading("translate");
+                //     text = await translator.translate(input: text, outputLanguage: 'en');
+                //     if (data.isPerformanceTracking) {
+                //       performance.addReading(
+                //           performance.parentKey, "translate", performance.stopReading("translate"));
+                //     }
+                //   }
+
+                //   if (data.isPerformanceTracking) performance.startReading("classify");
+                //   var sentimentScore = sentimentClassifier.classify(text);
+                //   point.sentimentScore = sentimentScore.last; //0-1
+                //   if (data.isPerformanceTracking) {
+                //     performance.addReading(
+                //         performance.parentKey, "classify", performance.stopReading("classify"));
+                //   }
+
+                //   if (data.isPerformanceTracking) performance.startReading("repo");
+                //   dataRepo.addDataPoint(point);
+                //   if (data.isPerformanceTracking) {
+                //     performance.addReading(
+                //         performance.parentKey, "repo", performance.stopReading("repo"));
+                //   }
+
+                //   _logger.logger
+                //       .info("Gave DataPoint with id ${point.id} a score of ${point.sentimentScore}");
               } else {
                 point.sentimentScore = -1;
                 dataRepo.addDataPoint(point);
 
                 _logger.logger.info("DataPoint had an empty sentiment text");
+
+                _sendProgressUpdate(1);
               }
             } else {
               point.sentimentScore = -1;
@@ -161,13 +209,15 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
 
               _logger.logger.info(
                   "DataPoint with id: ${point.id} had a sentiment text that was either null, empty or not the users data");
+
+              _sendProgressUpdate(1);
             }
           }
 
-          mainSendPort.send(MainSentimentClassifyProgressPackage(
-            amountTagged: dataPoints.length,
-            isDone: false,
-          ));
+          // mainSendPort.send(MainSentimentClassifyProgressPackage(
+          //   amountTagged: dataPoints.length,
+          //   isDone: false,
+          // ));
         }
 
         const step = 20;
@@ -213,10 +263,11 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
       ));
     } catch (e, stacktrace) {
       mainSendPort.send(LogRecordPackage(e.toString(), stacktrace.toString()));
-    } finally {
-      var _context = locator.get<ObjectBox>(instanceName: 'context');
-      _context.store.close();
     }
+  } else if (data is IsolateSentimentDisposePackage) {
+    print("finito");
+    var _context = locator.get<ObjectBox>(instanceName: 'context');
+    _context.store.close();
   }
 }
 
@@ -247,6 +298,8 @@ class IsolateSentimentStartPackage extends InitiatorPackage {
     this.offset,
   });
 }
+
+class IsolateSentimentDisposePackage {}
 
 class MainSentimentClassifyProgressPackage {
   int amountTagged;

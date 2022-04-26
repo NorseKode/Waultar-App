@@ -44,8 +44,8 @@ class _SearchState extends State<Search> {
       var categories =
           _chosenCategories.entries.where((element) => element.value).map((e) => e.key).toList();
       isAppend
-          ? _contents += _textSearchService.search(categories, _getSelectedProfiles(), _controller.text, _offset, _limit)
-          : _contents = _textSearchService.search(categories, _getSelectedProfiles(), _controller.text, _offset, _limit);
+          ? _contents += _textSearchService.searchText(categories, _getSelectedProfiles(), _controller.text, _offset, _limit)
+          : _contents = _textSearchService.searchText(categories, _getSelectedProfiles(), _controller.text, _offset, _limit);
     });
   }
 

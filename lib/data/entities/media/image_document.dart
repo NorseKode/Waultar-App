@@ -8,6 +8,7 @@ class ImageDocument {
   String uri;
   String data;
   String searchString;
+  @Index()
   late String mediaTags;
   late List<String> mediaTagScores;
 

@@ -44,9 +44,9 @@ class _SearchBarButtonState extends State<SearchBarButton> {
       var categories =
           chosenCategories.entries.where((element) => element.value).map((e) => e.key).toList();
       isAppend
-          ? _contents += _textSearchService.search(
+          ? _contents += _textSearchService.searchText(
               categories, profileIds, serachController.text, _offset, _limit)
-          : _contents = _textSearchService.search(
+          : _contents = _textSearchService.searchText(
               categories, profileIds, serachController.text, _offset, _limit);
     });
   }

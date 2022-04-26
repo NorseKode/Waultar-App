@@ -11,7 +11,7 @@ class SearchService extends ISearchService {
   final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
 
   @override
-  List<UIModel> search(
+  List<UIModel> searchText(
       List<CategoryEnum> categories, List<int> profileIds, String search, int offset, int limit) {
     var ids = categories.map((e) => e.index).toList();
     profileIds.removeWhere((element) => element == 0);

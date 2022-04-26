@@ -380,7 +380,7 @@ class _GalleryState extends State<Gallery> {
             ),
             filled: true,
             fillColor: (const Color(0xFF272837)),
-            hintText: "search your images ...",
+            hintText: "search your images like ...",
             hintStyle: TextStyle(letterSpacing: 0.3),
           )),
     );

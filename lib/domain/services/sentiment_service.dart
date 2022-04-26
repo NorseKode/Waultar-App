@@ -100,11 +100,14 @@ class SentimentService extends ISentimentService {
           callback("$progressCount/$totalCount text analysed", false);
 
           if (data.isDone) {
+            print("done");
             isDoneCount++;
           }
 
-          if (isDoneCount == threadCount) {
+          if (isDoneCount == threadCount && progressCount == totalCount) {
             for (var worker in workers) {
+              print("disposing");
+              worker.sendMessage(IsolateSentimentDisposePackage());
               worker.dispose();
             }
             callback("Initializing", true);
@@ -136,6 +139,7 @@ class SentimentService extends ISentimentService {
 
     for (var messageData in messagesOnIsolates) {
       var threadCountTemp = 2;
+      threadCount += threadCountTemp;
       var count = messageData.count;
       var splitCount = count ~/ threadCountTemp;
 
