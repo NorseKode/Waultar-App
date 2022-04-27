@@ -90,12 +90,25 @@ class _TimelineState extends State<Timeline> {
       controller: controller,
       onTabSelection: (index) => selectedTab = index ?? 0,
     );
-    TabbedViewTheme tabTheme = TabbedViewTheme(
-      child: tabbedView,
-      data: TabbedViewThemeData.dark(
-        colorSet: Colors.grey,
-      ),
-    );
+    TabbedViewThemeData themeData =
+        TabbedViewThemeData.dark(colorSet: Colors.grey);
+    themeData.contentArea
+      ..decoration = BoxDecoration(
+        color: _themeProvider.themeData().primaryColor,
+      );
+    themeData.tab
+      ..padding = EdgeInsets.fromLTRB(10, 4, 10, 4)
+      ..decoration = BoxDecoration(
+        color: Color(0xFF1F202B),
+      )
+      ..selectedStatus.decoration =
+          BoxDecoration(color: _themeProvider.themeData().primaryColor)
+      ..highlightedStatus.decoration =
+          BoxDecoration(color: _themeProvider.themeData().primaryColor);
+    ;
+
+    TabbedViewTheme tabTheme =
+        TabbedViewTheme(child: tabbedView, data: themeData);
     return Expanded(child: tabTheme);
   }
 

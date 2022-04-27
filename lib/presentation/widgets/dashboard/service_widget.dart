@@ -23,13 +23,14 @@ class _ServiceWidgetState extends State<ServiceWidget> {
     themeProvider = Provider.of<ThemeProvider>(context);
     ServiceEnum serviceEnum = getFromID(widget.service.service.target!.id);
     return Container(
-        constraints: BoxConstraints(minWidth: 200, maxWidth: 200),
+        // constraints: BoxConstraints(minWidth: 200, maxWidth: 200),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: themeProvider.themeData().primaryColor),
         child: Padding(
           padding: const EdgeInsets.all(20),
-          child: Column(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
@@ -48,54 +49,52 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                   ),
                 ),
               ),
-              const SizedBox(height: 15),
-              Text(
-                "${widget.service.service.target!.serviceName} - ${widget.service.name}",
-                softWrap: true,
-                style: const TextStyle(fontSize: 12),
-              ),
-              const SizedBox(height: 15),
-              Row(children: [
-                Expanded(
-                    flex: 3,
-                    child: Container(
-                      height: 5,
-                      decoration: BoxDecoration(
-                        color: serviceEnum.color,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          bottomLeft: Radius.circular(10),
-                        ),
-                      ),
-                    )),
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                      height: 5,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFF4D4F68),
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(10),
-                          bottomRight: Radius.circular(10),
-                        ),
-                      )),
-                )
-              ]),
-              const SizedBox(height: 15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                // ignore: prefer_const_literals_to_create_immutables
+              const SizedBox(width: 15),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${NumberFormat.compact().format(145342)} points", //"${widget.service.dataPoints.length} points",
-
+                    "${widget.service.name}",
                     style: const TextStyle(
-                        color: Color.fromARGB(255, 149, 150, 159),
-                        fontFamily: "Poppins",
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400),
+                        fontSize: 14, fontWeight: FontWeight.w400),
                   ),
-                  const Text("4.3 GB", style: TextStyle(fontSize: 12))
+                  const SizedBox(height: 2),
+                  Text(
+                    "${widget.service.service.target!.serviceName}",
+                    style: themeProvider.themeData().textTheme.headline4,
+                  ),
+                ],
+              ),
+              SizedBox(width: 30),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "145.034",
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w400),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    "DP",
+                    style: themeProvider.themeData().textTheme.headline4,
+                  ),
+                ],
+              ),
+              SizedBox(width: 30),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Apr 27. 2022",
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w400),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    "Uploaded",
+                    style: themeProvider.themeData().textTheme.headline4,
+                  ),
                 ],
               ),
             ],

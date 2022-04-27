@@ -7,7 +7,7 @@ class DefaultWidget extends StatefulWidget {
   final String title;
   final Widget child;
   final String? description;
-  final EdgeInsetsGeometry? edgeInsetsGeometry;
+  final EdgeInsetsGeometry? padding;
   final BoxConstraints? constraints;
   final Color? color;
   const DefaultWidget({
@@ -15,7 +15,7 @@ class DefaultWidget extends StatefulWidget {
     required this.title,
     required this.child,
     this.description,
-    this.edgeInsetsGeometry,
+    this.padding,
     this.constraints,
     this.color,
   }) : super(key: key);
@@ -32,6 +32,7 @@ class _DefaultWidgetState extends State<DefaultWidget> {
     return DefaultWidgetBox(
         color: widget.color,
         constraints: widget.constraints,
+        padding: widget.padding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

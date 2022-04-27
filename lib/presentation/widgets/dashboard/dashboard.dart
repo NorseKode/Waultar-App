@@ -78,47 +78,97 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _dashboardWidgets() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
       children: [
-        Expanded(
-          flex: 2,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _services(),
-              const SizedBox(height: 20),
-              Text(
-                "Highlights",
-                style: themeProvider.themeData().textTheme.headline4,
-              ),
-              const SizedBox(height: 15),
-              _highlightBar(),
-              const SizedBox(height: 20),
-              IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+        Row(children: [Expanded(child: _services())]),
+        const SizedBox(height: 20),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Overview",
+                  style: themeProvider.themeData().textTheme.headline4,
+                ),
+                const SizedBox(height: 15),
+                IntrinsicHeight(
+                    child: Row(
                   children: [
-                    Expanded(child: _topMessageWidget()),
+                    Expanded(child: _datapointGraph()),
+                    SizedBox(width: 20),
+                    SizedBox(height: 300, width: 300, child: _serviceGraph())
+                  ],
+                )),
+                const SizedBox(height: 20),
+                IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      Container(
+                        color: Colors.orange,
+                        height: 100,
+                        width: 100,
+                      ),
+                      const SizedBox(width: 20),
+                      Container(
+                        color: Colors.orange,
+                        width: 200,
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(child: Container(color: Colors.purple))
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                        child: Container(height: 200, color: Colors.orange)),
                     const SizedBox(width: 20),
                     Expanded(
-                      child: Column(
-                        children: [
-                          _diagram1(),
-                          const SizedBox(height: 20),
-                          _diagram2()
-                        ],
-                      ),
-                    )
+                        child: Container(height: 400, color: Colors.purple))
                   ],
-                ),
-              )
-            ],
-          ),
+                )
+              ],
+            )),
+            const SizedBox(width: 20),
+            Container(
+              // decoration: BoxDecoration(
+              //   borderRadius: BorderRadius.circular(10),
+              //   color: themeProvider.themeData().primaryColor,
+              // ),
+              width: 400,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Analysis",
+                    style: themeProvider.themeData().textTheme.headline4,
+                  ),
+                  const SizedBox(height: 15),
+                  ImageClassifyWidget(),
+                  // Divider(
+                  //   height: 15,
+                  //   indent: 20,
+                  //   endIndent: 20,
+                  // ),
+                  const SizedBox(height: 20),
+                  _sentimentTestWidget(),
+                  // Divider(
+                  //   height: 15,
+                  //   indent: 20,
+                  //   endIndent: 20,
+                  // ),
+                  const SizedBox(height: 20),
+                  SentimentWidget()
+                ],
+              ),
+            ),
+          ],
         ),
-        const SizedBox(width: 20),
-        Container(
-            constraints: BoxConstraints(maxWidth: 330), child: _analysis()),
       ],
     );
   }
@@ -128,7 +178,7 @@ class _DashboardState extends State<Dashboard> {
         profiles.length, (e) => ServiceWidget(service: profiles[e]));
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           "Services",
@@ -147,219 +197,316 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget _analysis() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Data Analysis",
-          style: themeProvider.themeData().textTheme.headline4,
-        ),
-        const SizedBox(height: 15),
-        ImageClassifyWidget(),
-        const SizedBox(height: 20),
-        SentimentWidget(),
-        const SizedBox(height: 20),
-        _sentimentTestWidget(),
-      ],
-    );
-  }
-
-  Widget _highlightBar() {
-    return Container(
-      constraints: BoxConstraints(maxHeight: 70),
-      child: Row(
-        children: [
-          // _highlightWidget(Iconsax.activity5, Colors.amber, "Most Active Year",
-          //     "${_dashboardService.getMostActiveYear()}", Container()),
-          // SizedBox(
-          //   width: 20,
-          // ),
-          _highlightWidget(Iconsax.activity5, const Color(0xFF323346),
-              "Most Active Weekday", "${mostActive.item1}", Container()),
-          SizedBox(
-            width: 20,
-          ),
-          Expanded(
-            child: _highlightWidget(
-                Iconsax.activity5,
-                const Color(0xFF323346),
-                "Last Post",
-                "${DateFormat.yMMMd().format(DateTime.now())}",
-                Container()),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _highlightWidget(
-      IconData icon, Color color, String title, String result, Widget child) {
-    return DefaultWidgetBox(
-      padding: EdgeInsets.all(15),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-                color: color, //const Color(0xFF323346),
-                borderRadius: BorderRadius.circular(5)),
-            child: Icon(
-              icon,
-              color: color,
-            ),
-          ),
-          SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                    color: Color(0xFFABAAB8),
-                    fontSize: 10,
-                    fontWeight: FontWeight.w400),
-              ),
-              Text(
-                result,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-              )
-            ],
-          ),
-          SizedBox(width: 10),
-          child
-        ],
-      ),
-    );
-  }
-
-  Widget _topMessageWidget() {
-    int top = 10;
-    var sortedMessages = _dashboardService.getSortedMessageCount(top);
-    List<Widget> topMessageList = List.generate(
-        sortedMessages.length,
-        (index) => Padding(
-              padding: EdgeInsets.only(top: 15),
-              child: Container(
-                  child: Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 20,
-                          width: 20,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white)),
-                          child: Center(child: Text("${index + 1}")),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(sortedMessages[index].item1,
-                            overflow: TextOverflow.ellipsis,
-                            softWrap: false,
-                            style: themeProvider
-                                .themeData()
-                                .textTheme
-                                .headline4!
-                                .apply(
-                                    color: Colors.white, fontSizeDelta: 0.5)),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      sortedMessages[index].item2.toString(),
-                      textAlign: TextAlign.right,
-                      style: themeProvider
-                          .themeData()
-                          .textTheme
-                          .headline4!
-                          .apply(color: Colors.white, fontSizeDelta: 0.5),
-                    ),
-                  )
-                ],
-              )),
-            ));
-    topMessageList.insert(
-        0,
-        Row(
-          children: [
-            Expanded(
-                flex: 3,
-                child: Text(
-                  "Contact",
-                  style: themeProvider.themeData().textTheme.headline4,
-                )),
-            Expanded(
-                child: Text("Messages",
-                    textAlign: TextAlign.right,
-                    style: themeProvider.themeData().textTheme.headline4))
-          ],
-        ));
-
+  Widget _serviceGraph() {
     return DefaultWidget(
-        title: "Top Message Count",
+        title: "Service Distribution",
         child: Expanded(
           child: Column(
-            children: topMessageList,
+            children: [
+              SizedBox(height: 5),
+              Expanded(
+                child: Container(
+                  constraints: BoxConstraints(minWidth: 300),
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(width: 20, color: Colors.yellow)),
+                ),
+              ),
+            ],
           ),
         ));
   }
 
-  Widget _diagram1() {
-    return Expanded(
-        child: DefaultWidget(
-      title: "Weekly Activity",
-      child: Expanded(
-          child: Container(
-              height: 100,
-              child: Row(
-                  children: List.generate(
-                      weekdays.length,
-                      (index) => Expanded(
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  flex: (100 -
-                                          (weekdays[index].item2 /
-                                              (mostActive.item2 * 1.5) *
-                                              100))
-                                      .floor(),
-                                  child: Container(
-                                    color: Colors.transparent,
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: (weekdays[index].item2 /
-                                          (mostActive.item2 * 1.5) *
-                                          100)
-                                      .ceil(),
-                                  child: Container(
-                                    width: 10,
-                                    color: themeProvider.themeMode().themeColor,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ))))),
-    ));
-  }
-
-  Widget _diagram2() {
-    return Expanded(
-      child: DefaultWidget(
-          title: "Data overview",
-          child: Expanded(
-            child: Container(),
-          )),
+  Widget _datapointGraph() {
+    return DefaultWidget(
+      title: "Last week",
+      child: Text("TODO"),
     );
   }
+
+  // Widget _dashboardWidgets() {
+  //   return Row(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Expanded(
+  //         flex: 2,
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             _services(),
+  //             const SizedBox(height: 20),
+  //             Text(
+  //               "Highlights",
+  //               style: themeProvider.themeData().textTheme.headline4,
+  //             ),
+  //             const SizedBox(height: 15),
+  //             _highlightBar(),
+  //             const SizedBox(height: 20),
+  //             IntrinsicHeight(
+  //               child: Row(
+  //                 crossAxisAlignment: CrossAxisAlignment.stretch,
+  //                 children: [
+  //                   Expanded(child: _topMessageWidget()),
+  //                   const SizedBox(width: 20),
+  //                   Expanded(
+  //                     child: Column(
+  //                       children: [
+  //                         _diagram1(),
+  //                         const SizedBox(height: 20),
+  //                         _diagram2()
+  //                       ],
+  //                     ),
+  //                   )
+  //                 ],
+  //               ),
+  //             )
+  //           ],
+  //         ),
+  //       ),
+  //       const SizedBox(width: 20),
+  //       Container(
+  //           constraints: BoxConstraints(maxWidth: 330), child: _analysis()),
+  //     ],
+  //   );
+  // }
+
+  // Widget _services() {
+  //   List<Widget> serviceWidgets = List.generate(
+  //       profiles.length, (e) => ServiceWidget(service: profiles[e]));
+
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.stretch,
+  //     children: [
+  //       Text(
+  //         "Services",
+  //         style: themeProvider.themeData().textTheme.headline4,
+  //       ),
+  //       const SizedBox(height: 15),
+  //       Wrap(
+  //         runSpacing: 20,
+  //         spacing: 20,
+  //         children: List.generate(
+  //           serviceWidgets.length,
+  //           (index) => serviceWidgets[index],
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  // Widget _analysis() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Text(
+  //         "Data Analysis",
+  //         style: themeProvider.themeData().textTheme.headline4,
+  //       ),
+  //       const SizedBox(height: 15),
+  //       ImageClassifyWidget(),
+  //       const SizedBox(height: 20),
+  //       SentimentWidget(),
+  //       const SizedBox(height: 20),
+  //       _sentimentTestWidget(),
+  //     ],
+  //   );
+  // }
+
+  // Widget _highlightBar() {
+  //   return Container(
+  //     constraints: BoxConstraints(maxHeight: 70),
+  //     child: Row(
+  //       children: [
+  //         // _highlightWidget(Iconsax.activity5, Colors.amber, "Most Active Year",
+  //         //     "${_dashboardService.getMostActiveYear()}", Container()),
+  //         // SizedBox(
+  //         //   width: 20,
+  //         // ),
+  //         _highlightWidget(Iconsax.activity5, const Color(0xFF323346),
+  //             "Most Active Weekday", "${mostActive.item1}", Container()),
+  //         SizedBox(
+  //           width: 20,
+  //         ),
+  //         Expanded(
+  //           child: _highlightWidget(
+  //               Iconsax.activity5,
+  //               const Color(0xFF323346),
+  //               "Last Post",
+  //               "${DateFormat.yMMMd().format(DateTime.now())}",
+  //               Container()),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  // Widget _highlightWidget(
+  //     IconData icon, Color color, String title, String result, Widget child) {
+  //   return DefaultWidgetBox(
+  //     padding: EdgeInsets.all(15),
+  //     child: Row(
+  //       children: [
+  //         Container(
+  //           width: 40,
+  //           height: 40,
+  //           decoration: BoxDecoration(
+  //               color: color, //const Color(0xFF323346),
+  //               borderRadius: BorderRadius.circular(5)),
+  //           child: Icon(
+  //             icon,
+  //             color: color,
+  //           ),
+  //         ),
+  //         SizedBox(width: 10),
+  //         Column(
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             Text(
+  //               title,
+  //               style: const TextStyle(
+  //                   color: Color(0xFFABAAB8),
+  //                   fontSize: 10,
+  //                   fontWeight: FontWeight.w400),
+  //             ),
+  //             Text(
+  //               result,
+  //               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+  //             )
+  //           ],
+  //         ),
+  //         SizedBox(width: 10),
+  //         child
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  // Widget _topMessageWidget() {
+  //   int top = 10;
+  //   var sortedMessages = _dashboardService.getSortedMessageCount(top);
+  //   List<Widget> topMessageList = List.generate(
+  //       sortedMessages.length,
+  //       (index) => Padding(
+  //             padding: EdgeInsets.only(top: 15),
+  //             child: Container(
+  //                 child: Row(
+  //               children: [
+  //                 Expanded(
+  //                   flex: 3,
+  //                   child: Row(
+  //                     children: [
+  //                       Container(
+  //                         height: 20,
+  //                         width: 20,
+  //                         decoration: BoxDecoration(
+  //                             shape: BoxShape.circle,
+  //                             border: Border.all(color: Colors.white)),
+  //                         child: Center(child: Text("${index + 1}")),
+  //                       ),
+  //                       SizedBox(
+  //                         width: 10,
+  //                       ),
+  //                       Text(sortedMessages[index].item1,
+  //                           overflow: TextOverflow.ellipsis,
+  //                           softWrap: false,
+  //                           style: themeProvider
+  //                               .themeData()
+  //                               .textTheme
+  //                               .headline4!
+  //                               .apply(
+  //                                   color: Colors.white, fontSizeDelta: 0.5)),
+  //                     ],
+  //                   ),
+  //                 ),
+  //                 Expanded(
+  //                   child: Text(
+  //                     sortedMessages[index].item2.toString(),
+  //                     textAlign: TextAlign.right,
+  //                     style: themeProvider
+  //                         .themeData()
+  //                         .textTheme
+  //                         .headline4!
+  //                         .apply(color: Colors.white, fontSizeDelta: 0.5),
+  //                   ),
+  //                 )
+  //               ],
+  //             )),
+  //           ));
+  //   topMessageList.insert(
+  //       0,
+  //       Row(
+  //         children: [
+  //           Expanded(
+  //               flex: 3,
+  //               child: Text(
+  //                 "Contact",
+  //                 style: themeProvider.themeData().textTheme.headline4,
+  //               )),
+  //           Expanded(
+  //               child: Text("Messages",
+  //                   textAlign: TextAlign.right,
+  //                   style: themeProvider.themeData().textTheme.headline4))
+  //         ],
+  //       ));
+
+  //   return DefaultWidget(
+  //       title: "Top Message Count",
+  //       child: Expanded(
+  //         child: Column(
+  //           children: topMessageList,
+  //         ),
+  //       ));
+  // }
+
+  // Widget _diagram1() {
+  //   return Expanded(
+  //       child: DefaultWidget(
+  //     title: "Weekly Activity",
+  //     child: Expanded(
+  //         child: Container(
+  //             height: 100,
+  //             child: Row(
+  //                 children: List.generate(
+  //                     weekdays.length,
+  //                     (index) => Expanded(
+  //                           child: Column(
+  //                             children: [
+  //                               Expanded(
+  //                                 flex: (100 -
+  //                                         (weekdays[index].item2 /
+  //                                             (mostActive.item2 * 1.5) *
+  //                                             100))
+  //                                     .floor(),
+  //                                 child: Container(
+  //                                   color: Colors.transparent,
+  //                                 ),
+  //                               ),
+  //                               Expanded(
+  //                                 flex: (weekdays[index].item2 /
+  //                                         (mostActive.item2 * 1.5) *
+  //                                         100)
+  //                                     .ceil(),
+  //                                 child: Container(
+  //                                   width: 10,
+  //                                   color: themeProvider.themeMode().themeColor,
+  //                                 ),
+  //                               ),
+  //                             ],
+  //                           ),
+  //                         ))))),
+  //   ));
+  // }
+
+  // Widget _diagram2() {
+  //   return Expanded(
+  //     child: DefaultWidget(
+  //         title: "Data overview",
+  //         child: Expanded(
+  //           child: Container(),
+  //         )),
+  //   );
+  // }
 
   Widget _sentimentTestWidget() {
     return DefaultWidget(
