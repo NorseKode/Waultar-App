@@ -8,26 +8,32 @@ import 'name_node.dart';
 class DataCategory {
   int id;
 
-  int count;
-
-  List<String> matchingFoldersFacebook;
-  List<String> matchingFoldersInstagram;
+  @Unique(onConflict: ConflictStrategy.fail)
+  late String
+      profileCategoryCombination; // To ensure at max one enum associated with each profile
 
   @Index()
   CategoryEnum category;
-
-  final profile = ToOne<ProfileDocument>();
+  int count;
 
   @Backlink('dataCategory')
   final dataPointNames = ToMany<DataPointName>();
+  final profile = ToOne<ProfileDocument>();
 
   DataCategory({
     this.id = 0,
     this.count = 0,
     this.category = CategoryEnum.unknown,
-    required this.matchingFoldersFacebook,
-    required this.matchingFoldersInstagram,
+    this.profileCategoryCombination = '',
   });
+
+  DataCategory.create(CategoryEnum categoryEnum, ProfileDocument profile)
+      : id = 0,
+        count = 0,
+        category = categoryEnum {
+    this.profile.target = profile;
+    profileCategoryCombination = profile.name + category.categoryName;
+  }
 
   int get dbCategory {
     return category.index;
@@ -43,8 +49,8 @@ class DataCategory {
     return {
       'id': id,
       'count': count,
-      'matchingFoldersFacebook': matchingFoldersFacebook,
-      'matchingFoldersInstagram': matchingFoldersInstagram,
+      // 'matchingFoldersFacebook': matchingFoldersFacebook,
+      // 'matchingFoldersInstagram': matchingFoldersInstagram,
       'category': category.categoryName,
       'profile': profile.targetId,
       'dataPointNames': dataPointNames.map((element) => element.id).toList(),

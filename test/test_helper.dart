@@ -116,16 +116,14 @@ class TestHelper {
       1448169079, // Sun Nov 22 2015 06:11:19 GMT
     ];
     final testProfile = createTestProfile(context);
-    var posts = DataCategory(
-      matchingFoldersFacebook: [],
-      matchingFoldersInstagram: [],
-      category: CategoryEnum.posts,
+    var posts = DataCategory.create(
+      CategoryEnum.posts,
+      testProfile,
     );
 
-    var comments = DataCategory(
-      matchingFoldersFacebook: [],
-      matchingFoldersInstagram: [],
-      category: CategoryEnum.comments,
+    var comments = DataCategory.create(
+      CategoryEnum.comments,
+      testProfile,
     );
 
     final _categoryBox = context.store.box<DataCategory>();
