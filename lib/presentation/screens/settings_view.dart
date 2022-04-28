@@ -70,7 +70,7 @@ class _SettingsViewState extends State<SettingsView> {
                   value: ISPERFORMANCETRACKING,
                   onChanged: (value) async {
                     await _appSettings.toggleIsPerformanceTracking(value);
-
+                    // _appLogger.changeLogLevel(Level.INFO);
                     if (!value) {
                       _appLogger.changeLogLevel(LOGLEVEL);
                     } else {
