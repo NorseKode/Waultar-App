@@ -455,7 +455,8 @@ final _entities = <ModelEntity>[
             id: const IdUid(5, 2396916416399033536),
             name: 'mediaTags',
             type: 9,
-            flags: 0),
+            flags: 2048,
+            indexId: const IdUid(28, 2417113203985853430)),
         ModelProperty(
             id: const IdUid(6, 3166776243268138274),
             name: 'mediaTagScores',
@@ -826,7 +827,7 @@ ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
       lastEntityId: const IdUid(15, 5720511274814738726),
-      lastIndexId: const IdUid(27, 1840948439946308396),
+      lastIndexId: const IdUid(28, 2417113203985853430),
       lastRelationId: const IdUid(12, 4215224062452969106),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
