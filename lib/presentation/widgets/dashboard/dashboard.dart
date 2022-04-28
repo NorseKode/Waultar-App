@@ -8,6 +8,7 @@ import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dar
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
+import 'package:waultar/presentation/widgets/machine_models/image_classify_single_widget%20.dart';
 
 import 'package:waultar/presentation/widgets/machine_models/sentiment_widget.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
@@ -219,6 +220,8 @@ class _DashboardState extends State<Dashboard> {
         const SentimentWidget(),
         const SizedBox(height: 20),
         _sentimentTestWidget(),
+        const SizedBox(height: 20),
+        const ImageClassifySingleWidget(),
       ],
     );
   }

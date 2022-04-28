@@ -54,7 +54,7 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
       limitAmount: _amountToTagTextController.text.isNotEmpty
           ? int.parse(_amountToTagTextController.text)
           : null,
-      threadCount: 3,
+      threadCount: 4,
       imageModel:
           _isFastImageModel ? ImageModelEnum.efficientNetB4 : ImageModelEnum.mobileNetV3Large,
     );

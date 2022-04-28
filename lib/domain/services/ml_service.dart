@@ -1,7 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/configs/globals/image_model_enum.dart';
+import 'package:waultar/core/ai/image_classifier.dart';
+import 'package:waultar/core/ai/image_classifier_efficient_net_b4.dart';
+import 'package:waultar/core/ai/image_classifier_mobilenetv3.dart';
 import 'package:waultar/core/base_worker/base_worker.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
@@ -143,4 +148,25 @@ class MLService extends IMLService {
     // return updated;
     throw UnimplementedError();
   }
+
+  @override
+  List<Tuple2<String, double>> classifySingleImage({required File imageFile, required ImageModelEnum imageModel}) {
+    ImageClassifier classifier;
+    
+    switch (imageModel) {
+      case ImageModelEnum.mobileNetV3Large:
+        classifier = ImageClassifierMobileNetV3();
+        break;
+      case ImageModelEnum.efficientNetB4:
+        classifier = ImageClassifierEfficientNetB4();
+        break;
+
+      default:
+        classifier = ImageClassifierMobileNetV3();
+        break;        
+    }
+
+    return classifier.predict(imageFile.path, 5);
+  }
+
 }
