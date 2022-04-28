@@ -26,40 +26,43 @@ class _TopPanelState extends State<TopPanel> {
       constraints: const BoxConstraints(maxHeight: 40),
       color: themeProvider.themeData().scaffoldBackgroundColor,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _dayDisplay(),
+          Container(
+            width: 150,
+            child: _dayDisplay(),
+          ),
           const SizedBox(width: 20),
-          const SearchBarButton(),
-          const SizedBox(width: 20),
-          _profileBar(),
+          Row(
+            children: [
+              const SearchBarButton(),
+              const SizedBox(width: 20),
+              Container(width: 200, child: _profileBar()),
+            ],
+          )
         ],
       ),
     );
   }
 
   Widget _dayDisplay() {
-    return Expanded(
-        flex: 1,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text("Today",
-                style: TextStyle(
-                    fontSize: 9,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w400)),
-            Text(
-              DateFormat('EE, MMM d. yyy').format(DateTime.now()),
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
-            )
-          ],
-        ));
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Today",
+            style: TextStyle(
+                fontSize: 9, color: Colors.grey, fontWeight: FontWeight.w400)),
+        Text(
+          DateFormat('EE, MMM d. yyy').format(DateTime.now()),
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+        )
+      ],
+    );
   }
 
   Widget _profileBar() {
-    return Expanded(
-      flex: 2,
+    return Container(
       child: Row(children: [
         Container(
             width: 30,

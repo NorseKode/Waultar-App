@@ -14,12 +14,20 @@ class SearchView extends StatefulWidget {
 
 class _SearchViewState extends State<SearchView> {
   final _activeScreen = ViewScreen.search;
+  _callback() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return getWaultarDesktopMainBody(
       context,
-      MenuPanel(active: _activeScreen),
+      MenuPanel(
+        active: _activeScreen,
+        callback: () {
+          _callback();
+        },
+      ),
       const TopPanel(),
       const Search(),
     );

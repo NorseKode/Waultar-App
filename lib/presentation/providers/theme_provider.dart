@@ -55,6 +55,7 @@ class ThemeProvider with ChangeNotifier {
           color:
               isLightTheme ? const Color(0xFF65696F) : const Color(0xFFE0E0E0),
           //fontFamily: "Poppins",
+
           fontSize: 16,
         ),
         headline3: TextStyle(
@@ -71,12 +72,12 @@ class ThemeProvider with ChangeNotifier {
             fontWeight: FontWeight.w500),
         bodyText1: const TextStyle(
             color: Colors.pink,
-            fontSize: 10,
+            fontSize: 12,
             fontWeight: FontWeight.w400), //not used
         bodyText2: const TextStyle(
             color: Colors.white,
-            fontSize: 12,
-            fontWeight: FontWeight.w200,
+            fontSize: 13,
+            fontWeight: FontWeight.w300,
             letterSpacing: 0.2),
       ),
     );

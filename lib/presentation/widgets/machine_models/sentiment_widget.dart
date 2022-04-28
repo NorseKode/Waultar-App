@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
+import 'package:waultar/configs/globals/service_enums.dart';
 
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
@@ -36,10 +38,17 @@ class _SentimentWidgetState extends State<SentimentWidget> {
   ];
   List<int> categories = [];
   late Map<int, int> countedCategories;
+  late Map<int, bool> openProfiles;
+
+  @override
+  void initState() {
+    profiles = sentimentService.getAllProfiles();
+    openProfiles = {for (var item in profiles) item.id: false};
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    profiles = sentimentService.getAllProfiles();
     themeProvider = Provider.of<ThemeProvider>(context);
 
     for (var profile in profiles) {
@@ -94,7 +103,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
               style: const TextStyle(
                   color: Color.fromARGB(255, 149, 150, 159),
                   fontFamily: "Poppins",
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: FontWeight.w500),
             ),
             SizedBox(
@@ -118,12 +127,12 @@ class _SentimentWidgetState extends State<SentimentWidget> {
               "Estimated Time To Tag: ",
               style: const TextStyle(
                   color: Color.fromARGB(255, 149, 150, 159),
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: FontWeight.w500),
             ),
             Text(
               timeEstimate,
-              style: TextStyle(fontSize: 11),
+              style: TextStyle(fontSize: 12),
             ),
           ],
         ),
@@ -180,116 +189,167 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "${profiles[index].service.target!.serviceName} - ${profiles[index].name}",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 11,
-                            color: Color.fromARGB(255, 149, 150, 159)),
-                      ),
-                      _categoryList(profiles[index]),
+                      _profile(profiles[index]),
+                      openProfiles[profiles[index].id]!
+                          ? _categoryList(profiles[index])
+                          : Container(),
                       const SizedBox(height: 20),
                     ],
                   ),
                 ));
   }
 
-  Widget _categoryList(ProfileDocument profile) {
-    return Container(
-      child: SingleChildScrollView(
-        child: Column(
-            children: List.generate(
-                profile.categories.length,
-                (index) => validCategories
-                        .contains(profile.categories[index].category)
-                    ? Padding(
-                        padding: EdgeInsets.only(top: 5),
-                        child: GestureDetector(
-                          onTap:
-                              countedCategories[profile.categories[index].id] ==
-                                      0
-                                  ? () {}
-                                  : () {
-                                      chosenCategories
-                                              .where((element) =>
-                                                  element.id ==
-                                                  profile.categories[index].id)
-                                              .toList()
-                                              .isNotEmpty
-                                          ? chosenCategories.remove(
-                                              chosenCategories
-                                                  .firstWhere((element) =>
-                                                      element.id ==
-                                                      profile.categories[index]
-                                                          .id))
-                                          : chosenCategories
-                                              .add(profile.categories[index]);
+  Widget _profile(ProfileDocument profile) {
+    ServiceEnum serviceEnum = getFromID(profile.service.target!.id);
+    return GestureDetector(
+      onTap: () {
+        openProfiles[profile.id] = !openProfiles[profile.id]!;
 
-                                      setState(
-                                        () {},
-                                      );
-                                    },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 10),
-                            decoration: BoxDecoration(
-                                color: chosenCategories
-                                        .where((element) =>
-                                            element.id ==
-                                            profile.categories[index].id)
-                                        .toList()
-                                        .isNotEmpty
-                                    ? const Color(0xFF323346)
-                                    : Colors.transparent,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                        profile.categories[index].category.icon,
-                                        color: countedCategories[profile
-                                                    .categories[index].id] ==
-                                                0
-                                            ? Color.fromARGB(255, 149, 150, 159)
-                                            : profile.categories[index].category
-                                                .color,
-                                        size: 16),
-                                    SizedBox(width: 10),
-                                    Text(
-                                        profile.categories[index].category.name,
-                                        style: TextStyle(
+        setState(() {});
+      },
+      child: Container(
+        color:
+            openProfiles[profile.id]! ? Colors.transparent : Colors.transparent,
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          Icon(
+            openProfiles[profile.id]!
+                ? Iconsax.arrow_down_1
+                : Iconsax.arrow_right_3,
+            size: 20,
+          ),
+          const SizedBox(width: 15),
+          Container(
+            width: 25,
+            height: 25,
+            decoration: BoxDecoration(
+                color:
+                    serviceEnum.color, //widget.service.service.target!.color,
+                borderRadius: BorderRadius.circular(5)),
+            child: Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: SvgPicture.asset(
+                serviceEnum.image,
+                color: Colors.white,
+                matchTextDirection: true,
+              ),
+            ),
+          ),
+          const SizedBox(width: 15),
+          Expanded(
+            child: Text(
+              "${profile.name}",
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
+
+  Widget _categoryList(ProfileDocument profile) {
+    return Column(
+      children: [
+        const SizedBox(height: 10),
+        SingleChildScrollView(
+          child: Column(
+              children: List.generate(
+                  profile.categories.length,
+                  (index) => validCategories
+                          .contains(profile.categories[index].category)
+                      ? Padding(
+                          padding: EdgeInsets.only(top: 5),
+                          child: GestureDetector(
+                            onTap: countedCategories[
+                                        profile.categories[index].id] ==
+                                    0
+                                ? () {}
+                                : () {
+                                    chosenCategories
+                                            .where((element) =>
+                                                element.id ==
+                                                profile.categories[index].id)
+                                            .toList()
+                                            .isNotEmpty
+                                        ? chosenCategories.remove(
+                                            chosenCategories
+                                                .firstWhere((element) =>
+                                                    element.id ==
+                                                    profile
+                                                        .categories[index].id))
+                                        : chosenCategories
+                                            .add(profile.categories[index]);
+
+                                    setState(
+                                      () {},
+                                    );
+                                  },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 10),
+                              decoration: BoxDecoration(
+                                  color: chosenCategories
+                                          .where((element) =>
+                                              element.id ==
+                                              profile.categories[index].id)
+                                          .toList()
+                                          .isNotEmpty
+                                      ? const Color(0xFF323346)
+                                      : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(7)),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        height: 20,
+                                        width: 20,
+                                        child: Icon(
+                                          profile
+                                              .categories[index].category.icon,
+                                          size: 20,
                                           color: countedCategories[profile
                                                       .categories[index].id] ==
                                                   0
                                               ? Color.fromARGB(
                                                   255, 149, 150, 159)
-                                              : Colors.white,
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: 12,
-                                        )),
-                                  ],
-                                ),
-                                Text(
-                                  countedCategories[
-                                          profile.categories[index].id]
-                                      .toString(),
-                                  style: TextStyle(
-                                    color: countedCategories[
-                                                profile.categories[index].id] ==
-                                            0
-                                        ? Color.fromARGB(255, 149, 150, 159)
-                                        : Colors.white,
+                                              : profile.categories[index]
+                                                  .category.color,
+                                        ),
+                                      ),
+                                      SizedBox(width: 12),
+                                      Text(
+                                        profile.categories[index].category.name,
+                                        style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400,
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
+                                    ],
                                   ),
-                                )
-                              ],
+                                  Text(
+                                    countedCategories[
+                                            profile.categories[index].id]
+                                        .toString(),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 12,
+                                      color: countedCategories[profile
+                                                  .categories[index].id] ==
+                                              0
+                                          ? Color.fromARGB(255, 149, 150, 159)
+                                          : Colors.white,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                    : Container())),
-      ),
+                        )
+                      : Container())),
+        ),
+      ],
     );
   }
 

@@ -15,12 +15,20 @@ class BrowseView extends StatefulWidget {
 
 class _BrowseViewState extends State<BrowseView> {
   final _activeScreen = ViewScreen.browse;
+  _callback() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return getWaultarDesktopMainBody(
       context,
-      MenuPanel(active: _activeScreen),
+      MenuPanel(
+        active: _activeScreen,
+        callback: () {
+          _callback();
+        },
+      ),
       const TopPanel(),
       const Explorer(),
     );

@@ -20,6 +20,7 @@ import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/entities/nodes/name_node.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:waultar/presentation/widgets/browse/datapoint_widget.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget_box.dart';
 
@@ -49,8 +50,10 @@ class _ExplorerState extends State<Explorer> {
   void initState() {
     super.initState();
     profiles = _explorerService.getAllProfiles();
-    service = profiles.first;
-    folder = FolderItem(service);
+    if (profiles.isNotEmpty) {
+      service = profiles.first;
+      folder = FolderItem(service);
+    }
   }
 
   @override
@@ -69,7 +72,10 @@ class _ExplorerState extends State<Explorer> {
       ),
       const SizedBox(height: 20),
       profiles.isEmpty
-          ? Center(child: const Text("Upload data to use Explorer"))
+          ? Text(
+              "Upload data to use explorer",
+              style: themeProvider.themeData().textTheme.headline4,
+            )
           : setup()
     ]);
   }
@@ -277,66 +283,7 @@ class _ExplorerState extends State<Explorer> {
   Widget datapointOverview() {
     if (datapoint == null) return Text("Choose a data point");
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          datapoint!.stringName,
-          style: themeProvider.themeData().textTheme.headline1,
-        ),
-        SizedBox(height: 10),
-        Wrap(
-            spacing: double.infinity,
-            runSpacing: 10,
-            children: List.generate(
-                datapoint!.asMap.length,
-                (index) => Wrap(
-                      children: [
-                        RichText(
-                          text: TextSpan(
-                            style: DefaultTextStyle.of(context).style,
-                            children: <TextSpan>[
-                              TextSpan(
-                                text:
-                                    "${datapoint!.asMap.entries.elementAt(index).key}: ",
-                                style: themeProvider
-                                    .themeData()
-                                    .textTheme
-                                    .headline4,
-                              ),
-                              TextSpan(
-                                text:
-                                    "${datapoint!.asMap.entries.elementAt(index).value}",
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ))),
-        datapoint!.asMap.containsKey("photos")
-            ? photoList(datapoint!.asMap["photos"])
-            : Container()
-      ],
-    );
-  }
-
-  Widget photoList(dynamic photos) {
-    return Container();
-    // Map<dynamic, dynamic> map = photos.map((a, b) => MapEntry(a, b));
-
-    // switch (photos.runtimeType) {
-    //   case Map:
-    //     Map photoMap = photos;
-    //     return Image.file(File(photoMap["uri"]));
-    //   case List:
-    //     List photoList = photos;
-    //     return Column(
-    //       children:
-    //           List.generate(photoList.length, (index) => Image.file(File(""))),
-    //     );
-    //   default:
-    //     return const Text("No photo");
-    //}
+    return DatapointWidget(datapoint: datapoint!);
   }
 }
 

@@ -1,12 +1,13 @@
 import 'dart:io';
 import 'dart:math';
-
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tuple/tuple.dart';
+import 'package:waultar/configs/globals/service_enums.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_dashboard_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
@@ -45,6 +46,7 @@ class _DashboardState extends State<Dashboard> {
   late var mostActive;
   var testText = TextEditingController();
   double testScore = -1;
+  Map<int, int> serviceAlpha = {};
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +54,8 @@ class _DashboardState extends State<Dashboard> {
     themeProvider = Provider.of<ThemeProvider>(context);
     profiles = _dashboardService.getAllProfiles();
     weekdays = _dashboardService.getActiveWeekday();
-    if (profiles.isNotEmpty) {
-      mostActive = weekdays.reduce(
-          (value, element) => value.item2 <= element.item2 ? element : value);
-    }
+
+    if (profiles.isNotEmpty) _alphaGenerator();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,98 +77,159 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  void _alphaGenerator() {
+    var before = profiles.first.service;
+    var count = 0;
+    for (int i = 0; i < profiles.length; i++) {
+      if (profiles[i].service.target!.id != before.target!.id) {
+        count = 0;
+      }
+      serviceAlpha.addAll({i: count});
+      count++;
+      before = profiles[i].service;
+    }
+    if (profiles.isNotEmpty) {
+      mostActive = weekdays.reduce(
+          (value, element) => value.item2 <= element.item2 ? element : value);
+    }
+  }
+
   Widget _dashboardWidgets() {
-    return Column(
+    var widgets = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(children: [Expanded(child: _services())]),
+        Text(
+          "Overview",
+          style: themeProvider.themeData().textTheme.headline4,
+        ),
+        const SizedBox(height: 15),
+        Wrap(
+          spacing: 20,
+          runSpacing: 20,
+          children: [
+            Container(
+                height: 300,
+                width: 300,
+                constraints:
+                    const BoxConstraints(minHeight: 300, minWidth: 300),
+                child: _circleGraph()),
+            Container(
+                constraints:
+                    const BoxConstraints(minHeight: 300, minWidth: 300),
+                child: graphOverview()),
+          ],
+        ),
+        const SizedBox(height: 20),
+        Row(
+          // spacing: double.infinity,
+          // runSpacing: 20,
+          children: [
+            Container(
+              height: 95,
+              child: DefaultWidgetBox(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Most Active Year",
+                      style: themeProvider.themeData().textTheme.headline4!),
+                  Text("${_dashboardService.getMostActiveYear().toString()}",
+                      style: themeProvider.themeData().textTheme.headline3!)
+                ],
+              )),
+            ),
+            SizedBox(width: 20),
+            Container(
+              height: 95,
+              child: DefaultWidgetBox(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Most Active time of day",
+                      style: themeProvider.themeData().textTheme.headline4!),
+                  Text("3 - 4 PM",
+                      style: themeProvider.themeData().textTheme.headline3!)
+                ],
+              )),
+            ),
+            SizedBox(width: 20),
+            Expanded(
+              child: Container(
+                height: 95,
+                child: DefaultWidgetBox(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Some other stat here",
+                        style: themeProvider.themeData().textTheme.headline4!),
+                    Text("",
+                        style: themeProvider.themeData().textTheme.headline3!)
+                  ],
+                )),
+              ),
+            ),
+          ],
+        ),
         const SizedBox(height: 20),
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Overview",
-                  style: themeProvider.themeData().textTheme.headline4,
-                ),
-                const SizedBox(height: 15),
-                IntrinsicHeight(
-                    child: Row(
-                  children: [
-                    Expanded(child: _datapointGraph()),
-                    SizedBox(width: 20),
-                    SizedBox(height: 300, width: 300, child: _serviceGraph())
-                  ],
-                )),
-                const SizedBox(height: 20),
-                IntrinsicHeight(
-                  child: Row(
-                    children: [
-                      Container(
-                        color: Colors.orange,
-                        height: 100,
-                        width: 100,
-                      ),
-                      const SizedBox(width: 20),
-                      Container(
-                        color: Colors.orange,
-                        width: 200,
-                      ),
-                      const SizedBox(width: 20),
-                      Expanded(child: Container(color: Colors.purple))
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                        child: Container(height: 200, color: Colors.orange)),
-                    const SizedBox(width: 20),
-                    Expanded(
-                        child: Container(height: 400, color: Colors.purple))
-                  ],
-                )
-              ],
+                child: Container(
+              height: 200,
+              child: DefaultWidget(
+                title: "Your first post",
+                child: Container(),
+              ),
             )),
             const SizedBox(width: 20),
-            Container(
-              // decoration: BoxDecoration(
-              //   borderRadius: BorderRadius.circular(10),
-              //   color: themeProvider.themeData().primaryColor,
-              // ),
-              width: 400,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Analysis",
-                    style: themeProvider.themeData().textTheme.headline4,
-                  ),
-                  const SizedBox(height: 15),
-                  ImageClassifyWidget(),
-                  // Divider(
-                  //   height: 15,
-                  //   indent: 20,
-                  //   endIndent: 20,
-                  // ),
-                  const SizedBox(height: 20),
-                  _sentimentTestWidget(),
-                  // Divider(
-                  //   height: 15,
-                  //   indent: 20,
-                  //   endIndent: 20,
-                  // ),
-                  const SizedBox(height: 20),
-                  SentimentWidget()
-                ],
+            Expanded(
+                child: Container(
+              height: 200,
+              child: DefaultWidget(
+                title: "Graph",
+                child: Container(),
               ),
-            ),
+            )),
           ],
-        ),
+        )
+      ],
+    );
+
+    var analysis = Container(
+      width: 400,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Analysis",
+            style: themeProvider.themeData().textTheme.headline4,
+          ),
+          const SizedBox(height: 15),
+          ImageClassifyWidget(),
+          const SizedBox(height: 20),
+          _sentimentTestWidget(),
+          const SizedBox(height: 20),
+          SentimentWidget()
+        ],
+      ),
+    );
+
+    return Column(
+      children: [
+        Row(children: [Expanded(child: _services())]),
+        const SizedBox(height: 20),
+        MediaQuery.of(context).size.width < 1010
+            ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [widgets, SizedBox(height: 20), analysis])
+            : Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Expanded(child: widgets),
+                SizedBox(width: 20),
+                analysis
+              ])
       ],
     );
   }
@@ -197,30 +258,118 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget _serviceGraph() {
+  Widget graphOverview() {
+    var dpSum = profiles.fold<int>(
+        0,
+        (previousValue, element) =>
+            previousValue +
+            element.categories.fold(
+                0, (previousValue, element) => previousValue + element.count));
     return DefaultWidget(
         title: "Service Distribution",
-        child: Expanded(
-          child: Column(
-            children: [
-              SizedBox(height: 5),
-              Expanded(
-                child: Container(
-                  constraints: BoxConstraints(minWidth: 300),
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(width: 20, color: Colors.yellow)),
-                ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 30),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(NumberFormat.compact().format(dpSum),
+                    style: themeProvider.themeData().textTheme.headline3!),
+                Text("Total datapoints uploaded",
+                    style: themeProvider.themeData().textTheme.headline4)
+              ],
+            ),
+            SizedBox(height: 30),
+            Container(
+              child: Wrap(
+                spacing: double.infinity,
+                runSpacing: 10,
+                children: List.generate(
+                    profiles.length,
+                    (index) => Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              height: 10,
+                              width: 10,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: getFromID(
+                                          profiles[index].service.target!.id)
+                                      .color
+                                      .withAlpha(
+                                          255 - (serviceAlpha[index]! * 100))),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text("${profiles[index].name}:"),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Text(
+                              "${NumberFormat.compact().format(profiles[index].categories.fold<int>(0, (previousValue, element) => previousValue + element.count))}",
+                            )
+                          ],
+                        )),
               ),
-            ],
-          ),
+            ),
+          ],
         ));
   }
 
-  Widget _datapointGraph() {
-    return DefaultWidget(
-      title: "Last week",
-      child: Text("TODO"),
+  Widget _circleGraph() {
+    var dpSum = profiles.fold<int>(
+        0,
+        (previousValue, element) =>
+            previousValue +
+            element.categories.fold(
+                0, (previousValue, element) => previousValue + element.count));
+
+    return DefaultWidgetBox(
+      child: Stack(
+        children: [
+          Center(
+              child: Container(
+                  height: 100,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: const Color(0xFF323346),
+                  ),
+                  child: Center(
+                      child: Text(
+                    "DP",
+                    style: TextStyle(
+                        fontSize: 30,
+                        color: themeProvider.themeData().primaryColor,
+                        fontWeight: FontWeight.w700),
+                  )))),
+          Container(
+            padding: EdgeInsets.all(10),
+            child: PieChart(
+              PieChartData(
+                  sectionsSpace: 5,
+                  sections: List.generate(
+                    profiles.length,
+                    (index) => PieChartSectionData(
+                        value: profiles[index].categories.fold<int>(
+                                0,
+                                (previousValue, element) =>
+                                    previousValue + element.count) /
+                            dpSum,
+                        radius: 30,
+                        title:
+                            "${NumberFormat.compact().format(profiles[index].categories.fold<int>(0, (previousValue, element) => previousValue + element.count) / dpSum * 100)}%",
+                        color: getFromID(profiles[index].service.target!.id)
+                            .color
+                            .withAlpha(255 - (serviceAlpha[index]! * 100))),
+                  )),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -459,63 +608,55 @@ class _DashboardState extends State<Dashboard> {
   //       ));
   // }
 
-  // Widget _diagram1() {
-  //   return Expanded(
-  //       child: DefaultWidget(
-  //     title: "Weekly Activity",
-  //     child: Expanded(
-  //         child: Container(
-  //             height: 100,
-  //             child: Row(
-  //                 children: List.generate(
-  //                     weekdays.length,
-  //                     (index) => Expanded(
-  //                           child: Column(
-  //                             children: [
-  //                               Expanded(
-  //                                 flex: (100 -
-  //                                         (weekdays[index].item2 /
-  //                                             (mostActive.item2 * 1.5) *
-  //                                             100))
-  //                                     .floor(),
-  //                                 child: Container(
-  //                                   color: Colors.transparent,
-  //                                 ),
-  //                               ),
-  //                               Expanded(
-  //                                 flex: (weekdays[index].item2 /
-  //                                         (mostActive.item2 * 1.5) *
-  //                                         100)
-  //                                     .ceil(),
-  //                                 child: Container(
-  //                                   width: 10,
-  //                                   color: themeProvider.themeMode().themeColor,
-  //                                 ),
-  //                               ),
-  //                             ],
-  //                           ),
-  //                         ))))),
-  //   ));
-  // }
-
-  // Widget _diagram2() {
-  //   return Expanded(
-  //     child: DefaultWidget(
-  //         title: "Data overview",
-  //         child: Expanded(
-  //           child: Container(),
-  //         )),
-  //   );
-  // }
+  Widget _diagram1() {
+    return Expanded(
+        child: DefaultWidget(
+      title: "Weekly Activity",
+      child: Expanded(
+          child: Container(
+              height: 100,
+              child: Row(
+                  children: List.generate(
+                      weekdays.length,
+                      (index) => Expanded(
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  flex: (100 -
+                                          (weekdays[index].item2 /
+                                              (mostActive.item2 * 1.5) *
+                                              100))
+                                      .floor(),
+                                  child: Container(
+                                    color: Colors.transparent,
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: (weekdays[index].item2 /
+                                          (mostActive.item2 * 1.5) *
+                                          100)
+                                      .ceil(),
+                                  child: Container(
+                                    width: 10,
+                                    color: themeProvider.themeMode().themeColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ))))),
+    ));
+  }
 
   Widget _sentimentTestWidget() {
     return DefaultWidget(
         title: "Sentiment Test",
+        description: "Test the sentiment tool by input text",
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Input text to test sentiment"),
-            SizedBox(height: 10),
+            // Text("Input text to test sentiment"),
+
+            const SizedBox(height: 10),
             Container(
               height: 40,
               child: TextFormField(
@@ -550,7 +691,22 @@ class _DashboardState extends State<Dashboard> {
               ],
             ),
             SizedBox(height: 20),
-            Text("Sentiment Score: $testScore"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Sentiment Score: ",
+                  style: const TextStyle(
+                      color: Color.fromARGB(255, 149, 150, 159),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  testScore.toStringAsFixed(3),
+                  style: TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
           ],
         ));
   }

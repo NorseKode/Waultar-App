@@ -93,8 +93,6 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                     ),
                     Text(
                       "How many images to tag?",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w400, fontSize: 11),
                     ),
                     SizedBox(height: 10),
                     Container(
@@ -124,10 +122,10 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                             style: const TextStyle(
                                 color: Color.fromARGB(255, 149, 150, 159),
                                 fontFamily: "Poppins",
-                                fontSize: 11,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w500)),
                         Text("${_imagesToTagCount}",
-                            style: TextStyle(fontSize: 11)),
+                            style: TextStyle(fontSize: 12)),
                       ],
                     ),
                     Row(
@@ -138,12 +136,12 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                           style: const TextStyle(
                               color: Color.fromARGB(255, 149, 150, 159),
                               fontFamily: "Poppins",
-                              fontSize: 11,
+                              fontSize: 12,
                               fontWeight: FontWeight.w500),
                         ),
                         Text(
                           "${_timeEstimate(_imagesToTagCount)}",
-                          style: TextStyle(fontSize: 11),
+                          style: TextStyle(fontSize: 12),
                         ),
                       ],
                     ),

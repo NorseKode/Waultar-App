@@ -15,11 +15,20 @@ class TimelineView extends StatefulWidget {
 class _TimelineViewState extends State<TimelineView> {
   final _activeScreen = ViewScreen.timeline;
 
+  _callback() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return getWaultarDesktopMainBody(
       context,
-      MenuPanel(active: _activeScreen),
+      MenuPanel(
+        active: _activeScreen,
+        callback: () {
+          _callback();
+        },
+      ),
       const TopPanel(),
       const Timeline(),
     );

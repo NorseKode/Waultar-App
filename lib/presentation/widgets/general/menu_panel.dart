@@ -15,7 +15,10 @@ import 'package:waultar/startup.dart';
 
 class MenuPanel extends StatefulWidget {
   final ViewScreen active;
-  const MenuPanel({required this.active, Key? key}) : super(key: key);
+  final Function callback;
+  const MenuPanel(
+      {required, required this.callback, required this.active, Key? key})
+      : super(key: key);
 
   @override
   _MenuPanelState createState() => _MenuPanelState();
@@ -59,7 +62,7 @@ class _MenuPanelState extends State<MenuPanel> {
                       style: TextStyle(
                           color: themeProvider.themeMode().tonedTextColor,
                           fontSize: 10,
-                          fontWeight: FontWeight.w200),
+                          fontWeight: FontWeight.w300),
                     ),
                     const SizedBox(width: 5),
                     // ignore: avoid_unnecessary_containers
@@ -238,6 +241,7 @@ class _MenuPanelState extends State<MenuPanel> {
                             Text(
                               isLoading ? _progressMessage : "Upload data",
                               style: TextStyle(fontWeight: FontWeight.w500),
+                              overflow: TextOverflow.ellipsis,
                             )
                           ],
                         ),
@@ -270,6 +274,7 @@ class _MenuPanelState extends State<MenuPanel> {
     setState(() {
       _progressMessage = message;
       isLoading = !isDone;
+      if (isDone) widget.callback();
     });
   }
 }

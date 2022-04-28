@@ -48,7 +48,7 @@ class _DefaultWidgetState extends State<DefaultWidget> {
                     style: const TextStyle(
                         color: Color.fromARGB(255, 149, 150, 159),
                         fontFamily: "Poppins",
-                        fontSize: 11,
+                        fontSize: 12,
                         fontWeight: FontWeight.w500),
                   ),
                 ],
