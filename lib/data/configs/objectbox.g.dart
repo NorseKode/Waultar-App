@@ -54,7 +54,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(2, 1030856511635179812),
       name: 'DataCategory',
-      lastPropertyId: const IdUid(6, 8596063191314543503),
+      lastPropertyId: const IdUid(7, 7948130630070163015),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -68,16 +68,6 @@ final _entities = <ModelEntity>[
             type: 6,
             flags: 0),
         ModelProperty(
-            id: const IdUid(3, 2315140064090849086),
-            name: 'matchingFoldersFacebook',
-            type: 30,
-            flags: 0),
-        ModelProperty(
-            id: const IdUid(4, 2152544415744737755),
-            name: 'matchingFoldersInstagram',
-            type: 30,
-            flags: 0),
-        ModelProperty(
             id: const IdUid(5, 7049662799421261250),
             name: 'profileId',
             type: 11,
@@ -88,7 +78,13 @@ final _entities = <ModelEntity>[
             id: const IdUid(6, 8596063191314543503),
             name: 'dbCategory',
             type: 6,
-            flags: 0)
+            flags: 0),
+        ModelProperty(
+            id: const IdUid(7, 7948130630070163015),
+            name: 'profileCategoryCombination',
+            type: 9,
+            flags: 2080,
+            indexId: const IdUid(28, 3839497319210028752))
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[
@@ -455,7 +451,8 @@ final _entities = <ModelEntity>[
             id: const IdUid(5, 2396916416399033536),
             name: 'mediaTags',
             type: 9,
-            flags: 0),
+            flags: 2048,
+            indexId: const IdUid(29, 8879363302499341035)),
         ModelProperty(
             id: const IdUid(6, 3166776243268138274),
             name: 'mediaTagScores',
@@ -603,7 +600,8 @@ final _entities = <ModelEntity>[
             id: const IdUid(2, 767691660595695284),
             name: 'name',
             type: 9,
-            flags: 0),
+            flags: 2080,
+            indexId: const IdUid(30, 1184298938947409531)),
         ModelProperty(
             id: const IdUid(3, 6477047724359941093),
             name: 'serviceId',
@@ -826,12 +824,12 @@ ModelDefinition getObjectBoxModel() {
   final model = ModelInfo(
       entities: _entities,
       lastEntityId: const IdUid(15, 5720511274814738726),
-      lastIndexId: const IdUid(27, 1840948439946308396),
+      lastIndexId: const IdUid(30, 1184298938947409531),
       lastRelationId: const IdUid(12, 4215224062452969106),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [],
+      retiredPropertyUids: const [2315140064090849086, 2152544415744737755],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -876,21 +874,14 @@ ModelDefinition getObjectBoxModel() {
           object.id = id;
         },
         objectToFB: (DataCategory object, fb.Builder fbb) {
-          final matchingFoldersFacebookOffset = fbb.writeList(object
-              .matchingFoldersFacebook
-              .map(fbb.writeString)
-              .toList(growable: false));
-          final matchingFoldersInstagramOffset = fbb.writeList(object
-              .matchingFoldersInstagram
-              .map(fbb.writeString)
-              .toList(growable: false));
-          fbb.startTable(7);
+          final profileCategoryCombinationOffset =
+              fbb.writeString(object.profileCategoryCombination);
+          fbb.startTable(8);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.count);
-          fbb.addOffset(2, matchingFoldersFacebookOffset);
-          fbb.addOffset(3, matchingFoldersInstagramOffset);
           fbb.addInt64(4, object.profile.targetId);
           fbb.addInt64(5, object.dbCategory);
+          fbb.addOffset(6, profileCategoryCombinationOffset);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -901,14 +892,9 @@ ModelDefinition getObjectBoxModel() {
           final object = DataCategory(
               id: const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0),
               count: const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0),
-              matchingFoldersFacebook: const fb.ListReader<String>(
-                      fb.StringReader(asciiOptimization: true),
-                      lazy: false)
-                  .vTableGet(buffer, rootOffset, 8, []),
-              matchingFoldersInstagram: const fb.ListReader<String>(
-                      fb.StringReader(asciiOptimization: true),
-                      lazy: false)
-                  .vTableGet(buffer, rootOffset, 10, []))
+              profileCategoryCombination:
+                  const fb.StringReader(asciiOptimization: true)
+                      .vTableGet(buffer, rootOffset, 16, ''))
             ..dbCategory =
                 const fb.Int64Reader().vTableGet(buffer, rootOffset, 14, 0);
           object.profile.targetId =
@@ -1669,21 +1655,17 @@ class DataCategory_ {
   static final count =
       QueryIntegerProperty<DataCategory>(_entities[1].properties[1]);
 
-  /// see [DataCategory.matchingFoldersFacebook]
-  static final matchingFoldersFacebook =
-      QueryStringVectorProperty<DataCategory>(_entities[1].properties[2]);
-
-  /// see [DataCategory.matchingFoldersInstagram]
-  static final matchingFoldersInstagram =
-      QueryStringVectorProperty<DataCategory>(_entities[1].properties[3]);
-
   /// see [DataCategory.profile]
   static final profile = QueryRelationToOne<DataCategory, ProfileDocument>(
-      _entities[1].properties[4]);
+      _entities[1].properties[2]);
 
   /// see [DataCategory.dbCategory]
   static final dbCategory =
-      QueryIntegerProperty<DataCategory>(_entities[1].properties[5]);
+      QueryIntegerProperty<DataCategory>(_entities[1].properties[3]);
+
+  /// see [DataCategory.profileCategoryCombination]
+  static final profileCategoryCombination =
+      QueryStringProperty<DataCategory>(_entities[1].properties[4]);
 }
 
 /// [DataPoint] entity fields to define ObjectBox queries.

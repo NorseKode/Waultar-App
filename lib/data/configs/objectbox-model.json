@@ -24,7 +24,7 @@
     },
     {
       "id": "2:1030856511635179812",
-      "lastPropertyId": "6:8596063191314543503",
+      "lastPropertyId": "7:7948130630070163015",
       "name": "DataCategory",
       "properties": [
         {
@@ -39,16 +39,6 @@
           "type": 6
         },
         {
-          "id": "3:2315140064090849086",
-          "name": "matchingFoldersFacebook",
-          "type": 30
-        },
-        {
-          "id": "4:2152544415744737755",
-          "name": "matchingFoldersInstagram",
-          "type": 30
-        },
-        {
           "id": "5:7049662799421261250",
           "name": "profileId",
           "type": 11,
@@ -60,6 +50,13 @@
           "id": "6:8596063191314543503",
           "name": "dbCategory",
           "type": 6
+        },
+        {
+          "id": "7:7948130630070163015",
+          "name": "profileCategoryCombination",
+          "type": 9,
+          "flags": 2080,
+          "indexId": "28:3839497319210028752"
         }
       ],
       "relations": []
@@ -434,7 +431,9 @@
         {
           "id": "5:2396916416399033536",
           "name": "mediaTags",
-          "type": 9
+          "type": 9,
+          "flags": 2048,
+          "indexId": "29:8879363302499341035"
         },
         {
           "id": "6:3166776243268138274",
@@ -590,7 +589,9 @@
         {
           "id": "2:767691660595695284",
           "name": "name",
-          "type": 9
+          "type": 9,
+          "flags": 2080,
+          "indexId": "30:1184298938947409531"
         },
         {
           "id": "3:6477047724359941093",
@@ -800,14 +801,17 @@
     }
   ],
   "lastEntityId": "15:5720511274814738726",
-  "lastIndexId": "27:1840948439946308396",
+  "lastIndexId": "30:1184298938947409531",
   "lastRelationId": "12:4215224062452969106",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    2315140064090849086,
+    2152544415744737755
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

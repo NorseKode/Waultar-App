@@ -244,8 +244,8 @@ class _TimelineState extends State<Timeline> {
       tooltipBehavior: _tooltipBehavior,
       zoomPanBehavior: ZoomPanBehavior(
         enablePanning: true,
-        zoomMode: ZoomMode.x,
-        enableMouseWheelZooming: _chosenChartType.canZoom,
+        // zoomMode: ZoomMode.x,
+        // enableMouseWheelZooming: _chosenChartType.canZoom,
       ),
       legend: Legend(
         isVisible: true,
