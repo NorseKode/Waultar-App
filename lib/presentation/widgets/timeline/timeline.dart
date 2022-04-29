@@ -9,6 +9,7 @@ import 'package:waultar/data/repositories/datapoint_repo.dart';
 import 'package:waultar/domain/services/timeline_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_dropdown.dart';
 import 'package:waultar/startup.dart';
 
 class Timeline extends StatefulWidget {
@@ -50,6 +51,7 @@ class _TimelineState extends State<Timeline> {
   @override
   Widget build(BuildContext context) {
     _themeProvider = Provider.of<ThemeProvider>(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -58,7 +60,19 @@ class _TimelineState extends State<Timeline> {
           style: _themeProvider.themeData().textTheme.headline3,
         ),
         const SizedBox(height: 10),
-        _profileSelector(),
+        Row(
+          children: [
+            _profileSelector(),
+            selectedTab == 0
+                ? Row(children: [
+                    const SizedBox(width: 20),
+                    _chartTypeSelector(),
+                    const SizedBox(width: 20),
+                    _resetButton(),
+                  ])
+                : Container(),
+          ],
+        ),
         const SizedBox(height: 10),
         _tabs(),
       ],
@@ -84,11 +98,15 @@ class _TimelineState extends State<Timeline> {
       content: _sentimentChart(),
     ));
 
-    var controller = TabbedViewController(tabs);
-    controller.selectedIndex = selectedTab;
+    var tabController = TabbedViewController(tabs);
+
+    tabController.selectedIndex = selectedTab;
     TabbedView tabbedView = TabbedView(
-      controller: controller,
-      onTabSelection: (index) => selectedTab = index ?? 0,
+      controller: tabController,
+      onTabSelection: (index) {
+        selectedTab = index ?? 0;
+        setState(() {});
+      },
     );
     TabbedViewThemeData themeData =
         TabbedViewThemeData.dark(colorSet: Colors.grey);
@@ -97,6 +115,7 @@ class _TimelineState extends State<Timeline> {
         color: _themeProvider.themeData().primaryColor,
       );
     themeData.tab
+      ..textStyle = _themeProvider.themeData().textTheme.headline4!
       ..padding = EdgeInsets.fromLTRB(10, 4, 10, 4)
       ..decoration = BoxDecoration(
         color: Color(0xFF1F202B),
@@ -105,7 +124,6 @@ class _TimelineState extends State<Timeline> {
           BoxDecoration(color: _themeProvider.themeData().primaryColor)
       ..highlightedStatus.decoration =
           BoxDecoration(color: _themeProvider.themeData().primaryColor);
-    ;
 
     TabbedViewTheme tabTheme =
         TabbedViewTheme(child: tabbedView, data: themeData);
@@ -113,19 +131,20 @@ class _TimelineState extends State<Timeline> {
   }
 
   Widget _profileSelector() {
-    return DropdownButton(
-      value: _timelineService.currentProfile,
-      items: List.generate(
+    var items = List.generate(
         _timelineService.allProfiles.length,
-        (index) => DropdownMenuItem(
-          child:
-              Text(_profileNameInDropDown(_timelineService.allProfiles[index])),
-          value: _timelineService.allProfiles[index],
-        ),
-      ),
-      onChanged: (ProfileDocument? profile) {
+        (index) => MenuItem(
+            _profileNameInDropDown(_timelineService.allProfiles[index]),
+            _timelineService.allProfiles[index]));
+    return DefaultDropdown(
+      value: items.firstWhere(
+          (element) => element.value.id == _timelineService.currentProfile!.id),
+      items: items,
+      onChanged: (MenuItem? menuitem) {
         setState(() {
-          _timelineService.updateProfile(profile!);
+          if (menuitem != null) {
+            _timelineService.updateProfile(menuitem.value! as ProfileDocument);
+          }
         });
       },
     );
@@ -140,6 +159,24 @@ class _TimelineState extends State<Timeline> {
   }
 
   Widget _chartTypeSelector() {
+    var items = List.generate(
+        ChartSeriesType.values.length,
+        (index) => MenuItem(
+              ChartSeriesType.values[index].chartName,
+              ChartSeriesType.values[index],
+            ));
+
+    return DefaultDropdown(
+      value: items.firstWhere((element) => element.value == _chosenChartType),
+      items: items,
+      onChanged: (MenuItem? menuitem) {
+        setState(() {
+          if (menuitem != null) {
+            _chosenChartType = menuitem.value ?? ChartSeriesType.stackedColumns;
+          }
+        });
+      },
+    );
     return DropdownButton(
       value: _chosenChartType,
       items: List.generate(
@@ -239,9 +276,9 @@ class _TimelineState extends State<Timeline> {
       children: [
         Row(
           children: [
-            _chartTypeSelector(),
-            const SizedBox(width: 20),
-            _resetButton(),
+            //_chartTypeSelector(),
+            //const SizedBox(width: 20),
+            //_resetButton(),
           ],
         ),
         const SizedBox(height: 15),
