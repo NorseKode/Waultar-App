@@ -80,10 +80,12 @@ class _DashboardState extends State<Dashboard> {
   void _alphaGenerator() {
     var before = profiles.first.service;
     var count = 0;
+
     for (int i = 0; i < profiles.length; i++) {
       if (profiles[i].service.target!.id != before.target!.id) {
         count = 0;
       }
+
       serviceAlpha.addAll({i: count});
       count++;
       before = profiles[i].service;
@@ -199,7 +201,7 @@ class _DashboardState extends State<Dashboard> {
     );
 
     var analysis = Container(
-      width: 400,
+      width: 350,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -221,7 +223,7 @@ class _DashboardState extends State<Dashboard> {
       children: [
         Row(children: [Expanded(child: _services())]),
         const SizedBox(height: 20),
-        MediaQuery.of(context).size.width < 1010
+        MediaQuery.of(context).size.width < 1275
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [widgets, SizedBox(height: 20), analysis])
@@ -299,7 +301,7 @@ class _DashboardState extends State<Dashboard> {
                                           profiles[index].service.target!.id)
                                       .color
                                       .withAlpha(
-                                          255 - (serviceAlpha[index]! * 100))),
+                                          255 - (serviceAlpha[index]! * 30))),
                             ),
                             SizedBox(
                               width: 10,
@@ -350,263 +352,27 @@ class _DashboardState extends State<Dashboard> {
             padding: EdgeInsets.all(10),
             child: PieChart(
               PieChartData(
-                  sectionsSpace: 5,
                   sections: List.generate(
-                    profiles.length,
-                    (index) => PieChartSectionData(
-                        value: profiles[index].categories.fold<int>(
-                                0,
-                                (previousValue, element) =>
-                                    previousValue + element.count) /
-                            dpSum,
-                        radius: 30,
-                        title:
-                            "${NumberFormat.compact().format(profiles[index].categories.fold<int>(0, (previousValue, element) => previousValue + element.count) / dpSum * 100)}%",
-                        color: getFromID(profiles[index].service.target!.id)
-                            .color
-                            .withAlpha(255 - (serviceAlpha[index]! * 100))),
-                  )),
+                profiles.length,
+                (index) => PieChartSectionData(
+                    value: profiles[index].categories.fold<int>(
+                            0,
+                            (previousValue, element) =>
+                                previousValue + element.count) /
+                        dpSum,
+                    radius: 30,
+                    title:
+                        "${NumberFormat.compact().format(profiles[index].categories.fold<int>(0, (previousValue, element) => previousValue + element.count) / dpSum * 100)}%",
+                    color: getFromID(profiles[index].service.target!.id)
+                        .color
+                        .withAlpha(255 - (serviceAlpha[index]! * 30))),
+              )),
             ),
           ),
         ],
       ),
     );
   }
-
-  // Widget _dashboardWidgets() {
-  //   return Row(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       Expanded(
-  //         flex: 2,
-  //         child: Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             _services(),
-  //             const SizedBox(height: 20),
-  //             Text(
-  //               "Highlights",
-  //               style: themeProvider.themeData().textTheme.headline4,
-  //             ),
-  //             const SizedBox(height: 15),
-  //             _highlightBar(),
-  //             const SizedBox(height: 20),
-  //             IntrinsicHeight(
-  //               child: Row(
-  //                 crossAxisAlignment: CrossAxisAlignment.stretch,
-  //                 children: [
-  //                   Expanded(child: _topMessageWidget()),
-  //                   const SizedBox(width: 20),
-  //                   Expanded(
-  //                     child: Column(
-  //                       children: [
-  //                         _diagram1(),
-  //                         const SizedBox(height: 20),
-  //                         _diagram2()
-  //                       ],
-  //                     ),
-  //                   )
-  //                 ],
-  //               ),
-  //             )
-  //           ],
-  //         ),
-  //       ),
-  //       const SizedBox(width: 20),
-  //       Container(
-  //           constraints: BoxConstraints(maxWidth: 330), child: _analysis()),
-  //     ],
-  //   );
-  // }
-
-  // Widget _services() {
-  //   List<Widget> serviceWidgets = List.generate(
-  //       profiles.length, (e) => ServiceWidget(service: profiles[e]));
-
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.stretch,
-  //     children: [
-  //       Text(
-  //         "Services",
-  //         style: themeProvider.themeData().textTheme.headline4,
-  //       ),
-  //       const SizedBox(height: 15),
-  //       Wrap(
-  //         runSpacing: 20,
-  //         spacing: 20,
-  //         children: List.generate(
-  //           serviceWidgets.length,
-  //           (index) => serviceWidgets[index],
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
-
-  // Widget _analysis() {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       Text(
-  //         "Data Analysis",
-  //         style: themeProvider.themeData().textTheme.headline4,
-  //       ),
-  //       const SizedBox(height: 15),
-  //       ImageClassifyWidget(),
-  //       const SizedBox(height: 20),
-  //       SentimentWidget(),
-  //       const SizedBox(height: 20),
-  //       _sentimentTestWidget(),
-  //     ],
-  //   );
-  // }
-
-  // Widget _highlightBar() {
-  //   return Container(
-  //     constraints: BoxConstraints(maxHeight: 70),
-  //     child: Row(
-  //       children: [
-  //         // _highlightWidget(Iconsax.activity5, Colors.amber, "Most Active Year",
-  //         //     "${_dashboardService.getMostActiveYear()}", Container()),
-  //         // SizedBox(
-  //         //   width: 20,
-  //         // ),
-  //         _highlightWidget(Iconsax.activity5, const Color(0xFF323346),
-  //             "Most Active Weekday", "${mostActive.item1}", Container()),
-  //         SizedBox(
-  //           width: 20,
-  //         ),
-  //         Expanded(
-  //           child: _highlightWidget(
-  //               Iconsax.activity5,
-  //               const Color(0xFF323346),
-  //               "Last Post",
-  //               "${DateFormat.yMMMd().format(DateTime.now())}",
-  //               Container()),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget _highlightWidget(
-  //     IconData icon, Color color, String title, String result, Widget child) {
-  //   return DefaultWidgetBox(
-  //     padding: EdgeInsets.all(15),
-  //     child: Row(
-  //       children: [
-  //         Container(
-  //           width: 40,
-  //           height: 40,
-  //           decoration: BoxDecoration(
-  //               color: color, //const Color(0xFF323346),
-  //               borderRadius: BorderRadius.circular(5)),
-  //           child: Icon(
-  //             icon,
-  //             color: color,
-  //           ),
-  //         ),
-  //         SizedBox(width: 10),
-  //         Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Text(
-  //               title,
-  //               style: const TextStyle(
-  //                   color: Color(0xFFABAAB8),
-  //                   fontSize: 10,
-  //                   fontWeight: FontWeight.w400),
-  //             ),
-  //             Text(
-  //               result,
-  //               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
-  //             )
-  //           ],
-  //         ),
-  //         SizedBox(width: 10),
-  //         child
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget _topMessageWidget() {
-  //   int top = 10;
-  //   var sortedMessages = _dashboardService.getSortedMessageCount(top);
-  //   List<Widget> topMessageList = List.generate(
-  //       sortedMessages.length,
-  //       (index) => Padding(
-  //             padding: EdgeInsets.only(top: 15),
-  //             child: Container(
-  //                 child: Row(
-  //               children: [
-  //                 Expanded(
-  //                   flex: 3,
-  //                   child: Row(
-  //                     children: [
-  //                       Container(
-  //                         height: 20,
-  //                         width: 20,
-  //                         decoration: BoxDecoration(
-  //                             shape: BoxShape.circle,
-  //                             border: Border.all(color: Colors.white)),
-  //                         child: Center(child: Text("${index + 1}")),
-  //                       ),
-  //                       SizedBox(
-  //                         width: 10,
-  //                       ),
-  //                       Text(sortedMessages[index].item1,
-  //                           overflow: TextOverflow.ellipsis,
-  //                           softWrap: false,
-  //                           style: themeProvider
-  //                               .themeData()
-  //                               .textTheme
-  //                               .headline4!
-  //                               .apply(
-  //                                   color: Colors.white, fontSizeDelta: 0.5)),
-  //                     ],
-  //                   ),
-  //                 ),
-  //                 Expanded(
-  //                   child: Text(
-  //                     sortedMessages[index].item2.toString(),
-  //                     textAlign: TextAlign.right,
-  //                     style: themeProvider
-  //                         .themeData()
-  //                         .textTheme
-  //                         .headline4!
-  //                         .apply(color: Colors.white, fontSizeDelta: 0.5),
-  //                   ),
-  //                 )
-  //               ],
-  //             )),
-  //           ));
-  //   topMessageList.insert(
-  //       0,
-  //       Row(
-  //         children: [
-  //           Expanded(
-  //               flex: 3,
-  //               child: Text(
-  //                 "Contact",
-  //                 style: themeProvider.themeData().textTheme.headline4,
-  //               )),
-  //           Expanded(
-  //               child: Text("Messages",
-  //                   textAlign: TextAlign.right,
-  //                   style: themeProvider.themeData().textTheme.headline4))
-  //         ],
-  //       ));
-
-  //   return DefaultWidget(
-  //       title: "Top Message Count",
-  //       child: Expanded(
-  //         child: Column(
-  //           children: topMessageList,
-  //         ),
-  //       ));
-  // }
 
   Widget _diagram1() {
     return Expanded(

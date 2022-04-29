@@ -61,9 +61,6 @@ class _DatapointWidgetState extends State<DatapointWidget> {
                                     .headline4,
                               ),
                               TextSpan(
-                                text: "hello",
-                              ),
-                              TextSpan(
                                 text:
                                     "${datapoint.asMap.entries.elementAt(index).value}",
                               ),

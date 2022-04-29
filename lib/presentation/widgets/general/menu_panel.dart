@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/configs/navigation/app_state.dart';
 import 'package:waultar/configs/navigation/router/app_route_path.dart';
 import 'package:waultar/configs/navigation/screen.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_dashboard_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
@@ -30,9 +32,19 @@ class _MenuPanelState extends State<MenuPanel> {
   final _parserService = locator.get<IParserService>(
     instanceName: 'parserService',
   );
+  final _dashboardService = locator.get<IDashboardService>(
+    instanceName: 'dashboardService',
+  );
   double menuWidth = 250;
   bool isLoading = false;
+  String _lastUploadText = "";
   var _progressMessage = "Initializing";
+
+  @override
+  void initState() {
+    _lastUploadText = _lastUpload();
+    super.initState();
+  }
 
   Widget logo() {
     var logo = SvgPicture.asset('lib/assets/graphics/logo2022.svg',
@@ -67,9 +79,9 @@ class _MenuPanelState extends State<MenuPanel> {
                     const SizedBox(width: 5),
                     // ignore: avoid_unnecessary_containers
                     Container(
-                      child: const Padding(
+                      child: Padding(
                         padding: EdgeInsets.fromLTRB(2, 2, 8, 2),
-                        child: Text("Feb 2. 2022",
+                        child: Text(_lastUploadText,
                             style: TextStyle(
                                 color: Color(0xFF4FB376),
                                 fontSize: 10,
@@ -82,6 +94,19 @@ class _MenuPanelState extends State<MenuPanel> {
         ],
       ),
     );
+  }
+
+  String _lastUpload() {
+    var profiles = _dashboardService.getAllProfiles();
+    var init = DateTime.parse("1857-12-24");
+    DateTime lastUploaded = init;
+    for (var profile in profiles) {
+      var temp = profile.created;
+
+      if (temp != null && temp.isAfter(lastUploaded)) lastUploaded = temp;
+    }
+    if (lastUploaded == init) return "No uploads yet";
+    return DateFormat('EE, MMM d. yyy').format(lastUploaded);
   }
 
   Widget menuButton(
@@ -238,10 +263,16 @@ class _MenuPanelState extends State<MenuPanel> {
                                     ))
                                 : Icon(Iconsax.arrow_up_1, size: 17),
                             SizedBox(width: 12),
-                            Text(
-                              isLoading ? _progressMessage : "Upload data",
-                              style: TextStyle(fontWeight: FontWeight.w500),
-                              overflow: TextOverflow.ellipsis,
+                            Container(
+                              width: 145,
+                              child: Text(
+                                isLoading ? _progressMessage : "Upload data",
+                                softWrap: false,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                overflow: TextOverflow.fade,
+                              ),
                             )
                           ],
                         ),
@@ -274,7 +305,10 @@ class _MenuPanelState extends State<MenuPanel> {
     setState(() {
       _progressMessage = message;
       isLoading = !isDone;
-      if (isDone) widget.callback();
+      if (isDone) {
+        _lastUploadText = _lastUpload();
+        widget.callback();
+      }
     });
   }
 }

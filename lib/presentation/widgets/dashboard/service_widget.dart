@@ -70,7 +70,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "145.034",
+                    "${NumberFormat.compact().format(widget.service.categories.fold<int>(0, (previousValue, element) => previousValue + element.count))}",
                     style: const TextStyle(
                         fontSize: 14, fontWeight: FontWeight.w400),
                   ),
@@ -86,7 +86,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Apr 27. 2022",
+                    "${DateFormat('EE, MMM d. yyy').format(widget.service.categories.first.dataPointNames.first.dataPoints.first.createdAt)}",
                     style: const TextStyle(
                         fontSize: 14, fontWeight: FontWeight.w400),
                   ),
