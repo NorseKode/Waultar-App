@@ -17,9 +17,8 @@ import 'package:waultar/startup.dart';
 
 class MenuPanel extends StatefulWidget {
   final ViewScreen active;
-  final Function callback;
-  const MenuPanel(
-      {required, required this.callback, required this.active, Key? key})
+  Function? callback;
+  MenuPanel({this.callback, required, required this.active, Key? key})
       : super(key: key);
 
   @override
@@ -106,7 +105,7 @@ class _MenuPanelState extends State<MenuPanel> {
       if (temp != null && temp.isAfter(lastUploaded)) lastUploaded = temp;
     }
     if (lastUploaded == init) return "No uploads yet";
-    return DateFormat('EE, MMM d. yyy').format(lastUploaded);
+    return DateFormat('MMM d. yyy').format(lastUploaded);
   }
 
   Widget menuButton(
@@ -307,7 +306,7 @@ class _MenuPanelState extends State<MenuPanel> {
       isLoading = !isDone;
       if (isDone) {
         _lastUploadText = _lastUpload();
-        widget.callback();
+        widget.callback!.call();
       }
     });
   }

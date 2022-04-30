@@ -339,9 +339,9 @@ class _GalleryState extends State<Gallery> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _topBar(),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
         if (_selectedMediaType == FileType.image) _searchbar(),
-        const SizedBox(height: 20),
+        const SizedBox(height: 15),
         _imageList(),
       ],
     );

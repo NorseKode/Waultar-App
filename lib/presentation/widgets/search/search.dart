@@ -118,14 +118,14 @@ class _SearchState extends State<Search> {
           "Search",
           style: themeProvider.themeData().textTheme.headline3,
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 10),
         _topBar(),
         const SizedBox(
-          height: 20.0,
+          height: 10.0,
         ),
         _searchCategoriesCheckBoxes(),
         const SizedBox(
-          height: 20.0,
+          height: 10.0,
         ),
         Expanded(
           // flex: 20,

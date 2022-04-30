@@ -70,7 +70,7 @@ class _ExplorerState extends State<Explorer> {
           ),
         ],
       ),
-      const SizedBox(height: 20),
+      const SizedBox(height: 10),
       profiles.isEmpty
           ? Text(
               "Upload data to use explorer",

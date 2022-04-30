@@ -25,9 +25,6 @@ class _TimelineViewState extends State<TimelineView> {
       context,
       MenuPanel(
         active: _activeScreen,
-        callback: () {
-          _callback();
-        },
       ),
       const TopPanel(),
       const Timeline(),

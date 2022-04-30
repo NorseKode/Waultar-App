@@ -26,7 +26,7 @@ import 'package:waultar/presentation/widgets/machine_models/image_classify_widge
 import 'package:waultar/startup.dart';
 
 class Dashboard extends StatefulWidget {
-  const Dashboard({Key? key}) : super(key: key);
+  Dashboard({Key? key}) : super(key: key);
 
   @override
   _DashboardState createState() => _DashboardState();
@@ -41,9 +41,8 @@ class _DashboardState extends State<Dashboard> {
   late AppLocalizations localizer;
   late ThemeProvider themeProvider;
   late List<ProfileDocument> profiles;
-  late List<Tuple2<String, double>> weekdays =
-      _dashboardService.getActiveWeekday();
-  late var mostActive;
+  late List<Tuple2<String, double>> weekdays;
+  Tuple2<String, double> mostActive = const Tuple2('Unknown', 0);
   var testText = TextEditingController();
   double testScore = -1;
   Map<int, int> serviceAlpha = {};
@@ -90,7 +89,7 @@ class _DashboardState extends State<Dashboard> {
       count++;
       before = profiles[i].service;
     }
-    if (profiles.isNotEmpty) {
+    if (profiles.isNotEmpty && weekdays.isNotEmpty) {
       mostActive = weekdays.reduce(
           (value, element) => value.item2 <= element.item2 ? element : value);
     }
@@ -116,6 +115,7 @@ class _DashboardState extends State<Dashboard> {
                     const BoxConstraints(minHeight: 300, minWidth: 300),
                 child: _circleGraph()),
             Container(
+                width: 300,
                 constraints:
                     const BoxConstraints(minHeight: 300, minWidth: 300),
                 child: graphOverview()),
@@ -126,20 +126,7 @@ class _DashboardState extends State<Dashboard> {
           // spacing: double.infinity,
           // runSpacing: 20,
           children: [
-            Container(
-              height: 95,
-              child: DefaultWidgetBox(
-                  child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Most Active Year",
-                      style: themeProvider.themeData().textTheme.headline4!),
-                  Text("${_dashboardService.getMostActiveYear().toString()}",
-                      style: themeProvider.themeData().textTheme.headline3!)
-                ],
-              )),
-            ),
+            _mostActiveYear(),
             SizedBox(width: 20),
             Container(
               height: 95,
@@ -272,7 +259,7 @@ class _DashboardState extends State<Dashboard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 30),
+            SizedBox(height: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -286,7 +273,7 @@ class _DashboardState extends State<Dashboard> {
             Container(
               child: Wrap(
                 spacing: double.infinity,
-                runSpacing: 10,
+                runSpacing: 20,
                 children: List.generate(
                     profiles.length,
                     (index) => Row(
@@ -301,18 +288,27 @@ class _DashboardState extends State<Dashboard> {
                                           profiles[index].service.target!.id)
                                       .color
                                       .withAlpha(
-                                          255 - (serviceAlpha[index]! * 30))),
+                                          255 - (serviceAlpha[index]! * 75))),
                             ),
                             SizedBox(
-                              width: 10,
+                              width: 20,
                             ),
-                            Text("${profiles[index].name}:"),
+                            Expanded(
+                              child: Container(
+                                child: Text(
+                                  "${profiles[index].name}:",
+                                  maxLines: 1,
+                                  softWrap: false,
+                                ),
+                              ),
+                            ),
                             SizedBox(
-                              width: 10,
+                              width: 20,
                             ),
                             Text(
-                              "${NumberFormat.compact().format(profiles[index].categories.fold<int>(0, (previousValue, element) => previousValue + element.count))}",
-                            )
+                                "${NumberFormat.compact().format(profiles[index].categories.fold<int>(0, (previousValue, element) => previousValue + element.count))}",
+                                style: const TextStyle(
+                                    fontSize: 13, fontWeight: FontWeight.w500))
                           ],
                         )),
               ),
@@ -365,7 +361,7 @@ class _DashboardState extends State<Dashboard> {
                         "${NumberFormat.compact().format(profiles[index].categories.fold<int>(0, (previousValue, element) => previousValue + element.count) / dpSum * 100)}%",
                     color: getFromID(profiles[index].service.target!.id)
                         .color
-                        .withAlpha(255 - (serviceAlpha[index]! * 30))),
+                        .withAlpha(255 - (serviceAlpha[index]! * 75))),
               )),
             ),
           ),
@@ -380,7 +376,7 @@ class _DashboardState extends State<Dashboard> {
       title: "Weekly Activity",
       child: Expanded(
           child: Container(
-              height: 100,
+              height: 200,
               child: Row(
                   children: List.generate(
                       weekdays.length,
@@ -403,7 +399,7 @@ class _DashboardState extends State<Dashboard> {
                                           100)
                                       .ceil(),
                                   child: Container(
-                                    width: 10,
+                                    width: 20,
                                     color: themeProvider.themeMode().themeColor,
                                   ),
                                 ),
@@ -411,6 +407,24 @@ class _DashboardState extends State<Dashboard> {
                             ),
                           ))))),
     ));
+  }
+
+  _mostActiveYear() {
+    int year = _dashboardService.getMostActiveYear();
+    return Container(
+      height: 95,
+      child: DefaultWidgetBox(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Most Active Year",
+              style: themeProvider.themeData().textTheme.headline4!),
+          Text("${year != -1 ? year.toString() : "Unknown"}",
+              style: themeProvider.themeData().textTheme.headline3!)
+        ],
+      )),
+    );
   }
 
   Widget _sentimentTestWidget() {
@@ -422,7 +436,7 @@ class _DashboardState extends State<Dashboard> {
           children: [
             // Text("Input text to test sentiment"),
 
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Container(
               height: 40,
               child: TextFormField(
@@ -442,7 +456,7 @@ class _DashboardState extends State<Dashboard> {
                     hintStyle: TextStyle(letterSpacing: 0.3),
                   )),
             ),
-            SizedBox(height: 10),
+            SizedBox(height: 20),
             Row(
               children: [
                 Expanded(
