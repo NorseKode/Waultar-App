@@ -1,3 +1,4 @@
+import 'dart:io' as io;
 import 'package:path/path.dart' as dart_path;
 
 class PathHelper {
@@ -19,5 +20,9 @@ class PathHelper {
     var dirNamePath2 = dart_path.dirname(path2);
 
     return dirNamePath1 == dirNamePath2;
+  }
+
+  static bool doesFileExistsIO(String path) {
+    return io.File(path).existsSync();
   }
 }

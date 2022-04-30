@@ -8,6 +8,7 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repositor
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
 import 'package:waultar/core/base_worker/base_worker.dart';
+import 'package:waultar/core/helpers/PathHelper.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/repositories/profile_repo.dart';
@@ -140,6 +141,8 @@ class ParserService implements IParserService {
             }
           }
 
+          var basePathToFiles = PathHelper.getCommonPath(_pathsToParse.first, _pathsToParse.last);
+
           for (var i = 0; i < threadCount; i++) {
             var paths = _pathsToParse.sublist(splitCount * i,
                 i != threadCount - 1 ? (splitCount * (i + 1)) : _pathsToParse.length);
@@ -150,6 +153,7 @@ class ParserService implements IParserService {
                 profileId: profile.id,
                 isPerformanceTracking: ISPERFORMANCETRACKING,
                 waultarPath: _waultarPath,
+                basePath: basePathToFiles,
               ),
             );
             workersList.add(worker);
@@ -255,6 +259,7 @@ class ParserService implements IParserService {
       profileId: profile.id,
       isPerformanceTracking: ISPERFORMANCETRACKING,
       waultarPath: _waultarPath,
+      basePath: "",
     );
     _listenParser(dynamic data) {
       switch (data.runtimeType) {

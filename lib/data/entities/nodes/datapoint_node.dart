@@ -5,6 +5,7 @@ import 'package:pretty_json/pretty_json.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
+import 'package:waultar/core/helpers/PathHelper.dart';
 import 'package:waultar/core/helpers/parse_helper.dart';
 import 'package:waultar/data/repositories/datapoint_repo.dart';
 import 'package:waultar/data/entities/media/file_document.dart';
@@ -213,7 +214,11 @@ class DataPoint {
         for (var entry in json.entries) {
           var value = entry.value;
           if (value is String) {
-            if (Extensions.isImage(value)) {
+            if (Extensions.isImage(value) &&
+                !values.contains("/stickers_used/") &&
+                !values.contains("\\stickers_used\\") &&
+                !values.endsWith(".gif") &&
+                PathHelper.doesFileExistsIO(dart_path.normalize('$basePathToMedia/$value'))) {
               var image = ImageDocument(
                 uri: dart_path.normalize('$basePathToMedia/$value'),
                 data: jsonEncode(flatten(json)),

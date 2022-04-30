@@ -5,6 +5,7 @@ import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 @Entity()
 class ImageDocument {
   int id;
+  @Unique()
   String uri;
   String data;
   String searchString;

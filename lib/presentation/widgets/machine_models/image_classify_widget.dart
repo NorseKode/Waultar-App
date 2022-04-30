@@ -54,7 +54,7 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
       limitAmount: _amountToTagTextController.text.isNotEmpty
           ? int.parse(_amountToTagTextController.text)
           : null,
-      threadCount: 4,
+      threadCount: 3,
       imageModel:
           _isFastImageModel ? ImageModelEnum.efficientNetB4 : ImageModelEnum.mobileNetV3Large,
     );
@@ -72,7 +72,7 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
   }
 
   String _timeEstimate(int count) {
-    var timeEstimate = (count * 0.08).ceil();
+    var timeEstimate = (count * 1.0).ceil();
 
     return "${'${(Duration(seconds: timeEstimate))}'.substring(2, 7)} ${timeEstimate < 60 ? "sec" : "min"}";
   }

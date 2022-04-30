@@ -27,6 +27,7 @@ Future parseWorkerBody(dynamic data, SendPort mainSendPort, Function onError) as
         mainSendPort.send("No profile with id: ${data.profileId}");
       } else {
         var parser = locator.get<TreeParser>(instanceName: 'parser');
+        parser.basePathToFiles = data.basePath;
 
         if (data.isPerformanceTracking) {
           performance.startReading("Parse of file");
@@ -83,12 +84,14 @@ class IsolateParserStartPackage extends InitiatorPackage {
   int profileId;
   bool isPerformanceTracking;
   String waultarPath;
+  String basePath;
 
   IsolateParserStartPackage({
     required this.paths,
     required this.profileId,
     required this.isPerformanceTracking,
     required this.waultarPath,
+    required this.basePath,
   });
 }
 

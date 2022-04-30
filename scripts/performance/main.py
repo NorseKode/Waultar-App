@@ -17,7 +17,7 @@ parserDataNewInsta = os.path.join(folderInsta, "Tree Parser Performance Data.jso
 # sentimentDataOldInsta = os.path.join(folderInsta, "1649760401279386-Sentiment classification.json")
 sentimentDataNewInsta = os.path.join(folderInsta, "Sentiment classification.json")
 sentimentTranslateDataNewInsta = os.path.join(folderInsta, "translate-Sentiment classification.json")
-imageDataNewInsta = os.path.join(folderInsta, "Tagging of images only total.json")
+imageDataNewInsta = os.path.join(folderInsta, "is365-t3-eff-Tagging of images only total.json")
 imageClassInsta = os.path.join(folderInsta, "Image Classifier Abstract Class.json")
 
 extractBigDataNewFacebook = os.path.join(folderFacebook, "Extraction and parsing.json")
@@ -28,7 +28,7 @@ sentimentDataNewFacebook = os.path.join(folderFacebook, "Sentiment classificatio
 imageDataNewFacebook = os.path.join(folderFacebook, "Tagging of images only total.json")
 imageClassFacebook = os.path.join(folderFacebook, "Image Classifier Abstract Class.json")
 
-print("########## NOTE: All Run On 1 Isolate ##########")
+# print("########## NOTE: All Run On 1 Isolate ##########")
 print("########## Instagram ##########")
 print("##### Extract Small - Start #####")
 e.extractAndParseReadingToConsole(extractDataNewInsta, os.path.join(saveInsta, "insta_small_extract_time_percent_v0.1.png"), extractionTitle + "\nSingle Thread Instagram Small")
@@ -39,7 +39,7 @@ p.parserPerformanceToConsole(parserDataNewInsta, os.path.join(saveInsta, "insta_
 print("###### Parser - End ######\n")
 
 print("##### Image Tagging - Start #####")
-it.taggedImageReadingToConsole(imageDataNewInsta, os.path.join(saveInsta, "insta_image_taggin_time_percent_v0.1.png"))
+it.taggedImageReadingToConsole(imageDataNewInsta, os.path.join(saveInsta, "insta_image_tagging_time_percent_v0.1.png"))
 print("###### Image Tagging - End ######\n")
 
 print("##### Image Classifier - Start #####")
@@ -92,4 +92,4 @@ print("##### Sentiment - Start #####")
 s.sentimentReadingToConsole(sentimentDataNewFacebook, os.path.join(saveFacebook, "facebook_sentiment_time_percent_v0.1.png"))
 print("###### Sentiment - End ######")
 print("########## Facebook ##########")
-print("########## NOTE: All Run On 1 Isolate ##########")
+# print("########## NOTE: All Run On 1 Isolate ##########")
