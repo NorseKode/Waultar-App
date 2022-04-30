@@ -50,13 +50,21 @@ class MediaRepository {
   }
 
   List<ImageDocument> searchImagesPagination(
-      List<String> searchText, List<int> profileIds, int offset, int limit) {
-     var queryInput = ImageDocument_.mediaTags.contains(searchText.removeAt(0));
+      List<String> tags, List<int> profileIds, int offset, int limit) {
+    var queryInput = ImageDocument_.mediaTags.contains(
+      tags.removeAt(0).trim(),
+      caseSensitive: false,
+    );
 
-     for (var search in searchText) {
-       queryInput.or(ImageDocument_.mediaTags.contains(search));
-     }
-    
+    for (var tag in tags) {
+      if (tag.isNotEmpty) {
+        queryInput = queryInput.and(ImageDocument_.mediaTags.contains(
+          tag.trim(),
+          caseSensitive: false,
+        ));
+      }
+    }
+
     var builder = _imageBox.query(queryInput);
 
     builder.link(ImageDocument_.profile, ProfileDocument_.id.oneOf(profileIds));
