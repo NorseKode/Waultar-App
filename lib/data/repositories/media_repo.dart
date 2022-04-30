@@ -50,9 +50,14 @@ class MediaRepository {
   }
 
   List<ImageDocument> searchImagesPagination(
-      String searchText, List<int> profileIds, int offset, int limit) {
-    var builder =
-        _imageBox.query(ImageDocument_.mediaTags.contains(searchText, caseSensitive: false));
+      List<String> searchText, List<int> profileIds, int offset, int limit) {
+     var queryInput = ImageDocument_.mediaTags.contains(searchText.removeAt(0));
+
+     for (var search in searchText) {
+       queryInput.or(ImageDocument_.mediaTags.contains(search));
+     }
+    
+    var builder = _imageBox.query(queryInput);
 
     builder.link(ImageDocument_.profile, ProfileDocument_.id.oneOf(profileIds));
 

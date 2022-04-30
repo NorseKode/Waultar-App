@@ -21,6 +21,6 @@ class SearchService extends ISearchService {
   @override
   List<ImageDocument> searchImages(List<int> profileIds, String search, int offset, int limit) {
     profileIds.removeWhere((element) => element == 0);
-    return _mediaRepo.searchImagesPagination(search, profileIds, offset, limit);
+    return _mediaRepo.searchImagesPagination(search.trim().split(","), profileIds, offset, limit);
   }
 }
