@@ -54,7 +54,7 @@ class _GalleryState extends State<Gallery> {
   @override
   void initState() {
     super.initState();
-    if (profiles.length > 0) {
+    if (profiles.isNotEmpty) {
       currentProfile = profiles.first;
     }
     if (profiles.length > 1) {
@@ -287,9 +287,11 @@ class _GalleryState extends State<Gallery> {
       case FileType.image:
         return Expanded(
             child: MasonryGridView.count(
+          controller: _imageListScrollController,
           crossAxisCount: 4,
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,
+          itemCount: _images.length,
           itemBuilder: (context, index) {
             return Container(
               decoration:
@@ -298,19 +300,13 @@ class _GalleryState extends State<Gallery> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    height: 200,
-                    width: 260,
                     child: Image.file(
                       File(Uri.decodeFull(_images[index].uri)),
-                      width: 260,
-                      height: 260,
                       alignment: Alignment.topLeft,
-                      fit: BoxFit.contain,
                     ),
                   ),
-                  SizedBox(height: 10),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Text(_images[index].mediaTags != ""
                         ? _images[index].mediaTags == "NULL"
                             ? "No tags found"
@@ -331,58 +327,58 @@ class _GalleryState extends State<Gallery> {
             );
           },
         ));
-      // case FileType.image:
-      //   return Expanded(
-      //     child: GridView.extent(
-      //         maxCrossAxisExtent: 300,
-      //         childAspectRatio: 0.85,
-      //         shrinkWrap: true,
-      //         controller: _imageListScrollController,
-      //         mainAxisSpacing: 20,
-      //         crossAxisSpacing: 20,
-      //         children: List.generate(
-      //             _images.length,
-      //             (index) => Container(
-      //                   decoration: BoxDecoration(
-      //                       color: themeProvider.themeData().primaryColor),
-      //                   child: Column(
-      //                     crossAxisAlignment: CrossAxisAlignment.start,
-      //                     children: [
-      //                       SizedBox(
-      //                         height: 200,
-      //                         width: 260,
-      //                         child: Image.file(
-      //                           File(Uri.decodeFull(_images[index].uri)),
-      //                           width: 260,
-      //                           height: 260,
-      //                           alignment: Alignment.topLeft,
-      //                           fit: BoxFit.contain,
-      //                         ),
-      //                       ),
-      //                       SizedBox(height: 10),
-      //                       Padding(
-      //                         padding:
-      //                             const EdgeInsets.symmetric(horizontal: 10.0),
-      //                         child: Text(_images[index].mediaTags != ""
-      //                             ? _images[index].mediaTags == "NULL"
-      //                                 ? "No tags found"
-      //                                 : _images[index]
-      //                                     .mediaTags
-      //                                     .split(",")
-      //                                     .fold<String>(
-      //                                         "",
-      //                                         (previousValue, element) =>
-      //                                             previousValue +=
-      //                                                 (element.trim().isNotEmpty
-      //                                                     ? element + "\n"
-      //                                                     : ""))
-      //                                     .trim()
-      //                             : "Not tagged"),
-      //                       ),
-      //                     ],
-      //                   ),
-      //                 ))),
-      //   );
+      case FileType.image:
+        return Expanded(
+          child: GridView.extent(
+              maxCrossAxisExtent: 300,
+              childAspectRatio: 0.85,
+              shrinkWrap: true,
+              controller: _imageListScrollController,
+              mainAxisSpacing: 20,
+              crossAxisSpacing: 20,
+              children: List.generate(
+                  _images.length,
+                  (index) => Container(
+                        decoration: BoxDecoration(
+                            color: themeProvider.themeData().primaryColor),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              height: 200,
+                              width: 260,
+                              child: Image.file(
+                                File(Uri.decodeFull(_images[index].uri)),
+                                width: 260,
+                                height: 260,
+                                alignment: Alignment.topLeft,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Text(_images[index].mediaTags != ""
+                                  ? _images[index].mediaTags == "NULL"
+                                      ? "No tags found"
+                                      : _images[index]
+                                          .mediaTags
+                                          .split(",")
+                                          .fold<String>(
+                                              "",
+                                              (previousValue, element) =>
+                                                  previousValue +=
+                                                      (element.trim().isNotEmpty
+                                                          ? element + "\n"
+                                                          : ""))
+                                          .trim()
+                                  : "Not tagged"),
+                            ),
+                          ],
+                        ),
+                      ))),
+        );
 
       case FileType.video:
         return InfiniteScroll(

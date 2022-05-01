@@ -77,7 +77,7 @@ class _DashboardState extends State<Dashboard> {
               ),
               // TextField(controller: threadCountController),
               // _uploadButton(),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               Expanded(
                 child: profiles.isNotEmpty
                     ? SingleChildScrollView(child: _dashboardWidgets())

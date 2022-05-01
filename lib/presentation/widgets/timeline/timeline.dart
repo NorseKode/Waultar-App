@@ -81,7 +81,6 @@ class _TimelineState extends State<Timeline> {
     } else {
       return Text("No data");
     }
-
   }
 
   Widget _tabs() {

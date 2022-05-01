@@ -36,8 +36,11 @@ class _DefaultDropdownState extends State<DefaultDropdown> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         color: const Color(0xFF323346),
         child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: widget.color ?? _themeProvider.themeData().primaryColor,
+            ),
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-            color: widget.color ?? _themeProvider.themeData().primaryColor,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
