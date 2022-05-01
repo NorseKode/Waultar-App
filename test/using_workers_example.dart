@@ -37,7 +37,7 @@ Future<void> main() async {
 
   // I delay the main function to allow for the isolate to finish its task
   // otherwise the mainthread (spawned with main) will be killed and all
-  // spawned isolates within will be killed unconditionally 
+  // spawned isolates within will be killed unconditionally
   await Future.delayed(const Duration(seconds: 10));
 }
 
@@ -60,17 +60,14 @@ Future testIsolateMethod(String message) async {
   _logger.logger.info(created.id.toString());
 }
 
-
 // the actual function to be executed inside the isolate
 Future workerBody(dynamic data, SendPort mainSendPort, Function onError) async {
   if (data is InitiatorPackage) {
-    
     // ! wrap with try-catch always
     // ! if any uncaught errors happen inside the isolate, it will terminate immediately
     try {
-
       // setup services and dependecies as we do on normal app startup, but with
-      // configurations to match the isolate (logger and objectbox need special setup when in isolate) 
+      // configurations to match the isolate (logger and objectbox need special setup when in isolate)
       await setupIsolate(mainSendPort, data);
 
       // .. we can now work with the dependecies as normally
@@ -79,14 +76,13 @@ Future workerBody(dynamic data, SendPort mainSendPort, Function onError) async {
       _logger.logger.info('dummy package log');
 
       // as well as calling other methods or creating normal classes
-      await testIsolateMethod('I was logged inside a method invoked from the workerBody');
-
+      await testIsolateMethod(
+          'I was logged inside a method invoked from the workerBody');
     } catch (e, stacktrace) {
-
-      // we cannot yet guarentee that the logger is ready, so we just send the message directly with the sendport 
+      // we cannot yet guarentee that the logger is ready, so we just send the message directly with the sendport
       mainSendPort.send(LogRecordPackage(e.toString(), stacktrace.toString()));
-
-    } finally { // ! <== always close the store in the isolate with a finally block 
+    } finally {
+      // ! <== always close the store in the isolate with a finally block
       var _context = locator.get<ObjectBox>(instanceName: 'context');
       _context.store.close();
     }

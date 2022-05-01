@@ -19,7 +19,9 @@ class _SearchViewState extends State<SearchView> {
   Widget build(BuildContext context) {
     return getWaultarDesktopMainBody(
       context,
-      MenuPanel(active: _activeScreen),
+      MenuPanel(
+        active: _activeScreen,
+      ),
       const TopPanel(),
       const Search(),
     );

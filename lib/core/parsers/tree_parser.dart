@@ -295,6 +295,7 @@ class TreeParser {
     }
 
     parent.profile.target = profile;
+    parent.dataCategory.target = category;
     parent.count = parent.children.length + parent.dataPoints.length;
     return parent;
   }

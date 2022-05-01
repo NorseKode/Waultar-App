@@ -8,4 +8,5 @@ abstract class IExplorerService {
   List<DataCategory> getAllCategories(int profileID);
   List<DataPointName> getAllDatanames(int categoryID);
   List<DataPoint> getAllDataPoints(int datapointnameID);
+  List<DataPointName> getAllDatanameChildren(int datanameID);
 }

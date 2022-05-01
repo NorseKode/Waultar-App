@@ -4,7 +4,7 @@ class ModelHelper {
   static const knownTimestampKeys = [
     "timestamp",
     "creation_timestamp",
-    "timestamp_ms"
+    "timestamp_ms",
   ];
 
   static DateTime? getTimestamp(var jsonData) {

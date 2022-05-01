@@ -20,7 +20,9 @@ class _BrowseViewState extends State<BrowseView> {
   Widget build(BuildContext context) {
     return getWaultarDesktopMainBody(
       context,
-      MenuPanel(active: _activeScreen),
+      MenuPanel(
+        active: _activeScreen,
+      ),
       const TopPanel(),
       const Explorer(),
     );

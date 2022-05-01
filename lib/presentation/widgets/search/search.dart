@@ -143,14 +143,14 @@ class _SearchState extends State<Search> {
             profileSelector(profiles, currentProfile, _changeSelectedProfile),
           ],
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 10),
         _topBar(),
         const SizedBox(
-          height: 20.0,
+          height: 10.0,
         ),
         _searchCategoriesCheckBoxes(),
         const SizedBox(
-          height: 20.0,
+          height: 10.0,
         ),
         Expanded(
           // flex: 20,
@@ -161,7 +161,7 @@ class _SearchState extends State<Search> {
             itemBuilder: (_, index) => Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
               child: DefaultWidget(
-                edgeInsetsGeometry: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 title: _contents[index].getMostInformativeField(),
                 child: Text(
                   _contents[index].toString(),

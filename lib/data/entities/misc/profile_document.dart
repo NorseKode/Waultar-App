@@ -11,10 +11,12 @@ class ProfileDocument {
 
   @Unique()
   String name;
+  DateTime created = DateTime.now();
 
   final service = ToOne<ServiceDocument>();
   final dataPoints = ToMany<DataPoint>();
   final profilePicture = ToOne<ImageDocument>();
+
   @Backlink('profile')
   final categories = ToMany<DataCategory>();
 

@@ -19,7 +19,9 @@ class _GalleryViewState extends State<GalleryView> {
   Widget build(BuildContext context) {
     return getWaultarDesktopMainBody(
       context,
-      MenuPanel(active: _activeScreen),
+      MenuPanel(
+        active: _activeScreen,
+      ),
       const TopPanel(),
       const Gallery(),
       mainAxisAlignment: MainAxisAlignment.center,

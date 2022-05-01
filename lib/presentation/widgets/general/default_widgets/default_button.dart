@@ -31,7 +31,7 @@ class _DefaultButtonState extends State<DefaultButton> {
     themeProvider = Provider.of<ThemeProvider>(context);
     TextStyle textStyle = TextStyle(
         color: widget.textColor ?? Colors.white,
-        fontSize: 10,
+        fontSize: 11,
         fontWeight: FontWeight.w500);
 
     return Container(

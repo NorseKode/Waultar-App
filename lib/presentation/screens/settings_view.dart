@@ -14,7 +14,7 @@ import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/screens/shared/waultar_desktop_main.dart';
 import 'package:waultar/presentation/widgets/general/menu_panel.dart';
 import 'package:waultar/presentation/widgets/general/top_panel.dart';
-import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/presentation/widgets/snackbar_custom.dart';
 import 'package:waultar/startup.dart';
@@ -40,7 +40,9 @@ class _SettingsViewState extends State<SettingsView> {
 
     return getWaultarDesktopMainBody(
       context,
-      MenuPanel(active: _activeScreen),
+      MenuPanel(
+        active: _activeScreen,
+      ),
       const TopPanel(),
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,

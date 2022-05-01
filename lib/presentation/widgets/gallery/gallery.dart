@@ -17,6 +17,7 @@ import 'package:waultar/presentation/widgets/general/default_widgets/default_wid
 import 'package:waultar/presentation/widgets/general/infinite_scroll.dart';
 import 'package:waultar/presentation/widgets/general/profile_selector.dart';
 import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 
 import 'package:waultar/startup.dart';
 
@@ -355,9 +356,9 @@ class _GalleryState extends State<Gallery> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _topBar(),
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
         if (_selectedMediaType == FileType.image) _searchbar(),
-        const SizedBox(height: 20),
+        const SizedBox(height: 15),
         _imageList(),
       ],
     );

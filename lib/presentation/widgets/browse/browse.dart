@@ -12,7 +12,7 @@ import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/data/entities/nodes/name_node.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 import 'package:waultar/presentation/widgets/snackbar_custom.dart';
 import 'package:waultar/presentation/widgets/upload/uploader.dart';
 import 'package:waultar/startup.dart';
@@ -88,18 +88,6 @@ class _BrowseState extends State<Browse> {
           var zipFile = files.item1
               .singleWhere((element) => dart_path.extension(element) == ".zip");
 
-          // await _parserService.parseIsolates(
-          //   zipFile,
-          //   _onUploadProgress,
-          //   files.item3,
-          //   ProfileDocument(name: files.item2),
-          // );
-          // await _parserService.parseIsolatesParallel(
-          //   zipFile,
-          //   _onUploadProgress,
-          //   files.item3,
-          //   ProfileDocument(name: files.item2),
-          // );
           await _parserService.parseIsolatesPara(
             zipFile,
             _onUploadProgress,

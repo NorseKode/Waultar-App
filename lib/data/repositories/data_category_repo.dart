@@ -113,35 +113,13 @@ class DataCategoryRepository {
       }
 
       var createdCategory = _categoryBox.get(createdId)!;
+      
       profile.categories.add(createdCategory);
-
-      // profile.categories.applyToDb();
       return newCategory;
     }
   }
 
   int count() => _categoryBox.count();
-
-  // int addCategory(
-  //   CategoryEnum category,
-  //   // List<String> matchingFoldersFacebook,
-  //   // List<String> matchingFoldersInstagram,
-  // ) {
-  //   var existing = _categoryBox
-  //       .query(DataCategory_.dbCategory.equals(category.index))
-  //       .build()
-  //       .findUnique();
-
-  //   if (existing == null) {
-  //     return _categoryBox.put(DataCategory(
-  //       category: category,
-  //       // matchingFoldersFacebook: matchingFoldersFacebook,
-  //       // matchingFoldersInstagram: matchingFoldersInstagram,
-  //     ));
-  //   }
-
-  //   return existing.id;
-  // }
 
   void addMany(List<DataCategory> categories) {
     _categoryBox.putMany(categories);
