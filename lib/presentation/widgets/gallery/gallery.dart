@@ -50,6 +50,7 @@ class _GalleryState extends State<Gallery> {
   var _offset = 0;
   var _limit = _step;
   FileType? _selectedMediaType = FileType.image;
+  var columnCount = 0;
 
   @override
   void initState() {
@@ -288,7 +289,7 @@ class _GalleryState extends State<Gallery> {
         return Expanded(
             child: MasonryGridView.count(
           controller: _imageListScrollController,
-          crossAxisCount: 4,
+          crossAxisCount: columnCount,
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,
           itemCount: _images.length,
@@ -423,6 +424,9 @@ class _GalleryState extends State<Gallery> {
   Widget build(BuildContext context) {
     // var timer = Stopwatch();
     // timer.start();
+    var viewSpace =
+        ((MediaQuery.of(context).size.width - 250 - 40) / 200).floor();
+    columnCount = viewSpace < 1 ? 1 : viewSpace;
     themeProvider = Provider.of<ThemeProvider>(context);
     if (currentProfile != null) {
       return Column(
