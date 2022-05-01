@@ -16,8 +16,8 @@ import 'package:waultar/presentation/widgets/general/default_widgets/default_wid
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget_box.dart';
 import 'package:waultar/presentation/widgets/general/infinite_scroll.dart';
 import 'package:waultar/presentation/widgets/general/profile_selector.dart';
-import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import 'package:waultar/startup.dart';
 
@@ -33,10 +33,12 @@ class _GalleryState extends State<Gallery> {
   late ThemeProvider themeProvider;
   var _isSearch = false;
   var _images = <ImageDocument>[];
-  var profiles = locator.get<ProfileRepository>(instanceName: 'profileRepo').getAll();
+  var profiles =
+      locator.get<ProfileRepository>(instanceName: 'profileRepo').getAll();
   late ProfileDocument currentProfile;
   final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
-  final _searchService = locator.get<ISearchService>(instanceName: 'searchService');
+  final _searchService =
+      locator.get<ISearchService>(instanceName: 'searchService');
   final _imageListScrollController = ScrollController();
   final _textSearchController = TextEditingController();
   final _logger = locator.get<BaseLogger>(instanceName: 'logger');
@@ -64,7 +66,10 @@ class _GalleryState extends State<Gallery> {
   }
 
   List<int> _getSelectedProfiles() {
-    return (currentProfile.id == 0 ? profiles.map((e) => e.id) : [currentProfile.id]).toList();
+    return (currentProfile.id == 0
+            ? profiles.map((e) => e.id)
+            : [currentProfile.id])
+        .toList();
   }
 
   void _scrollReset() {
@@ -78,7 +83,8 @@ class _GalleryState extends State<Gallery> {
     _offset = 0;
     _limit = _step;
 
-    _images = _searchService.searchImages(_getSelectedProfiles(), searchText, _offset, _limit);
+    _images = _searchService.searchImages(
+        _getSelectedProfiles(), searchText, _offset, _limit);
   }
 
   void scrollInit() {
@@ -92,8 +98,8 @@ class _GalleryState extends State<Gallery> {
         _offset += _limit;
 
         if (_isSearch) {
-          _images += _searchService.searchImages(
-              _getSelectedProfiles(), _textSearchController.text, _offset, _limit);
+          _images += _searchService.searchImages(_getSelectedProfiles(),
+              _textSearchController.text, _offset, _limit);
         } else {
           _images += _mediaRepo.getImagesPagination(_offset, _limit);
         }
@@ -124,7 +130,9 @@ class _GalleryState extends State<Gallery> {
                 ? null
                 : themeProvider.themeMode().tonedTextColor,
             icon: Iconsax.image,
-            color: _selectedMediaType == FileType.image ? Colors.transparent : Colors.transparent,
+            color: _selectedMediaType == FileType.image
+                ? Colors.transparent
+                : Colors.transparent,
             onPressed: () {
               setState(() {
                 _selectedMediaType = FileType.image;
@@ -140,7 +148,9 @@ class _GalleryState extends State<Gallery> {
                 ? null
                 : themeProvider.themeMode().tonedTextColor,
             icon: Iconsax.video,
-            color: _selectedMediaType == FileType.video ? Colors.transparent : Colors.transparent,
+            color: _selectedMediaType == FileType.video
+                ? Colors.transparent
+                : Colors.transparent,
             onPressed: () {
               setState(() {
                 _selectedMediaType = FileType.video;
@@ -156,7 +166,9 @@ class _GalleryState extends State<Gallery> {
                 ? null
                 : themeProvider.themeMode().tonedTextColor,
             icon: Iconsax.folder,
-            color: _selectedMediaType == FileType.file ? Colors.transparent : Colors.transparent,
+            color: _selectedMediaType == FileType.file
+                ? Colors.transparent
+                : Colors.transparent,
             onPressed: () {
               setState(() {
                 _selectedMediaType = FileType.file;
@@ -262,51 +274,103 @@ class _GalleryState extends State<Gallery> {
     switch (_selectedMediaType) {
       case FileType.image:
         return Expanded(
-          child: GridView.extent(
-              maxCrossAxisExtent: 300,
-              childAspectRatio: 0.85,
-              shrinkWrap: true,
-              controller: _imageListScrollController,
-              mainAxisSpacing: 20,
-              crossAxisSpacing: 20,
-              children: List.generate(
-                  _images.length,
-                  (index) => Container(
-                        decoration: BoxDecoration(color: themeProvider.themeData().primaryColor),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 200,
-                              width: 260,
-                              child: Image.file(
-                                File(Uri.decodeFull(_images[index].uri)),
-                                width: 260,
-                                height: 260,
-                                alignment: Alignment.topLeft,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Text(_images[index].mediaTags != ""
-                                  ? _images[index].mediaTags == "NULL"
-                                      ? "No tags found"
-                                      : _images[index]
-                                          .mediaTags
-                                          .split(",")
-                                          .fold<String>(
-                                              "",
-                                              (previousValue, element) => previousValue +=
-                                                  (element.trim().isNotEmpty ? element + "\n" : ""))
-                                          .trim()
-                                  : "Not tagged"),
-                            ),
-                          ],
-                        ),
-                      ))),
-        );
+            child: MasonryGridView.count(
+          crossAxisCount: 4,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+          itemBuilder: (context, index) {
+            return Container(
+              decoration:
+                  BoxDecoration(color: themeProvider.themeData().primaryColor),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    height: 200,
+                    width: 260,
+                    child: Image.file(
+                      File(Uri.decodeFull(_images[index].uri)),
+                      width: 260,
+                      height: 260,
+                      alignment: Alignment.topLeft,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Text(_images[index].mediaTags != ""
+                        ? _images[index].mediaTags == "NULL"
+                            ? "No tags found"
+                            : _images[index]
+                                .mediaTags
+                                .split(",")
+                                .fold<String>(
+                                    "",
+                                    (previousValue, element) => previousValue +=
+                                        (element.trim().isNotEmpty
+                                            ? element + "\n"
+                                            : ""))
+                                .trim()
+                        : "Not tagged"),
+                  ),
+                ],
+              ),
+            );
+          },
+        ));
+      // case FileType.image:
+      //   return Expanded(
+      //     child: GridView.extent(
+      //         maxCrossAxisExtent: 300,
+      //         childAspectRatio: 0.85,
+      //         shrinkWrap: true,
+      //         controller: _imageListScrollController,
+      //         mainAxisSpacing: 20,
+      //         crossAxisSpacing: 20,
+      //         children: List.generate(
+      //             _images.length,
+      //             (index) => Container(
+      //                   decoration: BoxDecoration(
+      //                       color: themeProvider.themeData().primaryColor),
+      //                   child: Column(
+      //                     crossAxisAlignment: CrossAxisAlignment.start,
+      //                     children: [
+      //                       SizedBox(
+      //                         height: 200,
+      //                         width: 260,
+      //                         child: Image.file(
+      //                           File(Uri.decodeFull(_images[index].uri)),
+      //                           width: 260,
+      //                           height: 260,
+      //                           alignment: Alignment.topLeft,
+      //                           fit: BoxFit.contain,
+      //                         ),
+      //                       ),
+      //                       SizedBox(height: 10),
+      //                       Padding(
+      //                         padding:
+      //                             const EdgeInsets.symmetric(horizontal: 10.0),
+      //                         child: Text(_images[index].mediaTags != ""
+      //                             ? _images[index].mediaTags == "NULL"
+      //                                 ? "No tags found"
+      //                                 : _images[index]
+      //                                     .mediaTags
+      //                                     .split(",")
+      //                                     .fold<String>(
+      //                                         "",
+      //                                         (previousValue, element) =>
+      //                                             previousValue +=
+      //                                                 (element.trim().isNotEmpty
+      //                                                     ? element + "\n"
+      //                                                     : ""))
+      //                                     .trim()
+      //                             : "Not tagged"),
+      //                       ),
+      //                     ],
+      //                   ),
+      //                 ))),
+      //   );
 
       case FileType.video:
         return InfiniteScroll(

@@ -14,6 +14,9 @@ class SearchView extends StatefulWidget {
 
 class _SearchViewState extends State<SearchView> {
   final _activeScreen = ViewScreen.search;
+  callback() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +24,7 @@ class _SearchViewState extends State<SearchView> {
       context,
       MenuPanel(
         active: _activeScreen,
+        callback: callback,
       ),
       const TopPanel(),
       const Search(),

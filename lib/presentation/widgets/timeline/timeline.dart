@@ -133,14 +133,14 @@ class _TimelineState extends State<Timeline> {
   Widget _profileSelector() {
     var items = List.generate(
         _timelineService.allProfiles.length,
-        (index) => MenuItem(
+        (index) => DefaultMenuItem(
             _profileNameInDropDown(_timelineService.allProfiles[index]),
             _timelineService.allProfiles[index]));
     return DefaultDropdown(
       value: items.firstWhere(
           (element) => element.value.id == _timelineService.currentProfile!.id),
       items: items,
-      onChanged: (MenuItem? menuitem) {
+      onChanged: (DefaultMenuItem? menuitem) {
         setState(() {
           if (menuitem != null) {
             _timelineService.updateProfile(menuitem.value! as ProfileDocument);
@@ -161,7 +161,7 @@ class _TimelineState extends State<Timeline> {
   Widget _chartTypeSelector() {
     var items = List.generate(
         ChartSeriesType.values.length,
-        (index) => MenuItem(
+        (index) => DefaultMenuItem(
               ChartSeriesType.values[index].chartName,
               ChartSeriesType.values[index],
             ));
@@ -169,7 +169,7 @@ class _TimelineState extends State<Timeline> {
     return DefaultDropdown(
       value: items.firstWhere((element) => element.value == _chosenChartType),
       items: items,
-      onChanged: (MenuItem? menuitem) {
+      onChanged: (DefaultMenuItem? menuitem) {
         setState(() {
           if (menuitem != null) {
             _chosenChartType = menuitem.value ?? ChartSeriesType.stackedColumns;
