@@ -2,7 +2,7 @@ import json
 import os
 from .diagram_creator import *
 
-def extractAndParseReadingToConsole(path, savePath):
+def extractAndParseReadingToConsole(path, savePath, figureTitle):
     extractData = json.load(open(path))
 
     totalTime = extractData["elapsedTime"]
@@ -30,7 +30,7 @@ def extractAndParseReadingToConsole(path, savePath):
     other = 100 - extractionPercentage - parsingPercentage
     totalPercentage = [extractionPercentage, parsingPercentage, other]
     totalLabels = ["Extraction", "Parsing", "Other"]
-    createPieChart(totalPercentage, totalLabels, "Extract and parsing time in percentage", savePath)
+    createPieChart(totalPercentage, totalLabels, figureTitle, savePath)
 
     decodePercentage = decodeZipTime / extractTotalTime * 100
     extractPercentage = extractedFileTime / extractTotalTime * 100

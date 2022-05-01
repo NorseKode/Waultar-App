@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:objectbox/objectbox.dart';
 import 'package:pretty_json/pretty_json.dart';
+import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/configs/globals/media_extensions.dart';
+import 'package:waultar/core/helpers/PathHelper.dart';
 import 'package:waultar/core/helpers/parse_helper.dart';
 import 'package:waultar/data/repositories/datapoint_repo.dart';
 import 'package:waultar/data/entities/media/file_document.dart';
@@ -12,6 +14,7 @@ import 'package:waultar/data/entities/media/video_document.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/core/parsers/tree_parser.dart';
 import 'package:path/path.dart' as dart_path;
+import 'package:waultar/startup.dart';
 
 import '../media/link_document.dart';
 import 'category_node.dart';
@@ -89,7 +92,7 @@ class DataPoint {
     dataPointName.target = parentName;
     stringName = parentName.name;
     profile.target = targetProfile;
-    valuesJsonBytes = utf8.encode(utf8.decode(jsonEncode(json).codeUnits));
+    valuesJsonBytes = utf8.encode(utf8.decode(jsonEncode(json).codeUnits, allowMalformed: true));
 
     final StringBuffer sb = StringBuffer();
     sb.write('${parentName.name} ');
@@ -113,8 +116,8 @@ class DataPoint {
     }
   }
 
-  String? _getSentimentText(DataCategory dataCategory, dynamic json,
-      ProfileDocument profile, DataPointName parent) {
+  String? _getSentimentText(
+      DataCategory dataCategory, dynamic json, ProfileDocument profile, DataPointName parent) {
     switch (profile.service.target!.serviceName) {
       case "Facebook":
         switch (dataCategory.category) {
@@ -138,9 +141,28 @@ class DataPoint {
             break;
 
           case CategoryEnum.comments:
-            if (json is Map<String, dynamic> && json.containsKey("comment")) {
-              return json["comment"];
+            if (json is Map<String, dynamic> && json.containsKey("data")) {
+              var temp = json["data"];
+              if (temp.length > 2) {
+                locator
+                    .get<BaseLogger>(instanceName: 'logger')
+                    .logger
+                    .severe("Found comment with more than 1 data: $json");
+                return "";
+              }
+              if (temp is List<dynamic> && temp.isNotEmpty && temp.first.containsKey("comment")) {
+                temp = temp.first;
+                if (temp is Map<String, dynamic> && temp.containsKey("comment")) {
+                  temp = temp["comment"];
+                  if (temp is Map<String, dynamic> && temp.containsKey("comment")) {
+                    temp = temp["comment"];
+                    return temp;
+                  }
+                }
+              }
             }
+
+            return "";
             break;
 
           default:
@@ -192,7 +214,11 @@ class DataPoint {
         for (var entry in json.entries) {
           var value = entry.value;
           if (value is String) {
-            if (Extensions.isImage(value)) {
+            if (Extensions.isImage(value) &&
+                !values.contains("/stickers_used/") &&
+                !values.contains("\\stickers_used\\") &&
+                !values.endsWith(".gif") &&
+                PathHelper.doesFileExistsIO(dart_path.normalize('$basePathToMedia/$value'))) {
               var image = ImageDocument(
                 uri: dart_path.normalize('$basePathToMedia/$value'),
                 data: jsonEncode(flatten(json)),
@@ -254,8 +280,7 @@ class DataPoint {
     sb.write("ID: $id \n");
 
     if (dataPointName.hasValue) {
-      sb.write(
-          "DataPoint relation target name: ${dataPointName.target!.name}\n");
+      sb.write("DataPoint relation target name: ${dataPointName.target!.name}\n");
     }
 
     sb.write("Data:\n");

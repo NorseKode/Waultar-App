@@ -4,13 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/file_type_enum.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_search_service.dart';
 import 'package:waultar/data/entities/media/image_document.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/repositories/media_repo.dart';
+import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget_box.dart';
 import 'package:waultar/presentation/widgets/general/infinite_scroll.dart';
+import 'package:waultar/presentation/widgets/general/profile_selector.dart';
+import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 
 import 'package:waultar/startup.dart';
@@ -27,9 +33,13 @@ class _GalleryState extends State<Gallery> {
   late ThemeProvider themeProvider;
   var _isSearch = false;
   var _images = <ImageDocument>[];
+  var profiles = locator.get<ProfileRepository>(instanceName: 'profileRepo').getAll();
+  late ProfileDocument currentProfile;
   final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
+  final _searchService = locator.get<ISearchService>(instanceName: 'searchService');
   final _imageListScrollController = ScrollController();
   final _textSearchController = TextEditingController();
+  final _logger = locator.get<BaseLogger>(instanceName: 'logger');
   static const _step = 8;
   var _offset = 0;
   var _limit = _step;
@@ -38,6 +48,10 @@ class _GalleryState extends State<Gallery> {
   @override
   void initState() {
     super.initState();
+    currentProfile = profiles.first;
+    if (profiles.length > 1) {
+      profiles.add(ProfileDocument(name: "All"));
+    }
     _imageListScrollController.addListener(_onScrollEnd);
 
     _images = _mediaRepo.getImagesPagination(_offset, _limit);
@@ -47,6 +61,10 @@ class _GalleryState extends State<Gallery> {
   void dispose() {
     super.dispose();
     _imageListScrollController.removeListener(_onScrollEnd);
+  }
+
+  List<int> _getSelectedProfiles() {
+    return (currentProfile.id == 0 ? profiles.map((e) => e.id) : [currentProfile.id]).toList();
   }
 
   void _scrollReset() {
@@ -60,7 +78,7 @@ class _GalleryState extends State<Gallery> {
     _offset = 0;
     _limit = _step;
 
-    _images = _mediaRepo.searchImagesPagination(searchText, _offset, _limit);
+    _images = _searchService.searchImages(_getSelectedProfiles(), searchText, _offset, _limit);
   }
 
   void scrollInit() {
@@ -74,8 +92,8 @@ class _GalleryState extends State<Gallery> {
         _offset += _limit;
 
         if (_isSearch) {
-          _images += _mediaRepo.searchImagesPagination(
-              _textSearchController.text, _offset, _limit);
+          _images += _searchService.searchImages(
+              _getSelectedProfiles(), _textSearchController.text, _offset, _limit);
         } else {
           _images += _mediaRepo.getImagesPagination(_offset, _limit);
         }
@@ -106,9 +124,7 @@ class _GalleryState extends State<Gallery> {
                 ? null
                 : themeProvider.themeMode().tonedTextColor,
             icon: Iconsax.image,
-            color: _selectedMediaType == FileType.image
-                ? Colors.transparent
-                : Colors.transparent,
+            color: _selectedMediaType == FileType.image ? Colors.transparent : Colors.transparent,
             onPressed: () {
               setState(() {
                 _selectedMediaType = FileType.image;
@@ -124,9 +140,7 @@ class _GalleryState extends State<Gallery> {
                 ? null
                 : themeProvider.themeMode().tonedTextColor,
             icon: Iconsax.video,
-            color: _selectedMediaType == FileType.video
-                ? Colors.transparent
-                : Colors.transparent,
+            color: _selectedMediaType == FileType.video ? Colors.transparent : Colors.transparent,
             onPressed: () {
               setState(() {
                 _selectedMediaType = FileType.video;
@@ -142,9 +156,7 @@ class _GalleryState extends State<Gallery> {
                 ? null
                 : themeProvider.themeMode().tonedTextColor,
             icon: Iconsax.folder,
-            color: _selectedMediaType == FileType.file
-                ? Colors.transparent
-                : Colors.transparent,
+            color: _selectedMediaType == FileType.file ? Colors.transparent : Colors.transparent,
             onPressed: () {
               setState(() {
                 _selectedMediaType = FileType.file;
@@ -227,6 +239,10 @@ class _GalleryState extends State<Gallery> {
     );
   }
 
+  _changeSelectedProfile(ProfileDocument profile) {
+    currentProfile = profile;
+  }
+
   Widget _topBar() {
     return Row(
       children: [
@@ -234,8 +250,10 @@ class _GalleryState extends State<Gallery> {
           "Gallery",
           style: themeProvider.themeData().textTheme.headline3,
         ),
-        SizedBox(width: 20),
+        const SizedBox(width: 20),
         _contentSelectionRadio(),
+        const SizedBox(width: 20),
+        profileSelector(profiles, currentProfile, _changeSelectedProfile),
       ],
     );
   }
@@ -254,8 +272,7 @@ class _GalleryState extends State<Gallery> {
               children: List.generate(
                   _images.length,
                   (index) => Container(
-                        decoration: BoxDecoration(
-                            color: themeProvider.themeData().primaryColor),
+                        decoration: BoxDecoration(color: themeProvider.themeData().primaryColor),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -272,21 +289,19 @@ class _GalleryState extends State<Gallery> {
                             ),
                             SizedBox(height: 10),
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
                               child: Text(_images[index].mediaTags != ""
-                                  ? _images[index]
-                                      .mediaTags
-                                      .split(",")
-                                      .fold<String>(
-                                          "",
-                                          (previousValue, element) =>
-                                              previousValue +=
-                                                  (element.trim().isNotEmpty
-                                                      ? element + "\n"
-                                                      : ""))
-                                      .trim()
-                                  : "No tags found"),
+                                  ? _images[index].mediaTags == "NULL"
+                                      ? "No tags found"
+                                      : _images[index]
+                                          .mediaTags
+                                          .split(",")
+                                          .fold<String>(
+                                              "",
+                                              (previousValue, element) => previousValue +=
+                                                  (element.trim().isNotEmpty ? element + "\n" : ""))
+                                          .trim()
+                                  : "Not tagged"),
                             ),
                           ],
                         ),
@@ -334,8 +349,10 @@ class _GalleryState extends State<Gallery> {
 
   @override
   Widget build(BuildContext context) {
+    // var timer = Stopwatch();
+    // timer.start();
     themeProvider = Provider.of<ThemeProvider>(context);
-    return Column(
+    var res = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _topBar(),
@@ -345,6 +362,12 @@ class _GalleryState extends State<Gallery> {
         _imageList(),
       ],
     );
+
+    // timer.stop();
+    // _logger.logger.shout(
+    //     "Re-render of gallery with serach tag: ${_textSearchController.text} took ${timer.elapsed.inMicroseconds} microseconds");
+
+    return res;
   }
 
   Widget _searchbar() {
@@ -368,7 +391,7 @@ class _GalleryState extends State<Gallery> {
             ),
             filled: true,
             fillColor: (const Color(0xFF272837)),
-            hintText: "search your images ...",
+            hintText: "search your images like dog, cat ...",
             hintStyle: TextStyle(letterSpacing: 0.3),
           )),
     );

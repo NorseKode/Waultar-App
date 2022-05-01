@@ -9,6 +9,7 @@ import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 class ProfileDocument {
   int id;
 
+  @Unique()
   String name;
   DateTime created = DateTime.now();
 

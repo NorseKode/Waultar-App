@@ -21,8 +21,7 @@ class SentimentWidget extends StatefulWidget {
 }
 
 class _SentimentWidgetState extends State<SentimentWidget> {
-  final sentimentService =
-      locator.get<ISentimentService>(instanceName: 'sentimentService');
+  final sentimentService = locator.get<ISentimentService>(instanceName: 'sentimentService');
   late ThemeProvider themeProvider;
   late List<ProfileDocument> profiles;
 
@@ -30,7 +29,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
   int timeEstimateSeconds = 0;
   bool translate = false;
   bool analyzing = false;
-  String message = "Analyzing ...";
+  String uiMessage = "Analyzing ...";
   List<CategoryEnum> validCategories = [
     CategoryEnum.comments,
     CategoryEnum.messaging,
@@ -52,8 +51,8 @@ class _SentimentWidgetState extends State<SentimentWidget> {
     themeProvider = Provider.of<ThemeProvider>(context);
 
     for (var profile in profiles) {
-      var profileCats = profile.categories
-          .where((element) => validCategories.contains(element.category));
+      var profileCats =
+          profile.categories.where((element) => validCategories.contains(element.category));
       for (var element in profileCats) {
         categories.add(element.id);
       }
@@ -74,17 +73,13 @@ class _SentimentWidgetState extends State<SentimentWidget> {
             "Analyze the invoked sentiment in your data.\nChoose what data to run analysis on :",
         child: analyzing
             ? Column(
-                children: [
-                  Text(message),
-                  const Center(child: CircularProgressIndicator())
-                ],
+                children: [Text(uiMessage), const Center(child: CircularProgressIndicator())],
               )
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 10),
-                  SingleChildScrollView(
-                      child: Column(children: _profileList())),
+                  SingleChildScrollView(child: Column(children: _profileList())),
                   const SizedBox(height: 0),
                   _analyzeBar(),
                 ],
@@ -98,9 +93,9 @@ class _SentimentWidgetState extends State<SentimentWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
+            const Text(
               "Translate text",
-              style: const TextStyle(
+              style: TextStyle(
                   color: Color.fromARGB(255, 149, 150, 159),
                   fontFamily: "Poppins",
                   fontSize: 12,
@@ -123,9 +118,9 @@ class _SentimentWidgetState extends State<SentimentWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
+            const Text(
               "Estimated Time To Tag: ",
-              style: const TextStyle(
+              style: TextStyle(
                   color: Color.fromARGB(255, 149, 150, 159),
                   fontSize: 12,
                   fontWeight: FontWeight.w500),
@@ -147,9 +142,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                       : () async {
                           analyzing = true;
                           await sentimentService.connotateOwnTextsFromCategory(
-                              chosenCategories,
-                              _sentimentAnalyzingProgress,
-                              translate);
+                              chosenCategories, _sentimentAnalyzingProgress, translate);
                           chosenCategories = [];
                           setState(() {});
                         }),
@@ -161,11 +154,16 @@ class _SentimentWidgetState extends State<SentimentWidget> {
   }
 
   _sentimentAnalyzingProgress(String message, bool isDone) {
-    analyzing = !isDone;
-    if (isDone) {
-      _calculateCount();
-      setState(() {});
-    }
+    setState(() {
+      analyzing = !isDone;
+
+      if (isDone) {
+        _calculateCount();
+        uiMessage = "Analyzing ...";
+      } else {
+        uiMessage = message;
+      }
+    });
   }
 
   String _timeEstimateOnCat() {
@@ -179,10 +177,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
 
   List<Widget> _profileList() {
     return profiles.isEmpty
-        ? [
-            Text("No data to analyze",
-                style: themeProvider.themeData().textTheme.headline4)
-          ]
+        ? [Text("No data to analyze", style: themeProvider.themeData().textTheme.headline4)]
         : List.generate(
             profiles.length,
             (index) => Container(

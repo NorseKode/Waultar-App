@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_search_service.dart';
 import 'package:waultar/core/models/ui_model.dart';
-import 'package:waultar/domain/services/text_search_service.dart';
+import 'package:waultar/data/repositories/profile_repo.dart';
+import 'package:waultar/domain/services/search_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
+import 'package:waultar/startup.dart';
 import 'package:waultar/presentation/widgets/browse/datapoint_widget.dart';
 
 class SearchBarButton extends StatefulWidget {
@@ -20,9 +23,14 @@ class _SearchBarButtonState extends State<SearchBarButton> {
   late Map<CategoryEnum, bool> chosenCategories;
   late StateSetter _setState;
 
-  final _textSearchService = TextSearchService();
+  final _textSearchService = locator.get<ISearchService>(instanceName: 'searchService');
   final _scrollController = ScrollController();
   var _contents = <UIModel>[];
+  var profileIds = locator
+      .get<ProfileRepository>(instanceName: 'profileRepo')
+      .getAll()
+      .map((e) => e.id)
+      .toList();
 
   var _offset = 0;
   final _limit = 20;
@@ -34,15 +42,13 @@ class _SearchBarButtonState extends State<SearchBarButton> {
         return;
       }
 
-      var categories = chosenCategories.entries
-          .where((element) => element.value)
-          .map((e) => e.key)
-          .toList();
+      var categories =
+          chosenCategories.entries.where((element) => element.value).map((e) => e.key).toList();
       isAppend
-          ? _contents += _textSearchService.search(
-              categories, serachController.text, _offset, _limit)
-          : _contents = _textSearchService.search(
-              categories, serachController.text, _offset, _limit);
+          ? _contents += _textSearchService.searchText(
+              categories, profileIds, serachController.text, _offset, _limit)
+          : _contents = _textSearchService.searchText(
+              categories, profileIds, serachController.text, _offset, _limit);
     });
   }
 
@@ -53,8 +59,7 @@ class _SearchBarButtonState extends State<SearchBarButton> {
   }
 
   _onScrollEnd() {
-    if (_scrollController.position.maxScrollExtent ==
-        _scrollController.position.pixels) {
+    if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
       _offset += _limit;
       _serach(true);
     }
@@ -231,14 +236,12 @@ class _SearchBarButtonState extends State<SearchBarButton> {
                     onTap: () {
                       _setState(() {
                         chosenCategories.update(
-                            chosenCategories.keys.elementAt(index),
-                            (value) => !value);
+                            chosenCategories.keys.elementAt(index), (value) => !value);
                         _loadNewData();
                       });
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 4, horizontal: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
                       decoration: BoxDecoration(
                           color: chosenCategories.values.elementAt(index)
                               ? const Color(0xFF323346)
@@ -247,15 +250,13 @@ class _SearchBarButtonState extends State<SearchBarButton> {
                       child: Row(
                         children: [
                           Icon(Iconsax.document,
-                              size: 12,
-                              color: themeProvider.themeMode().tonedTextColor),
+                              size: 12, color: themeProvider.themeMode().tonedTextColor),
                           const SizedBox(
                             width: 5,
                           ),
                           Text(
                             chosenCategories.keys.elementAt(index).name,
-                            style:
-                                themeProvider.themeData().textTheme.headline4,
+                            style: themeProvider.themeData().textTheme.headline4,
                           )
                         ],
                       ),

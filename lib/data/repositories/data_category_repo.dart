@@ -14,7 +14,39 @@ class DataCategoryRepository {
     _categoryBox = _context.store.box<DataCategory>();
   }
 
-  int updateCategory(DataCategory category) => _categoryBox.put(category);
+  DataCategory updateCategory(DataCategory category) {
+    try {
+      int id = _categoryBox.put(category);
+      return _categoryBox.get(id)!;
+    } catch (e) {
+      var existing = _categoryBox
+          .query(DataCategory_.profileCategoryCombination
+              .equals(category.profileCategoryCombination))
+          .build()
+          .findUnique()!;
+
+      // ObjectBox do not have UPSERT operation so we have to perform it manually here
+      // this means, updating all relations with the conflicting category relation
+      var nameBox = _context.store.box<DataPointName>();
+      var conflictingNames = nameBox.query(DataPointName_.dataCategory.equals(category.id)).build().find();
+      for (var item in conflictingNames) {
+        item.dataCategory.target = existing;
+      }
+      nameBox.putMany(conflictingNames);
+
+      var dataBox = _context.store.box<DataPoint>();
+      var conflictingDatapoints = dataBox.query(DataPoint_.category.equals(category.id)).build().find();
+      for (var item in conflictingDatapoints) {
+        item.category.target = existing;
+      }
+      dataBox.putMany(conflictingDatapoints);
+
+      existing.dataPointNames.addAll(conflictingNames);
+
+      int id = _categoryBox.put(existing);
+      return _categoryBox.get(id)!;
+    }
+  }
 
   DataCategory getCategory(CategoryEnum category) {
     var entity = _categoryBox
@@ -46,12 +78,6 @@ class DataCategoryRepository {
     return _categoryBox.get(category.id)!.dataPointNames.toList();
   }
 
-  void updateCount(DataCategory category, int incrementWith) {
-    var entity = _categoryBox.get(category.id)!;
-    entity.count += incrementWith;
-    _categoryBox.put(entity);
-  }
-
   DataCategory? getCategoryById(int id) => _categoryBox.get(id);
 
   List<DataPointName> getNamesByCategory(DataCategory category) {
@@ -63,49 +89,37 @@ class DataCategoryRepository {
     // get category from service based on parent directory for the file
     // keep looking backwards in the path until we reach root folder
     var categoryEnum = getFromPath(folderName);
-    var existingBuilder = _categoryBox
-        .query(DataCategory_.dbCategory.equals(categoryEnum.index))
-        ..link(DataCategory_.profile, ProfileDocument_.id.equals(profile.id));
+    String uniqueIdentifier = profile.name + categoryEnum.categoryName;
+    var existingBuilder = _categoryBox.query(
+        DataCategory_.profileCategoryCombination.equals(uniqueIdentifier));
     var existingEntity = existingBuilder.build().findUnique();
     if (existingEntity != null) {
       return existingEntity;
     } else {
-      var newCategory = DataCategory(
-        matchingFoldersFacebook: [],
-        matchingFoldersInstagram: [],
-        category: categoryEnum,
+      var newCategory = DataCategory.create(
+        categoryEnum,
+        profile,
       );
-      newCategory.profile.target = profile;
-      int createdId = _categoryBox.put(newCategory);
+      int createdId = 0;
+      try {
+        createdId = _categoryBox.put(newCategory);
+      } catch (e) {
+        createdId = _categoryBox
+            .query(DataCategory_.profileCategoryCombination
+                .equals(newCategory.profileCategoryCombination))
+            .build()
+            .findUnique()!
+            .id;
+      }
+
       var createdCategory = _categoryBox.get(createdId)!;
       
       profile.categories.add(createdCategory);
-      return createdCategory;
+      return newCategory;
     }
   }
 
   int count() => _categoryBox.count();
-
-  int addCategory(
-    CategoryEnum category,
-    List<String> matchingFoldersFacebook,
-    List<String> matchingFoldersInstagram,
-  ) {
-    var existing = _categoryBox
-        .query(DataCategory_.dbCategory.equals(category.index))
-        .build()
-        .findUnique();
-
-    if (existing == null) {
-      return _categoryBox.put(DataCategory(
-        category: category,
-        matchingFoldersFacebook: matchingFoldersFacebook,
-        matchingFoldersInstagram: matchingFoldersInstagram,
-      ));
-    }
-
-    return existing.id;
-  }
 
   void addMany(List<DataCategory> categories) {
     _categoryBox.putMany(categories);

@@ -196,7 +196,7 @@ class _TimelineState extends State<Timeline> {
 
   Widget _resetButton() {
     return DefaultButton(
-      constraints: BoxConstraints(maxWidth: 200),
+      constraints: const BoxConstraints(maxWidth: 200),
       onPressed: () {
         _timelineService.reset();
         setState(() {});
@@ -294,8 +294,8 @@ class _TimelineState extends State<Timeline> {
       tooltipBehavior: _tooltipBehavior,
       zoomPanBehavior: ZoomPanBehavior(
         enablePanning: true,
-        zoomMode: ZoomMode.x,
-        enableMouseWheelZooming: _chosenChartType.canZoom,
+        // zoomMode: ZoomMode.x,
+        // enableMouseWheelZooming: _chosenChartType.canZoom,
       ),
       legend: Legend(
         isVisible: true,

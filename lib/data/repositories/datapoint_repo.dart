@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:pretty_json/pretty_json.dart';
+import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
+import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
+import 'package:waultar/startup.dart';
 
 class DataPointRepository {
   final ObjectBox _context;
   late final Box<DataPoint> _dataBox;
+  final _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
+  final _logger = locator.get<BaseLogger>(instanceName: 'logger');
 
   DataPointRepository(this._context) {
     _dataBox = _context.store.box<DataPoint>();
@@ -36,7 +41,8 @@ class DataPointRepository {
     return query.find();
   }
 
-  List<UIDTO> search(List<int> categoryIds, String searchString, int offset, int limit) {
+  List<UIDTO> search(List<int> categoryIds, List<int> profileIds, String searchString, int offset, int limit) {
+    _performance.startReading("Text search");
     var builder = _dataBox.query(
       DataPoint_.searchTerms.contains(
         searchString,
@@ -47,12 +53,21 @@ class DataPointRepository {
       DataPoint_.category,
       DataCategory_.dbCategory.oneOf(categoryIds),
     );
+
+    var amountOfProfiles = _context.store.box<ProfileDocument>().getAll().length;
+    if (amountOfProfiles > profileIds.length) {
+      builder.link(DataPoint_.profile, ProfileDocument_.id.oneOf(profileIds));
+    }
     var query = builder.build();
 
     query
       ..offset = offset
       ..limit = limit;
-    return query.find().map((e) => e.getUIDTO).toList();
+
+    var result = query.find().map((e) => e.getUIDTO).toList();
+    _logger.logger.info("Text search: $searchString ran in: ${_performance.stopReading('Text search').inMicroseconds} microseconds");
+
+    return result;
   }
 
   int readAllSentimentCategory(int categoryId) {

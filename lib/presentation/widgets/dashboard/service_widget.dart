@@ -4,7 +4,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/configs/globals/service_enums.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
-import 'package:waultar/data/entities/misc/service_document.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 
 class ServiceWidget extends StatefulWidget {

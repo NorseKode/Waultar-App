@@ -8,7 +8,7 @@ abstract class ISentimentService {
   int getCategoryCount(int categoryId);
   double connotateText(String text);
   Future<void> connotateOwnTextsFromCategory(List<DataCategory> categories,
-      Function(String message, bool isDone) callback, bool translate);
+      Function(String message, bool isDone) callback, bool translate, {int threadCount = 1});
   Future<void> connotateAllTextSeparateThreadFromDB();
   List<ProfileDocument> getAllProfiles();
 }

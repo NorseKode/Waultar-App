@@ -1,16 +1,13 @@
 import 'dart:io';
 
-// Import tflite_flutter
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/core/ai/i_ml_model.dart';
 import 'package:waultar/startup.dart';
 
 class SentimentClassifier extends IMLModel {
-  // name of the model file
   late String modelPath;
   late String vocabPath;
-  // Maximum length of sentence
   final int _sentenceLen = 256;
 
   final String start = '<START>';
@@ -20,7 +17,6 @@ class SentimentClassifier extends IMLModel {
   late Map<String, int> _dict;
   final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
 
-  // TensorFlow Lite Interpreter object
   late Interpreter _interpreter;
 
   @override
@@ -36,7 +32,6 @@ class SentimentClassifier extends IMLModel {
   }
 
   _loadModel() {
-    // Creating the interpreter using Interpreter.fromAsset
     var path = locator.get<String>(instanceName: 'ai_folder');
     _interpreter = Interpreter.fromFile(File(modelPath), path);
   }
@@ -52,31 +47,61 @@ class SentimentClassifier extends IMLModel {
     _dict = dict;
   }
 
+  /// Takes [rawText] and returns a list of doubles of length 2, with the first
+  /// being the % negative and the second being the % positive
+  ///
+  /// If [rawText] doesn't contain any recognized text it will return a list
+  /// with both elements being -1
+  ///
+  /// Taking the two doubles, if the [rawText] was recognized, and adding them
+  /// together, they will sum up to 1
   List<double> classify(String rawText) {
-    var startTime = DateTime.now();
-    // tokenizeInputText returns List<List<double>>
-    // of shape [1, 256].
-    //List<List<int>> input = tokenizeInputText(rawText);
-    List<List<double>> input = tokenizeInputText(rawText);
+    var finalScore = [0.0, 0.0];
+    var scoreCount = 0;
+    var isLastIt = rawText.length < 256;
 
-    // output of shape [1,2].
-    var output = List<int>.filled(2, 0).reshape([1, 2]);
-    //var output = List<int>.filled(384, 0).reshape([1, 384]);
+    aux(String inputText) {
+      var input = tokenizeInputText(inputText);
 
-    // The run method will run inference and
-    // store the resulting values in output.
-    //print(_interpreter.getOutputTensors());
-    _interpreter.run(input, output);
-    //_interpreter.runForMultipleInputs(input, {0: output, 1: output});
+      if (input != null) {
+        var output = List<int>.filled(2, 0).reshape([1, 2]);
 
-    return [output[0][0], output[0][1]];
+        _interpreter.run(input, output);
+
+        return output;
+      } else {
+        return null;
+      }
+    }
+
+    while (rawText.length > 256) {
+      var first256 = rawText.substring(0, 256);
+      rawText = rawText.substring(256);
+
+      var results = aux(first256);
+
+      if (results != null) {
+        finalScore[0] += results[0][0];
+        finalScore[1] += results[0][1];
+        scoreCount++;
+      }
+    }
+
+    var results = aux(rawText);
+
+    if (results != null) {
+      finalScore[0] += results[0][0];
+      finalScore[1] += results[0][1];
+      scoreCount++;
+    }
+
+    return scoreCount == 0 ? [-1, -1] : [finalScore[0] / scoreCount, finalScore[1] / scoreCount];
   }
 
-  List<List<double>> tokenizeInputText(String text) {
-    // Whitespace tokenization
+  List<List<double>>? tokenizeInputText(String text) {
+    var isNonEmpty = false;
     final toks = text.split(' ');
 
-    // Create a list of length==_sentenceLen filled with the value <pad>
     var vec = List<double>.filled(_sentenceLen, _dict[pad]!.toDouble());
 
     var index = 0;
@@ -84,18 +109,20 @@ class SentimentClassifier extends IMLModel {
       vec[index++] = _dict[start]!.toDouble();
     }
 
-    // For each word in sentence find corresponding index in dict
     for (var tok in toks) {
       if (index > _sentenceLen) {
         break;
       }
-      vec[index++] = _dict.containsKey(tok)
-          ? _dict[tok]!.toDouble()
-          : _dict[unk]!.toDouble();
+      if (_dict.containsKey(tok)) {
+        isNonEmpty = true;
+        vec[index++] = _dict[tok]!.toDouble();
+      } else {
+        vec[index++] = _dict[unk]!.toDouble();
+      }
     }
 
-    // returning List<List<double>> as our interpreter input tensor expects the shape, [1,256]
-    return [vec];
+    // return isNonEmpty ? [vec] : [vec];
+    return isNonEmpty ? [vec] : null;
   }
 
   @override

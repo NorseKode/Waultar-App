@@ -1,12 +1,16 @@
+import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
 import 'package:waultar/data/entities/media/file_document.dart';
 import 'package:waultar/data/entities/media/image_document.dart';
 import 'package:waultar/data/entities/media/link_document.dart';
 import 'package:waultar/data/entities/media/video_document.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
+import 'package:waultar/startup.dart';
 
 class MediaRepository {
   final ObjectBox _context;
+  final _logger = locator.get<BaseLogger>(instanceName: 'logger');
   late final Box<ImageDocument> _imageBox;
   late final Box<VideoDocument> _videoBox;
   late final Box<FileDocument> _fileBox;
@@ -27,7 +31,7 @@ class MediaRepository {
       ..limit = limit;
     return query.find();
   }
-  
+
   List<ImageDocument> getImagesForTaggingPagination(int offset, int limit) {
     var query = _imageBox.query(ImageDocument_.mediaTags.equals("")).build();
     query
@@ -48,10 +52,28 @@ class MediaRepository {
     return _imageBox.query(ImageDocument_.mediaTags.equals("")).build().count();
   }
 
-  List<ImageDocument> searchImagesPagination(String searchText, int offset, int limit) {
-    var query = _imageBox
-        .query(ImageDocument_.mediaTags.contains(searchText, caseSensitive: false))
-        .build();
+  List<ImageDocument> searchImagesPagination(
+      List<String> tags, List<int> profileIds, int offset, int limit) {
+    var queryInput = ImageDocument_.mediaTags.contains(
+      tags.removeAt(0).trim(),
+      caseSensitive: false,
+    );
+
+    for (var tag in tags) {
+      if (tag.isNotEmpty) {
+        queryInput = queryInput.and(ImageDocument_.mediaTags.contains(
+          tag.trim(),
+          caseSensitive: false,
+        ));
+      }
+    }
+
+    var builder = _imageBox.query(queryInput);
+
+    builder.link(ImageDocument_.profile, ProfileDocument_.id.oneOf(profileIds));
+
+    var query = builder.build();
+
     query
       ..offset = offset
       ..limit = limit;

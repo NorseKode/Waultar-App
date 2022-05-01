@@ -8,6 +8,7 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repositor
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
 import 'package:waultar/core/base_worker/base_worker.dart';
+import 'package:waultar/core/helpers/PathHelper.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/repositories/profile_repo.dart';
@@ -101,8 +102,7 @@ class ParserService implements IParserService {
                   parsedCount++;
                 }
 
-                callback(
-                    "Parsing ${parsedCount}/${_pathsToParse.length}", false);
+                callback("Parsing $parsedCount/${_pathsToParse.length}", false);
 
                 if (isDoneCount == threadCount) {
                   _bucketsRepo.createBuckets(_parsingStartedAt, profile);
@@ -122,6 +122,16 @@ class ParserService implements IParserService {
                         PerformanceDataPoint.fromMap(
                             jsonDecode(data.performanceDataPoint)));
                   }
+                }
+
+                if (isDoneCount == threadCount && ISPERFORMANCETRACKING) {
+                  _performance.addData(
+                    _performance.parentKey,
+                    duration: _performance.stopReading(_performance.parentKey),
+                    metadata: {
+                      'Thread Count': threadCount,
+                    },
+                  );
                   _performance.summary("Extraction and parsing");
                 }
                 break;
@@ -134,6 +144,8 @@ class ParserService implements IParserService {
             }
           }
 
+          var basePathToFiles = PathHelper.getCommonPath(_pathsToParse.first, _pathsToParse.last);
+
           for (var i = 0; i < threadCount; i++) {
             var paths = _pathsToParse.sublist(
                 splitCount * i,
@@ -145,8 +157,9 @@ class ParserService implements IParserService {
               initiator: IsolateParserStartPackage(
                 paths: paths,
                 profileId: profile.id,
-                isPerformanceTracking: false,
+                isPerformanceTracking: ISPERFORMANCETRACKING,
                 waultarPath: _waultarPath,
+                basePath: basePathToFiles,
               ),
             );
             workersList.add(worker);
@@ -257,6 +270,7 @@ class ParserService implements IParserService {
       profileId: profile.id,
       isPerformanceTracking: ISPERFORMANCETRACKING,
       waultarPath: _waultarPath,
+      basePath: "",
     );
     _listenParser(dynamic data) {
       switch (data.runtimeType) {
@@ -268,9 +282,7 @@ class ParserService implements IParserService {
           if (data.isDone) {
             callback("Creating timeline ...", false);
             _bucketsRepo.createBuckets(_parsingStartedAt, profile).whenComplete(
-                () => callback(
-                    "Parsing ${data.parsedCount}/${_pathsToParse.length}",
-                    data.isDone));
+                () => callback("Parsing ${data.parsedCount}/${_pathsToParse.length}", data.isDone));
           }
 
           if (data.isDone && ISPERFORMANCETRACKING) {

@@ -1,6 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/globals.dart';
+import 'package:waultar/configs/globals/image_model_enum.dart';
+import 'package:waultar/core/ai/image_classifier.dart';
+import 'package:waultar/core/ai/image_classifier_efficient_net_b4.dart';
+import 'package:waultar/core/ai/image_classifier_mobilenetv3.dart';
 import 'package:waultar/core/base_worker/base_worker.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
@@ -16,10 +22,12 @@ class MLService extends IMLService {
     required int totalAmountOfImagesToTag,
     int threadCount = 1,
     int? limitAmount,
+    required ImageModelEnum imageModel,
   }) async {
     var isDoneCount = 0;
     var amountTaggedSummed = 0;
     var amountToProcess = limitAmount ?? totalAmountOfImagesToTag;
+    if (amountToProcess < 3) threadCount = 1;
     var splitCount = amountToProcess ~/ threadCount;
     var workersList = <BaseWorker>[];
 
@@ -33,26 +41,38 @@ class MLService extends IMLService {
       switch (data.runtimeType) {
         case MainImageClassifyProgressPackage:
           data as MainImageClassifyProgressPackage;
-          amountTaggedSummed += data.amountTagged;
 
-          if (data.isDone) isDoneCount++;
-
-          callback("$amountTaggedSummed/${limitAmount ?? totalAmountOfImagesToTag} Images Tagged",
-              isDoneCount == threadCount);
-          if (ISPERFORMANCETRACKING && isDoneCount == threadCount) {
-            _performance.addData(
-              _performance.parentKey,
-              duration: _performance.stopReading(_performance.parentKey),
-              childs: data.performanceDataPoint != null && data.performanceDataPoint!.isNotEmpty
-                  ? [PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint!))]
-                  : [],
-              metadata: {"threadCount": threadCount},
+          if (data.isDone) {
+            isDoneCount++;
+          } else {
+            amountTaggedSummed += data.amountTagged;
+            callback(
+              "$amountTaggedSummed/${limitAmount ?? totalAmountOfImagesToTag} Images Tagged",
+              false,
             );
-            _performance.summary("Tagging of images only total");
+          }
 
+          if (isDoneCount == threadCount) {
             for (var worker in workersList) {
               worker.dispose();
             }
+
+            if (ISPERFORMANCETRACKING) {
+              _performance.addData(
+                _performance.parentKey,
+                duration: _performance.stopReading(_performance.parentKey),
+                childs: data.performanceDataPoint != null && data.performanceDataPoint!.isNotEmpty
+                    ? [PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint!))]
+                    : [],
+                metadata: {
+                  "threadCount": threadCount,
+                  "tagged count": totalAmountOfImagesToTag,
+                },
+              );
+              _performance.summary("Tagging of images only total");
+            }
+
+            callback("Initializing", true);
           }
       }
     }
@@ -65,7 +85,8 @@ class MLService extends IMLService {
           waultarPath: waultarPath,
           offset: splitCount * i,
           limit: i != threadCount - 1 ? (splitCount * (i + 1)) : amountToProcess,
-          isPerformanceTracking: false,
+          isPerformanceTracking: ISPERFORMANCETRACKING,
+          imageModel: imageModel,
         ),
       );
 
@@ -127,4 +148,25 @@ class MLService extends IMLService {
     // return updated;
     throw UnimplementedError();
   }
+
+  @override
+  List<Tuple2<String, double>> classifySingleImage({required File imageFile, required ImageModelEnum imageModel}) {
+    ImageClassifier classifier;
+    
+    switch (imageModel) {
+      case ImageModelEnum.mobileNetV3Large:
+        classifier = ImageClassifierMobileNetV3();
+        break;
+      case ImageModelEnum.efficientNetB4:
+        classifier = ImageClassifierEfficientNetB4();
+        break;
+
+      default:
+        classifier = ImageClassifierMobileNetV3();
+        break;        
+    }
+
+    return classifier.predict(imageFile.path, 5);
+  }
+
 }

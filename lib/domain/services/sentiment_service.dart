@@ -1,4 +1,3 @@
-import 'package:remove_emoji/remove_emoji.dart';
 
 import 'dart:convert';
 
@@ -17,7 +16,6 @@ import 'package:waultar/data/repositories/datapoint_repo.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/data/entities/nodes/category_node.dart';
-import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/domain/workers/sentiment_worker.dart';
 import 'package:waultar/startup.dart';
 
@@ -57,35 +55,67 @@ class SentimentService extends ISentimentService {
   }
 
   @override
-  Future<void> connotateOwnTextsFromCategory(List<DataCategory> categories,
-      Function(String message, bool isDone) callback, bool translate) async {
+  Future<void> connotateOwnTextsFromCategory(
+      List<DataCategory> categories, Function(String message, bool isDone) callback, bool translate,
+      {int threadCount = 1}) async {
     if (ISPERFORMANCETRACKING) {
       var key = "Classify text all";
       _performance.init(newParentKey: key);
       _performance.startReading(key);
     }
 
+    var isDoneCount = 0;
+    var progressCount = 0;
+    var workers = <BaseWorker>[];
+    var totalCount =
+        categories.fold<int>(0, (previousValue, element) => previousValue += element.count);
+    var profiles =
+        categories.fold<List<ProfileDocument>>(<ProfileDocument>[], (previousValue, element) {
+      if (!previousValue.contains(element.profile.target)) {
+        previousValue.add(element.profile.target!);
+      }
+
+      return previousValue;
+    });
+
+    var messagesOnIsolates = categories
+        .where((element) => element.category == CategoryEnum.messaging && element.count > 30000)
+        .toList();
+
+    categories.removeWhere((element) => messagesOnIsolates.contains(element));
+
     var initiator = IsolateSentimentStartPackage(
       waultarPath: locator.get<String>(instanceName: 'waultar_root_directory'),
       aiFolder: locator.get<String>(instanceName: 'ai_folder'),
       categoriesIds: categories.map((e) => e.id).toList(),
       translate: translate,
-      isPerformanceTracking: ISPERFORMANCETRACKING,
+      isPerformanceTracking: false,
     );
 
     _listenSentimentClassify(dynamic data) {
       switch (data.runtimeType) {
         case MainSentimentClassifyProgressPackage:
           data as MainSentimentClassifyProgressPackage;
-          callback("", data.isDone);
+          progressCount += data.amountTagged;
+          callback("$progressCount/$totalCount text analysed", false);
 
           if (data.isDone) {
+            print("done");
+            isDoneCount++;
+          }
+
+          if (isDoneCount == threadCount && progressCount == totalCount) {
+            for (var worker in workers) {
+              print("disposing");
+              worker.sendMessage(IsolateSentimentDisposePackage());
+              worker.dispose();
+            }
+            callback("Initializing", true);
+
             if (ISPERFORMANCETRACKING) {
               _performance.startReading("Bucket repo update");
             }
-            _bucketsRepo.updateForSentiments(
-              categories.first.profile.target!,
-            );
+            profiles.map((e) => _bucketsRepo.updateForSentiments(e));
             if (ISPERFORMANCETRACKING) {
               _performance.addReading(_performance.parentKey, "Bucket repo update",
                   _performance.stopReading("Bucket repo update"));
@@ -98,13 +128,39 @@ class SentimentService extends ISentimentService {
       }
     }
 
-    var classifyWorker = BaseWorker(
-      initiator: initiator,
-      mainHandler: _listenSentimentClassify,
-    );
-    classifyWorker.init(sentimentWorkerBody);
+    if (categories.isNotEmpty) {
+      var classifyWorker = BaseWorker(
+        initiator: initiator,
+        mainHandler: _listenSentimentClassify,
+      );
+      workers.add(classifyWorker);
+      classifyWorker.init(sentimentWorkerBody);
+    }
 
-    var updated = 0;
+    for (var messageData in messagesOnIsolates) {
+      var threadCountTemp = 2;
+      threadCount += threadCountTemp;
+      var count = messageData.count;
+      var splitCount = count ~/ threadCountTemp;
+
+      for (var i = 0; i < threadCountTemp; i++) {
+        var worker = BaseWorker(
+          mainHandler: _listenSentimentClassify,
+          initiator: IsolateSentimentStartPackage(
+            waultarPath: locator.get<String>(instanceName: 'waultar_root_directory'),
+            aiFolder: locator.get<String>(instanceName: 'ai_folder'),
+            categoriesIds: [messageData.id],
+            translate: translate,
+            isPerformanceTracking: false,
+            offset: splitCount * i,
+            limit: i != threadCountTemp - 1 ? (splitCount * (i + 1)) : count,
+          ),
+        );
+
+        workers.add(worker);
+        worker.init(sentimentWorkerBody);
+      }
+    }
   }
 
   @override
@@ -116,8 +172,7 @@ class SentimentService extends ISentimentService {
   void calculateCategoryCount(List<int> categories) {
     for (var categoryID in categories) {
       var entry = {
-        categoryID:
-            getCategoryCount(_categoryRepo.getCategoryById(categoryID)!.id),
+        categoryID: getCategoryCount(_categoryRepo.getCategoryById(categoryID)!.id),
       };
       categoryCountMap.addAll(entry);
     }

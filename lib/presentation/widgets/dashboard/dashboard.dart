@@ -2,18 +2,18 @@ import 'dart:io';
 import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/service_enums.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_dashboard_service.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
-import 'package:waultar/domain/services/dashboard_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
+import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
+import 'package:waultar/presentation/widgets/machine_models/image_classify_single_widget%20.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 
 import 'package:waultar/presentation/widgets/machine_models/sentiment_widget.dart';
@@ -22,8 +22,11 @@ import 'package:waultar/presentation/widgets/general/default_widgets/default_wid
 import 'package:waultar/presentation/widgets/dashboard/service_widget.dart';
 
 import 'package:waultar/presentation/widgets/machine_models/image_classify_widget.dart';
+import 'package:waultar/presentation/widgets/snackbar_custom.dart';
+import 'package:waultar/presentation/widgets/upload/uploader.dart';
 
 import 'package:waultar/startup.dart';
+import 'package:path/path.dart' as dart_path;
 
 class Dashboard extends StatefulWidget {
   Dashboard({Key? key}) : super(key: key);
@@ -36,14 +39,18 @@ class _DashboardState extends State<Dashboard> {
   final _dashboardService = locator.get<IDashboardService>(
     instanceName: 'dashboardService',
   );
-  final sentimentService =
-      locator.get<ISentimentService>(instanceName: 'sentimentService');
+  final _parserService = locator.get<IParserService>(
+    instanceName: 'parserService',
+  );
+  final sentimentService = locator.get<ISentimentService>(instanceName: 'sentimentService');
   late AppLocalizations localizer;
   late ThemeProvider themeProvider;
   late List<ProfileDocument> profiles;
   late List<Tuple2<String, double>> weekdays;
   Tuple2<String, double> mostActive = const Tuple2('Unknown', 0);
   var testText = TextEditingController();
+  var _isLoading = false;
+  var _progressMessage = "Initializing";
   double testScore = -1;
   Map<int, int> serviceAlpha = {};
 
@@ -53,26 +60,84 @@ class _DashboardState extends State<Dashboard> {
     themeProvider = Provider.of<ThemeProvider>(context);
     profiles = _dashboardService.getAllProfiles();
     weekdays = _dashboardService.getActiveWeekday();
-
     if (profiles.isNotEmpty) _alphaGenerator();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          localizer.dashboard,
-          style: themeProvider.themeData().textTheme.headline3,
-        ),
-        const SizedBox(height: 20),
-        Expanded(
-          child: profiles.isNotEmpty
-              ? SingleChildScrollView(child: _dashboardWidgets())
-              : Text(
-                  "Upload data to use dashboard",
-                  style: themeProvider.themeData().textTheme.headline4,
-                ),
-        )
-      ],
+      children: _isLoading
+          ? [
+              Text(_progressMessage),
+              const CircularProgressIndicator(),
+            ]
+          : [
+              Text(
+                localizer.dashboard,
+                style: themeProvider.themeData().textTheme.headline3,
+              ),
+              TextField(controller: threadCountController),
+              _uploadButton(),
+              const SizedBox(height: 20),
+              Expanded(
+                child: profiles.isNotEmpty
+                    ? SingleChildScrollView(child: _dashboardWidgets())
+                    : Text(
+                        "Upload data to use dashboard",
+                        style: themeProvider.themeData().textTheme.headline4,
+                      ),
+              )
+            ],
+    );
+  }
+
+  _onUploadProgress(String message, bool isDone) {
+    setState(() {
+      _progressMessage = message;
+      _isLoading = !isDone;
+      if (!_isLoading) {
+        _progressMessage = "Initializing";
+      }
+    });
+  }
+
+  var threadCountController = TextEditingController();
+  _uploadButton() {
+    return DefaultButton(
+      constraints: const BoxConstraints(maxWidth: 200),
+      onPressed: () async {
+        var files = await Uploader.uploadDialogue(context);
+        if (files != null) {
+          SnackBarCustom.useSnackbarOfContext(context, localizer.startedLoadingOfData);
+
+          setState(() {
+            _isLoading = true;
+          });
+
+          var zipFile =
+              files.item1.singleWhere((element) => dart_path.extension(element) == ".zip");
+
+          // await _parserService.parseIsolates(
+          //   zipFile,
+          //   _onUploadProgress,
+          //   files.item3,
+          //   ProfileDocument(name: files.item2),
+          // );
+          // await _parserService.parseIsolatesParallel(
+          //   zipFile,
+          //   _onUploadProgress,
+          //   files.item3,
+          //   ProfileDocument(name: files.item2),
+          // );
+
+          await _parserService.parseIsolatesPara(
+            zipFile,
+            _onUploadProgress,
+            files.item3,
+            ProfileDocument(name: files.item2),
+            threadCount: int.parse(threadCountController.text),
+          );
+        }
+      },
+      text: localizer.upload,
     );
   }
 
@@ -224,8 +289,8 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _services() {
-    List<Widget> serviceWidgets = List.generate(
-        profiles.length, (e) => ServiceWidget(service: profiles[e]));
+    List<Widget> serviceWidgets =
+        List.generate(profiles.length, (e) => ServiceWidget(service: profiles[e]));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

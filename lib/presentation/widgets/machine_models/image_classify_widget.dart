@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/configs/globals/image_model_enum.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
@@ -30,6 +31,7 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
   var _progressMessage = "Initializing";
   var _imagesToTagCount = 0;
   var _isLoading = false;
+  var _isFastImageModel = false;
 
   _onImageTaggingProgress(String message, bool isDone) {
     setState(() {
@@ -53,6 +55,8 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
           ? int.parse(_amountToTagTextController.text)
           : null,
       threadCount: 3,
+      imageModel:
+          _isFastImageModel ? ImageModelEnum.efficientNetB4 : ImageModelEnum.mobileNetV3Large,
     );
   }
 
@@ -61,16 +65,42 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Text(_progressMessage),
-        SizedBox(height: 20),
-        Center(child: const CircularProgressIndicator())
+        const SizedBox(height: 20),
+        const Center(child: CircularProgressIndicator())
       ],
     );
   }
 
   String _timeEstimate(int count) {
-    var timeEstimate = (count * 0.08).ceil();
+    var timeEstimate = (count * 0.3).ceil();
 
     return "${'${(Duration(seconds: timeEstimate))}'.substring(2, 7)} ${timeEstimate < 60 ? "sec" : "min"}";
+  }
+
+  Widget _imageModelChooser() {
+    return Column(
+      children: [
+        const Align(
+          alignment: Alignment.centerLeft,
+          child: Text("Should use fast tagger, it's less precise"),
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Checkbox(
+            value: _isFastImageModel,
+            onChanged: (value) {
+              setState(() {
+                if (value != null) {
+                  _isFastImageModel = value;
+                } else {
+                  _isFastImageModel = !_isFastImageModel;
+                }
+              });
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _mainBody() {
@@ -81,29 +111,29 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
           ? _loadingScreen()
           : _imagesToTagCount == 0
               ? Row(
-                  children: [
-                    const Text("No Images To Tag"),
+                  children: const [
+                    Text("No Images To Tag"),
                   ],
                 )
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
-                    Text(
+                    const Text(
                       "How many images to tag?",
                     ),
-                    SizedBox(height: 10),
-                    Container(
+                    const SizedBox(height: 10),
+                    SizedBox(
                       height: 40,
                       child: TextFormField(
-                          style: TextStyle(fontSize: 12),
+                          style: const TextStyle(fontSize: 12),
                           cursorWidth: 1,
                           keyboardType: TextInputType.number,
                           controller: _amountToTagTextController,
                           decoration: InputDecoration(
-                            contentPadding: EdgeInsets.only(left: 15),
+                            contentPadding: const EdgeInsets.only(left: 15),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(5.0),
                               borderSide: BorderSide.none,
@@ -111,15 +141,16 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                             filled: true,
                             fillColor: (const Color(0xFF323346)),
                             hintText: "Enter a number ...",
-                            hintStyle: TextStyle(letterSpacing: 0.3),
+                            hintStyle: const TextStyle(letterSpacing: 0.3),
                           )),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
+                    _imageModelChooser(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Untagged Images Count: ",
-                            style: const TextStyle(
+                        const Text("Untagged Images Count: ",
+                            style: TextStyle(
                                 color: Color.fromARGB(255, 149, 150, 159),
                                 fontFamily: "Poppins",
                                 fontSize: 12,
@@ -131,9 +162,9 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           "Estimated Time To Tag All: ",
-                          style: const TextStyle(
+                          style: TextStyle(
                               color: Color.fromARGB(255, 149, 150, 159),
                               fontFamily: "Poppins",
                               fontSize: 12,

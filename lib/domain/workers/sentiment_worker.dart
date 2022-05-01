@@ -7,6 +7,7 @@ import 'package:waultar/core/ai/sentiment_classifier_textClassification.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/data/configs/objectbox.dart';
+import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/repositories/data_category_repo.dart';
 import 'package:waultar/data/repositories/datapoint_repo.dart';
@@ -35,6 +36,7 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
       var categories = data.categoriesIds.map((e) => categoryRepo.getCategoryById(e)!).toList();
 
       var username = "";
+      var name = "";
       var profile = categories.first.profile.target!;
       var profileData = categories.first.profile.target!.categories
           .firstWhere((element) => element.category == CategoryEnum.profile)
@@ -43,6 +45,7 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
         if (profile.service.target!.serviceName == "Instagram") {
           if (element.name == "profile user") {
             for (var point in element.dataPoints) {
+              name = ((point.asMap["string_map_data"])["Name"])["value"];
               username = ((point.asMap["string_map_data"])["Username"])["value"];
             }
           }
@@ -65,7 +68,8 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
       bool _isOwnData(DataPoint point, String profileUsername, String profileName) {
         switch (point.category.target!.category) {
           case CategoryEnum.messaging:
-            if (point.asMap["sender_name"] == profileUsername) {
+            if (point.asMap["sender_name"] == profileUsername ||
+                point.asMap["sender_name"] == name) {
               return true;
             }
             return false;
@@ -73,6 +77,15 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
           default:
             return true;
         }
+        // switch (point.profile.target!.service.target!.serviceName) {
+        //   case "Facebook":
+
+        //   case "Instagram":
+        //     // print("sender_name: ${point.asMap['sender_name']}, profileUsername: $profileUsername, profileName: $profileName");
+        //     return false;
+        // }
+
+        // return false;
       }
 
       String _cleanText(String text) {
@@ -80,6 +93,13 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
         clean = clean.replaceAll(RegExp(r'#\w+'), '');
         clean = clean.replaceAll(RegExp(r'(@(?:\w|\.)+)'), '');
         return clean;
+      }
+
+      void _sendProgressUpdate(int count) {
+        mainSendPort.send(MainSentimentClassifyProgressPackage(
+          amountTagged: count,
+          isDone: false,
+        ));
       }
 
       _logger.logger.info("Started sentiment scoring of ${data.categoriesIds.length} categories");
@@ -90,11 +110,13 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
             if (data.isPerformanceTracking) performance.startReading("_isOwnData");
             var isOwnData = _isOwnData(point, username, profile.name);
             if (data.isPerformanceTracking) {
-              performance.addReading(performance.parentKey, "_isOwnData",
-                  performance.stopReading("_isOwnData"));
+              performance.addReading(
+                  performance.parentKey, "_isOwnData", performance.stopReading("_isOwnData"));
             }
 
             if (isOwnData && point.sentimentText != null && point.sentimentText!.isNotEmpty) {
+              // var text = point.sentimentText!;
+
               if (data.isPerformanceTracking) performance.startReading("clean text");
               var text = "";
               if (point.sentimentText!.contains("#") || point.sentimentText!.contains("#")) {
@@ -103,23 +125,13 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
               } else {
                 text = point.sentimentText!;
               }
-              if (text.length > 256) text = text.substring(0, 256);
               if (data.isPerformanceTracking) {
                 performance.addReading(
                     performance.parentKey, "clean text", performance.stopReading("clean text"));
               }
 
-              if (text.isNotEmpty) {
-                if (data.translate) {
-                  if (data.isPerformanceTracking) performance.startReading("translate");
-                  text = await translator.translate(input: text, outputLanguage: 'en');
-                  if (data.isPerformanceTracking) {
-                    performance.addReading(
-                        performance.parentKey, "translate", performance.stopReading("translate"));
-                  }
-                }
-
-              if (data.isPerformanceTracking) performance.startReading("classify");
+              scoreTheText() {
+                if (data.isPerformanceTracking) performance.startReading("classify");
                 var sentimentScore = sentimentClassifier.classify(text);
                 point.sentimentScore = sentimentScore.last; //0-1
                 if (data.isPerformanceTracking) {
@@ -136,11 +148,60 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
 
                 _logger.logger
                     .info("Gave DataPoint with id ${point.id} a score of ${point.sentimentScore}");
+
+                _sendProgressUpdate(1);
+              }
+
+              if (text.isNotEmpty) {
+                if (data.translate) {
+                  if (data.isPerformanceTracking) performance.startReading("translate");
+                  // text = await translator.translate(input: text, outputLanguage: 'en');
+                  translator.translate(input: text, outputLanguage: 'en').then((value) {
+                    text = value;
+                    scoreTheText();
+                  });
+                  if (data.isPerformanceTracking) {
+                    performance.addReading(
+                        performance.parentKey, "translate", performance.stopReading("translate"));
+                  }
+                } else {
+                  scoreTheText();
+                }
+
+                // if (text.isNotEmpty) {
+                //   if (data.translate) {
+                //     if (data.isPerformanceTracking) performance.startReading("translate");
+                //     text = await translator.translate(input: text, outputLanguage: 'en');
+                //     if (data.isPerformanceTracking) {
+                //       performance.addReading(
+                //           performance.parentKey, "translate", performance.stopReading("translate"));
+                //     }
+                //   }
+
+                //   if (data.isPerformanceTracking) performance.startReading("classify");
+                //   var sentimentScore = sentimentClassifier.classify(text);
+                //   point.sentimentScore = sentimentScore.last; //0-1
+                //   if (data.isPerformanceTracking) {
+                //     performance.addReading(
+                //         performance.parentKey, "classify", performance.stopReading("classify"));
+                //   }
+
+                //   if (data.isPerformanceTracking) performance.startReading("repo");
+                //   dataRepo.addDataPoint(point);
+                //   if (data.isPerformanceTracking) {
+                //     performance.addReading(
+                //         performance.parentKey, "repo", performance.stopReading("repo"));
+                //   }
+
+                //   _logger.logger
+                //       .info("Gave DataPoint with id ${point.id} a score of ${point.sentimentScore}");
               } else {
                 point.sentimentScore = -1;
                 dataRepo.addDataPoint(point);
-                
+
                 _logger.logger.info("DataPoint had an empty sentiment text");
+
+                _sendProgressUpdate(1);
               }
             } else {
               point.sentimentScore = -1;
@@ -148,21 +209,42 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
 
               _logger.logger.info(
                   "DataPoint with id: ${point.id} had a sentiment text that was either null, empty or not the users data");
+
+              _sendProgressUpdate(1);
             }
           }
+
+          // mainSendPort.send(MainSentimentClassifyProgressPackage(
+          //   amountTagged: dataPoints.length,
+          //   isDone: false,
+          // ));
         }
 
         const step = 20;
-        int offset = 0;
+        int offset = data.offset ?? 0;
         int limit = step;
+        var isDone = false;
 
-        List<DataPoint> dataPoints = dataRepo.readAllFromCategoryPagination(category, offset, limit);
-        
-        while (dataPoints.isNotEmpty) {
+        List<DataPoint> dataPoints =
+            dataRepo.readAllFromCategoryPagination(category, offset, limit);
+
+        while (dataPoints.isNotEmpty && !isDone) {
           await aux(dataPoints);
 
+          if (data.limit != null && data.limit! < (offset + step)) {
+            var remaining = step - ((offset + step) - data.limit!);
+            offset += remaining;
+            limit = remaining;
+            isDone = true;
+          } else {
+            offset += step;
+          }
+
           dataPoints = dataRepo.readAllFromCategoryPagination(category, offset, limit);
-          offset += step;
+        }
+
+        if (isDone) {
+          aux(dataPoints);
         }
       }
 
@@ -181,10 +263,11 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
       ));
     } catch (e, stacktrace) {
       mainSendPort.send(LogRecordPackage(e.toString(), stacktrace.toString()));
-    } finally {
-      var _context = locator.get<ObjectBox>(instanceName: 'context');
-      _context.store.close();
     }
+  } else if (data is IsolateSentimentDisposePackage) {
+    print("finito");
+    var _context = locator.get<ObjectBox>(instanceName: 'context');
+    _context.store.close();
   }
 }
 
@@ -202,6 +285,8 @@ class IsolateSentimentStartPackage extends InitiatorPackage {
   List<int> categoriesIds;
   bool isPerformanceTracking;
   bool translate;
+  int? limit;
+  int? offset;
 
   IsolateSentimentStartPackage({
     required this.waultarPath,
@@ -209,8 +294,12 @@ class IsolateSentimentStartPackage extends InitiatorPackage {
     required this.categoriesIds,
     required this.isPerformanceTracking,
     required this.translate,
+    this.limit,
+    this.offset,
   });
 }
+
+class IsolateSentimentDisposePackage {}
 
 class MainSentimentClassifyProgressPackage {
   int amountTagged;

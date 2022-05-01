@@ -139,8 +139,10 @@ class TreeParser {
       }
       category.dataPointNames.add(name);
       category.profile.target = profile;
-      _categoryRepo.updateCategory(category);
+      var updatedCategory = _categoryRepo.updateCategory(category);
+      profile.categories.add(updatedCategory);
       _profileRepo.add(profile);
+
       if (ISPERFORMANCETRACKING) {
         _performance.addReading(
             _performance.parentKey, key5, _performance.stopReading(key5));

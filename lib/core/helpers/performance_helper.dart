@@ -20,12 +20,15 @@ abstract class IPerformanceHelper {
       {Duration? duration, List<PerformanceDataPoint>? childs, Map<String, dynamic>? metadata});
   void addDataPoint(String successorKey, PerformanceDataPoint performanceDataPoint);
 
-  void addReading(String successorKey, String key, Duration elapsedTime, {Map<String, dynamic>? metadata});
+  void addReading(String successorKey, String key, Duration elapsedTime,
+      {Map<String, dynamic>? metadata});
   void addReadings(String successorKey, String key, List<PerformanceDataPoint> childs);
 
   void storeDataPoint(String key, PerformanceDataPoint dataPoint);
   List<PerformanceDataPoint> getStoredDataPoints(String key);
   void clearDataPointStore();
+
+  bool containsChildWithKey({required String key, bool recurse = false});
 
   void summary(String summaryFileName);
 
@@ -80,7 +83,8 @@ class PerformanceHelper extends IPerformanceHelper {
   }
 
   @override
-  void addReading(String successorKey, String key, Duration elapsedTime, {Map<String, dynamic>? metadata}) {
+  void addReading(String successorKey, String key, Duration elapsedTime,
+      {Map<String, dynamic>? metadata}) {
     _addReading(super.parentDataPoint, successorKey, key, elapsedTime, metadata: metadata);
   }
 
@@ -91,7 +95,8 @@ class PerformanceHelper extends IPerformanceHelper {
     }
   }
 
-  _addReading(PerformanceDataPoint node, String successorKey, String key, Duration elapsedTime, {Map<String, dynamic>? metadata}) {
+  _addReading(PerformanceDataPoint node, String successorKey, String key, Duration elapsedTime,
+      {Map<String, dynamic>? metadata}) {
     if (node.key == successorKey) {
       node.childs.add(PerformanceDataPoint(key: key, inputTime: elapsedTime, metaData: metadata));
     } else {
@@ -108,8 +113,7 @@ class PerformanceHelper extends IPerformanceHelper {
     List<PerformanceDataPoint>? childs,
     Map<String, dynamic>? metadata,
   }) {
-    _addData(super.parentDataPoint, key,
-        duration: duration, childs: childs, metadata: metadata);
+    _addData(super.parentDataPoint, key, duration: duration, childs: childs, metadata: metadata);
   }
 
   _addData(
@@ -141,7 +145,8 @@ class PerformanceHelper extends IPerformanceHelper {
     _addDataPoint(super.parentDataPoint, successorKey, performanceDataPoint);
   }
 
-  _addDataPoint(PerformanceDataPoint successor, String successorKey, PerformanceDataPoint performanceDataPoint) {
+  _addDataPoint(PerformanceDataPoint successor, String successorKey,
+      PerformanceDataPoint performanceDataPoint) {
     if (successor.key == successorKey) {
       successor.childs.add(performanceDataPoint);
     } else {
@@ -170,6 +175,19 @@ class PerformanceHelper extends IPerformanceHelper {
     _tempStorageList = <Tuple2<String, List<PerformanceDataPoint>>>[
       const Tuple2("", <PerformanceDataPoint>[])
     ];
+  }
+
+  @override
+  bool containsChildWithKey({required String key, bool recurse = false}) {
+    for (var child in parentDataPoint.childs) {
+      if (child.key == key) {
+        return true;
+      } else if (recurse) {
+        return containsChildWithKey(key: key, recurse: recurse);
+      }
+    }
+
+    return false;
   }
 
   @override
@@ -226,7 +244,7 @@ class PerformanceDataPoint {
     } else {
       timeFormat = "microseconds";
     }
-    
+
     if (inputTime != null) {
       elapsedTime = inputTime;
     } else {
