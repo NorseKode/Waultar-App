@@ -36,10 +36,10 @@ class DashboardService implements IDashboardService {
   @override
   int getMostActiveYear() {
     var allYears = _bucketsRepository.getAllYears();
+    if (allYears.isEmpty) return -1;
     YearBucket mostActive = allYears.first;
     for (var year in allYears) {
       if (year.total > mostActive.total) {
-        print(year.profile.target!.name);
         mostActive = year;
       }
     }
@@ -49,6 +49,7 @@ class DashboardService implements IDashboardService {
   @override
   List<Tuple2<String, double>> getActiveWeekday() {
     const namesMap = {
+      -1: 'Unknown',
       1: 'Monday',
       2: 'Tuesday',
       3: 'Wednesday',

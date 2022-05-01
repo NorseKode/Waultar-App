@@ -46,8 +46,11 @@ class ParserService implements IParserService {
   );
 
   @override
-  Future<void> parseIsolatesPara(String zipPath, Function(String message, bool isDone) callback,
-      String serviceName, ProfileDocument profile,
+  Future<void> parseIsolatesPara(
+      String zipPath,
+      Function(String message, bool isDone) callback,
+      String serviceName,
+      ProfileDocument profile,
       {int threadCount = 1}) async {
     if (ISPERFORMANCETRACKING) {
       _performance.init(newParentKey: "Extracting and parsing synchronously");
@@ -80,7 +83,7 @@ class ParserService implements IParserService {
 
         case MainUnzipProgressPackage:
           data as MainUnzipProgressPackage;
-          callback("${data.progress} files extracted out of $_totalCount", false);
+          callback("${data.progress} / $_totalCount files unzipped", false);
           break;
 
         case MainUnzippedPathsPackage:
@@ -98,7 +101,8 @@ class ParserService implements IParserService {
                   parsedCount++;
                 }
 
-                callback("Parsing ${parsedCount}/${_pathsToParse.length}", false);
+                callback(
+                    "Parsing ${parsedCount}/${_pathsToParse.length}", false);
 
                 if (isDoneCount == threadCount) {
                   _bucketsRepo.createBuckets(_parsingStartedAt, profile);
@@ -110,10 +114,13 @@ class ParserService implements IParserService {
 
                 if (isDoneCount == threadCount && ISPERFORMANCETRACKING) {
                   _performance.addData(_performance.parentKey,
-                      duration: _performance.stopReading(_performance.parentKey));
+                      duration:
+                          _performance.stopReading(_performance.parentKey));
                   if (data.performanceDataPoint.isNotEmpty) {
-                    _performance.addDataPoint(_performance.parentKey,
-                        PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
+                    _performance.addDataPoint(
+                        _performance.parentKey,
+                        PerformanceDataPoint.fromMap(
+                            jsonDecode(data.performanceDataPoint)));
                   }
                   _performance.summary("Extraction and parsing");
                 }
@@ -128,8 +135,11 @@ class ParserService implements IParserService {
           }
 
           for (var i = 0; i < threadCount; i++) {
-            var paths = _pathsToParse.sublist(splitCount * i,
-                i != threadCount - 1 ? (splitCount * (i + 1)) : _pathsToParse.length);
+            var paths = _pathsToParse.sublist(
+                splitCount * i,
+                i != threadCount - 1
+                    ? (splitCount * (i + 1))
+                    : _pathsToParse.length);
             var worker = BaseWorker(
               mainHandler: _listenParser2,
               initiator: IsolateParserStartPackage(
@@ -145,8 +155,10 @@ class ParserService implements IParserService {
           }
 
           if (ISPERFORMANCETRACKING) {
-            _performance.addDataPoint(_performance.parentKey,
-                PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
+            _performance.addDataPoint(
+                _performance.parentKey,
+                PerformanceDataPoint.fromMap(
+                    jsonDecode(data.performanceDataPoint)));
           }
 
           break;
@@ -154,8 +166,8 @@ class ParserService implements IParserService {
         case MainPerformanceMeasurementPackage:
           data as MainPerformanceMeasurementPackage;
           if (ISPERFORMANCETRACKING) {
-            var performanceReading =
-                PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPointJson));
+            var performanceReading = PerformanceDataPoint.fromMap(
+                jsonDecode(data.performanceDataPointJson));
             _performance.storeDataPoint("Extracting files", performanceReading);
           }
           break;
@@ -205,7 +217,8 @@ class ParserService implements IParserService {
 
         case MainUnzipProgressPackage:
           data as MainUnzipProgressPackage;
-          callback("${data.progress} files extracted out of $_totalCount", false);
+          callback(
+              "${data.progress} files extracted out of $_totalCount", false);
           break;
 
         case MainUnzippedPathsPackage:
@@ -214,8 +227,10 @@ class ParserService implements IParserService {
           _startParsing(callback, profile);
 
           if (ISPERFORMANCETRACKING) {
-            _performance.addDataPoint(_performance.parentKey,
-                PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
+            _performance.addDataPoint(
+                _performance.parentKey,
+                PerformanceDataPoint.fromMap(
+                    jsonDecode(data.performanceDataPoint)));
           }
 
           break;
@@ -223,8 +238,8 @@ class ParserService implements IParserService {
         case MainPerformanceMeasurementPackage:
           data as MainPerformanceMeasurementPackage;
           if (ISPERFORMANCETRACKING) {
-            var performanceReading =
-                PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPointJson));
+            var performanceReading = PerformanceDataPoint.fromMap(
+                jsonDecode(data.performanceDataPointJson));
             _performance.storeDataPoint("Extracting files", performanceReading);
           }
           break;
@@ -247,7 +262,8 @@ class ParserService implements IParserService {
       switch (data.runtimeType) {
         case MainParsedProgressPackage:
           data as MainParsedProgressPackage;
-          callback("Parsing ${data.parsedCount}/${_pathsToParse.length}", data.isDone);
+          callback("Parsing ${data.parsedCount}/${_pathsToParse.length}",
+              data.isDone);
 
           if (data.isDone) {
             callback("Creating timeline ...", false);
@@ -260,8 +276,10 @@ class ParserService implements IParserService {
           if (data.isDone && ISPERFORMANCETRACKING) {
             _performance.addData(_performance.parentKey,
                 duration: _performance.stopReading(_performance.parentKey));
-            _performance.addDataPoint(_performance.parentKey,
-                PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint)));
+            _performance.addDataPoint(
+                _performance.parentKey,
+                PerformanceDataPoint.fromMap(
+                    jsonDecode(data.performanceDataPoint)));
             _performance.summary("Extraction and parsing");
           }
           break;
@@ -274,13 +292,17 @@ class ParserService implements IParserService {
       }
     }
 
-    var parseWorker = BaseWorker(mainHandler: _listenParser, initiator: parseInitiator);
+    var parseWorker =
+        BaseWorker(mainHandler: _listenParser, initiator: parseInitiator);
     parseWorker.init(parseWorkerBody);
   }
 
   @override
-  Future<void> parseIsolatesParallel(String zipPath, Function(String message, bool isDone) callback,
-      String serviceName, ProfileDocument profile) async {
+  Future<void> parseIsolatesParallel(
+      String zipPath,
+      Function(String message, bool isDone) callback,
+      String serviceName,
+      ProfileDocument profile) async {
     if (ISPERFORMANCETRACKING) {
       _performance.init(newParentKey: "Extracting and parsing synchronously");
       _performance.startReading(_performance.parentKey);
@@ -331,7 +353,8 @@ class ParserService implements IParserService {
       switch (data.runtimeType) {
         case MainParsedParaProgressPackage:
           data as MainParsedParaProgressPackage;
-          callback("Parsing ${parsedCount += data.parsedCount}/$_totalCount", false);
+          callback(
+              "Parsing ${parsedCount += data.parsedCount}/$_totalCount", false);
 
           if (parsedCount == _totalCount) {
             _disposeWorkers();
@@ -346,7 +369,8 @@ class ParserService implements IParserService {
       }
     }
 
-    parseWorker = BaseWorker(mainHandler: _listenParser, initiator: parseInitiator);
+    parseWorker =
+        BaseWorker(mainHandler: _listenParser, initiator: parseInitiator);
     parseWorker.init(parseWorkerBody2);
 
     // Extract
@@ -371,7 +395,8 @@ class ParserService implements IParserService {
             callback("Started unzipping", false);
             _totalCount = data.amountOfFiles;
 
-            parseWorker!.sendMessage(IsolateParseParaDestDirPackage(destDir: data.destDir));
+            parseWorker!.sendMessage(
+                IsolateParseParaDestDirPackage(destDir: data.destDir));
           } else {
             isExtractionDone = true;
             _totalCount = data.amountOfFiles;
@@ -389,7 +414,8 @@ class ParserService implements IParserService {
 
           if (pathsToBeParsed.length > 18) {
             pathsToBeParsed.add(data.path);
-            parseWorker!.sendMessage(IsolateParseParaFilePackage(pathToFile: pathsToBeParsed));
+            parseWorker!.sendMessage(
+                IsolateParseParaFilePackage(pathToFile: pathsToBeParsed));
             pathsToBeParsed.clear();
           } else {
             pathsToBeParsed.add(data.path);
@@ -412,8 +438,8 @@ class ParserService implements IParserService {
         case MainPerformanceMeasurementPackage:
           data as MainPerformanceMeasurementPackage;
           if (ISPERFORMANCETRACKING && ISTRACKALL) {
-            var performanceReading =
-                PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPointJson));
+            var performanceReading = PerformanceDataPoint.fromMap(
+                jsonDecode(data.performanceDataPointJson));
             _performance.storeDataPoint("Extracting files", performanceReading);
           }
           break;
@@ -434,7 +460,9 @@ class ParserService implements IParserService {
     profile = _profileRepo.add(profile);
 
     var files = FileUploader.extractZip(zipPath, serviceName, profile.name);
-    locator.get<TreeParser>(instanceName: 'parser').parseManyPaths(files, profile);
+    locator
+        .get<TreeParser>(instanceName: 'parser')
+        .parseManyPaths(files, profile);
   }
 
   @override

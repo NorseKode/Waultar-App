@@ -39,7 +39,7 @@ class ThemeProvider with ChangeNotifier {
       textTheme: TextTheme(
         headline1: TextStyle(
             color: Colors.white,
-            fontFamily: "Poppins",
+            //fontFamily: "Poppins",
             fontSize: 14,
             letterSpacing: 0.5,
             fontWeight: FontWeight.w500),
@@ -54,29 +54,30 @@ class ThemeProvider with ChangeNotifier {
         headline2: TextStyle(
           color:
               isLightTheme ? const Color(0xFF65696F) : const Color(0xFFE0E0E0),
-          fontFamily: "Poppins",
+          //fontFamily: "Poppins",
+
           fontSize: 16,
         ),
         headline3: TextStyle(
             color: isLightTheme
                 ? const Color(0xFF65696F)
                 : const Color(0xFFFFFFFF),
-            fontFamily: "Poppins",
+            //fontFamily: "Poppins",
             fontSize: 20,
             fontWeight: FontWeight.w500),
         headline4: const TextStyle(
             color: Color.fromARGB(255, 149, 150, 159), //Color(0xFFAEAFBB),
-            fontFamily: "Poppins",
+            //fontFamily: "Poppins",
             fontSize: 12,
             fontWeight: FontWeight.w500),
         bodyText1: const TextStyle(
             color: Colors.pink,
-            fontSize: 10,
+            fontSize: 12,
             fontWeight: FontWeight.w400), //not used
         bodyText2: const TextStyle(
             color: Colors.white,
-            fontSize: 12,
-            fontWeight: FontWeight.w200,
+            fontSize: 13,
+            fontWeight: FontWeight.w300,
             letterSpacing: 0.2),
       ),
     );
@@ -96,7 +97,7 @@ class ThemeProvider with ChangeNotifier {
         iconSize: 12,
         menuHeaderStyle: const TextStyle(
             color: Color(0xFFAEAFBB),
-            fontFamily: "Poppins",
+            //fontFamily: "Poppins",
             fontSize: 12,
             fontWeight: FontWeight.w400),
         tonedTextColor: const Color(0xFFAEAFBB));

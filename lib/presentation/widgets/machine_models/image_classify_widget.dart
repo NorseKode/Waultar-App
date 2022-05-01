@@ -4,7 +4,7 @@ import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
-import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 import 'package:waultar/startup.dart';
 
 class ImageClassifyWidget extends StatefulWidget {
@@ -93,8 +93,6 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                     ),
                     Text(
                       "How many images to tag?",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w400, fontSize: 11),
                     ),
                     SizedBox(height: 10),
                     Container(
@@ -124,10 +122,10 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                             style: const TextStyle(
                                 color: Color.fromARGB(255, 149, 150, 159),
                                 fontFamily: "Poppins",
-                                fontSize: 11,
+                                fontSize: 12,
                                 fontWeight: FontWeight.w500)),
                         Text("${_imagesToTagCount}",
-                            style: TextStyle(fontSize: 11)),
+                            style: TextStyle(fontSize: 12)),
                       ],
                     ),
                     Row(
@@ -138,12 +136,12 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                           style: const TextStyle(
                               color: Color.fromARGB(255, 149, 150, 159),
                               fontFamily: "Poppins",
-                              fontSize: 11,
+                              fontSize: 12,
                               fontWeight: FontWeight.w500),
                         ),
                         Text(
                           "${_timeEstimate(_imagesToTagCount)}",
-                          style: TextStyle(fontSize: 11),
+                          style: TextStyle(fontSize: 12),
                         ),
                       ],
                     ),

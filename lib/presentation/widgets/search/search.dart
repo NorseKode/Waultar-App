@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/domain/services/text_search_service.dart';
+import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 
 class Search extends StatefulWidget {
@@ -12,6 +14,7 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  late ThemeProvider themeProvider;
   final _controller = TextEditingController();
   final _textSearchService = TextSearchService();
   final _scrollController = ScrollController();
@@ -71,6 +74,7 @@ class _SearchState extends State<Search> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Checkbox(
+              activeColor: themeProvider.themeMode().themeColor,
               value: _chosenCategories[CategoryEnum.values[index]],
               onChanged: (changedTo) {
                 if (changedTo != null) {
@@ -89,25 +93,39 @@ class _SearchState extends State<Search> {
     );
   }
 
+  Widget _topBar() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Text(
+        //   "Search",
+        //   style: themeProvider.themeData().textTheme.headline3,
+        // ),
+        // SizedBox(width: 20),
+        // Expanded(child: Container()),
+        Expanded(child: _searchbar())
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    themeProvider = Provider.of<ThemeProvider>(context);
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextField(
-          controller: _controller,
-          onChanged: (change) {
-            // call text search
-            setState(() {
-              _loadNewData();
-            });
-          },
+        Text(
+          "Search",
+          style: themeProvider.themeData().textTheme.headline3,
         ),
+        SizedBox(height: 10),
+        _topBar(),
         const SizedBox(
-          height: 20.0,
+          height: 10.0,
         ),
         _searchCategoriesCheckBoxes(),
         const SizedBox(
-          height: 20.0,
+          height: 10.0,
         ),
         Expanded(
           // flex: 20,
@@ -118,7 +136,7 @@ class _SearchState extends State<Search> {
             itemBuilder: (_, index) => Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
               child: DefaultWidget(
-                edgeInsetsGeometry: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 title: _contents[index].getMostInformativeField(),
                 child: Text(
                   _contents[index].toString(),
@@ -128,6 +146,33 @@ class _SearchState extends State<Search> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _searchbar() {
+    return Container(
+      height: 40,
+      child: TextFormField(
+          style: TextStyle(fontSize: 12),
+          cursorWidth: 1,
+          keyboardType: TextInputType.number,
+          controller: _controller,
+          onChanged: (change) {
+            setState(() {
+              _loadNewData();
+            });
+          },
+          decoration: InputDecoration(
+            contentPadding: EdgeInsets.only(left: 15),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              borderSide: BorderSide.none,
+            ),
+            filled: true,
+            fillColor: (const Color(0xFF272837)),
+            hintText: "search ...",
+            hintStyle: TextStyle(letterSpacing: 0.3),
+          )),
     );
   }
 }

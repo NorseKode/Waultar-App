@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/configs/navigation/app_state.dart';
 import 'package:waultar/configs/navigation/router/app_route_path.dart';
 import 'package:waultar/configs/navigation/screen.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_dashboard_service.dart';
+import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
+import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:waultar/presentation/widgets/upload/uploader.dart';
+import 'package:path/path.dart' as dart_path;
+import 'package:waultar/startup.dart';
 
 class MenuPanel extends StatefulWidget {
   final ViewScreen active;
-  const MenuPanel({required this.active, Key? key}) : super(key: key);
+  Function? callback;
+  MenuPanel({this.callback, required, required this.active, Key? key})
+      : super(key: key);
 
   @override
   _MenuPanelState createState() => _MenuPanelState();
@@ -19,7 +28,22 @@ class MenuPanel extends StatefulWidget {
 class _MenuPanelState extends State<MenuPanel> {
   late AppLocalizations localizer;
   late ThemeProvider themeProvider;
+  final _parserService = locator.get<IParserService>(
+    instanceName: 'parserService',
+  );
+  final _dashboardService = locator.get<IDashboardService>(
+    instanceName: 'dashboardService',
+  );
   double menuWidth = 250;
+  bool isLoading = false;
+  String _lastUploadText = "";
+  var _progressMessage = "Initializing";
+
+  @override
+  void initState() {
+    _lastUploadText = _lastUpload();
+    super.initState();
+  }
 
   Widget logo() {
     var logo = SvgPicture.asset('lib/assets/graphics/logo2022.svg',
@@ -49,14 +73,14 @@ class _MenuPanelState extends State<MenuPanel> {
                       style: TextStyle(
                           color: themeProvider.themeMode().tonedTextColor,
                           fontSize: 10,
-                          fontWeight: FontWeight.w200),
+                          fontWeight: FontWeight.w300),
                     ),
                     const SizedBox(width: 5),
                     // ignore: avoid_unnecessary_containers
                     Container(
-                      child: const Padding(
+                      child: Padding(
                         padding: EdgeInsets.fromLTRB(2, 2, 8, 2),
-                        child: Text("Feb 2. 2022",
+                        child: Text(_lastUploadText,
                             style: TextStyle(
                                 color: Color(0xFF4FB376),
                                 fontSize: 10,
@@ -71,6 +95,19 @@ class _MenuPanelState extends State<MenuPanel> {
     );
   }
 
+  String _lastUpload() {
+    var profiles = _dashboardService.getAllProfiles();
+    var init = DateTime.parse("1857-12-24");
+    DateTime lastUploaded = init;
+    for (var profile in profiles) {
+      var temp = profile.created;
+
+      if (temp != null && temp.isAfter(lastUploaded)) lastUploaded = temp;
+    }
+    if (lastUploaded == init) return "No uploads yet";
+    return DateFormat('MMM d. yyy').format(lastUploaded);
+  }
+
   Widget menuButton(
     IconData icon,
     String title,
@@ -78,7 +115,7 @@ class _MenuPanelState extends State<MenuPanel> {
     Function(ViewScreen screen) onPressed,
   ) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 5),
       child: TextButton(
         style: ButtonStyle(
           overlayColor: MaterialStateProperty.all((const Color(0xFF323346))),
@@ -93,7 +130,7 @@ class _MenuPanelState extends State<MenuPanel> {
           setState(() {});
         },
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(6, 12, 6, 12),
+          padding: const EdgeInsets.fromLTRB(10, 12, 15, 12),
           child: Row(
             children: [
               Icon(
@@ -101,7 +138,7 @@ class _MenuPanelState extends State<MenuPanel> {
                 color: widget.active != screen
                     ? themeProvider.themeMode().tonedTextColor
                     : Colors.white, //const Color(0xFFABAAB8),
-                size: 12,
+                size: 15,
               ),
               const SizedBox(width: 12),
               Text(
@@ -112,7 +149,7 @@ class _MenuPanelState extends State<MenuPanel> {
                         : Colors.white,
                     fontFamily: "Poppins",
                     fontSize: 12,
-                    fontWeight: FontWeight.w400),
+                    fontWeight: FontWeight.w500),
               ) //const Color(0xFFABAAB8)))
             ],
           ),
@@ -139,8 +176,9 @@ class _MenuPanelState extends State<MenuPanel> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   logo(),
+                  SizedBox(height: 15),
                   Divider(
-                      height: 40,
+                      height: 22,
                       thickness: 2,
                       color: themeProvider.themeMode().tonedColor),
                   menuButton(
@@ -169,26 +207,77 @@ class _MenuPanelState extends State<MenuPanel> {
                         .read<AppState>()
                         .updateNavigatorState(AppRoutePath.timeline());
                   }),
-                  menuButton(Iconsax.element_3, "Upload", ViewScreen.browse,
+                  menuButton(Iconsax.element_3, "Explorer", ViewScreen.browse,
                       (_) {
                     context
                         .read<AppState>()
                         .updateNavigatorState(AppRoutePath.browse());
                   }),
-                  // Divider(
-                  //     height: 40,
-                  //     thickness: 2,
-                  //     color: themeProvider.themeMode().tonedColor),
-                  // menuButton(
-                  //     themeProvider.isLightTheme ? Iconsax.sun : Iconsax.moon,
-                  //     localizer.changeTheme,
-                  //     ViewScreen.unknown, (_) async {
-                  //   await themeProvider.toggleThemeData();
-                  // }),
-                  // Divider(
-                  //     height: 40,
-                  //     thickness: 2,
-                  //     color: themeProvider.themeMode().tonedColor),
+                  Divider(
+                      height: 22,
+                      thickness: 2,
+                      color: themeProvider.themeMode().tonedColor),
+                  SizedBox(height: 10),
+                  GestureDetector(
+                    onTap: () async {
+                      var files = await Uploader.uploadDialogue(context);
+                      if (files != null) {
+                        // SnackBarCustom.useSnackbarOfContext(
+                        //     context, localizer.startedLoadingOfData);
+                        setState(() {
+                          isLoading = true;
+                        });
+
+                        var zipFile = files.item1.singleWhere((element) =>
+                            dart_path.extension(element) == ".zip");
+
+                        await _parserService.parseIsolatesPara(
+                          zipFile,
+                          _onUploadProgress,
+                          files.item3,
+                          ProfileDocument(name: files.item2),
+                          threadCount: 3,
+                        );
+                      }
+                    },
+                    child: Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                          color: themeProvider.themeMode().themeColor,
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: 15.0,
+                          right: 20,
+                        ),
+                        child: Row(
+                          children: [
+                            isLoading
+                                ? Container(
+                                    height: 10,
+                                    width: 10,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ))
+                                : Icon(Iconsax.arrow_up_1, size: 17),
+                            SizedBox(width: 12),
+                            Container(
+                              width: 145,
+                              child: Text(
+                                isLoading ? _progressMessage : "Upload data",
+                                softWrap: false,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                overflow: TextOverflow.fade,
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
               Column(
@@ -196,7 +285,7 @@ class _MenuPanelState extends State<MenuPanel> {
                 children: [
                   //profile(),
                   menuButton(
-                      Iconsax.setting, localizer.settings, ViewScreen.unknown,
+                      Iconsax.setting, localizer.settings, ViewScreen.settings,
                       (_) {
                     context
                         .read<AppState>()
@@ -209,5 +298,16 @@ class _MenuPanelState extends State<MenuPanel> {
             ],
           ),
         ));
+  }
+
+  _onUploadProgress(String message, bool isDone) {
+    setState(() {
+      _progressMessage = message;
+      isLoading = !isDone;
+      if (isDone) {
+        _lastUploadText = _lastUpload();
+        widget.callback!.call();
+      }
+    });
   }
 }
