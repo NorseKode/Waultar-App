@@ -12,6 +12,7 @@ import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_dropdown.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget_box.dart';
 import 'package:waultar/presentation/widgets/general/infinite_scroll.dart';
@@ -33,9 +34,12 @@ class _GalleryState extends State<Gallery> {
   late ThemeProvider themeProvider;
   var _isSearch = false;
   var _images = <ImageDocument>[];
-  var profiles =
-      locator.get<ProfileRepository>(instanceName: 'profileRepo').getAll();
-  late ProfileDocument currentProfile;
+  var profiles = locator
+      .get<ProfileRepository>(instanceName: 'profileRepo')
+      .getAll()
+      .map((e) => DefaultMenuItem(e.name, e))
+      .toList();
+  DefaultMenuItem? currentProfile;
   final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
   final _searchService =
       locator.get<ISearchService>(instanceName: 'searchService');
@@ -50,9 +54,11 @@ class _GalleryState extends State<Gallery> {
   @override
   void initState() {
     super.initState();
-    currentProfile = profiles.first;
+    if (profiles.length > 0) {
+      currentProfile = profiles.first;
+    }
     if (profiles.length > 1) {
-      profiles.add(ProfileDocument(name: "All"));
+      profiles.add(DefaultMenuItem("All", ProfileDocument(name: "All")));
     }
     _imageListScrollController.addListener(_onScrollEnd);
 
@@ -66,10 +72,9 @@ class _GalleryState extends State<Gallery> {
   }
 
   List<int> _getSelectedProfiles() {
-    return (currentProfile.id == 0
-            ? profiles.map((e) => e.id)
-            : [currentProfile.id])
-        .toList();
+    return currentProfile!.value.id == 0
+        ? profiles.map<int>((e) => e.value.id).toList()
+        : [currentProfile!.value.id];
   }
 
   void _scrollReset() {
@@ -251,8 +256,12 @@ class _GalleryState extends State<Gallery> {
     );
   }
 
-  _changeSelectedProfile(ProfileDocument profile) {
-    currentProfile = profile;
+  void _changeSelectedProfile(DefaultMenuItem? profile) {
+    if (profile != null) {
+      setState(() {
+        currentProfile = profile;
+      });
+    }
   }
 
   Widget _topBar() {
@@ -265,7 +274,10 @@ class _GalleryState extends State<Gallery> {
         const SizedBox(width: 20),
         _contentSelectionRadio(),
         const SizedBox(width: 20),
-        profileSelector(profiles, currentProfile, _changeSelectedProfile),
+        DefaultDropdown(
+            items: profiles,
+            value: currentProfile!,
+            onChanged: _changeSelectedProfile),
       ],
     );
   }
@@ -416,22 +428,24 @@ class _GalleryState extends State<Gallery> {
     // var timer = Stopwatch();
     // timer.start();
     themeProvider = Provider.of<ThemeProvider>(context);
-    var res = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _topBar(),
-        const SizedBox(height: 10),
-        if (_selectedMediaType == FileType.image) _searchbar(),
-        const SizedBox(height: 15),
-        _imageList(),
-      ],
-    );
+    if (currentProfile != null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _topBar(),
+          const SizedBox(height: 10),
+          if (_selectedMediaType == FileType.image) _searchbar(),
+          const SizedBox(height: 15),
+          _imageList(),
+        ],
+      );
+    } else {
+      return Text("No data");
+    }
 
     // timer.stop();
     // _logger.logger.shout(
     //     "Re-render of gallery with serach tag: ${_textSearchController.text} took ${timer.elapsed.inMicroseconds} microseconds");
-
-    return res;
   }
 
   Widget _searchbar() {

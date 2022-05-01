@@ -52,31 +52,36 @@ class _TimelineState extends State<Timeline> {
   Widget build(BuildContext context) {
     _themeProvider = Provider.of<ThemeProvider>(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Statistics",
-          style: _themeProvider.themeData().textTheme.headline3,
-        ),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            _profileSelector(),
-            selectedTab == 0
-                ? Row(children: [
-                    const SizedBox(width: 20),
-                    _chartTypeSelector(),
-                    const SizedBox(width: 20),
-                    _resetButton(),
-                  ])
-                : Container(),
-          ],
-        ),
-        const SizedBox(height: 10),
-        _tabs(),
-      ],
-    );
+    if (_timelineService.allProfiles.length > 0) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Statistics",
+            style: _themeProvider.themeData().textTheme.headline3,
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              _profileSelector(),
+              selectedTab == 0
+                  ? Row(children: [
+                      const SizedBox(width: 20),
+                      _chartTypeSelector(),
+                      const SizedBox(width: 20),
+                      _resetButton(),
+                    ])
+                  : Container(),
+            ],
+          ),
+          const SizedBox(height: 10),
+          _tabs(),
+        ],
+      );
+    } else {
+      return Text("No data");
+    }
+
   }
 
   Widget _tabs() {

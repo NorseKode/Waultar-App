@@ -75,8 +75,8 @@ class _DashboardState extends State<Dashboard> {
                 localizer.dashboard,
                 style: themeProvider.themeData().textTheme.headline3,
               ),
-              TextField(controller: threadCountController),
-              _uploadButton(),
+              // TextField(controller: threadCountController),
+              // _uploadButton(),
               const SizedBox(height: 20),
               Expanded(
                 child: profiles.isNotEmpty
