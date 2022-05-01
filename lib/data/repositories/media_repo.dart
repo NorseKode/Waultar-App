@@ -1,3 +1,4 @@
+import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/data/configs/objectbox.dart';
 import 'package:waultar/data/configs/objectbox.g.dart';
 import 'package:waultar/data/entities/media/file_document.dart';
@@ -5,9 +6,11 @@ import 'package:waultar/data/entities/media/image_document.dart';
 import 'package:waultar/data/entities/media/link_document.dart';
 import 'package:waultar/data/entities/media/video_document.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
+import 'package:waultar/startup.dart';
 
 class MediaRepository {
   final ObjectBox _context;
+  final _logger = locator.get<BaseLogger>(instanceName: 'logger');
   late final Box<ImageDocument> _imageBox;
   late final Box<VideoDocument> _videoBox;
   late final Box<FileDocument> _fileBox;

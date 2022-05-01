@@ -25,7 +25,7 @@ extractSmallDataNewFacebook = os.path.join(folderFacebook, "fs-Extraction and pa
 parserDataNewFacebook = os.path.join(folderFacebook, "Tree Parser Performance Data.json")
 # sentimentDataOldFacebook = os.path.join(folderFacebook, "1649760401279386-Sentiment classification.json")
 sentimentDataNewFacebook = os.path.join(folderFacebook, "Sentiment classification.json")
-imageDataNewFacebook = os.path.join(folderFacebook, "Tagging of images only total.json")
+imageDataNewFacebook = os.path.join(folderFacebook, "fb-t3-40000-Tagging of images only total.json")
 imageClassFacebook = os.path.join(folderFacebook, "Image Classifier Abstract Class.json")
 
 # print("########## NOTE: All Run On 1 Isolate ##########")

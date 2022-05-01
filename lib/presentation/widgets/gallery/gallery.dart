@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/file_type_enum.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_search_service.dart';
 import 'package:waultar/data/entities/media/image_document.dart';
@@ -37,6 +38,7 @@ class _GalleryState extends State<Gallery> {
   final _searchService = locator.get<ISearchService>(instanceName: 'searchService');
   final _imageListScrollController = ScrollController();
   final _textSearchController = TextEditingController();
+  final _logger = locator.get<BaseLogger>(instanceName: 'logger');
   static const _step = 8;
   var _offset = 0;
   var _limit = _step;
@@ -346,8 +348,10 @@ class _GalleryState extends State<Gallery> {
 
   @override
   Widget build(BuildContext context) {
+    // var timer = Stopwatch();
+    // timer.start();
     themeProvider = Provider.of<ThemeProvider>(context);
-    return Column(
+    var res = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _topBar(),
@@ -357,6 +361,12 @@ class _GalleryState extends State<Gallery> {
         _imageList(),
       ],
     );
+
+    // timer.stop();
+    // _logger.logger.shout(
+    //     "Re-render of gallery with serach tag: ${_textSearchController.text} took ${timer.elapsed.inMicroseconds} microseconds");
+
+    return res;
   }
 
   Widget _searchbar() {

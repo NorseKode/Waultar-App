@@ -1,0 +1,42 @@
+[
+    {
+        "print name": "Instragram 365 images",
+        "search string": "computer, note",
+        "readings": [
+            1092,
+            417,
+            281,
+            945,
+            660,
+            432,
+            331,
+            283,
+            1055,
+            454,
+            554,
+            301,
+            271,
+            454
+        ]
+    },
+    {
+        "print name": "Search Instagram 365 and Facebook ~4000 that isn't tagged",
+        "search string": "computer, note",
+        "readings": [
+            726,
+            408,
+            273,
+            270,
+            689,
+            568,
+            705,
+            693,
+            1409,
+            331,
+            682,
+            663,
+            361,
+            284
+        ]
+    }
+]

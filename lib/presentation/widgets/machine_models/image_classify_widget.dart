@@ -72,7 +72,7 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
   }
 
   String _timeEstimate(int count) {
-    var timeEstimate = (count * 1.0).ceil();
+    var timeEstimate = (count * 0.3).ceil();
 
     return "${'${(Duration(seconds: timeEstimate))}'.substring(2, 7)} ${timeEstimate < 60 ? "sec" : "min"}";
   }

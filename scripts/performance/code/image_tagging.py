@@ -13,8 +13,10 @@ def taggedImageReadingToConsole(path, savePath):
     loadingOfImagesTime = 0
     updateRepoCount = 0
     updateRepoTime = 0
+    taggedCount = (taggedImages["metadata"])["tagged count"]
     info = taggedImages["childs"][0]
     classifyingTime = info["elapsedTime"]
+
 
     for point in info["childs"]:
         if point["key"] == "Classify Image":
@@ -40,9 +42,9 @@ def taggedImageReadingToConsole(path, savePath):
 
     print(f"Image tagging took {totalTime / 1000000} seconds")
     print(f"With image classifying taking {classifyingTime / totalTime}% of the time")
-    print(f"\tWith {len(imagesTagged)} images tagged in {summedImagesTaggedTime / 1000000} second");
+    print(f"\tWith {taggedCount} images tagged in {summedImagesTaggedTime / 1000000} second");
     print(f"\t\tSetup of classifier took {setupPercentage}% of the classifying time")
     print(f"\t\tLoading of images from the database took {loadImagePercentage}% of the classifying time")
     print(f"\t\tUpdate of repo from the database took {updateRepoPercentage}% of the classifying time")
     print(f"\t\tClassifying of images took {classifyingTime}% of the classifying time used")
-    print(f"\t\tThat's an average tagging time of {(summedImagesTaggedTime / len(imagesTagged)) / 1000000} seconds per image")
+    print(f"\t\tThat's an average tagging time of {(summedImagesTaggedTime / taggedCount) / 1000000} seconds per image")
