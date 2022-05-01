@@ -7,6 +7,7 @@ import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/domain/services/search_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_dropdown.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 import 'package:waultar/presentation/widgets/general/profile_selector.dart';
 import 'package:waultar/startup.dart';
@@ -27,16 +28,16 @@ class _SearchState extends State<Search> {
   var _chosenCategories = <CategoryEnum, bool>{};
   var _contents = <UIModel>[];
 
-  var profiles = locator.get<ProfileRepository>(instanceName: 'profileRepo').getAll().toList();
-  late ProfileDocument currentProfile;
+  var profiles = locator.get<ProfileRepository>(instanceName: 'profileRepo').getAll().map((e) => MenuItem(e.name, e)).toList();
+  MenuItem? currentProfile;
 
   var _offset = 0;
   final _limit = 20;
 
-  _getSelectedProfiles() {
-    return currentProfile.id == 0
-      ? profiles.map((e) => e.id).toList()
-      : [currentProfile.id];
+  List<int> _getSelectedProfiles() {
+    return (currentProfile!.value.id == 0
+      ? profiles.map<int>((e) => e.value.id).toList()
+      : [currentProfile!.value.id]);
   }
 
   _serach(bool isAppend) {
@@ -64,9 +65,11 @@ class _SearchState extends State<Search> {
 
   @override
   void initState() {
-    currentProfile = profiles.first;
+    if (profiles.length > 0) {
+      currentProfile = profiles.first;
+    }
     if (profiles.length > 1) {
-      profiles.add(ProfileDocument(name: "All"));
+      profiles.add(MenuItem("All", ProfileDocument(name: "All")));
     }
     
     
@@ -123,55 +126,63 @@ class _SearchState extends State<Search> {
     );
   }
 
-  _changeSelectedProfile(ProfileDocument profile) {
-    currentProfile = profile;
+  void _changeSelectedProfile(MenuItem? profile) {
+    if (profile != null) {
+      setState(() {
+        currentProfile = profile;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     themeProvider = Provider.of<ThemeProvider>(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              "Search",
-              style: themeProvider.themeData().textTheme.headline3,
-            ),
-            const SizedBox(width: 20),
-            profileSelector(profiles, currentProfile, _changeSelectedProfile),
-          ],
-        ),
-        SizedBox(height: 10),
-        _topBar(),
-        const SizedBox(
-          height: 10.0,
-        ),
-        _searchCategoriesCheckBoxes(),
-        const SizedBox(
-          height: 10.0,
-        ),
-        Expanded(
-          // flex: 20,
-          child: ListView.builder(
-            controller: _scrollController,
-            padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
-            itemCount: _contents.length,
-            itemBuilder: (_, index) => Padding(
+    if (currentProfile != null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                "Search",
+                style: themeProvider.themeData().textTheme.headline3,
+              ),
+              const SizedBox(width: 20),
+              DefaultDropdown(value: currentProfile!, items: profiles, onChanged: _changeSelectedProfile),
+            ],
+          ),
+          SizedBox(height: 10),
+          _topBar(),
+          const SizedBox(
+            height: 10.0,
+          ),
+          _searchCategoriesCheckBoxes(),
+          const SizedBox(
+            height: 10.0,
+          ),
+          Expanded(
+            // flex: 20,
+            child: ListView.builder(
+              controller: _scrollController,
               padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
-              child: DefaultWidget(
-                padding: const EdgeInsets.all(8.0),
-                title: _contents[index].getMostInformativeField(),
-                child: Text(
-                  _contents[index].toString(),
+              itemCount: _contents.length,
+              itemBuilder: (_, index) => Padding(
+                padding: const EdgeInsets.fromLTRB(0.0, 8.0, 0.0, 8.0),
+                child: DefaultWidget(
+                  padding: const EdgeInsets.all(8.0),
+                  title: _contents[index].getMostInformativeField(),
+                  child: Text(
+                    _contents[index].toString(),
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
-    );
+        ],
+      );
+    } else {
+      return Text("No data");
+    }
   }
 
   Widget _searchbar() {

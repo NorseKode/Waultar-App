@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tuple/tuple.dart';
@@ -12,7 +13,6 @@ import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
-import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 import 'package:waultar/presentation/widgets/machine_models/image_classify_single_widget%20.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 
@@ -74,8 +74,8 @@ class _DashboardState extends State<Dashboard> {
                 localizer.dashboard,
                 style: themeProvider.themeData().textTheme.headline3,
               ),
-              TextField(controller: threadCountController),
-              _uploadButton(),
+              // TextField(controller: threadCountController),
+              // _uploadButton(),
               const SizedBox(height: 20),
               Expanded(
                 child: profiles.isNotEmpty

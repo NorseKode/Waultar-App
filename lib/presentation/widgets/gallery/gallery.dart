@@ -12,11 +12,11 @@ import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_dropdown.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget_box.dart';
 import 'package:waultar/presentation/widgets/general/infinite_scroll.dart';
 import 'package:waultar/presentation/widgets/general/profile_selector.dart';
-import 'package:waultar/presentation/widgets/general/util_widgets/default_button.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 
 import 'package:waultar/startup.dart';
@@ -33,10 +33,15 @@ class _GalleryState extends State<Gallery> {
   late ThemeProvider themeProvider;
   var _isSearch = false;
   var _images = <ImageDocument>[];
-  var profiles = locator.get<ProfileRepository>(instanceName: 'profileRepo').getAll();
-  late ProfileDocument currentProfile;
+  var profiles = locator
+      .get<ProfileRepository>(instanceName: 'profileRepo')
+      .getAll()
+      .map((e) => MenuItem(e.name, e))
+      .toList();
+  MenuItem? currentProfile;
   final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
-  final _searchService = locator.get<ISearchService>(instanceName: 'searchService');
+  final _searchService =
+      locator.get<ISearchService>(instanceName: 'searchService');
   final _imageListScrollController = ScrollController();
   final _textSearchController = TextEditingController();
   final _logger = locator.get<BaseLogger>(instanceName: 'logger');
@@ -48,9 +53,11 @@ class _GalleryState extends State<Gallery> {
   @override
   void initState() {
     super.initState();
-    currentProfile = profiles.first;
+    if (profiles.length > 0) {
+      currentProfile = profiles.first;
+    }
     if (profiles.length > 1) {
-      profiles.add(ProfileDocument(name: "All"));
+      profiles.add(MenuItem("All", ProfileDocument(name: "All")));
     }
     _imageListScrollController.addListener(_onScrollEnd);
 
@@ -64,7 +71,9 @@ class _GalleryState extends State<Gallery> {
   }
 
   List<int> _getSelectedProfiles() {
-    return (currentProfile.id == 0 ? profiles.map((e) => e.id) : [currentProfile.id]).toList();
+    return currentProfile!.value.id == 0
+        ? profiles.map<int>((e) => e.value.id).toList()
+        : [currentProfile!.value.id];
   }
 
   void _scrollReset() {
@@ -78,7 +87,8 @@ class _GalleryState extends State<Gallery> {
     _offset = 0;
     _limit = _step;
 
-    _images = _searchService.searchImages(_getSelectedProfiles(), searchText, _offset, _limit);
+    _images = _searchService.searchImages(
+        _getSelectedProfiles(), searchText, _offset, _limit);
   }
 
   void scrollInit() {
@@ -92,8 +102,8 @@ class _GalleryState extends State<Gallery> {
         _offset += _limit;
 
         if (_isSearch) {
-          _images += _searchService.searchImages(
-              _getSelectedProfiles(), _textSearchController.text, _offset, _limit);
+          _images += _searchService.searchImages(_getSelectedProfiles(),
+              _textSearchController.text, _offset, _limit);
         } else {
           _images += _mediaRepo.getImagesPagination(_offset, _limit);
         }
@@ -124,7 +134,9 @@ class _GalleryState extends State<Gallery> {
                 ? null
                 : themeProvider.themeMode().tonedTextColor,
             icon: Iconsax.image,
-            color: _selectedMediaType == FileType.image ? Colors.transparent : Colors.transparent,
+            color: _selectedMediaType == FileType.image
+                ? Colors.transparent
+                : Colors.transparent,
             onPressed: () {
               setState(() {
                 _selectedMediaType = FileType.image;
@@ -140,7 +152,9 @@ class _GalleryState extends State<Gallery> {
                 ? null
                 : themeProvider.themeMode().tonedTextColor,
             icon: Iconsax.video,
-            color: _selectedMediaType == FileType.video ? Colors.transparent : Colors.transparent,
+            color: _selectedMediaType == FileType.video
+                ? Colors.transparent
+                : Colors.transparent,
             onPressed: () {
               setState(() {
                 _selectedMediaType = FileType.video;
@@ -156,7 +170,9 @@ class _GalleryState extends State<Gallery> {
                 ? null
                 : themeProvider.themeMode().tonedTextColor,
             icon: Iconsax.folder,
-            color: _selectedMediaType == FileType.file ? Colors.transparent : Colors.transparent,
+            color: _selectedMediaType == FileType.file
+                ? Colors.transparent
+                : Colors.transparent,
             onPressed: () {
               setState(() {
                 _selectedMediaType = FileType.file;
@@ -239,8 +255,12 @@ class _GalleryState extends State<Gallery> {
     );
   }
 
-  _changeSelectedProfile(ProfileDocument profile) {
-    currentProfile = profile;
+  void _changeSelectedProfile(MenuItem? profile) {
+    if (profile != null) {
+      setState(() {
+        currentProfile = profile;
+      });
+    }
   }
 
   Widget _topBar() {
@@ -253,7 +273,10 @@ class _GalleryState extends State<Gallery> {
         const SizedBox(width: 20),
         _contentSelectionRadio(),
         const SizedBox(width: 20),
-        profileSelector(profiles, currentProfile, _changeSelectedProfile),
+        DefaultDropdown(
+            items: profiles,
+            value: currentProfile!,
+            onChanged: _changeSelectedProfile),
       ],
     );
   }
@@ -264,7 +287,7 @@ class _GalleryState extends State<Gallery> {
         return Expanded(
           child: GridView.extent(
               maxCrossAxisExtent: 300,
-              childAspectRatio: 0.85,
+              childAspectRatio: 0.7,
               shrinkWrap: true,
               controller: _imageListScrollController,
               mainAxisSpacing: 20,
@@ -272,7 +295,8 @@ class _GalleryState extends State<Gallery> {
               children: List.generate(
                   _images.length,
                   (index) => Container(
-                        decoration: BoxDecoration(color: themeProvider.themeData().primaryColor),
+                        decoration: BoxDecoration(
+                            color: themeProvider.themeData().primaryColor),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -288,20 +312,27 @@ class _GalleryState extends State<Gallery> {
                               ),
                             ),
                             SizedBox(height: 10),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Text(_images[index].mediaTags != ""
-                                  ? _images[index].mediaTags == "NULL"
-                                      ? "No tags found"
-                                      : _images[index]
-                                          .mediaTags
-                                          .split(",")
-                                          .fold<String>(
-                                              "",
-                                              (previousValue, element) => previousValue +=
-                                                  (element.trim().isNotEmpty ? element + "\n" : ""))
-                                          .trim()
-                                  : "Not tagged"),
+                            Container(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0),
+                                child: Text(_images[index].mediaTags != ""
+                                    ? _images[index].mediaTags == "NULL"
+                                        ? "No tags found"
+                                        : _images[index]
+                                            .mediaTags
+                                            .split(",")
+                                            .fold<String>(
+                                                "",
+                                                (previousValue, element) =>
+                                                    previousValue += (element
+                                                            .trim()
+                                                            .isNotEmpty
+                                                        ? element + "\n"
+                                                        : ""))
+                                            .trim()
+                                    : "Not tagged"),
+                              ),
                             ),
                           ],
                         ),
@@ -352,22 +383,24 @@ class _GalleryState extends State<Gallery> {
     // var timer = Stopwatch();
     // timer.start();
     themeProvider = Provider.of<ThemeProvider>(context);
-    var res = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _topBar(),
-        const SizedBox(height: 10),
-        if (_selectedMediaType == FileType.image) _searchbar(),
-        const SizedBox(height: 15),
-        _imageList(),
-      ],
-    );
+    if (currentProfile != null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _topBar(),
+          const SizedBox(height: 10),
+          if (_selectedMediaType == FileType.image) _searchbar(),
+          const SizedBox(height: 15),
+          _imageList(),
+        ],
+      );
+    } else {
+      return Text("No data");
+    }
 
     // timer.stop();
     // _logger.logger.shout(
     //     "Re-render of gallery with serach tag: ${_textSearchController.text} took ${timer.elapsed.inMicroseconds} microseconds");
-
-    return res;
   }
 
   Widget _searchbar() {
