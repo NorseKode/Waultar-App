@@ -42,7 +42,6 @@ class DataPointRepository {
   }
 
   List<UIDTO> search(List<int> categoryIds, List<int> profileIds, String searchString, int offset, int limit) {
-    _performance.startReading("Text search");
     var builder = _dataBox.query(
       DataPoint_.searchTerms.contains(
         searchString,
@@ -58,6 +57,9 @@ class DataPointRepository {
     if (amountOfProfiles > profileIds.length) {
       builder.link(DataPoint_.profile, ProfileDocument_.id.oneOf(profileIds));
     }
+
+    builder.order(DataPoint_.id, flags: Order.descending);
+
     var query = builder.build();
 
     query
@@ -65,7 +67,6 @@ class DataPointRepository {
       ..limit = limit;
 
     var result = query.find().map((e) => e.getUIDTO).toList();
-    _logger.logger.info("Text search: $searchString ran in: ${_performance.stopReading('Text search').inMicroseconds} microseconds");
 
     return result;
   }

@@ -1,44 +1,72 @@
 [
     {
-        "print name": "Search in 1 big profile",
+        "print name": "Search with 1 Facebook profile",
         "search string": "hvordan går det",
         "readings": [
-            459344,
-            14787,
-            43574,
-            36227,
-            39500,
-            43352,
-            34725,
-            40043,
-            109123,
-            50937,
-            54807,
-            89349,
-            71740,
-            42592,
-            63750
+            36539,
+            13855,
+            28928,
+            39226,
+            35561,
+            27318,
+            43874,
+            35797,
+            55175,
+            63547,
+            54084,
+            77296,
+            51912,
+            76106
         ]
     },
     {
-        "print name": "Search in 2 big profiles",
+        "print name": "Search with 1 Facebook and 1 Instagram",
         "search string": "hvordan går det",
         "readings": [
-            13830,
-            14300,
-            9880,
-            14025,
-            13560,
-            20383,
-            19351,
-            20523,
-            28412,
-            54398,
-            45655,
-            48987,
-            43737,
-            48068,
-            45978
+            99450,
+            98813,
+            102236,
+            109668,
+            101131,
+            84951,
+            94669,
+            116630,
+            123217,
+            92122,
+            113330,
+            123625
+        ]
+    },
+    {
+        "print name": "Search with 1 Facebook and 2 Instagram",
+        "search string": "hvordan går det",
+        "readings": [
+            77608,
+            106876,
+            125277,
+            97934,
+            100420,
+            97882,
+            114762,
+            99390,
+            144919,
+            138894
+        ]
+    },
+    {
+        "print name": "Search with 1 Facebook and 3 Instagram",
+        "search string": "hvordan går det",
+        "readings": [
+            106790,
+            137354,
+            139123,
+            146407,
+            97318,
+            162120,
+            131070,
+            122161,
+            130628,
+            129046
         ]
     }
 ]

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_search_service.dart';
 import 'package:waultar/core/models/ui_model.dart';
@@ -24,7 +25,9 @@ class _SearchState extends State<Search> {
   final _controller = TextEditingController();
   final _textSearchService =
       locator.get<ISearchService>(instanceName: 'searchService');
+  final _logger = locator.get<BaseLogger>(instanceName: 'logger');
   final _scrollController = ScrollController();
+  // final _timer = Stopwatch();
 
   var _chosenCategories = <CategoryEnum, bool>{};
   var _contents = <UIModel>[];
@@ -147,7 +150,7 @@ class _SearchState extends State<Search> {
   Widget build(BuildContext context) {
     themeProvider = Provider.of<ThemeProvider>(context);
     if (currentProfile != null) {
-      return Column(
+      var result = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
@@ -192,6 +195,12 @@ class _SearchState extends State<Search> {
           ),
         ],
       );
+
+      // _timer.stop();
+      // _logger.logger.shout(
+      //     "Finished text search of: ${_controller.text} in: ${_timer.elapsed.inMicroseconds} microseconds");
+
+      return result;
     } else {
       return Text("No data");
     }
@@ -206,6 +215,8 @@ class _SearchState extends State<Search> {
           keyboardType: TextInputType.number,
           controller: _controller,
           onChanged: (change) {
+            // _timer.reset();
+            // _timer.start();
             setState(() {
               _loadNewData();
             });
