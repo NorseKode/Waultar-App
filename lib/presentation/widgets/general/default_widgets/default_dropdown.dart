@@ -8,12 +8,12 @@ import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/timeline/timeline.dart';
 
 class DefaultDropdown extends StatefulWidget {
-  MenuItem value;
-  final List<MenuItem> items;
-  void Function(MenuItem?)? onChanged;
-  Color? color;
+  final DefaultMenuItem value;
+  final List<DefaultMenuItem> items;
+  final void Function(DefaultMenuItem?)? onChanged;
+  final Color? color;
 
-  DefaultDropdown(
+  const DefaultDropdown(
       {required this.value,
       required this.items,
       required this.onChanged,
@@ -36,8 +36,11 @@ class _DefaultDropdownState extends State<DefaultDropdown> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         color: const Color(0xFF323346),
         child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              color: widget.color ?? _themeProvider.themeData().primaryColor,
+            ),
             padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-            color: widget.color ?? _themeProvider.themeData().primaryColor,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -55,8 +58,8 @@ class _DefaultDropdownState extends State<DefaultDropdown> {
             )),
         offset: Offset(0, 45),
         onSelected: widget.onChanged,
-        itemBuilder: (BuildContext context) =>
-            widget.items.map<PopupMenuEntry<MenuItem>>((MenuItem value) {
+        itemBuilder: (BuildContext context) => widget.items
+                .map<PopupMenuEntry<DefaultMenuItem>>((DefaultMenuItem value) {
               return PopupMenuItem(
                   padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
                   height: 30,
@@ -71,9 +74,9 @@ class _DefaultDropdownState extends State<DefaultDropdown> {
   }
 }
 
-class MenuItem {
+class DefaultMenuItem {
   final String name;
   final dynamic value;
 
-  const MenuItem(this.name, this.value);
+  const DefaultMenuItem(this.name, this.value);
 }

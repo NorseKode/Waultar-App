@@ -15,6 +15,9 @@ class BrowseView extends StatefulWidget {
 
 class _BrowseViewState extends State<BrowseView> {
   final _activeScreen = ViewScreen.browse;
+  callback() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +25,7 @@ class _BrowseViewState extends State<BrowseView> {
       context,
       MenuPanel(
         active: _activeScreen,
+        callback: callback,
       ),
       const TopPanel(),
       const Explorer(),

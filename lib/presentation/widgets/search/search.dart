@@ -22,31 +22,40 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   late ThemeProvider themeProvider;
   final _controller = TextEditingController();
-  final _textSearchService = locator.get<ISearchService>(instanceName: 'searchService');
+  final _textSearchService =
+      locator.get<ISearchService>(instanceName: 'searchService');
   final _scrollController = ScrollController();
 
   var _chosenCategories = <CategoryEnum, bool>{};
   var _contents = <UIModel>[];
 
-  var profiles = locator.get<ProfileRepository>(instanceName: 'profileRepo').getAll().map((e) => MenuItem(e.name, e)).toList();
-  MenuItem? currentProfile;
+  var profiles = locator
+      .get<ProfileRepository>(instanceName: 'profileRepo')
+      .getAll()
+      .map((e) => DefaultMenuItem(e.name, e))
+      .toList();
+  DefaultMenuItem? currentProfile;
 
   var _offset = 0;
   final _limit = 20;
 
   List<int> _getSelectedProfiles() {
     return (currentProfile!.value.id == 0
-      ? profiles.map<int>((e) => e.value.id).toList()
-      : [currentProfile!.value.id]);
+        ? profiles.map<int>((e) => e.value.id).toList()
+        : [currentProfile!.value.id]);
   }
 
   _serach(bool isAppend) {
     setState(() {
-      var categories =
-          _chosenCategories.entries.where((element) => element.value).map((e) => e.key).toList();
+      var categories = _chosenCategories.entries
+          .where((element) => element.value)
+          .map((e) => e.key)
+          .toList();
       isAppend
-          ? _contents += _textSearchService.searchText(categories, _getSelectedProfiles(), _controller.text, _offset, _limit)
-          : _contents = _textSearchService.searchText(categories, _getSelectedProfiles(), _controller.text, _offset, _limit);
+          ? _contents += _textSearchService.searchText(categories,
+              _getSelectedProfiles(), _controller.text, _offset, _limit)
+          : _contents = _textSearchService.searchText(categories,
+              _getSelectedProfiles(), _controller.text, _offset, _limit);
     });
   }
 
@@ -57,7 +66,8 @@ class _SearchState extends State<Search> {
   }
 
   _onScrollEnd() {
-    if (_scrollController.position.maxScrollExtent == _scrollController.position.pixels) {
+    if (_scrollController.position.maxScrollExtent ==
+        _scrollController.position.pixels) {
       _offset += _limit;
       _serach(true);
     }
@@ -69,10 +79,9 @@ class _SearchState extends State<Search> {
       currentProfile = profiles.first;
     }
     if (profiles.length > 1) {
-      profiles.add(MenuItem("All", ProfileDocument(name: "All")));
+      profiles.add(DefaultMenuItem("All", ProfileDocument(name: "All")));
     }
-    
-    
+
     _chosenCategories = {for (var item in CategoryEnum.values) item: true};
     super.initState();
     _scrollController.addListener(_onScrollEnd);
@@ -126,7 +135,7 @@ class _SearchState extends State<Search> {
     );
   }
 
-  void _changeSelectedProfile(MenuItem? profile) {
+  void _changeSelectedProfile(DefaultMenuItem? profile) {
     if (profile != null) {
       setState(() {
         currentProfile = profile;
@@ -148,7 +157,10 @@ class _SearchState extends State<Search> {
                 style: themeProvider.themeData().textTheme.headline3,
               ),
               const SizedBox(width: 20),
-              DefaultDropdown(value: currentProfile!, items: profiles, onChanged: _changeSelectedProfile),
+              DefaultDropdown(
+                  value: currentProfile!,
+                  items: profiles,
+                  onChanged: _changeSelectedProfile),
             ],
           ),
           SizedBox(height: 10),

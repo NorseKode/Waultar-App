@@ -14,6 +14,9 @@ class GalleryView extends StatefulWidget {
 
 class _GalleryViewState extends State<GalleryView> {
   final _activeScreen = ViewScreen.gallery;
+  callback() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +24,7 @@ class _GalleryViewState extends State<GalleryView> {
       context,
       MenuPanel(
         active: _activeScreen,
+        callback: callback,
       ),
       const TopPanel(),
       const Gallery(),

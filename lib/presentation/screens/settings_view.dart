@@ -30,8 +30,13 @@ class _SettingsViewState extends State<SettingsView> {
   late AppLocalizations localizer;
   late ThemeProvider themeProvider;
   final _activeScreen = ViewScreen.settings;
-  final _appSettings = locator.get<IAppSettingsService>(instanceName: 'appSettingsService');
+  final _appSettings =
+      locator.get<IAppSettingsService>(instanceName: 'appSettingsService');
   final _appLogger = locator.get<BaseLogger>(instanceName: 'logger');
+
+  callback() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +47,7 @@ class _SettingsViewState extends State<SettingsView> {
       context,
       MenuPanel(
         active: _activeScreen,
+        callback: callback,
       ),
       const TopPanel(),
       Column(
@@ -90,7 +96,9 @@ class _SettingsViewState extends State<SettingsView> {
             child: DefaultButton(
               text: "Delete Image Tags",
               onPressed: () {
-                locator.get<MediaRepository>(instanceName: 'mediaRepo').deleteAllImageTags();
+                locator
+                    .get<MediaRepository>(instanceName: 'mediaRepo')
+                    .deleteAllImageTags();
               },
             ),
           ),

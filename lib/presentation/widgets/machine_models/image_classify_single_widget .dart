@@ -16,7 +16,8 @@ class ImageClassifySingleWidget extends StatefulWidget {
   const ImageClassifySingleWidget({Key? key}) : super(key: key);
 
   @override
-  State<ImageClassifySingleWidget> createState() => _ImageClassifySingleWidgetState();
+  State<ImageClassifySingleWidget> createState() =>
+      _ImageClassifySingleWidgetState();
 }
 
 class _ImageClassifySingleWidgetState extends State<ImageClassifySingleWidget> {
@@ -55,8 +56,9 @@ class _ImageClassifySingleWidgetState extends State<ImageClassifySingleWidget> {
     if (_uploadedFile != null) {
       _classifyResults = _mlService.classifySingleImage(
         imageFile: _uploadedFile!,
-        imageModel:
-            _isFastImageModel ? ImageModelEnum.mobileNetV3Large : ImageModelEnum.efficientNetB4,
+        imageModel: _isFastImageModel
+            ? ImageModelEnum.mobileNetV3Large
+            : ImageModelEnum.efficientNetB4,
       );
     }
 
@@ -133,9 +135,7 @@ class _ImageClassifySingleWidgetState extends State<ImageClassifySingleWidget> {
             Expanded(
               child: DefaultButton(
                 text: "Tag Images",
-                onPressed: _uploadedFile != null
-                    ? () => _tagImage()
-                    : null,
+                onPressed: _uploadedFile != null ? () => _tagImage() : null,
               ),
             ),
           ],
@@ -146,8 +146,8 @@ class _ImageClassifySingleWidgetState extends State<ImageClassifySingleWidget> {
             ? Text(
                 _classifyResults!.fold<String>(
                     "",
-                    (previousValue, element) =>
-                        previousValue += "${element.item1}: ${element.item2}%\n"),
+                    (previousValue, element) => previousValue +=
+                        "${element.item1}: ${element.item2}%\n"),
               )
             : Container(),
       ],

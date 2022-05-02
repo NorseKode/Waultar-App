@@ -42,7 +42,8 @@ class _DashboardState extends State<Dashboard> {
   final _parserService = locator.get<IParserService>(
     instanceName: 'parserService',
   );
-  final sentimentService = locator.get<ISentimentService>(instanceName: 'sentimentService');
+  final sentimentService =
+      locator.get<ISentimentService>(instanceName: 'sentimentService');
   late AppLocalizations localizer;
   late ThemeProvider themeProvider;
   late List<ProfileDocument> profiles;
@@ -76,7 +77,7 @@ class _DashboardState extends State<Dashboard> {
               ),
               // TextField(controller: threadCountController),
               // _uploadButton(),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               Expanded(
                 child: profiles.isNotEmpty
                     ? SingleChildScrollView(child: _dashboardWidgets())
@@ -106,14 +107,15 @@ class _DashboardState extends State<Dashboard> {
       onPressed: () async {
         var files = await Uploader.uploadDialogue(context);
         if (files != null) {
-          SnackBarCustom.useSnackbarOfContext(context, localizer.startedLoadingOfData);
+          SnackBarCustom.useSnackbarOfContext(
+              context, localizer.startedLoadingOfData);
 
           setState(() {
             _isLoading = true;
           });
 
-          var zipFile =
-              files.item1.singleWhere((element) => dart_path.extension(element) == ".zip");
+          var zipFile = files.item1
+              .singleWhere((element) => dart_path.extension(element) == ".zip");
 
           // await _parserService.parseIsolates(
           //   zipFile,
@@ -289,8 +291,8 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _services() {
-    List<Widget> serviceWidgets =
-        List.generate(profiles.length, (e) => ServiceWidget(service: profiles[e]));
+    List<Widget> serviceWidgets = List.generate(
+        profiles.length, (e) => ServiceWidget(service: profiles[e]));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

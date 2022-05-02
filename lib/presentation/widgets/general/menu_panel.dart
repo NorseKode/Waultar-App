@@ -17,8 +17,8 @@ import 'package:waultar/startup.dart';
 
 class MenuPanel extends StatefulWidget {
   final ViewScreen active;
-  Function? callback;
-  MenuPanel({this.callback, required, required this.active, Key? key})
+  Function callback;
+  MenuPanel({required this.callback, required, required this.active, Key? key})
       : super(key: key);
 
   @override
@@ -306,7 +306,7 @@ class _MenuPanelState extends State<MenuPanel> {
       isLoading = !isDone;
       if (isDone) {
         _lastUploadText = _lastUpload();
-        widget.callback!.call();
+        widget.callback.call();
       }
     });
   }

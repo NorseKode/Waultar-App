@@ -18,6 +18,7 @@ import 'package:waultar/presentation/widgets/general/default_widgets/default_wid
 import 'package:waultar/presentation/widgets/general/infinite_scroll.dart';
 import 'package:waultar/presentation/widgets/general/profile_selector.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import 'package:waultar/startup.dart';
 
@@ -36,9 +37,9 @@ class _GalleryState extends State<Gallery> {
   var profiles = locator
       .get<ProfileRepository>(instanceName: 'profileRepo')
       .getAll()
-      .map((e) => MenuItem(e.name, e))
+      .map((e) => DefaultMenuItem(e.name, e))
       .toList();
-  MenuItem? currentProfile;
+  DefaultMenuItem? currentProfile;
   final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
   final _searchService =
       locator.get<ISearchService>(instanceName: 'searchService');
@@ -49,15 +50,16 @@ class _GalleryState extends State<Gallery> {
   var _offset = 0;
   var _limit = _step;
   FileType? _selectedMediaType = FileType.image;
+  var columnCount = 0;
 
   @override
   void initState() {
     super.initState();
-    if (profiles.length > 0) {
+    if (profiles.isNotEmpty) {
       currentProfile = profiles.first;
     }
     if (profiles.length > 1) {
-      profiles.add(MenuItem("All", ProfileDocument(name: "All")));
+      profiles.add(DefaultMenuItem("All", ProfileDocument(name: "All")));
     }
     _imageListScrollController.addListener(_onScrollEnd);
 
@@ -255,7 +257,7 @@ class _GalleryState extends State<Gallery> {
     );
   }
 
-  void _changeSelectedProfile(MenuItem? profile) {
+  void _changeSelectedProfile(DefaultMenuItem? profile) {
     if (profile != null) {
       setState(() {
         currentProfile = profile;
@@ -285,9 +287,52 @@ class _GalleryState extends State<Gallery> {
     switch (_selectedMediaType) {
       case FileType.image:
         return Expanded(
+            child: MasonryGridView.count(
+          controller: _imageListScrollController,
+          crossAxisCount: columnCount,
+          mainAxisSpacing: 10,
+          crossAxisSpacing: 10,
+          itemCount: _images.length,
+          itemBuilder: (context, index) {
+            return Container(
+              decoration:
+                  BoxDecoration(color: themeProvider.themeData().primaryColor),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    child: Image.file(
+                      File(Uri.decodeFull(_images[index].uri)),
+                      alignment: Alignment.topLeft,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(_images[index].mediaTags != ""
+                        ? _images[index].mediaTags == "NULL"
+                            ? "No tags found"
+                            : _images[index]
+                                .mediaTags
+                                .split(",")
+                                .fold<String>(
+                                    "",
+                                    (previousValue, element) => previousValue +=
+                                        (element.trim().isNotEmpty
+                                            ? element + "\n"
+                                            : ""))
+                                .trim()
+                        : "Not tagged"),
+                  ),
+                ],
+              ),
+            );
+          },
+        ));
+      case FileType.image:
+        return Expanded(
           child: GridView.extent(
               maxCrossAxisExtent: 300,
-              childAspectRatio: 0.7,
+              childAspectRatio: 0.85,
               shrinkWrap: true,
               controller: _imageListScrollController,
               mainAxisSpacing: 20,
@@ -312,27 +357,24 @@ class _GalleryState extends State<Gallery> {
                               ),
                             ),
                             SizedBox(height: 10),
-                            Container(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 10.0),
-                                child: Text(_images[index].mediaTags != ""
-                                    ? _images[index].mediaTags == "NULL"
-                                        ? "No tags found"
-                                        : _images[index]
-                                            .mediaTags
-                                            .split(",")
-                                            .fold<String>(
-                                                "",
-                                                (previousValue, element) =>
-                                                    previousValue += (element
-                                                            .trim()
-                                                            .isNotEmpty
-                                                        ? element + "\n"
-                                                        : ""))
-                                            .trim()
-                                    : "Not tagged"),
-                              ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Text(_images[index].mediaTags != ""
+                                  ? _images[index].mediaTags == "NULL"
+                                      ? "No tags found"
+                                      : _images[index]
+                                          .mediaTags
+                                          .split(",")
+                                          .fold<String>(
+                                              "",
+                                              (previousValue, element) =>
+                                                  previousValue +=
+                                                      (element.trim().isNotEmpty
+                                                          ? element + "\n"
+                                                          : ""))
+                                          .trim()
+                                  : "Not tagged"),
                             ),
                           ],
                         ),
@@ -382,6 +424,9 @@ class _GalleryState extends State<Gallery> {
   Widget build(BuildContext context) {
     // var timer = Stopwatch();
     // timer.start();
+    var viewSpace =
+        ((MediaQuery.of(context).size.width - 250 - 40) / 200).floor();
+    columnCount = viewSpace < 1 ? 1 : viewSpace;
     themeProvider = Provider.of<ThemeProvider>(context);
     if (currentProfile != null) {
       return Column(
