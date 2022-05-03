@@ -86,13 +86,13 @@ final _entities = <ModelEntity>[
             type: 6,
             flags: 0)
       ],
-      relations: <ModelRelation>[],
-      backlinks: <ModelBacklink>[
-        ModelBacklink(
+      relations: <ModelRelation>[
+        ModelRelation(
+            id: const IdUid(13, 264351551282433070),
             name: 'dataPointNames',
-            srcEntity: 'DataPointName',
-            srcField: 'dataCategory')
-      ]),
+            targetId: const IdUid(4, 3269474045357722689))
+      ],
+      backlinks: <ModelBacklink>[]),
   ModelEntity(
       id: const IdUid(3, 4962047627445010156),
       name: 'DataPoint',
@@ -831,7 +831,7 @@ ModelDefinition getObjectBoxModel() {
       entities: _entities,
       lastEntityId: const IdUid(15, 4339868820811934294),
       lastIndexId: const IdUid(31, 8948796617759040281),
-      lastRelationId: const IdUid(12, 1162928655364897406),
+      lastRelationId: const IdUid(13, 264351551282433070),
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [],
@@ -871,9 +871,7 @@ ModelDefinition getObjectBoxModel() {
         model: _entities[1],
         toOneRelations: (DataCategory object) => [object.profile],
         toManyRelations: (DataCategory object) => {
-              RelInfo<DataPointName>.toOneBacklink(4, object.id,
-                      (DataPointName srcObject) => srcObject.dataCategory):
-                  object.dataPointNames
+              RelInfo<DataCategory>.toMany(13, object.id): object.dataPointNames
             },
         getId: (DataCategory object) => object.id,
         setId: (DataCategory object, int id) {
@@ -909,8 +907,7 @@ ModelDefinition getObjectBoxModel() {
           InternalToManyAccess.setRelInfo(
               object.dataPointNames,
               store,
-              RelInfo<DataPointName>.toOneBacklink(4, object.id,
-                  (DataPointName srcObject) => srcObject.dataCategory),
+              RelInfo<DataCategory>.toMany(13, object.id),
               store.box<DataCategory>());
           return object;
         }),
@@ -1675,6 +1672,11 @@ class DataCategory_ {
   /// see [DataCategory.dbCategory]
   static final dbCategory =
       QueryIntegerProperty<DataCategory>(_entities[1].properties[4]);
+
+  /// see [DataCategory.dataPointNames]
+  static final dataPointNames =
+      QueryRelationToMany<DataCategory, DataPointName>(
+          _entities[1].relations[0]);
 }
 
 /// [DataPoint] entity fields to define ObjectBox queries.

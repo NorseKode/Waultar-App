@@ -59,7 +59,13 @@
           "type": 6
         }
       ],
-      "relations": []
+      "relations": [
+        {
+          "id": "13:264351551282433070",
+          "name": "dataPointNames",
+          "targetId": "4:3269474045357722689"
+        }
+      ]
     },
     {
       "id": "3:4962047627445010156",
@@ -809,7 +815,7 @@
   ],
   "lastEntityId": "15:4339868820811934294",
   "lastIndexId": "31:8948796617759040281",
-  "lastRelationId": "12:1162928655364897406",
+  "lastRelationId": "13:264351551282433070",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,

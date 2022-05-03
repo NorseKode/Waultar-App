@@ -16,7 +16,7 @@ class DataCategory {
   CategoryEnum category;
   int count;
 
-  @Backlink('dataCategory')
+  // @Backlink('dataCategory')
   final dataPointNames = ToMany<DataPointName>();
   final profile = ToOne<ProfileDocument>();
 
