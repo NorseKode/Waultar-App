@@ -58,8 +58,6 @@ class DataPointRepository {
       builder.link(DataPoint_.profile, ProfileDocument_.id.oneOf(profileIds));
     }
 
-    builder.order(DataPoint_.id, flags: Order.descending);
-
     var query = builder.build();
 
     query

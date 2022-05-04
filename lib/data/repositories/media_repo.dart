@@ -25,7 +25,9 @@ class MediaRepository {
 
   List<ImageDocument> getAllImages() => _imageBox.getAll();
   List<ImageDocument> getImagesPagination(int offset, int limit) {
-    var query = _imageBox.query().build();
+    var builder = _imageBox.query();
+    builder.order(ImageDocument_.id, flags: Order.descending);
+    var query = builder.build();
     query
       ..offset = offset
       ..limit = limit;
@@ -71,6 +73,8 @@ class MediaRepository {
     var builder = _imageBox.query(queryInput);
 
     builder.link(ImageDocument_.profile, ProfileDocument_.id.oneOf(profileIds));
+
+    // builder.order(ImageDocument_.id, flags: Order.descending);
 
     var query = builder.build();
 

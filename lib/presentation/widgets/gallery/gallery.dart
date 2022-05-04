@@ -45,7 +45,8 @@ class _GalleryState extends State<Gallery> {
       locator.get<ISearchService>(instanceName: 'searchService');
   final _imageListScrollController = ScrollController();
   final _textSearchController = TextEditingController();
-  final _logger = locator.get<BaseLogger>(instanceName: 'logger');
+  // final _logger = locator.get<BaseLogger>(instanceName: 'logger');
+  // final _timer = Stopwatch();
   static const _step = 8;
   var _offset = 0;
   var _limit = _step;
@@ -63,7 +64,12 @@ class _GalleryState extends State<Gallery> {
     }
     _imageListScrollController.addListener(_onScrollEnd);
 
-    _images = _mediaRepo.getImagesPagination(_offset, _limit);
+    _images = _searchService.searchImages(
+      _getSelectedProfiles(),
+      "",
+      _offset,
+      _limit,
+    );
   }
 
   @override
@@ -94,7 +100,12 @@ class _GalleryState extends State<Gallery> {
   }
 
   void scrollInit() {
-    _images = _mediaRepo.getImagesPagination(_offset, _limit);
+    _images = _searchService.searchImages(
+      _getSelectedProfiles(),
+      "",
+      _offset,
+      _limit,
+    );
   }
 
   void _onScrollEnd() {
@@ -107,7 +118,12 @@ class _GalleryState extends State<Gallery> {
           _images += _searchService.searchImages(_getSelectedProfiles(),
               _textSearchController.text, _offset, _limit);
         } else {
-          _images += _mediaRepo.getImagesPagination(_offset, _limit);
+          _images += _searchService.searchImages(
+            _getSelectedProfiles(),
+            "",
+            _offset,
+            _limit,
+          );
         }
       });
     }
@@ -261,6 +277,8 @@ class _GalleryState extends State<Gallery> {
     if (profile != null) {
       setState(() {
         currentProfile = profile;
+        _textSearchController.clear();
+        _searchImagesInit(_textSearchController.text);
       });
     }
   }
@@ -422,14 +440,12 @@ class _GalleryState extends State<Gallery> {
 
   @override
   Widget build(BuildContext context) {
-    // var timer = Stopwatch();
-    // timer.start();
     var viewSpace =
         ((MediaQuery.of(context).size.width - 250 - 40) / 200).floor();
     columnCount = viewSpace < 1 ? 1 : viewSpace;
     themeProvider = Provider.of<ThemeProvider>(context);
     if (currentProfile != null) {
-      return Column(
+      var result = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _topBar(),
@@ -439,13 +455,13 @@ class _GalleryState extends State<Gallery> {
           _imageList(),
         ],
       );
+      // _timer.stop();
+      // _logger.logger.shout(
+      //     "Re-render of gallery with serach tag: ${_textSearchController.text} took ${_timer.elapsed.inMicroseconds} microseconds");
+      return result;
     } else {
       return Text("No data");
     }
-
-    // timer.stop();
-    // _logger.logger.shout(
-    //     "Re-render of gallery with serach tag: ${_textSearchController.text} took ${timer.elapsed.inMicroseconds} microseconds");
   }
 
   Widget _searchbar() {
@@ -457,6 +473,8 @@ class _GalleryState extends State<Gallery> {
           keyboardType: TextInputType.number,
           controller: _textSearchController,
           onChanged: (change) {
+            // _timer.reset();
+            // _timer.start();
             setState(() {
               _searchImagesInit(change);
             });

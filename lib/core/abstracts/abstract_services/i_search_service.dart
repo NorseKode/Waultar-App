@@ -5,6 +5,5 @@ import 'package:waultar/data/entities/media/image_document.dart';
 abstract class ISearchService {
   List<UIModel> searchText(
       List<CategoryEnum> categories, List<int> profileIds, String search, int offset, int limit);
-  
   List<ImageDocument> searchImages(List<int> profileIds, String search, int offset, int limit);
 }

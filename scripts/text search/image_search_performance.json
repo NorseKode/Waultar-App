@@ -1,42 +1,54 @@
 [
     {
-        "print name": "Instragram 365 images",
-        "search string": "computer, note",
+        "print name": "1 Instagram",
+        "search string": "basenji",
         "readings": [
-            1092,
-            417,
-            281,
-            945,
-            660,
-            432,
-            331,
-            283,
-            1055,
-            454,
-            554,
-            301,
-            271,
-            454
+            9814,
+            14489,
+            25977,
+            8608,
+            18892,
+            16183,
+            19651
         ]
     },
     {
-        "print name": "Search Instagram 365 and Facebook ~4000 that isn't tagged",
-        "search string": "computer, note",
+        "print name": "1 Instagram 1 Facebook",
+        "search string": "basenji",
         "readings": [
-            726,
-            408,
-            273,
-            270,
-            689,
-            568,
-            705,
-            693,
-            1409,
-            331,
-            682,
-            663,
-            361,
-            284
+            12469,
+            23412,
+            14154,
+            11865,
+            25595,
+            6606,
+            5283
+        ]
+    },
+    {
+        "print name": "1 Instagram 2 Facebook",
+        "search string": "basenji",
+        "readings": [
+            14431,
+            7612,
+            13890,
+            16870,
+            27754,
+            16218,
+            19091
+        ]
+    },
+    {
+        "print name": "1 Instagram 3 Facebook",
+        "search string": "basenji",
+        "readings": [
+            30233,
+            6110,
+            20537,
+            1058,
+            26960,
+            23103,
+            30379
         ]
     }
 ]
