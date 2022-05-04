@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
-import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/file_type_enum.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_search_service.dart';
 import 'package:waultar/data/entities/media/image_document.dart';
@@ -14,9 +13,7 @@ import 'package:waultar/data/repositories/profile_repo.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_dropdown.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
-import 'package:waultar/presentation/widgets/general/default_widgets/default_widget_box.dart';
 import 'package:waultar/presentation/widgets/general/infinite_scroll.dart';
-import 'package:waultar/presentation/widgets/general/profile_selector.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -146,7 +143,7 @@ class _GalleryState extends State<Gallery> {
       child: Row(
         children: [
           DefaultButton(
-            constraints: BoxConstraints(maxHeight: 20),
+            constraints: const BoxConstraints(maxHeight: 20),
             //text: "Images",
             textColor: _selectedMediaType == FileType.image
                 ? null
@@ -162,9 +159,9 @@ class _GalleryState extends State<Gallery> {
               });
             },
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           DefaultButton(
-            constraints: BoxConstraints(maxHeight: 20),
+            constraints: const BoxConstraints(maxHeight: 20),
             //text: "Video",
             textColor: _selectedMediaType == FileType.video
                 ? null
@@ -180,9 +177,9 @@ class _GalleryState extends State<Gallery> {
               });
             },
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           DefaultButton(
-            constraints: BoxConstraints(maxHeight: 20),
+            constraints: const BoxConstraints(maxHeight: 20),
             //text: "Files",
             textColor: _selectedMediaType == FileType.file
                 ? null
@@ -346,58 +343,6 @@ class _GalleryState extends State<Gallery> {
             );
           },
         ));
-      case FileType.image:
-        return Expanded(
-          child: GridView.extent(
-              maxCrossAxisExtent: 300,
-              childAspectRatio: 0.85,
-              shrinkWrap: true,
-              controller: _imageListScrollController,
-              mainAxisSpacing: 20,
-              crossAxisSpacing: 20,
-              children: List.generate(
-                  _images.length,
-                  (index) => Container(
-                        decoration: BoxDecoration(
-                            color: themeProvider.themeData().primaryColor),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 200,
-                              width: 260,
-                              child: Image.file(
-                                File(Uri.decodeFull(_images[index].uri)),
-                                width: 260,
-                                height: 260,
-                                alignment: Alignment.topLeft,
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 10.0),
-                              child: Text(_images[index].mediaTags != ""
-                                  ? _images[index].mediaTags == "NULL"
-                                      ? "No tags found"
-                                      : _images[index]
-                                          .mediaTags
-                                          .split(",")
-                                          .fold<String>(
-                                              "",
-                                              (previousValue, element) =>
-                                                  previousValue +=
-                                                      (element.trim().isNotEmpty
-                                                          ? element + "\n"
-                                                          : ""))
-                                          .trim()
-                                  : "Not tagged"),
-                            ),
-                          ],
-                        ),
-                      ))),
-        );
 
       case FileType.video:
         return InfiniteScroll(
@@ -460,15 +405,15 @@ class _GalleryState extends State<Gallery> {
       //     "Re-render of gallery with serach tag: ${_textSearchController.text} took ${_timer.elapsed.inMicroseconds} microseconds");
       return result;
     } else {
-      return Text("No data");
+      return const Text("No data");
     }
   }
 
   Widget _searchbar() {
-    return Container(
+    return SizedBox(
       height: 40,
       child: TextFormField(
-          style: TextStyle(fontSize: 12),
+          style: const TextStyle(fontSize: 12),
           cursorWidth: 1,
           keyboardType: TextInputType.number,
           controller: _textSearchController,
@@ -480,7 +425,7 @@ class _GalleryState extends State<Gallery> {
             });
           },
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.only(left: 15),
+            contentPadding: const EdgeInsets.only(left: 15),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
               borderSide: BorderSide.none,
@@ -488,7 +433,7 @@ class _GalleryState extends State<Gallery> {
             filled: true,
             fillColor: (const Color(0xFF272837)),
             hintText: "search your images like dog, cat ...",
-            hintStyle: TextStyle(letterSpacing: 0.3),
+            hintStyle: const TextStyle(letterSpacing: 0.3),
           )),
     );
   }

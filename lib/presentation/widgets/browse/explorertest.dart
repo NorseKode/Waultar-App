@@ -97,23 +97,23 @@ class _ExplorerState extends State<Explorer> {
             child: Row(
               children: [
                 profileList(),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 Expanded(child: categoryList()),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 Expanded(child: datanameList()),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 dataView()
               ],
             ),
           ),
-          SizedBox(height: 20),
-          Container(
+          const SizedBox(height: 20),
+          SizedBox(
             height: 150,
             child: Row(children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Data Point"),
+                  const Text("Data Point"),
                   Text(chosenDataPoint.toString())
                 ],
               ),
@@ -125,13 +125,13 @@ class _ExplorerState extends State<Explorer> {
   }
 
   Widget profileList() {
-    return Container(
+    return SizedBox(
       width: 150,
       // color: Colors.red,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Services"),
+          const Text("Services"),
           Column(
             children: List.generate(
                 profiles.length, (index) => profileTile(profiles[index])),
@@ -158,15 +158,15 @@ class _ExplorerState extends State<Explorer> {
               width: 30,
               decoration: BoxDecoration(
                   color: Colors.pink, borderRadius: BorderRadius.circular(5)),
-              child: Icon(
+              child: const Icon(
                 Iconsax.people,
                 size: 20,
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Text(
               profile.name,
-              style: TextStyle(fontWeight: FontWeight.w500),
+              style: const TextStyle(fontWeight: FontWeight.w500),
             )
           ],
         ),
@@ -175,13 +175,13 @@ class _ExplorerState extends State<Explorer> {
   }
 
   Widget categoryList() {
-    return Container(
+    return SizedBox(
       width: 250,
       // color: Colors.blue,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Category"),
+          const Text("Category"),
           Expanded(
               child: SingleChildScrollView(
             child: Column(
@@ -218,10 +218,10 @@ class _ExplorerState extends State<Explorer> {
                 size: 20,
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Text(
               category.category.name,
-              style: TextStyle(fontWeight: FontWeight.w500),
+              style: const TextStyle(fontWeight: FontWeight.w500),
             )
           ],
         ),
@@ -230,12 +230,12 @@ class _ExplorerState extends State<Explorer> {
   }
 
   Widget datanameList() {
-    return Container(
+    return SizedBox(
       width: 250,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Subcategory"),
+          const Text("Subcategory"),
           Expanded(
               child: SingleChildScrollView(
             child: Column(
@@ -272,10 +272,10 @@ class _ExplorerState extends State<Explorer> {
                 size: 20,
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Text(
               dataname.name,
-              style: TextStyle(fontWeight: FontWeight.w500),
+              style: const TextStyle(fontWeight: FontWeight.w500),
             )
           ],
         ),
@@ -284,13 +284,13 @@ class _ExplorerState extends State<Explorer> {
   }
 
   Widget dataView() {
-    return Container(
+    return SizedBox(
       width: 250,
       // color: Colors.orange,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Data points"),
+          const Text("Data points"),
           Expanded(
               child: SingleChildScrollView(
             child: Column(
@@ -323,7 +323,7 @@ class _ExplorerState extends State<Explorer> {
             children: [
               Text(
                 datapoint.stringName,
-                style: TextStyle(fontWeight: FontWeight.w500),
+                style: const TextStyle(fontWeight: FontWeight.w500),
               )
             ],
           ),

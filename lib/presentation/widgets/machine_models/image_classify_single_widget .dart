@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/image_model_enum.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
-import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
@@ -141,7 +140,7 @@ class _ImageClassifySingleWidgetState extends State<ImageClassifySingleWidget> {
           ],
         ),
         const SizedBox(height: 20),
-        Text("Results"),
+        const Text("Results"),
         _classifyResults != null
             ? Text(
                 _classifyResults!.fold<String>(

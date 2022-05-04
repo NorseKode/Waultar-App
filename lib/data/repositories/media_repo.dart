@@ -5,7 +5,6 @@ import 'package:waultar/data/entities/media/file_document.dart';
 import 'package:waultar/data/entities/media/image_document.dart';
 import 'package:waultar/data/entities/media/link_document.dart';
 import 'package:waultar/data/entities/media/video_document.dart';
-import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/startup.dart';
 
 class MediaRepository {
@@ -26,7 +25,7 @@ class MediaRepository {
   List<ImageDocument> getAllImages() => _imageBox.getAll();
   List<ImageDocument> getImagesPagination(int offset, int limit) {
     var builder = _imageBox.query();
-    builder.order(ImageDocument_.id, flags: Order.descending);
+    
     var query = builder.build();
     query
       ..offset = offset

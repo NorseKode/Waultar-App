@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
-import 'package:waultar/configs/globals/service_enums.dart';
-import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
-import 'package:waultar/presentation/widgets/timeline/timeline.dart';
 
 class DefaultDropdown extends StatefulWidget {
   final DefaultMenuItem value;
@@ -48,7 +44,7 @@ class _DefaultDropdownState extends State<DefaultDropdown> {
                   widget.value.name,
                   style: _themeProvider.themeData().textTheme.headline4!,
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Icon(
                   Iconsax.arrow_down_1,
                   size: 12,
@@ -56,7 +52,7 @@ class _DefaultDropdownState extends State<DefaultDropdown> {
                 ),
               ],
             )),
-        offset: Offset(0, 45),
+        offset: const Offset(0, 45),
         onSelected: widget.onChanged,
         itemBuilder: (BuildContext context) => widget.items
                 .map<PopupMenuEntry<DefaultMenuItem>>((DefaultMenuItem value) {

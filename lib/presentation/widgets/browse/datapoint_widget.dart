@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/repositories/datapoint_repo.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
@@ -40,7 +39,7 @@ class _DatapointWidgetState extends State<DatapointWidget> {
           widget.title ?? datapoint.stringName,
           style: themeProvider.themeData().textTheme.headline1,
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Wrap(
             spacing: double.infinity,
             runSpacing: 10,
@@ -85,7 +84,7 @@ class _DatapointWidgetState extends State<DatapointWidget> {
           widget.title ?? datapoint.getMostInformativeField(),
           style: themeProvider.themeData().textTheme.headline1,
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Wrap(
             spacing: double.infinity,
             runSpacing: 10,

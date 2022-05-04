@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/search/searchbar_button.dart';
-import 'package:waultar/presentation/widgets/snackbar_custom.dart';
-import 'package:waultar/presentation/widgets/upload/uploader.dart';
 
 class TopPanel extends StatefulWidget {
   const TopPanel({Key? key}) : super(key: key);
@@ -28,7 +25,7 @@ class _TopPanelState extends State<TopPanel> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
+          SizedBox(
             width: 150,
             child: _dayDisplay(),
           ),
@@ -37,7 +34,7 @@ class _TopPanelState extends State<TopPanel> {
             children: [
               const SearchBarButton(),
               const SizedBox(width: 20),
-              Container(width: 200, child: _profileBar()),
+              SizedBox(width: 200, child: _profileBar()),
             ],
           )
         ],

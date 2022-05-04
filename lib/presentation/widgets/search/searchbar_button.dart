@@ -5,7 +5,6 @@ import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_search_service.dart';
 import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/data/repositories/profile_repo.dart';
-import 'package:waultar/domain/services/search_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/startup.dart';
 import 'package:waultar/presentation/widgets/browse/datapoint_widget.dart';
@@ -87,7 +86,7 @@ class _SearchBarButtonState extends State<SearchBarButton> {
     themeProvider = Provider.of<ThemeProvider>(context);
 
     return Container(
-      constraints: BoxConstraints(minWidth: 50),
+      constraints: const BoxConstraints(minWidth: 50),
       width: 400,
       alignment: Alignment.centerLeft,
       decoration: BoxDecoration(
@@ -136,7 +135,7 @@ class _SearchBarButtonState extends State<SearchBarButton> {
                           const SizedBox(width: 150), //time of day
                           const SizedBox(width: 20),
                           Row(children: [
-                            Container(width: 400, child: openDialog()), //,
+                            SizedBox(width: 400, child: openDialog()), //,
                             const SizedBox(width: 20),
                             const SizedBox(width: 200),
                           ]),

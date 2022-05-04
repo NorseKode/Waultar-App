@@ -19,13 +19,13 @@ class _ServiceWidgetState extends State<ServiceWidget> {
 
   _servicename() {
     return Text(
-      "${widget.service.service.target!.serviceName}",
+      widget.service.service.target!.serviceName,
       style: themeProvider.themeData().textTheme.headline4!,
     );
   }
 
   _profilename() {
-    return Container(
+    return SizedBox(
       width: 135,
       child: Text(
         widget.service.name,
@@ -50,7 +50,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
 
   _date() {
     return Text(
-        "${DateFormat('MMM d. yyy').format(widget.service.categories.first.dataPointNames.first.dataPoints.first.createdAt)}",
+        DateFormat('MMM d. yyy').format(widget.service.categories.first.dataPointNames.first.dataPoints.first.createdAt),
         style: themeProvider.themeData().textTheme.headline4);
   }
 

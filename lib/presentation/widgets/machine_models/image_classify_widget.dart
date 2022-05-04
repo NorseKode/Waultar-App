@@ -155,8 +155,8 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                                 fontFamily: "Poppins",
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500)),
-                        Text("${_imagesToTagCount}",
-                            style: TextStyle(fontSize: 12)),
+                        Text("$_imagesToTagCount",
+                            style: const TextStyle(fontSize: 12)),
                       ],
                     ),
                     Row(
@@ -171,8 +171,8 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
                               fontWeight: FontWeight.w500),
                         ),
                         Text(
-                          "${_timeEstimate(_imagesToTagCount)}",
-                          style: TextStyle(fontSize: 12),
+                          _timeEstimate(_imagesToTagCount),
+                          style: const TextStyle(fontSize: 12),
                         ),
                       ],
                     ),

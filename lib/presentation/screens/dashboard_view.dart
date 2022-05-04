@@ -24,6 +24,6 @@ class _DashboardViewState extends State<DashboardView> {
         context,
         MenuPanel(active: _activeScreen, callback: callback),
         const TopPanel(),
-        Dashboard());
+        const Dashboard());
   }
 }

@@ -52,7 +52,7 @@ class _TimelineState extends State<Timeline> {
   Widget build(BuildContext context) {
     _themeProvider = Provider.of<ThemeProvider>(context);
 
-    if (_timelineService.allProfiles.length > 0) {
+    if (_timelineService.allProfiles.isNotEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -79,7 +79,7 @@ class _TimelineState extends State<Timeline> {
         ],
       );
     } else {
-      return Text("No data");
+      return const Text("No data");
     }
   }
 
@@ -115,13 +115,13 @@ class _TimelineState extends State<Timeline> {
     TabbedViewThemeData themeData =
         TabbedViewThemeData.dark(colorSet: Colors.grey);
     themeData.contentArea
-      ..decoration = BoxDecoration(
+      .decoration = BoxDecoration(
         color: _themeProvider.themeData().primaryColor,
       );
     themeData.tab
       ..textStyle = _themeProvider.themeData().textTheme.headline4!
-      ..padding = EdgeInsets.fromLTRB(10, 4, 10, 4)
-      ..decoration = BoxDecoration(
+      ..padding = const EdgeInsets.fromLTRB(10, 4, 10, 4)
+      ..decoration = const BoxDecoration(
         color: Color(0xFF1F202B),
       )
       ..selectedStatus.decoration =
@@ -279,7 +279,7 @@ class _TimelineState extends State<Timeline> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          children: [
+          children: const [
             //_chartTypeSelector(),
             //const SizedBox(width: 20),
             //_resetButton(),

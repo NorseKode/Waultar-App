@@ -1,8 +1,5 @@
 // ignore_for_file: avoid_print
 
-import 'dart:collection';
-import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/configs/globals/service_enums.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_explorer_service.dart';
-import 'package:waultar/core/helpers/PathHelper.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/entities/misc/service_document.dart';
 import 'package:waultar/data/entities/nodes/category_node.dart';
@@ -21,8 +17,6 @@ import 'package:waultar/data/entities/nodes/name_node.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:waultar/presentation/widgets/browse/datapoint_widget.dart';
-import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
-import 'package:waultar/presentation/widgets/general/default_widgets/default_widget_box.dart';
 
 import 'package:waultar/startup.dart';
 
@@ -90,13 +84,13 @@ class _ExplorerState extends State<Explorer> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 services(),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Expanded(child: filemanager())
               ],
             ),
           ),
-          SizedBox(width: 20),
-          Container(width: 300, child: datapointOverview())
+          const SizedBox(width: 20),
+          SizedBox(width: 300, child: datapointOverview())
         ],
       ),
     );
@@ -155,13 +149,13 @@ class _ExplorerState extends State<Explorer> {
                 child: socialSvg(serviceEnum),
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Text(
               item.name,
               style: const TextStyle(
                   fontWeight: FontWeight.w500, overflow: TextOverflow.ellipsis),
             ),
-            SizedBox(width: 12)
+            const SizedBox(width: 12)
           ],
         ),
       ),
@@ -193,15 +187,15 @@ class _ExplorerState extends State<Explorer> {
                     height: 30,
                     color: Colors.transparent,
                     child: Row(mainAxisSize: MainAxisSize.min, children: [
-                      Icon(Iconsax.arrow_left_2, size: 15),
-                      SizedBox(width: 12),
+                      const Icon(Iconsax.arrow_left_2, size: 15),
+                      const SizedBox(width: 12),
                       Text(folder.name)
                     ]),
                   ),
                 ),
               ),
         children.isEmpty
-            ? Center(
+            ? const Center(
                 child: Text("Empty folder"),
               )
             : Expanded(
@@ -260,7 +254,7 @@ class _ExplorerState extends State<Explorer> {
                 size: 20,
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Expanded(
               child: Text(
                 item.name,
@@ -269,7 +263,7 @@ class _ExplorerState extends State<Explorer> {
                     overflow: TextOverflow.ellipsis),
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             isDatapoint && (item.item as DataPoint).timestamp != null
                 ? Text(DateFormat('MMM d. yyy, HH.MM  ')
                     .format((item.item as DataPoint).timestamp!))
@@ -281,7 +275,7 @@ class _ExplorerState extends State<Explorer> {
   }
 
   Widget datapointOverview() {
-    if (datapoint == null) return Text("Choose a data point");
+    if (datapoint == null) return const Text("Choose a data point");
 
     return DatapointWidget(datapoint: datapoint!);
   }
@@ -296,7 +290,7 @@ class FolderItem {
   FolderItem.service(ProfileDocument dataItem)
       : icon = Iconsax.pen_add,
         color = Colors.transparent,
-        name = "${dataItem.name}",
+        name = dataItem.name,
         item = dataItem;
 
   FolderItem.category(DataCategory dataItem)

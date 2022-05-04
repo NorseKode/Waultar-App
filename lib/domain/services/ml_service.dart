@@ -53,6 +53,7 @@ class MLService extends IMLService {
           }
 
           if (isDoneCount == threadCount) {
+            print(amountTaggedSummed);
             for (var worker in workersList) {
               worker.dispose();
             }

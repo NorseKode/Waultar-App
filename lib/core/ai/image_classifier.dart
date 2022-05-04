@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:flutter/animation.dart';
 import 'package:image/image.dart' as img;
 import 'package:collection/collection.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';

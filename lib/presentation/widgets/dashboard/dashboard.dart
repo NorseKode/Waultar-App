@@ -1,5 +1,3 @@
-import 'dart:io';
-import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -7,13 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tuple/tuple.dart';
 import 'package:waultar/configs/globals/service_enums.dart';
-import 'package:waultar/core/abstracts/abstract_repositories/i_service_repository.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_dashboard_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_parser_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
-import 'package:waultar/presentation/widgets/machine_models/image_classify_single_widget%20.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
 
 import 'package:waultar/presentation/widgets/machine_models/sentiment_widget.dart';
@@ -29,7 +25,7 @@ import 'package:waultar/startup.dart';
 import 'package:path/path.dart' as dart_path;
 
 class Dashboard extends StatefulWidget {
-  Dashboard({Key? key}) : super(key: key);
+  const Dashboard({Key? key}) : super(key: key);
 
   @override
   _DashboardState createState() => _DashboardState();
@@ -194,8 +190,8 @@ class _DashboardState extends State<Dashboard> {
           // runSpacing: 20,
           children: [
             _mostActiveYear(),
-            SizedBox(width: 20),
-            Container(
+            const SizedBox(width: 20),
+            SizedBox(
               height: 95,
               child: DefaultWidgetBox(
                   child: Column(
@@ -209,9 +205,9 @@ class _DashboardState extends State<Dashboard> {
                 ],
               )),
             ),
-            SizedBox(width: 20),
+            const SizedBox(width: 20),
             Expanded(
-              child: Container(
+              child: SizedBox(
                 height: 95,
                 child: DefaultWidgetBox(
                     child: Column(
@@ -233,7 +229,7 @@ class _DashboardState extends State<Dashboard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
-                child: Container(
+                child: SizedBox(
               height: 200,
               child: DefaultWidget(
                 title: "Your first post",
@@ -242,7 +238,7 @@ class _DashboardState extends State<Dashboard> {
             )),
             const SizedBox(width: 20),
             Expanded(
-                child: Container(
+                child: SizedBox(
               height: 200,
               child: DefaultWidget(
                 title: "Graph",
@@ -254,7 +250,7 @@ class _DashboardState extends State<Dashboard> {
       ],
     );
 
-    var analysis = Container(
+    var analysis = SizedBox(
       width: 350,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -264,11 +260,11 @@ class _DashboardState extends State<Dashboard> {
             style: themeProvider.themeData().textTheme.headline4,
           ),
           const SizedBox(height: 15),
-          ImageClassifyWidget(),
+          const ImageClassifyWidget(),
           const SizedBox(height: 20),
           _sentimentTestWidget(),
           const SizedBox(height: 20),
-          SentimentWidget()
+          const SentimentWidget()
         ],
       ),
     );
@@ -280,10 +276,10 @@ class _DashboardState extends State<Dashboard> {
         MediaQuery.of(context).size.width < 1275
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [widgets, SizedBox(height: 20), analysis])
+                children: [widgets, const SizedBox(height: 20), analysis])
             : Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Expanded(child: widgets),
-                SizedBox(width: 20),
+                const SizedBox(width: 20),
                 analysis
               ])
       ],
@@ -326,7 +322,7 @@ class _DashboardState extends State<Dashboard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -336,7 +332,7 @@ class _DashboardState extends State<Dashboard> {
                     style: themeProvider.themeData().textTheme.headline4)
               ],
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             Container(
               child: Wrap(
                 spacing: double.infinity,
@@ -357,7 +353,7 @@ class _DashboardState extends State<Dashboard> {
                                       .withAlpha(
                                           255 - (serviceAlpha[index]! * 75))),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 20,
                             ),
                             Expanded(
@@ -369,11 +365,11 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 20,
                             ),
                             Text(
-                                "${NumberFormat.compact().format(profiles[index].categories.fold<int>(0, (previousValue, element) => previousValue + element.count))}",
+                                NumberFormat.compact().format(profiles[index].categories.fold<int>(0, (previousValue, element) => previousValue + element.count)),
                                 style: const TextStyle(
                                     fontSize: 13, fontWeight: FontWeight.w500))
                           ],
@@ -399,9 +395,9 @@ class _DashboardState extends State<Dashboard> {
               child: Container(
                   height: 100,
                   width: 100,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
-                    color: const Color(0xFF323346),
+                    color: Color(0xFF323346),
                   ),
                   child: Center(
                       child: Text(
@@ -412,7 +408,7 @@ class _DashboardState extends State<Dashboard> {
                         fontWeight: FontWeight.w700),
                   )))),
           Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: PieChart(
               PieChartData(
                   sections: List.generate(
@@ -442,7 +438,7 @@ class _DashboardState extends State<Dashboard> {
         child: DefaultWidget(
       title: "Weekly Activity",
       child: Expanded(
-          child: Container(
+          child: SizedBox(
               height: 200,
               child: Row(
                   children: List.generate(
@@ -478,7 +474,7 @@ class _DashboardState extends State<Dashboard> {
 
   _mostActiveYear() {
     int year = _dashboardService.getMostActiveYear();
-    return Container(
+    return SizedBox(
       height: 95,
       child: DefaultWidgetBox(
           child: Column(
@@ -487,7 +483,7 @@ class _DashboardState extends State<Dashboard> {
         children: [
           Text("Most Active Year",
               style: themeProvider.themeData().textTheme.headline4!),
-          Text("${year != -1 ? year.toString() : "Unknown"}",
+          Text(year != -1 ? year.toString() : "Unknown",
               style: themeProvider.themeData().textTheme.headline3!)
         ],
       )),
@@ -504,15 +500,15 @@ class _DashboardState extends State<Dashboard> {
             // Text("Input text to test sentiment"),
 
             const SizedBox(height: 20),
-            Container(
+            SizedBox(
               height: 40,
               child: TextFormField(
-                  style: TextStyle(fontSize: 12),
+                  style: const TextStyle(fontSize: 12),
                   cursorWidth: 1,
                   keyboardType: TextInputType.number,
                   controller: testText,
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 15),
+                    contentPadding: const EdgeInsets.only(left: 15),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5.0),
                       borderSide: BorderSide.none,
@@ -520,10 +516,10 @@ class _DashboardState extends State<Dashboard> {
                     filled: true,
                     fillColor: (const Color(0xFF323346)),
                     hintText: "Enter a sentence ...",
-                    hintStyle: TextStyle(letterSpacing: 0.3),
+                    hintStyle: const TextStyle(letterSpacing: 0.3),
                   )),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               children: [
                 Expanded(
@@ -537,20 +533,20 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   "Sentiment Score: ",
-                  style: const TextStyle(
+                  style: TextStyle(
                       color: Color.fromARGB(255, 149, 150, 159),
                       fontSize: 12,
                       fontWeight: FontWeight.w500),
                 ),
                 Text(
                   testScore.toStringAsFixed(3),
-                  style: TextStyle(fontSize: 12),
+                  style: const TextStyle(fontSize: 12),
                 ),
               ],
             ),

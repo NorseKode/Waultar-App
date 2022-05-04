@@ -6,11 +6,9 @@ import 'package:waultar/core/abstracts/abstract_services/i_search_service.dart';
 import 'package:waultar/core/models/ui_model.dart';
 import 'package:waultar/data/entities/misc/profile_document.dart';
 import 'package:waultar/data/repositories/profile_repo.dart';
-import 'package:waultar/domain/services/search_service.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_dropdown.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_widget.dart';
-import 'package:waultar/presentation/widgets/general/profile_selector.dart';
 import 'package:waultar/startup.dart';
 
 class Search extends StatefulWidget {
@@ -78,7 +76,7 @@ class _SearchState extends State<Search> {
 
   @override
   void initState() {
-    if (profiles.length > 0) {
+    if (profiles.isNotEmpty) {
       currentProfile = profiles.first;
     }
     if (profiles.length > 1) {
@@ -166,7 +164,7 @@ class _SearchState extends State<Search> {
                   onChanged: _changeSelectedProfile),
             ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           _topBar(),
           const SizedBox(
             height: 10.0,
@@ -202,15 +200,15 @@ class _SearchState extends State<Search> {
 
       return result;
     } else {
-      return Text("No data");
+      return const Text("No data");
     }
   }
 
   Widget _searchbar() {
-    return Container(
+    return SizedBox(
       height: 40,
       child: TextFormField(
-          style: TextStyle(fontSize: 12),
+          style: const TextStyle(fontSize: 12),
           cursorWidth: 1,
           keyboardType: TextInputType.number,
           controller: _controller,
@@ -222,7 +220,7 @@ class _SearchState extends State<Search> {
             });
           },
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.only(left: 15),
+            contentPadding: const EdgeInsets.only(left: 15),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
               borderSide: BorderSide.none,
@@ -230,7 +228,7 @@ class _SearchState extends State<Search> {
             filled: true,
             fillColor: (const Color(0xFF272837)),
             hintText: "search ...",
-            hintStyle: TextStyle(letterSpacing: 0.3),
+            hintStyle: const TextStyle(letterSpacing: 0.3),
           )),
     );
   }

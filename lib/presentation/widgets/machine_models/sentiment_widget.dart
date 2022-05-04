@@ -127,7 +127,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
             ),
             Text(
               timeEstimate,
-              style: TextStyle(fontSize: 12),
+              style: const TextStyle(fontSize: 12),
             ),
           ],
         ),
@@ -232,7 +232,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
           const SizedBox(width: 15),
           Expanded(
             child: Text(
-              "${profile.name}",
+              profile.name,
               style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
             ),
           ),
@@ -252,7 +252,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                   (index) => validCategories
                           .contains(profile.categories[index].category)
                       ? Padding(
-                          padding: EdgeInsets.only(top: 5),
+                          padding: const EdgeInsets.only(top: 5),
                           child: GestureDetector(
                             onTap: countedCategories[
                                         profile.categories[index].id] ==
@@ -279,7 +279,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                                     );
                                   },
                             child: Container(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   vertical: 8, horizontal: 10),
                               decoration: BoxDecoration(
                                   color: chosenCategories
@@ -297,7 +297,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                                 children: [
                                   Row(
                                     children: [
-                                      Container(
+                                      SizedBox(
                                         height: 20,
                                         width: 20,
                                         child: Icon(
@@ -307,13 +307,13 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                                           color: countedCategories[profile
                                                       .categories[index].id] ==
                                                   0
-                                              ? Color.fromARGB(
+                                              ? const Color.fromARGB(
                                                   255, 149, 150, 159)
                                               : profile.categories[index]
                                                   .category.color,
                                         ),
                                       ),
-                                      SizedBox(width: 12),
+                                      const SizedBox(width: 12),
                                       Text(
                                         profile.categories[index].category.name,
                                         style: const TextStyle(
@@ -333,7 +333,7 @@ class _SentimentWidgetState extends State<SentimentWidget> {
                                       color: countedCategories[profile
                                                   .categories[index].id] ==
                                               0
-                                          ? Color.fromARGB(255, 149, 150, 159)
+                                          ? const Color.fromARGB(255, 149, 150, 159)
                                           : Colors.white,
                                     ),
                                   )

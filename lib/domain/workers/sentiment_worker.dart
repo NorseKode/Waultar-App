@@ -7,7 +7,6 @@ import 'package:waultar/core/ai/sentiment_classifier_textClassification.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/data/configs/objectbox.dart';
-import 'package:waultar/data/entities/nodes/category_node.dart';
 import 'package:waultar/data/entities/nodes/datapoint_node.dart';
 import 'package:waultar/data/repositories/data_category_repo.dart';
 import 'package:waultar/data/repositories/datapoint_repo.dart';

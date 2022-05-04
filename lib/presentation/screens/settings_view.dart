@@ -5,10 +5,7 @@ import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/configs/navigation/screen.dart';
 import 'package:logging/logging.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_appsettings_service.dart';
-import 'package:waultar/core/abstracts/abstract_services/i_do_not_user_service.dart';
-import 'package:waultar/core/helpers/do_not_use_helper.dart';
 import 'package:waultar/data/repositories/media_repo.dart';
-import 'package:waultar/domain/services/do_no_use_service.dart';
 import 'package:waultar/presentation/presentation_helper.dart';
 import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/screens/shared/waultar_desktop_main.dart';
@@ -57,7 +54,7 @@ class _SettingsViewState extends State<SettingsView> {
             "Settings",
             style: themeProvider.themeData().textTheme.headline3,
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           const Text("Developer Tools"),
           const Divider(),
           Padding(
@@ -122,14 +119,14 @@ class _SettingsViewState extends State<SettingsView> {
           ),
           const Divider(),
           const Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
             child: DefaultButton(
               text: "Create memory overflow on main thread",
               // onPressed: () => DoNotUseHelper.createMemoryOverflow(),
             ),
           ),
           const Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
             child: DefaultButton(
               text: "Create memory overflow on separate thread",
               // onPressed: () => DoNotUseService().createMemoryOverflow(),

@@ -1,16 +1,9 @@
-import 'dart:convert';
 import 'dart:isolate';
 import 'package:waultar/configs/globals/app_logger.dart';
-import 'package:waultar/configs/globals/image_model_enum.dart';
-import 'package:waultar/core/ai/image_classifier.dart';
-import 'package:waultar/core/ai/image_classifier_efficient_net_b4.dart';
-import 'package:waultar/core/ai/image_classifier_mobilenetv3.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
 import 'package:waultar/core/helpers/do_not_use_helper.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
 import 'package:waultar/data/configs/objectbox.dart';
-import 'package:waultar/data/entities/media/image_document.dart';
-import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:waultar/startup.dart';
 
 Future doNotUseWorkerBody(dynamic data, SendPort mainSendPort, Function onError) async {

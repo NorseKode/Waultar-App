@@ -79,9 +79,9 @@ class _MenuPanelState extends State<MenuPanel> {
                     // ignore: avoid_unnecessary_containers
                     Container(
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(2, 2, 8, 2),
+                        padding: const EdgeInsets.fromLTRB(2, 2, 8, 2),
                         child: Text(_lastUploadText,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 color: Color(0xFF4FB376),
                                 fontSize: 10,
                                 fontWeight: FontWeight.w600)),
@@ -102,7 +102,7 @@ class _MenuPanelState extends State<MenuPanel> {
     for (var profile in profiles) {
       var temp = profile.created;
 
-      if (temp != null && temp.isAfter(lastUploaded)) lastUploaded = temp;
+      if (temp.isAfter(lastUploaded)) lastUploaded = temp;
     }
     if (lastUploaded == init) return "No uploads yet";
     return DateFormat('MMM d. yyy').format(lastUploaded);
@@ -176,7 +176,7 @@ class _MenuPanelState extends State<MenuPanel> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   logo(),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   Divider(
                       height: 22,
                       thickness: 2,
@@ -217,7 +217,7 @@ class _MenuPanelState extends State<MenuPanel> {
                       height: 22,
                       thickness: 2,
                       color: themeProvider.themeMode().tonedColor),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   GestureDetector(
                     onTap: () async {
                       var files = await Uploader.uploadDialogue(context);
@@ -253,21 +253,21 @@ class _MenuPanelState extends State<MenuPanel> {
                         child: Row(
                           children: [
                             isLoading
-                                ? Container(
+                                ? const SizedBox(
                                     height: 10,
                                     width: 10,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
                                       color: Colors.white,
                                     ))
-                                : Icon(Iconsax.arrow_up_1, size: 17),
-                            SizedBox(width: 12),
-                            Container(
+                                : const Icon(Iconsax.arrow_up_1, size: 17),
+                            const SizedBox(width: 12),
+                            SizedBox(
                               width: 145,
                               child: Text(
                                 isLoading ? _progressMessage : "Upload data",
                                 softWrap: false,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                 ),
                                 overflow: TextOverflow.fade,
