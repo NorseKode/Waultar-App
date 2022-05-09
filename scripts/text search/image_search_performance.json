@@ -1,6 +1,6 @@
 [
     {
-        "print name": "1 Instagram",
+        "print name": "1 Facebook small",
         "search string": "basenji",
         "readings": [
             9814,
@@ -13,7 +13,7 @@
         ]
     },
     {
-        "print name": "1 Instagram 1 Facebook",
+        "print name": "1 Facebook small 1 Instagram small",
         "search string": "basenji",
         "readings": [
             12469,
@@ -26,7 +26,7 @@
         ]
     },
     {
-        "print name": "1 Instagram 2 Facebook",
+        "print name": "1 Facebook small 2 Instagram small",
         "search string": "basenji",
         "readings": [
             14431,
@@ -39,7 +39,7 @@
         ]
     },
     {
-        "print name": "1 Instagram 3 Facebook",
+        "print name": "1 Facebook small 3 Instagram small",
         "search string": "basenji",
         "readings": [
             30233,

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:tuple/tuple.dart';
+import 'package:waultar/configs/extensions/norsekode_int_extension.dart';
 import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/configs/globals/image_model_enum.dart';
 import 'package:waultar/core/ai/image_classifier.dart';
@@ -27,8 +28,8 @@ class MLService extends IMLService {
     var isDoneCount = 0;
     var amountTaggedSummed = 0;
     var amountToProcess = limitAmount ?? totalAmountOfImagesToTag;
-    if (amountToProcess < 3) threadCount = 1;
-    var splitCount = amountToProcess ~/ threadCount;
+    if (amountToProcess < 50) threadCount = 1;
+    var splitList = amountToProcess.splitEqualOffsetLimit(splits: threadCount);
     var workersList = <BaseWorker>[];
 
     if (ISPERFORMANCETRACKING) {
@@ -45,7 +46,9 @@ class MLService extends IMLService {
           if (data.isDone) {
             isDoneCount++;
           } else {
-            amountTaggedSummed += data.amountTagged;
+            if (amountTaggedSummed < amountToProcess) {
+              amountTaggedSummed += data.amountTagged;
+            }
             callback(
               "$amountTaggedSummed/${limitAmount ?? totalAmountOfImagesToTag} Images Tagged",
               false,
@@ -53,7 +56,6 @@ class MLService extends IMLService {
           }
 
           if (isDoneCount == threadCount) {
-            print(amountTaggedSummed);
             for (var worker in workersList) {
               worker.dispose();
             }
@@ -84,8 +86,8 @@ class MLService extends IMLService {
         mainHandler: _listenImageClassify,
         initiator: IsolateImageClassifyStartPackage(
           waultarPath: waultarPath,
-          offset: splitCount * i,
-          limit: i != threadCount - 1 ? (splitCount * (i + 1)) : amountToProcess,
+          offset: splitList[i].item1,
+          limit: splitList[i].item2,
           isPerformanceTracking: ISPERFORMANCETRACKING,
           imageModel: imageModel,
         ),

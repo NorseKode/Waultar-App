@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:waultar/configs/extensions/noresekode_list_extension.dart';
+import 'package:waultar/configs/extensions/norsekode_list_extension.dart';
+import 'package:waultar/configs/extensions/norsekode_int_extension.dart';
 
 void main() {
   var testList0 = List.generate(0, (index) => index);
@@ -20,6 +21,146 @@ void main() {
     testList6 = List.generate(6, (index) => index);
   });
 
+  group('Test of NorseKode int extension splitEqualOffsetLimit(int splits)', () {
+    test('int 0', () {
+      var result1 = 0.splitEqualOffsetLimit(splits: 1);
+      var result2 = 0.splitEqualOffsetLimit(splits: 2);
+      var result3 = 0.splitEqualOffsetLimit(splits: 3);
+
+      expect(result1.length, 0);
+      expect(result2.length, 0);
+      expect(result3.length, 0);
+    });
+
+    test('int 1', () {
+      var result1 = 1.splitEqualOffsetLimit(splits: 1);
+      var result2 = 1.splitEqualOffsetLimit(splits: 2);
+      var result3 = 1.splitEqualOffsetLimit(splits: 3);
+
+      expect(result1.length, 1);
+
+      expect(result1[0].item1, 0);
+      expect(result1[0].item2, 1);
+
+      expect(result2.length, 0);
+      expect(result3.length, 0);
+    });
+
+    test('int 2', () {
+      var result1 = 2.splitEqualOffsetLimit(splits: 1);
+      var result2 = 2.splitEqualOffsetLimit(splits: 2);
+      var result3 = 2.splitEqualOffsetLimit(splits: 3);
+
+      expect(result1.length, 1);
+      expect(result1[0].item1, 0);
+      expect(result1[0].item2, 2);
+
+      expect(result2.length, 2);
+      expect(result2[0].item1, 0);
+      expect(result2[0].item2, 1);
+      expect(result2[1].item1, 1);
+      expect(result2[1].item2, 1);
+
+      expect(result3.length, 0);
+    });
+
+    test('int 3', () {
+      var result1 = 3.splitEqualOffsetLimit(splits: 1);
+      var result2 = 3.splitEqualOffsetLimit(splits: 2);
+      var result3 = 3.splitEqualOffsetLimit(splits: 3);
+
+      expect(result1.length, 1);
+      expect(result1[0].item1, 0);
+      expect(result1[0].item2, 3);
+
+      expect(result2.length, 2);
+      expect(result2[0].item1, 0);
+      expect(result2[0].item2, 2);
+      expect(result2[1].item1, 2);
+      expect(result2[1].item2, 1);
+
+      expect(result3.length, 3);
+      expect(result3[0].item1, 0);
+      expect(result3[0].item2, 1);
+      expect(result3[1].item1, 1);
+      expect(result3[1].item2, 1);
+      expect(result3[2].item1, 2);
+      expect(result3[2].item2, 1);
+    });
+    
+    test('int 4', () {
+      var result1 = 4.splitEqualOffsetLimit(splits: 1);
+      var result2 = 4.splitEqualOffsetLimit(splits: 2);
+      var result3 = 4.splitEqualOffsetLimit(splits: 3);
+
+      expect(result1.length, 1);
+      expect(result1[0].item1, 0);
+      expect(result1[0].item2, 4);
+
+      expect(result2.length, 2);
+      expect(result2[0].item1, 0);
+      expect(result2[0].item2, 2);
+      expect(result2[1].item1, 2);
+      expect(result2[1].item2, 2);
+
+      expect(result3.length, 3);
+      expect(result3[0].item1, 0);
+      expect(result3[0].item2, 2);
+      expect(result3[1].item1, 2);
+      expect(result3[1].item2, 1);
+      expect(result3[2].item1, 3);
+      expect(result3[2].item2, 1);
+    });
+
+    test('int 5', () {
+      var result1 = 5.splitEqualOffsetLimit(splits: 1);
+      var result2 = 5.splitEqualOffsetLimit(splits: 2);
+      var result3 = 5.splitEqualOffsetLimit(splits: 3);
+
+      expect(result1.length, 1);
+      expect(result1[0].item1, 0);
+      expect(result1[0].item2, 5);
+
+      expect(result2.length, 2);
+      expect(result2[0].item1, 0);
+      expect(result2[0].item2, 3);
+      expect(result2[1].item1, 3);
+      expect(result2[1].item2, 2);
+
+      expect(result3.length, 3);
+      expect(result3[0].item1, 0);
+      expect(result3[0].item2, 2);
+      expect(result3[1].item1, 2);
+      expect(result3[1].item2, 2);
+      expect(result3[2].item1, 4);
+      expect(result3[2].item2, 1);
+    });
+
+    test('int 6', () {
+      var result1 = 6.splitEqualOffsetLimit(splits: 1);
+      var result2 = 6.splitEqualOffsetLimit(splits: 2);
+      var result3 = 6.splitEqualOffsetLimit(splits: 3);
+
+      expect(result1.length, 1);
+      expect(result1[0].item1, 0);
+      expect(result1[0].item2, 6);
+
+      expect(result2.length, 2);
+      expect(result2[0].item1, 0);
+      expect(result2[0].item2, 3);
+      expect(result2[1].item1, 3);
+      expect(result2[1].item2, 3);
+
+      expect(result3.length, 3);
+      expect(result3[0].item1, 0);
+      expect(result3[0].item2, 2);
+      expect(result3[1].item1, 2);
+      expect(result3[1].item2, 2);
+      expect(result3[2].item1, 4);
+      expect(result3[2].item2, 2);
+    });
+  });
+  
   group('Test of NorseKode List extension splitEqualVerbose(int splits)', () {
     test('List of length 0', () {
       var result1 = testList0.splitEqualVerbose(splits: 1);
@@ -58,7 +199,7 @@ void main() {
       expect(result2[0].item1, 0);
       expect(result2[0].item2, 1);
       expect(result2[1].item1, 1);
-      expect(result2[1].item2, 2);
+      expect(result2[1].item2, 1);
 
       expect(result3.length, 0);
     });
@@ -74,17 +215,17 @@ void main() {
 
       expect(result2.length, 2);
       expect(result2[0].item1, 0);
-      expect(result2[0].item2, 1);
-      expect(result2[1].item1, 1);
-      expect(result2[1].item2, 3);
+      expect(result2[0].item2, 2);
+      expect(result2[1].item1, 2);
+      expect(result2[1].item2, 1);
 
       expect(result3.length, 3);
       expect(result3[0].item1, 0);
       expect(result3[0].item2, 1);
       expect(result3[1].item1, 1);
-      expect(result3[1].item2, 2);
+      expect(result3[1].item2, 1);
       expect(result3[2].item1, 2);
-      expect(result3[2].item2, 3);
+      expect(result3[2].item2, 1);
     });
     
     test('List of length 4', () {
@@ -100,15 +241,15 @@ void main() {
       expect(result2[0].item1, 0);
       expect(result2[0].item2, 2);
       expect(result2[1].item1, 2);
-      expect(result2[1].item2, 4);
+      expect(result2[1].item2, 2);
 
       expect(result3.length, 3);
       expect(result3[0].item1, 0);
-      expect(result3[0].item2, 1);
-      expect(result3[1].item1, 1);
-      expect(result3[1].item2, 2);
-      expect(result3[2].item1, 2);
-      expect(result3[2].item2, 4);
+      expect(result3[0].item2, 2);
+      expect(result3[1].item1, 2);
+      expect(result3[1].item2, 1);
+      expect(result3[2].item1, 3);
+      expect(result3[2].item2, 1);
     });
 
     test('List of length 5', () {
@@ -122,20 +263,20 @@ void main() {
 
       expect(result2.length, 2);
       expect(result2[0].item1, 0);
-      expect(result2[0].item2, 2);
-      expect(result2[1].item1, 2);
-      expect(result2[1].item2, 5);
+      expect(result2[0].item2, 3);
+      expect(result2[1].item1, 3);
+      expect(result2[1].item2, 2);
 
       expect(result3.length, 3);
       expect(result3[0].item1, 0);
-      expect(result3[0].item2, 1);
-      expect(result3[1].item1, 1);
+      expect(result3[0].item2, 2);
+      expect(result3[1].item1, 2);
       expect(result3[1].item2, 2);
-      expect(result3[2].item1, 2);
-      expect(result3[2].item2, 5);
+      expect(result3[2].item1, 4);
+      expect(result3[2].item2, 1);
     });
 
-    test('List of length 5', () {
+    test('List of length 6', () {
       var result1 = testList6.splitEqualVerbose(splits: 1);
       var result2 = testList6.splitEqualVerbose(splits: 2);
       var result3 = testList6.splitEqualVerbose(splits: 3);
@@ -148,15 +289,15 @@ void main() {
       expect(result2[0].item1, 0);
       expect(result2[0].item2, 3);
       expect(result2[1].item1, 3);
-      expect(result2[1].item2, 6);
+      expect(result2[1].item2, 3);
 
       expect(result3.length, 3);
       expect(result3[0].item1, 0);
       expect(result3[0].item2, 2);
       expect(result3[1].item1, 2);
-      expect(result3[1].item2, 4);
+      expect(result3[1].item2, 2);
       expect(result3[2].item1, 4);
-      expect(result3[2].item2, 6);
+      expect(result3[2].item2, 2);
     });
   });
 }

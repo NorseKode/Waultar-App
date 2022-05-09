@@ -112,7 +112,6 @@ class _BrowseState extends State<Browse> {
           children: [
             InkWell(
               onTap: () {
-                print(_categories[index].category.categoryName);
                 setState(() {
                   _names = _collectionsService
                       .getAllNamesFromCategory(_categories[index]);
@@ -142,7 +141,6 @@ class _BrowseState extends State<Browse> {
           children: [
             InkWell(
               onTap: () {
-                print(_names[index].name);
               },
               child: Text(
                   _names[index].name + "   " + _names[index].count.toString()),

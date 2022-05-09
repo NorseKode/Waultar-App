@@ -50,6 +50,7 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
       int step = 1;
       int offset = data.offset ?? 0;
       int limit = step;
+      var taggedCount = 0;
       var isDone = false;
       if (data.isPerformanceTracking) {
         performance.startReading("Loading of images");
@@ -98,6 +99,7 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
         }
         mainSendPort.send(MainImageClassifyProgressPackage(amountTagged: step, isDone: false));
         offset += step;
+        taggedCount += step;
       }
 
       while (images.isNotEmpty && !isDone) {
@@ -106,13 +108,13 @@ Future imageClassifierWorkerBody(dynamic data, SendPort mainSendPort, Function o
         if (data.isPerformanceTracking) {
           performance.startReading("Loading of images");
         }
-        images = mediaRepo.getImagesPagination(offset, limit);
+        images = mediaRepo.getImagesForTaggingPagination(offset, limit);
         if (data.isPerformanceTracking) {
           var key = "Loading of images";
           performance.addReading(performance.parentKey, key, performance.stopReading(key));
         }
 
-        if (data.limit != null && offset >= data.limit!) {
+        if (data.limit != null && taggedCount > data.limit!) {
           isDone = true;
         }
       }

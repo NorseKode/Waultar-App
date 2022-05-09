@@ -20,19 +20,32 @@ extension NorseKodeList<T> on List<T> {
     var returnList = <Tuple3<int, int, List<T>>>[];
 
     if (this.isNotEmpty && splits != 0 && splits <= this.length) {
-      var limit = 0;
-      var offset = 0;
       var splitCount = this.length ~/ splits;
+      var missing =  this.length - (splitCount * splits);
+      var offset = 0;
+      var limit = 0;
 
       for (var i = 0; i < splits; i++) {
-        limit = (i != splits - 1 ? (splitCount * (i + 1)) : this.length);
-        offset = splitCount * i;
+        // limit = (i != splits - 1 ? splitCount : splitCount + 1);
+        // offset = (splitCount + extendedCount) * i;
 
-        returnList.add(Tuple3(
-          offset,
-          limit,
-          this.getRange(offset, limit).toList(),
-        ));
+        if (missing > 0) {
+          limit = splitCount + 1;
+          missing--;
+        } else {
+          limit = splitCount;
+        }
+
+        returnList.add(
+          Tuple3(
+            offset,
+            limit,
+            <T>[],
+            // this.getRange(offset, limit).toList(),
+          ),
+        );
+
+        offset = offset + limit;
       }
     }
 

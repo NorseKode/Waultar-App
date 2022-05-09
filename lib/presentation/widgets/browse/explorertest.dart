@@ -61,13 +61,11 @@ class _ExplorerState extends State<Explorer> {
             datapoints = firstDataname.dataPoints;
             var firstDatapoint = datapoints.first;
             chosenDataPoint = firstDatapoint.id;
-            print("Explorer setup: Completed");
             return;
           }
         }
       }
     }
-    print("Explorer setup: Error");
   }
 
   @override
