@@ -80,8 +80,7 @@ class SentimentService extends ISentimentService {
     });
 
     var messagesOnIsolates = categories
-        .where((element) => element.category == CategoryEnum.messaging && element.count > 2)
-        // .where((element) => element.category == CategoryEnum.messaging && element.count > 30000)
+        .where((element) => element.category == CategoryEnum.messaging && element.count > 30000)
         .toList();
 
     categories.removeWhere((element) => messagesOnIsolates.contains(element));
@@ -105,7 +104,6 @@ class SentimentService extends ISentimentService {
           }
 
           if (data.isDone) {
-            print("done");
             isDoneCount++;
           }
 
