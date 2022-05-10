@@ -7,6 +7,7 @@ import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repositor
 import 'package:waultar/core/abstracts/abstract_services/i_sentiment_service.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_translator_service.dart';
 import 'package:waultar/core/ai/sentiment_classifier_textClassification.dart';
+import 'package:waultar/configs/extensions/norsekode_int_extension.dart';
 
 import 'package:waultar/core/base_worker/base_worker.dart';
 import 'package:waultar/data/repositories/data_category_repo.dart';
@@ -79,7 +80,8 @@ class SentimentService extends ISentimentService {
     });
 
     var messagesOnIsolates = categories
-        .where((element) => element.category == CategoryEnum.messaging && element.count > 30000)
+        .where((element) => element.category == CategoryEnum.messaging && element.count > 2)
+        // .where((element) => element.category == CategoryEnum.messaging && element.count > 30000)
         .toList();
 
     categories.removeWhere((element) => messagesOnIsolates.contains(element));
@@ -97,16 +99,18 @@ class SentimentService extends ISentimentService {
         case MainSentimentClassifyProgressPackage:
           data as MainSentimentClassifyProgressPackage;
           progressCount += data.amountTagged;
-          callback("$progressCount/$totalCount text analysed", false);
+
+          if (progressCount < totalCount) {
+            callback("$progressCount/$totalCount text analysed", false);
+          }
 
           if (data.isDone) {
             print("done");
             isDoneCount++;
           }
 
-          if (isDoneCount == threadCount && progressCount == totalCount) {
+          if (isDoneCount == threadCount && progressCount >= totalCount) {
             for (var worker in workers) {
-              print("disposing");
               worker.sendMessage(IsolateSentimentDisposePackage());
               worker.dispose();
             }
@@ -141,7 +145,8 @@ class SentimentService extends ISentimentService {
       var threadCountTemp = 2;
       threadCount += threadCountTemp;
       var count = messageData.count;
-      var splitCount = count ~/ threadCountTemp;
+      // var splitCount = count ~/ threadCountTemp;
+      var splitList = count.splitEqualOffsetLimit(splits: threadCountTemp);
 
       for (var i = 0; i < threadCountTemp; i++) {
         var worker = BaseWorker(
@@ -152,8 +157,8 @@ class SentimentService extends ISentimentService {
             categoriesIds: [messageData.id],
             translate: translate,
             isPerformanceTracking: false,
-            offset: splitCount * i,
-            limit: i != threadCountTemp - 1 ? (splitCount * (i + 1)) : count,
+            offset: splitList[i].item1,
+            limit: splitList[i].item2,
           ),
         );
 

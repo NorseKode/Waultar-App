@@ -222,6 +222,7 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
         const step = 20;
         int offset = data.offset ?? 0;
         int limit = step;
+        var amountAnalysed = 0;
         var isDone = false;
 
         List<DataPoint> dataPoints =
@@ -229,11 +230,13 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
 
         while (dataPoints.isNotEmpty && !isDone) {
           await aux(dataPoints);
+          amountAnalysed += step;
 
-          if (data.limit != null && data.limit! < (offset + step)) {
-            var remaining = step - ((offset + step) - data.limit!);
-            offset += remaining;
-            limit = remaining;
+          if (data.limit != null && data.limit! < (amountAnalysed + step)) {
+            // var remaining = step - ((offset + step) - data.limit!);
+            // offset += remaining;
+            // limit = remaining;
+            offset += step;
             isDone = true;
           } else {
             offset += step;
@@ -244,6 +247,7 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
 
         if (isDone) {
           aux(dataPoints);
+          amountAnalysed += step;
         }
       }
 
