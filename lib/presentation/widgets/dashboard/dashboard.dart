@@ -369,7 +369,12 @@ class _DashboardState extends State<Dashboard> {
                               width: 20,
                             ),
                             Text(
-                                NumberFormat.compact().format(profiles[index].categories.fold<int>(0, (previousValue, element) => previousValue + element.count)),
+                                NumberFormat.compact().format(profiles[index]
+                                    .categories
+                                    .fold<int>(
+                                        0,
+                                        (previousValue, element) =>
+                                            previousValue + element.count)),
                                 style: const TextStyle(
                                     fontSize: 13, fontWeight: FontWeight.w500))
                           ],

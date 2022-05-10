@@ -33,7 +33,7 @@ class _SearchState extends State<Search> {
   var profiles = locator
       .get<ProfileRepository>(instanceName: 'profileRepo')
       .getAll()
-      .map((e) => DefaultMenuItem(e.name, e))
+      .map((e) => DefaultMenuItem(name: e.name, value: e))
       .toList();
   DefaultMenuItem? currentProfile;
 
@@ -80,7 +80,8 @@ class _SearchState extends State<Search> {
       currentProfile = profiles.first;
     }
     if (profiles.length > 1) {
-      profiles.add(DefaultMenuItem("All", ProfileDocument(name: "All")));
+      profiles.add(
+          DefaultMenuItem(name: "All", value: ProfileDocument(name: "All")));
     }
 
     _chosenCategories = {for (var item in CategoryEnum.values) item: true};
@@ -222,7 +223,7 @@ class _SearchState extends State<Search> {
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.only(left: 15),
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(5.0),
               borderSide: BorderSide.none,
             ),
             filled: true,

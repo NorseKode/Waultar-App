@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
+import 'package:waultar/presentation/providers/theme_provider.dart';
 import 'package:waultar/presentation/utils/text_validators.dart';
 import 'package:waultar/presentation/widgets/general/default_widgets/default_button.dart';
+import 'package:waultar/presentation/widgets/general/default_widgets/default_dropdown.dart';
 
 import 'upload_files.dart';
 
@@ -10,48 +13,78 @@ class Uploader {
   static Future<Tuple3<List<String>, String, String>?> uploadDialogue(
       BuildContext context) async {
     var localizer = AppLocalizations.of(context)!;
+    ThemeProvider _themeProvider =
+        Provider.of<ThemeProvider>(context, listen: false);
+    var usernameTextController = TextEditingController();
 
     return showDialog<Tuple3<List<String>, String, String>?>(
       context: context,
       builder: (BuildContext context) {
         var services = ["Facebook", "Instagram"];
         var dropDownValue = services[0];
-        var usernameTextController = TextEditingController();
+
         var formKey = GlobalKey<FormState>();
 
         return SimpleDialog(
           title: Text(localizer.upload),
+          backgroundColor: _themeProvider.themeData().scaffoldBackgroundColor,
           children: [
+            // Padding(
+            //   padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+            //   child: Form(
+            //     key: formKey,
+            //     child: TextFormField(
+            //       decoration: const InputDecoration(
+            //         icon: Icon(Icons.person),
+            //         hintText: "Service profile username",
+            //         label: Text("Username"),
+            //       ),
+            //       controller: usernameTextController,
+            //       validator: TextValidators.waultarServiceUsername,
+            //     ),
+            //   ),
+            // ),
+
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-              child: Form(
-                key: formKey,
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                    icon: Icon(Icons.person),
-                    hintText: "Service profile username",
-                    label: Text("Username"),
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                child: SizedBox(
+                  height: 40,
+                  child: Form(
+                    key: formKey,
+                    child: TextFormField(
+                        style: const TextStyle(fontSize: 12),
+                        cursorWidth: 1,
+                        controller: usernameTextController,
+                        validator: TextValidators.waultarServiceUsername,
+                        decoration: InputDecoration(
+                          contentPadding: const EdgeInsets.only(left: 15),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(5.0),
+                            borderSide: BorderSide.none,
+                          ),
+                          filled: true,
+                          fillColor: (const Color(0xFF272837)),
+                          hintText: "Service profile username",
+                          hintStyle: const TextStyle(letterSpacing: 0.3),
+                        )),
                   ),
-                  controller: usernameTextController,
-                  validator: TextValidators.waultarServiceUsername,
-                ),
-              ),
-            ),
+                )),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
               child: StatefulBuilder(
                 builder: (BuildContext context, StateSetter dropDownState) {
-                  return DropdownButton<String>(
-                    value: dropDownValue,
-                    items: services.map<DropdownMenuItem<String>>(
+                  return DefaultDropdown(
+                    value: DefaultMenuItem(
+                        name: dropDownValue, value: dropDownValue),
+                    items: services.map<DefaultMenuItem>(
                       (String service) {
-                        return DropdownMenuItem<String>(
-                            value: service, child: Text(service));
+                        return DefaultMenuItem(name: service, value: service);
                       },
                     ).toList(),
-                    onChanged: (String? temp) {
+                    onChanged: (DefaultMenuItem? temp) {
                       dropDownState(() {
-                        dropDownValue = temp!;
+                        dropDownValue =
+                            temp != null ? temp.value : dropDownValue;
                       });
                     },
                   );

@@ -55,8 +55,9 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
           ? int.parse(_amountToTagTextController.text)
           : null,
       threadCount: 3,
-      imageModel:
-          _isFastImageModel ? ImageModelEnum.efficientNetB4 : ImageModelEnum.mobileNetV3Large,
+      imageModel: _isFastImageModel
+          ? ImageModelEnum.efficientNetB4
+          : ImageModelEnum.mobileNetV3Large,
     );
   }
 
@@ -78,29 +79,59 @@ class _ImageClassifyWidgetState extends State<ImageClassifyWidget> {
   }
 
   Widget _imageModelChooser() {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Align(
-          alignment: Alignment.centerLeft,
-          child: Text("Should use fast tagger, it's less precise"),
+        const Text(
+          "Should use fast tagger, it's less precise",
+          style: TextStyle(
+              color: Color.fromARGB(255, 149, 150, 159),
+              fontFamily: "Poppins",
+              fontSize: 12,
+              fontWeight: FontWeight.w500),
         ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Checkbox(
-            value: _isFastImageModel,
-            onChanged: (value) {
-              setState(() {
-                if (value != null) {
-                  _isFastImageModel = value;
-                } else {
-                  _isFastImageModel = !_isFastImageModel;
-                }
-              });
-            },
-          ),
-        ),
+        SizedBox(
+            height: 20,
+            width: 20,
+            child: Transform.scale(
+                scale: 0.8,
+                child: Checkbox(
+                    activeColor: themeProvider.themeMode().themeColor,
+                    value: _isFastImageModel,
+                    onChanged: (value) {
+                      setState(() {
+                        if (value != null) {
+                          _isFastImageModel = value;
+                        } else {
+                          _isFastImageModel = !_isFastImageModel;
+                        }
+                      });
+                    })))
       ],
     );
+    // return Column(
+    //   children: [
+    //     const Align(
+    //       alignment: Alignment.centerLeft,
+    //       child: Text("Should use fast tagger, it's less precise"),
+    //     ),
+    //     Align(
+    //       alignment: Alignment.centerLeft,
+    //       child: Checkbox(
+    //         value: _isFastImageModel,
+    //         onChanged: (value) {
+    //           setState(() {
+    //             if (value != null) {
+    //               _isFastImageModel = value;
+    //             } else {
+    //               _isFastImageModel = !_isFastImageModel;
+    //             }
+    //           });
+    //         },
+    //       ),
+    //     ),
+    //   ],
+    // );
   }
 
   Widget _mainBody() {

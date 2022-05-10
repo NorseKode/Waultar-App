@@ -34,7 +34,7 @@ class _GalleryState extends State<Gallery> {
   var profiles = locator
       .get<ProfileRepository>(instanceName: 'profileRepo')
       .getAll()
-      .map((e) => DefaultMenuItem(e.name, e))
+      .map((e) => DefaultMenuItem(name: e.name, value: e))
       .toList();
   DefaultMenuItem? currentProfile;
   final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
@@ -57,7 +57,8 @@ class _GalleryState extends State<Gallery> {
       currentProfile = profiles.first;
     }
     if (profiles.length > 1) {
-      profiles.add(DefaultMenuItem("All", ProfileDocument(name: "All")));
+      profiles.add(
+          DefaultMenuItem(name: "All", value: ProfileDocument(name: "All")));
     }
     _imageListScrollController.addListener(_onScrollEnd);
 

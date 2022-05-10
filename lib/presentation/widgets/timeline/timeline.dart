@@ -114,10 +114,9 @@ class _TimelineState extends State<Timeline> {
     );
     TabbedViewThemeData themeData =
         TabbedViewThemeData.dark(colorSet: Colors.grey);
-    themeData.contentArea
-      .decoration = BoxDecoration(
-        color: _themeProvider.themeData().primaryColor,
-      );
+    themeData.contentArea.decoration = BoxDecoration(
+      color: _themeProvider.themeData().primaryColor,
+    );
     themeData.tab
       ..textStyle = _themeProvider.themeData().textTheme.headline4!
       ..padding = const EdgeInsets.fromLTRB(10, 4, 10, 4)
@@ -138,8 +137,8 @@ class _TimelineState extends State<Timeline> {
     var items = List.generate(
         _timelineService.allProfiles.length,
         (index) => DefaultMenuItem(
-            _profileNameInDropDown(_timelineService.allProfiles[index]),
-            _timelineService.allProfiles[index]));
+            name: _profileNameInDropDown(_timelineService.allProfiles[index]),
+            value: _timelineService.allProfiles[index]));
     return DefaultDropdown(
       value: items.firstWhere(
           (element) => element.value.id == _timelineService.currentProfile!.id),
@@ -166,8 +165,8 @@ class _TimelineState extends State<Timeline> {
     var items = List.generate(
         ChartSeriesType.values.length,
         (index) => DefaultMenuItem(
-              ChartSeriesType.values[index].chartName,
-              ChartSeriesType.values[index],
+              name: ChartSeriesType.values[index].chartName,
+              value: ChartSeriesType.values[index],
             ));
 
     return DefaultDropdown(

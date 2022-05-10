@@ -74,5 +74,5 @@ class DefaultMenuItem {
   final String name;
   final dynamic value;
 
-  const DefaultMenuItem(this.name, this.value);
+  const DefaultMenuItem({required this.name, this.value});
 }
