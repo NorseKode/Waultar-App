@@ -63,7 +63,7 @@ class Uploader {
                         ),
                         filled: true,
                         fillColor: (const Color(0xFF272837)),
-                        hintText: "Service profile username",
+                        hintText: "Choose profile username",
                         hintStyle: const TextStyle(letterSpacing: 0.3),
                       )),
                 )),
