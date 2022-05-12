@@ -47,27 +47,25 @@ class Uploader {
 
             Padding(
                 padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                child: SizedBox(
-                  height: 40,
-                  child: Form(
-                    key: formKey,
-                    child: TextFormField(
-                        style: const TextStyle(fontSize: 12),
-                        cursorWidth: 1,
-                        controller: usernameTextController,
-                        validator: TextValidators.waultarServiceUsername,
-                        decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.only(left: 15),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(5.0),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: (const Color(0xFF272837)),
-                          hintText: "Service profile username",
-                          hintStyle: const TextStyle(letterSpacing: 0.3),
-                        )),
-                  ),
+                child: Form(
+                  key: formKey,
+                  child: TextFormField(
+                      style: const TextStyle(fontSize: 12),
+                      cursorWidth: 1,
+                      controller: usernameTextController,
+                      validator: TextValidators.waultarServiceUsername,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.all(15),
+                        isDense: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5.0),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: (const Color(0xFF272837)),
+                        hintText: "Service profile username",
+                        hintStyle: const TextStyle(letterSpacing: 0.3),
+                      )),
                 )),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
