@@ -73,7 +73,7 @@ class MediaRepository {
 
     builder.link(ImageDocument_.profile, ProfileDocument_.id.oneOf(profileIds));
 
-    builder.order(ImageDocument_.id, flags: Order.descending);
+    // builder.order(ImageDocument_.id, flags: Order.descending);
 
     var query = builder.build();
 

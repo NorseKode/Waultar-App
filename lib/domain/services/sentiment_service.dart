@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:waultar/configs/globals/category_enums.dart';
@@ -36,7 +35,8 @@ class SentimentService extends ISentimentService {
   final _bucketsRepo = locator.get<IBucketsRepository>(
     instanceName: 'bucketsRepo',
   );
-  final _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
+  final _performance =
+      locator.get<PerformanceHelper>(instanceName: 'performance');
 
   var sentimentClassifier = SentimentClassifierTextClassifierTFLite();
 
@@ -56,8 +56,8 @@ class SentimentService extends ISentimentService {
   }
 
   @override
-  Future<void> connotateOwnTextsFromCategory(
-      List<DataCategory> categories, Function(String message, bool isDone) callback, bool translate,
+  Future<void> connotateOwnTextsFromCategory(List<DataCategory> categories,
+      Function(String message, bool isDone) callback, bool translate,
       {int threadCount = 1}) async {
     if (ISPERFORMANCETRACKING) {
       var key = "Classify text all";
@@ -68,10 +68,10 @@ class SentimentService extends ISentimentService {
     var isDoneCount = 0;
     var progressCount = 0;
     var workers = <BaseWorker>[];
-    var totalCount =
-        categories.fold<int>(0, (previousValue, element) => previousValue += element.count);
-    var profiles =
-        categories.fold<List<ProfileDocument>>(<ProfileDocument>[], (previousValue, element) {
+    var totalCount = categories.fold<int>(
+        0, (previousValue, element) => previousValue += element.count);
+    var profiles = categories.fold<List<ProfileDocument>>(<ProfileDocument>[],
+        (previousValue, element) {
       if (!previousValue.contains(element.profile.target)) {
         previousValue.add(element.profile.target!);
       }
@@ -80,7 +80,8 @@ class SentimentService extends ISentimentService {
     });
 
     var messagesOnIsolates = categories
-        .where((element) => element.category == CategoryEnum.messaging && element.count > 30000)
+        .where((element) =>
+            element.category == CategoryEnum.messaging && element.count > 30000)
         .toList();
 
     categories.removeWhere((element) => messagesOnIsolates.contains(element));
@@ -117,13 +118,30 @@ class SentimentService extends ISentimentService {
             if (ISPERFORMANCETRACKING) {
               _performance.startReading("Bucket repo update");
             }
-            profiles.map((e) => _bucketsRepo.updateForSentiments(e));
+            // profiles.map((e) => _bucketsRepo.updateForSentiments(e));
             if (ISPERFORMANCETRACKING) {
-              _performance.addReading(_performance.parentKey, "Bucket repo update",
+              _performance.addReading(
+                  _performance.parentKey,
+                  "Bucket repo update",
                   _performance.stopReading("Bucket repo update"));
               _performance.addData(_performance.parentKey,
                   duration: _performance.stopReading(_performance.parentKey),
-                  childs: [PerformanceDataPoint.fromMap(jsonDecode(data.performanceDataPoint!))]);
+                  metadata: {
+                    'totalCount': totalCount,
+                    'isolateCount': threadCount,
+                  });
+
+              if (data.performanceDataPoint != null &&
+                  data.performanceDataPoint!.isNotEmpty) {
+                _performance.addData(
+                  _performance.parentKey,
+                  childs: [
+                    PerformanceDataPoint.fromMap(
+                        jsonDecode(data.performanceDataPoint!))
+                  ],
+                );
+              }
+
               _performance.summary("Sentiment classification");
             }
           }
@@ -137,6 +155,8 @@ class SentimentService extends ISentimentService {
       );
       workers.add(classifyWorker);
       classifyWorker.init(sentimentWorkerBody);
+    } else {
+      threadCount--;
     }
 
     for (var messageData in messagesOnIsolates) {
@@ -175,7 +195,8 @@ class SentimentService extends ISentimentService {
   void calculateCategoryCount(List<int> categories) {
     for (var categoryID in categories) {
       var entry = {
-        categoryID: getCategoryCount(_categoryRepo.getCategoryById(categoryID)!.id),
+        categoryID:
+            getCategoryCount(_categoryRepo.getCategoryById(categoryID)!.id),
       };
       categoryCountMap.addAll(entry);
     }
