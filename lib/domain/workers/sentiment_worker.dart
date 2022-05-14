@@ -268,7 +268,6 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
       mainSendPort.send(LogRecordPackage(e.toString(), stacktrace.toString()));
     }
   } else if (data is IsolateSentimentDisposePackage) {
-    print("finito");
     var _context = locator.get<ObjectBox>(instanceName: 'context');
     _context.store.close();
   }
