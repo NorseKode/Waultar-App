@@ -2,7 +2,7 @@ import json
 import os
 from .diagram_creator import *
 
-def taggedImageReadingToConsole(path, savePath):
+def taggedImageReadingToConsole(path, savePath, figname):
     taggedImages = json.load(open(path))
 
     totalTime = taggedImages["elapsedTime"]
@@ -38,7 +38,7 @@ def taggedImageReadingToConsole(path, savePath):
     other = 100 - setupPercentage - loadImagePercentage - classifyImagePercentage - updateRepoPercentage
     percentData = [setupPercentage, loadImagePercentage, classifyImagePercentage, other]
     percentLabel = ["Setup", "Load Image", "Classify Image", "Update Repo", "Other"]
-    createPieChart(percentData, percentLabel, "Percentage of time used in classifier", savePath)
+    createPieChart(percentData, percentLabel, figname, savePath)
 
     print(f"Image tagging took {totalTime / 1000000} seconds")
     print(f"With image classifying taking {classifyingTime / totalTime}% of the time")

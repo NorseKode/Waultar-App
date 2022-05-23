@@ -1,7 +1,7 @@
 import json
 from .diagram_creator import *
 
-def classifyPerformanceToConsole(path, savePath):
+def classifyPerformanceToConsole(path, savePath, figname):
     data = json.load(open(path))
 
     totalTime = data["elapsedTime"]
@@ -41,7 +41,7 @@ def classifyPerformanceToConsole(path, savePath):
     other = 100 - imageDiskPercentage - preProcessPercentage - runPredictionPercentage - getResultPercentage 
     percentageData = [imageDiskPercentage, preProcessPercentage, runPredictionPercentage, getResultPercentage, other]
     percentageLabel = ["Load Image From Disk", "Pre Process", "Run Predictions", "Get Results", "Other"]
-    createPieChart(percentageData, percentageLabel, "Percentage of time used in predictions", savePath)
+    createPieChart(percentageData, percentageLabel, figname, savePath)
 
     print(f"The image prediction ran in {totalTime / 1000000} seconds")
     print(f"On average a prediction took {predictAvgTime} seconds, with")

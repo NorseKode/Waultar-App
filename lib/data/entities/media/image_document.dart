@@ -12,6 +12,7 @@ class ImageDocument {
   @Index()
   late String mediaTags;
   late List<String> mediaTagScores;
+  bool isProcessed = false;
 
   final relatedDatapoint = ToOne<DataPoint>();
   final profile = ToOne<ProfileDocument>();

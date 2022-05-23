@@ -34,11 +34,23 @@ class MediaRepository {
   }
 
   List<ImageDocument> getImagesForTaggingPagination(int offset, int limit) {
-    var query = _imageBox.query(ImageDocument_.mediaTags.equals("")).build();
+    var query = _imageBox.query(ImageDocument_.isProcessed.equals(false)).build();
     query
       ..offset = offset
       ..limit = limit;
     return query.find();
+  }
+
+  void setIsProcessed() {
+    var images = _imageBox.getAll();
+
+    for (var image in images) {
+      if (image.mediaTags != "") {
+        image.isProcessed = true;
+      }
+    }
+
+    _imageBox.putMany(images);
   }
 
   List<int> updateImages(List<ImageDocument> images) {
@@ -50,7 +62,8 @@ class MediaRepository {
     // for (var img in imgs) {
     //   print(img.mediaTags);
     // }
-    return _imageBox.query(ImageDocument_.mediaTags.equals("")).build().count();
+    // return _imageBox.query(ImageDocument_.mediaTags.equals("")).build().count();
+    return _imageBox.query(ImageDocument_.isProcessed.equals(false)).build().count();
   }
 
   List<ImageDocument> searchImagesPagination(

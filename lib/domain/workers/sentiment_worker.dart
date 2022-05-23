@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:isolate';
 import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
+import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_translator_service.dart';
 import 'package:waultar/core/ai/sentiment_classifier_textClassification.dart';
 import 'package:waultar/core/base_worker/package_models.dart';
@@ -23,6 +24,7 @@ Future sentimentWorkerBody(dynamic data, SendPort mainSendPort, Function onError
       var dataRepo = locator.get<DataPointRepository>(instanceName: 'dataRepo');
       var translator = locator.get<ITranslatorService>(instanceName: 'translator');
       var sentimentClassifier = SentimentClassifierTextClassifierTFLite();
+      ISPERFORMANCETRACKING = data.isPerformanceTracking;
 
       if (data.isPerformanceTracking) {
         performance.init(newParentKey: "Sentiment classification");

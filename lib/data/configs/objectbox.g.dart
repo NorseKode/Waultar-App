@@ -96,7 +96,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(3, 3553008538000015211),
       name: 'DataPoint',
-      lastPropertyId: const IdUid(12, 3972800456672256307),
+      lastPropertyId: const IdUid(13, 8361984536583755627),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -424,7 +424,7 @@ final _entities = <ModelEntity>[
   ModelEntity(
       id: const IdUid(8, 4001240405378944779),
       name: 'ImageDocument',
-      lastPropertyId: const IdUid(8, 6000353129815301496),
+      lastPropertyId: const IdUid(9, 4944944097609970536),
       flags: 0,
       properties: <ModelProperty>[
         ModelProperty(
@@ -472,7 +472,12 @@ final _entities = <ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const IdUid(19, 4250281111143905374),
-            relationTarget: 'ProfileDocument')
+            relationTarget: 'ProfileDocument'),
+        ModelProperty(
+            id: const IdUid(9, 4944944097609970536),
+            name: 'isProcessed',
+            type: 1,
+            flags: 0)
       ],
       relations: <ModelRelation>[],
       backlinks: <ModelBacklink>[]),
@@ -835,7 +840,7 @@ ModelDefinition getObjectBoxModel() {
       lastSequenceId: const IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [],
+      retiredPropertyUids: const [8361984536583755627],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -932,7 +937,7 @@ ModelDefinition getObjectBoxModel() {
           final searchTermsOffset = fbb.writeString(object.searchTerms);
           final valuesJsonBytesOffset =
               fbb.writeListInt8(object.valuesJsonBytes);
-          fbb.startTable(13);
+          fbb.startTable(14);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.dataPointName.targetId);
           fbb.addOffset(2, stringNameOffset);
@@ -1247,7 +1252,7 @@ ModelDefinition getObjectBoxModel() {
           final mediaTagScoresOffset = fbb.writeList(object.mediaTagScores
               .map(fbb.writeString)
               .toList(growable: false));
-          fbb.startTable(9);
+          fbb.startTable(10);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, uriOffset);
           fbb.addOffset(2, dataOffset);
@@ -1256,6 +1261,7 @@ ModelDefinition getObjectBoxModel() {
           fbb.addOffset(5, mediaTagScoresOffset);
           fbb.addInt64(6, object.relatedDatapoint.targetId);
           fbb.addInt64(7, object.profile.targetId);
+          fbb.addBool(8, object.isProcessed);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -1276,7 +1282,9 @@ ModelDefinition getObjectBoxModel() {
             ..mediaTagScores = const fb.ListReader<String>(
                     fb.StringReader(asciiOptimization: true),
                     lazy: false)
-                .vTableGet(buffer, rootOffset, 14, []);
+                .vTableGet(buffer, rootOffset, 14, [])
+            ..isProcessed =
+                const fb.BoolReader().vTableGet(buffer, rootOffset, 20, false);
           object.relatedDatapoint.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0);
           object.relatedDatapoint.attach(store);
@@ -1928,6 +1936,10 @@ class ImageDocument_ {
   /// see [ImageDocument.profile]
   static final profile = QueryRelationToOne<ImageDocument, ProfileDocument>(
       _entities[7].properties[7]);
+
+  /// see [ImageDocument.isProcessed]
+  static final isProcessed =
+      QueryBooleanProperty<ImageDocument>(_entities[7].properties[8]);
 }
 
 /// [LinkDocument] entity fields to define ObjectBox queries.

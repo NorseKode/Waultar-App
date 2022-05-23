@@ -58,7 +58,7 @@ class SentimentService extends ISentimentService {
   @override
   Future<void> connotateOwnTextsFromCategory(List<DataCategory> categories,
       Function(String message, bool isDone) callback, bool translate,
-      {int threadCount = 1}) async {
+      {int threadCount = 0}) async {
     if (ISPERFORMANCETRACKING) {
       var key = "Classify text all";
       _performance.init(newParentKey: key);
@@ -81,7 +81,8 @@ class SentimentService extends ISentimentService {
 
     var messagesOnIsolates = categories
         .where((element) =>
-            element.category == CategoryEnum.messaging && element.count > 30000)
+            // element.category == CategoryEnum.messaging && element.count > 30000)
+            element.category == CategoryEnum.messaging)
         .toList();
 
     categories.removeWhere((element) => messagesOnIsolates.contains(element));
@@ -118,7 +119,7 @@ class SentimentService extends ISentimentService {
             if (ISPERFORMANCETRACKING) {
               _performance.startReading("Bucket repo update");
             }
-            // profiles.map((e) => _bucketsRepo.updateForSentiments(e));
+            profiles.map((e) => _bucketsRepo.updateForSentiments(e));
             if (ISPERFORMANCETRACKING) {
               _performance.addReading(
                   _performance.parentKey,
@@ -148,19 +149,19 @@ class SentimentService extends ISentimentService {
       }
     }
 
-    if (categories.isNotEmpty) {
-      var classifyWorker = BaseWorker(
-        initiator: initiator,
-        mainHandler: _listenSentimentClassify,
-      );
-      workers.add(classifyWorker);
-      classifyWorker.init(sentimentWorkerBody);
-    } else {
-      threadCount--;
-    }
+    // if (categories.isNotEmpty) {
+    //   var classifyWorker = BaseWorker(
+    //     initiator: initiator,
+    //     mainHandler: _listenSentimentClassify,
+    //   );
+    //   workers.add(classifyWorker);
+    //   classifyWorker.init(sentimentWorkerBody);
+    // } else {
+    //   threadCount--;
+    // }
 
     for (var messageData in messagesOnIsolates) {
-      var threadCountTemp = 2;
+      var threadCountTemp = 1;
       threadCount += threadCountTemp;
       var count = messageData.count;
       // var splitCount = count ~/ threadCountTemp;
@@ -174,7 +175,8 @@ class SentimentService extends ISentimentService {
             aiFolder: locator.get<String>(instanceName: 'ai_folder'),
             categoriesIds: [messageData.id],
             translate: translate,
-            isPerformanceTracking: false,
+            isPerformanceTracking: true,
+            // isPerformanceTracking: false,
             offset: splitList[i].item1,
             limit: splitList[i].item2,
           ),

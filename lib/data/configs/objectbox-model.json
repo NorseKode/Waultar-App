@@ -69,7 +69,7 @@
     },
     {
       "id": "3:3553008538000015211",
-      "lastPropertyId": "12:3972800456672256307",
+      "lastPropertyId": "13:8361984536583755627",
       "name": "DataPoint",
       "properties": [
         {
@@ -410,7 +410,7 @@
     },
     {
       "id": "8:4001240405378944779",
-      "lastPropertyId": "8:6000353129815301496",
+      "lastPropertyId": "9:4944944097609970536",
       "name": "ImageDocument",
       "properties": [
         {
@@ -463,6 +463,11 @@
           "flags": 520,
           "indexId": "19:4250281111143905374",
           "relationTarget": "ProfileDocument"
+        },
+        {
+          "id": "9:4944944097609970536",
+          "name": "isProcessed",
+          "type": 1
         }
       ],
       "relations": []
@@ -821,7 +826,9 @@
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    8361984536583755627
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

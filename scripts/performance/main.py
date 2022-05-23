@@ -39,11 +39,11 @@ p.parserPerformanceToConsole(parserDataNewInsta, os.path.join(saveInsta, "insta_
 print("###### Parser - End ######\n")
 
 print("##### Image Tagging - Start #####")
-it.taggedImageReadingToConsole(imageDataNewInsta, os.path.join(saveInsta, "insta_image_tagging_time_percent_v0.1.png"))
+it.taggedImageReadingToConsole(imageDataNewInsta, os.path.join(saveInsta, "insta_image_tagging_time_percent_v0.1.png"), "Image Classify Worker percentage time used -\n Instagram small, 1 isolate")
 print("###### Image Tagging - End ######\n")
 
 print("##### Image Classifier - Start #####")
-ic.classifyPerformanceToConsole(imageClassInsta, os.path.join(saveInsta, "insta_image_classifier_time_percent_v0.1.png"))
+ic.classifyPerformanceToConsole(imageClassInsta, os.path.join(saveInsta, "insta_image_classifier_time_percent_v0.1.png"), "Image Classifier Predict method percentage time used \n- Instagram small, 1 isolate")
 print("###### Image Classifier - End ######\n")
 
 # print("##### Sentiment Old - Start #####")
@@ -51,11 +51,11 @@ print("###### Image Classifier - End ######\n")
 # print("###### Sentiment Old - End ######\n")
 
 print("##### Sentiment No Translate - Start #####")
-s.sentimentReadingToConsole(sentimentDataNewInsta, os.path.join(saveInsta, "insta_sentiment_time_percent_v0.1.png"))
+s.sentimentReadingToConsole(sentimentDataNewInsta, os.path.join(saveInsta, "insta_sentiment_time_percent_v0.1.png"), "Sentiment CLassify worker percentage time used\n Instagram small, no translate, 1 isolate")
 print("###### Sentiment No Translate - End ######")
 
 print("##### Sentiment Translate - Start #####")
-s.sentimentReadingToConsole(sentimentDataNewInsta, os.path.join(saveInsta, "insta_translate_sentiment_time_percent_v0.1.png"))
+s.sentimentReadingToConsole(sentimentDataNewInsta, os.path.join(saveInsta, "insta_translate_sentiment_time_percent_v0.1.png"), "Sentiment CLassify worker percentage time used\n Instagram small, translate, 1 isolate")
 print("###### Sentiment Translate - End ######")
 print("########## Instagram ##########\n\n")
 
@@ -77,11 +77,11 @@ p.parserPerformanceToConsole(parserDataNewFacebook, os.path.join(saveFacebook, "
 print("###### Parser - End ######\n")
 
 print("##### Image Tagging - Start #####")
-it.taggedImageReadingToConsole(imageDataNewFacebook, os.path.join(saveFacebook, "facebook_image_taggin_time_percent_v0.1.png"))
+it.taggedImageReadingToConsole(imageDataNewFacebook, os.path.join(saveFacebook, "facebook_image_taggin_time_percent_v0.1.png"), "Image Classify Worker percentage time used -\n Facebook big, 1 isolate")
 print("###### Image Tagging - End ######\n")
 
 print("##### Image Classifier - Start #####")
-ic.classifyPerformanceToConsole(imageClassFacebook, os.path.join(saveFacebook, "facebook_image_classifier_time_percent_v0.1.png"))
+ic.classifyPerformanceToConsole(imageClassFacebook, os.path.join(saveFacebook, "facebook_image_classifier_time_percent_v0.1.png"), "Image Classifier Predict method percentage time used - \nFacebook big, 1 isolate")
 print("###### Image Classifier - End ######\n")
 
 # print("##### Sentiment Old - Start #####")
@@ -89,7 +89,7 @@ print("###### Image Classifier - End ######\n")
 # print("###### Sentiment Old - End ######\n")
 
 print("##### Sentiment - Start #####")
-s.sentimentReadingToConsole(sentimentDataNewFacebook, os.path.join(saveFacebook, "facebook_sentiment_time_percent_v0.1.png"))
+s.sentimentReadingToConsole(sentimentDataNewFacebook, os.path.join(saveFacebook, "facebook_sentiment_time_percent_v0.1.png"), "Sentiment CLassify worker percentage time used\n Facebook, no translate, 1 isolate")
 print("###### Sentiment - End ######")
 print("########## Facebook ##########")
 # print("########## NOTE: All Run On 1 Isolate ##########")

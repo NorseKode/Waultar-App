@@ -11,11 +11,13 @@ import 'package:waultar/core/ai/image_classifier_mobilenetv3.dart';
 import 'package:waultar/core/base_worker/base_worker.dart';
 import 'package:waultar/core/abstracts/abstract_services/i_ml_service.dart';
 import 'package:waultar/core/helpers/performance_helper.dart';
+import 'package:waultar/data/repositories/media_repo.dart';
 import 'package:waultar/domain/workers/image_classifier_worker.dart';
 import 'package:waultar/startup.dart';
 
 class MLService extends IMLService {
   final _performance = locator.get<PerformanceHelper>(instanceName: 'performance');
+  final _mediaRepo = locator.get<MediaRepository>(instanceName: 'mediaRepo');
 
   @override
   Future<void> classifyImagesSeparateThread({
@@ -59,6 +61,8 @@ class MLService extends IMLService {
             for (var worker in workersList) {
               worker.dispose();
             }
+
+            _mediaRepo.setIsProcessed();
 
             if (ISPERFORMANCETRACKING) {
               _performance.addData(
