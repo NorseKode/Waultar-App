@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:waultar/configs/globals/app_logger.dart';
 import 'package:waultar/configs/globals/category_enums.dart';
 import 'package:waultar/configs/globals/globals.dart';
 import 'package:waultar/core/abstracts/abstract_repositories/i_buckets_repository.dart';
@@ -114,12 +115,13 @@ class SentimentService extends ISentimentService {
               worker.sendMessage(IsolateSentimentDisposePackage());
               worker.dispose();
             }
-            callback("Initializing", true);
 
             if (ISPERFORMANCETRACKING) {
               _performance.startReading("Bucket repo update");
             }
-            profiles.map((e) => _bucketsRepo.updateForSentiments(e));
+            for (var profile in profiles) {
+              _bucketsRepo.updateForSentiments(profile);
+            }
             if (ISPERFORMANCETRACKING) {
               _performance.addReading(
                   _performance.parentKey,
@@ -145,20 +147,22 @@ class SentimentService extends ISentimentService {
 
               _performance.summary("Sentiment classification");
             }
+
+            callback("Initializing", true);
           }
       }
     }
 
-    // if (categories.isNotEmpty) {
-    //   var classifyWorker = BaseWorker(
-    //     initiator: initiator,
-    //     mainHandler: _listenSentimentClassify,
-    //   );
-    //   workers.add(classifyWorker);
-    //   classifyWorker.init(sentimentWorkerBody);
-    // } else {
-    //   threadCount--;
-    // }
+    if (categories.isNotEmpty) {
+      var classifyWorker = BaseWorker(
+        initiator: initiator,
+        mainHandler: _listenSentimentClassify,
+      );
+      workers.add(classifyWorker);
+      classifyWorker.init(sentimentWorkerBody);
+    } else {
+      threadCount--;
+    }
 
     for (var messageData in messagesOnIsolates) {
       var threadCountTemp = 1;

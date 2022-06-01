@@ -100,6 +100,7 @@ class YearBucket {
       'months': JsonHelper.convertToManyToJson(months),
       'dbDateTime': dbDateTime,
       'dbCategoryMap': dbCategoryMap,
+      'dbCategorySentimentAverage': dbCategorySentimentAverage,
     };
   }
 }
